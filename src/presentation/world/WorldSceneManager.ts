@@ -105,10 +105,10 @@ export class WorldSceneManager {
     this.onNoticeboardRead = options.onNoticeboardRead;
 
     // 1. Scene Setup
-    const clearColor = options.clearColor ?? 0x070a10;
+    const clearColor = options.clearColor ?? 0x7dd3fc; // Warm coastal Lagos sky blue
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(clearColor);
-    this.scene.fog = new THREE.FogExp2(clearColor, 0.025);
+    this.scene.fog = new THREE.FogExp2(clearColor, 0.012);
 
     // 2. Camera Setup
     const width = container.clientWidth || 800;
@@ -135,7 +135,7 @@ export class WorldSceneManager {
       const canvas = this.renderer.domElement;
       canvas.className = 'world-viewport-canvas';
       canvas.setAttribute('role', 'region');
-      canvas.setAttribute('aria-label', '3D World Viewport — Explorable Urban Neighborhood');
+      canvas.setAttribute('aria-label', '3D World Viewport — Explorable Lagos Island Environment');
       this.container.appendChild(canvas);
     } catch (err) {
       this.dispose();
@@ -148,11 +148,11 @@ export class WorldSceneManager {
     this.collisionWorld = new CollisionWorld(WORLD_CONFIG.boundaries);
     this.interactionRegistry = new InteractionRegistry();
 
-    // 5. Build Environment (Neighborhood block + 3 landmarks + collision obstacles)
+    // 5. Build Environment (Lagos Island district + landmarks + collision obstacles)
     this.worldEnvironment = new WorldEnvironment(this.collisionWorld, this.interactionRegistry);
     this.scene.add(this.worldEnvironment.getMesh());
 
-    // 6. Lighting
+    // 6. Lighting (Bright Tropical Sunlight & Coastal Sky)
     this.setupLighting();
 
     // 7. Player Avatar and Controller Setup
@@ -162,8 +162,8 @@ export class WorldSceneManager {
     this.playerController = new PlayerController({
       avatar: this.playerAvatar,
       collisionWorld: this.collisionWorld,
-      initialPosition: [0, 0, 14],
-      initialYaw: 0,
+      initialPosition: WORLD_CONFIG.locations.neighborhood.spawnPosition,
+      initialYaw: WORLD_CONFIG.locations.neighborhood.spawnYaw,
       onCameraToggle: () => this.toggleCameraMode(),
       onInteract: () => this.triggerNearbyInteraction(),
     });
@@ -196,26 +196,26 @@ export class WorldSceneManager {
   private setupLighting(): void {
     if (!this.scene) return;
 
-    // Ambient Moonlight / Sky Light
-    const ambientLight = new THREE.AmbientLight(0x94a3b8, 0.45);
+    // Ambient Tropical Fill Light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
     this.scene.add(ambientLight);
 
-    // Directional Urban Key Light (Simulating tall street illumination)
-    const dirLight = new THREE.DirectionalLight(0x38bdf8, 1.1);
-    dirLight.position.set(10, 20, 15);
-    dirLight.castShadow = true;
-    dirLight.shadow.mapSize.width = 1024;
-    dirLight.shadow.mapSize.height = 1024;
-    dirLight.shadow.camera.near = 0.5;
-    dirLight.shadow.camera.far = 60;
-    dirLight.shadow.camera.left = -25;
-    dirLight.shadow.camera.right = 25;
-    dirLight.shadow.camera.top = 25;
-    dirLight.shadow.camera.bottom = -25;
-    this.scene.add(dirLight);
+    // Directional Tropical Sunlight (Bright sun with warm gold tint)
+    const sunLight = new THREE.DirectionalLight(0xfffaed, 1.35);
+    sunLight.position.set(20, 45, 25);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.width = 2048;
+    sunLight.shadow.mapSize.height = 2048;
+    sunLight.shadow.camera.near = 0.5;
+    sunLight.shadow.camera.far = 100;
+    sunLight.shadow.camera.left = -40;
+    sunLight.shadow.camera.right = 40;
+    sunLight.shadow.camera.top = 40;
+    sunLight.shadow.camera.bottom = -40;
+    this.scene.add(sunLight);
 
-    // Subtle Cyan Ground Fill Light
-    const hemiLight = new THREE.HemisphereLight(0x1e293b, 0x070a10, 0.4);
+    // Hemisphere Coastal Sky & Ground Bounce
+    const hemiLight = new THREE.HemisphereLight(0xbae6fd, 0xfde68a, 0.65);
     this.scene.add(hemiLight);
   }
 
@@ -249,7 +249,7 @@ export class WorldSceneManager {
       this.transitionController.transitionTo(target.targetLocationId);
     } else if (target.id === 'interact_noticeboard') {
       this.onNoticeboardRead?.(
-        'NOTICE: Unusual system alert activity detected in Cedarline Services staging cluster. Cedarline staff meeting outside Cafe at 14:00.'
+        'TINUBU SQUARE BULLETIN: Unusual system alert activity detected in Cedarline Services Marina staging cluster. Cedarline IT security staff meeting on Broad Street at 14:00.'
       );
     }
   }

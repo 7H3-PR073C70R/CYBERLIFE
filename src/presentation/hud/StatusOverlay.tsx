@@ -12,8 +12,8 @@ export interface StatusOverlayProps {
 }
 
 export const StatusOverlay: React.FC<StatusOverlayProps> = ({
-  milestoneTitle = 'M2: 3D Neighborhood',
-  currentLocationName = 'Downtown Urban Block',
+  milestoneTitle = 'M2.5: Lagos Island',
+  currentLocationName = 'Lagos Island — Broad Street & Marina',
   cameraMode = 'THIRD_PERSON',
   onToggleCamera,
   onToggleHelp,

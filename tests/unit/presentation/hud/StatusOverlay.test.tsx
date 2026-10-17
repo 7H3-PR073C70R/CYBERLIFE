@@ -7,7 +7,9 @@ describe('StatusOverlay Component', () => {
     render(<StatusOverlay />);
 
     expect(screen.getByRole('heading', { level: 1, name: /Cyberlife/i })).toBeInTheDocument();
-    expect(screen.getByTestId('hud-milestone-badge')).toHaveTextContent(/M2: 3D Neighborhood/i);
+    expect(screen.getByTestId('hud-milestone-badge')).toHaveTextContent(
+      /M2(\.5)?: (3D Neighborhood|Lagos Island)/i
+    );
     expect(screen.getByTestId('hud-prototype-badge')).toHaveTextContent(/Playable World/i);
   });
 

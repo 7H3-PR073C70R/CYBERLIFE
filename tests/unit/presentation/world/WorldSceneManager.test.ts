@@ -98,7 +98,7 @@ describe('WorldSceneManager', () => {
 
     const location = manager.getCurrentLocation();
     expect(location.id).toBe('neighborhood');
-    expect(location.name).toBe('Downtown Urban Block');
+    expect(location.name).toBe('Lagos Island — Broad Street & Marina');
 
     const pos = manager.getPlayerPosition();
     expect(pos).toHaveProperty('x');

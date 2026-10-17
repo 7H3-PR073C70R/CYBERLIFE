@@ -15,7 +15,7 @@ export interface HUDShellProps {
 }
 
 export const HUDShell: React.FC<HUDShellProps> = ({
-  currentLocationName = 'Downtown Urban Block',
+  currentLocationName = 'Lagos Island — Broad Street & Marina',
   cameraMode = 'THIRD_PERSON',
   activeTarget = null,
   onToggleCamera,

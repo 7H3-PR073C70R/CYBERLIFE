@@ -24,6 +24,10 @@ export class InteractionRegistry {
     return Array.from(this.interactables.values());
   }
 
+  public getById(id: string): InteractableDefinition | undefined {
+    return this.interactables.get(id);
+  }
+
   /**
    * Deterministically finds the nearest interactable within range of player coordinates (x, z).
    * Returns null if no interactable is within its defined interaction radius.
