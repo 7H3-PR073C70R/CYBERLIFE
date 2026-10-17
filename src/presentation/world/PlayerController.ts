@@ -73,6 +73,8 @@ export class PlayerController {
   }
 
   private handleKeyDown(e: KeyboardEvent): void {
+    if (this.isInputDisabled) return;
+
     // If the user is currently typing in an input or textarea, suspend gameplay keys
     if (this.isTypingInInput(e)) return;
 
@@ -103,6 +105,7 @@ export class PlayerController {
   }
 
   private handleKeyUp(e: KeyboardEvent): void {
+    if (this.isInputDisabled) return;
     this.keysPressed.delete(e.code);
   }
 

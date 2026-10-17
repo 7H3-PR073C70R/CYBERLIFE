@@ -111,3 +111,20 @@ export {
   InvalidArgumentError,
   InvariantViolationError,
 } from '../domain/errors/DomainError';
+
+// Cyber Terminal Simulation
+export {
+  type TerminalCommandResult,
+  type TerminalExecutionContext,
+  type TerminalCommandHandler,
+  TerminalCommandRegistry,
+  TerminalCommandParser,
+  createDefaultCommandRegistry,
+  createDefaultTerminalParser,
+  helpCommand,
+  clearCommand,
+  whoamiCommand,
+  dateCommand,
+  statusCommand,
+  historyCommand,
+} from './cyber/terminal';

@@ -908,6 +908,24 @@ export class WorldEnvironment {
     monitor.position.set(0, 1.35, -3.7);
     this.group.add(monitor);
 
+    // Workstation Interaction Trigger & Marker in front of desk
+    const wsMarker = new InteractableMarker(0, -2.4, accentColor, 'Workstation Terminal');
+    this.markers.push(wsMarker);
+    this.group.add(wsMarker.getMesh());
+
+    this.interactionRegistry.register({
+      id: isCedarline ? 'interact_cedarline_workstation' : 'interact_apartment_workstation',
+      name: isCedarline ? 'Cedarline Workstation' : 'Research Workstation',
+      promptAction: isCedarline
+        ? 'access Cedarline corporate terminal [E]'
+        : 'access personal research workstation [E]',
+      description: isCedarline
+        ? 'A secured enterprise terminal connected to the Cedarline internal network.'
+        : 'Your personal cybersecurity research rig and simulated development terminal.',
+      position: [0, 0, -2.4],
+      radius: 2.2,
+    });
+
     // Exit Doorway Marker at (0, 0, 5.0)
     const exitMarker = new InteractableMarker(0, 5.0, accentColor, 'Exit Door');
     this.markers.push(exitMarker);

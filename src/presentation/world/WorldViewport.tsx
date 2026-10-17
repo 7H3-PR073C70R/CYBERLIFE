@@ -7,6 +7,7 @@ import {
   WORLD_CONFIG,
 } from './worldConfig';
 import { HUDShell } from '../hud/HUDShell';
+import { DesktopShell } from '../desktop/DesktopShell';
 
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { Money } from '@/domain/common/Money';
@@ -33,6 +34,12 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   const [cameraMode, setCameraMode] = useState<CameraMode>('THIRD_PERSON');
   const [activeTarget, setActiveTarget] = useState<InteractableDefinition | null>(null);
   const [noticeMessage, setNoticeMessage] = useState<string | null>(null);
+
+  // M4 Virtual Desktop State
+  const [isDesktopOpen, setIsDesktopOpen] = useState<boolean>(false);
+  const [activeWorkstationId, setActiveWorkstationId] = useState<string>(
+    'interact_cedarline_workstation'
+  );
 
   const initializeScene = useCallback(() => {
     if (!containerRef.current) return;
@@ -66,6 +73,18 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
             simRef.current.dispatch({
               type: 'SetWorldFlag',
               key: 'has_read_community_noticeboard',
+              value: true,
+            });
+          }
+        },
+        onWorkstationOpen: wsId => {
+          setActiveWorkstationId(wsId);
+          setIsDesktopOpen(true);
+          manager.setInputDisabled(true);
+          if (simRef.current) {
+            simRef.current.dispatch({
+              type: 'SetWorldFlag',
+              key: 'has_accessed_workstation',
               value: true,
             });
           }
@@ -105,6 +124,13 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
       managerRef.current.triggerNearbyInteraction();
     }
   };
+
+  const handleCloseDesktop = useCallback(() => {
+    setIsDesktopOpen(false);
+    if (managerRef.current) {
+      managerRef.current.setInputDisabled(false);
+    }
+  }, []);
 
   return (
     <div
@@ -196,15 +222,22 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
       )}
 
       {/* 2D HUD Layer positioned above the 3D canvas */}
-      <HUDShell
-        currentLocationName={currentLocation.name}
-        cameraMode={cameraMode}
-        activeTarget={activeTarget}
-        simulationTimeString={sim ? sim.state.time.calendar.timeString : undefined}
-        playerFunds={sim ? Money.fromKobo(sim.state.player.moneyKobo).format() : undefined}
-        onToggleCamera={handleToggleCamera}
-        onInteract={handleInteract}
-      />
+      {!isDesktopOpen && (
+        <HUDShell
+          currentLocationName={currentLocation.name}
+          cameraMode={cameraMode}
+          activeTarget={activeTarget}
+          simulationTimeString={sim ? sim.state.time.calendar.timeString : undefined}
+          playerFunds={sim ? Money.fromKobo(sim.state.player.moneyKobo).format() : undefined}
+          onToggleCamera={handleToggleCamera}
+          onInteract={handleInteract}
+        />
+      )}
+
+      {/* M4 Virtual Desktop Overlay */}
+      {isDesktopOpen && (
+        <DesktopShell workstationId={activeWorkstationId} onExitDesktop={handleCloseDesktop} />
+      )}
     </div>
   );
 };

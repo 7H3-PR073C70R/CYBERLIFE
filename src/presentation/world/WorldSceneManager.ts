@@ -20,6 +20,7 @@ export interface WorldSceneOptions {
   onLocationChanged?: (location: LocationDefinition) => void;
   onCameraModeChanged?: (mode: CameraMode) => void;
   onNoticeboardRead?: (notice: string) => void;
+  onWorkstationOpen?: (workstationId: string) => void;
 }
 
 export interface SceneStatistics {
@@ -60,6 +61,7 @@ export class WorldSceneManager {
   private onLocationChanged?: (location: LocationDefinition) => void;
   private onCameraModeChanged?: (mode: CameraMode) => void;
   private onNoticeboardRead?: (notice: string) => void;
+  private onWorkstationOpen?: (workstationId: string) => void;
 
   private frameCount = 0;
   private isDisposed = false;
@@ -103,6 +105,7 @@ export class WorldSceneManager {
     this.onLocationChanged = options.onLocationChanged;
     this.onCameraModeChanged = options.onCameraModeChanged;
     this.onNoticeboardRead = options.onNoticeboardRead;
+    this.onWorkstationOpen = options.onWorkstationOpen;
 
     // 1. Scene Setup
     const clearColor = options.clearColor ?? 0x7dd3fc; // Warm coastal Lagos sky blue
@@ -247,6 +250,8 @@ export class WorldSceneManager {
     // If target specifies a destination location, execute scene transition
     if (target.targetLocationId) {
       this.transitionController.transitionTo(target.targetLocationId);
+    } else if (target.id.includes('workstation')) {
+      this.onWorkstationOpen?.(target.id);
     } else if (target.id === 'interact_noticeboard') {
       this.onNoticeboardRead?.(
         'TINUBU SQUARE BULLETIN: Unusual system alert activity detected in Cedarline Services Marina staging cluster. Cedarline IT security staff meeting on Broad Street at 14:00.'
@@ -259,12 +264,27 @@ export class WorldSceneManager {
     onLocationChanged?: (location: LocationDefinition) => void;
     onCameraModeChanged?: (mode: CameraMode) => void;
     onNoticeboardRead?: (notice: string) => void;
+    onWorkstationOpen?: (workstationId: string) => void;
   }): void {
     if (options.onInteractionTargetChanged)
       this.onInteractionTargetChanged = options.onInteractionTargetChanged;
     if (options.onLocationChanged) this.onLocationChanged = options.onLocationChanged;
     if (options.onCameraModeChanged) this.onCameraModeChanged = options.onCameraModeChanged;
     if (options.onNoticeboardRead) this.onNoticeboardRead = options.onNoticeboardRead;
+    if (options.onWorkstationOpen) this.onWorkstationOpen = options.onWorkstationOpen;
+  }
+
+  /**
+   * Suspends or restores player movement and camera controls.
+   * Used when opening/closing the virtual desktop.
+   */
+  public setInputDisabled(disabled: boolean): void {
+    if (this.playerController) {
+      this.playerController.setInputDisabled(disabled);
+    }
+    if (this.cameraController) {
+      this.cameraController.setEnabled(!disabled);
+    }
   }
 
   public getCurrentLocation(): LocationDefinition {

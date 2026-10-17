@@ -20,6 +20,7 @@ export class WorldCameraController {
   private pitch = 0; // Vertical look angle in radians
 
   private isPointerLocked = false;
+  private isEnabled = true;
   private onModeChanged?: (mode: CameraMode) => void;
 
   // Bound listeners
@@ -57,12 +58,29 @@ export class WorldCameraController {
     document.removeEventListener('mousemove', this.handleMouseMoveBound);
     document.removeEventListener('pointerlockchange', this.handlePointerLockChangeBound);
 
-    if (document.pointerLockElement === this.domElement) {
-      document.exitPointerLock();
+    this.exitPointerLock();
+  }
+
+  public exitPointerLock(): void {
+    if (typeof document !== 'undefined' && document.pointerLockElement === this.domElement) {
+      try {
+        document.exitPointerLock?.();
+      } catch {
+        // Fallback
+      }
+    }
+  }
+
+  public setEnabled(enabled: boolean): void {
+    this.isEnabled = enabled;
+    if (!enabled) {
+      this.exitPointerLock();
     }
   }
 
   private handleClick(): void {
+    if (!this.isEnabled) return;
+
     // In first person, clicking the canvas requests pointer lock for seamless mouse-look
     if (this.mode === 'FIRST_PERSON' && !this.isPointerLocked) {
       try {
@@ -78,6 +96,8 @@ export class WorldCameraController {
   }
 
   private handleMouseMove(e: MouseEvent): void {
+    if (!this.isEnabled) return;
+
     // Allow mouse look in first-person (or if pointer-locked)
     if (this.mode !== 'FIRST_PERSON' && !this.isPointerLocked) return;
 
