@@ -271,3 +271,63 @@ To support players with zero technical or command-line background (see [PLAYER_G
 2. **Deterministic Mistake Recovery**: When an invalid command is entered into the virtual terminal, the application layer matches the error against known common beginner mistakes and returns a constructive recovery hint without crashing or penalizing the player.
 3. **Assistance Tier Decoupling**: Switching between `Guided`, `Standard`, and `Independent` modes adjusts UI projections and hint visibility only; it has zero impact on simulation rules, mission rewards, or persistent state.
 
+---
+
+## 8. Virtual Desktop & Interaction Systems Architecture (M4)
+
+Milestone 4 establishes the seamless bridge between physical 3D world exploration and computer-based cybersecurity investigation through a virtual desktop operating environment.
+
+### 8.1 Workstation Interaction & State Flow
+
+```
+[In-World Workstation] (Cedarline HQ Desk / Apartment Workstation)
+       │
+       ▼ Player approaches within interaction radius (radius: 2.2m)
+[InteractionPrompt HUD] Displays "Cedarline Workstation — access Cedarline corporate terminal [E]"
+       │
+       ▼ Player presses 'E' (or clicks HUD trigger)
+[WorldSceneManager] ──▶ Calls `onWorkstationOpen(workstationId)`
+       │
+       ├── Disables PlayerController keyboard movement (`isInputDisabled = true`)
+       ├── Disables WorldCameraController mouse look (`setEnabled(false)`)
+       ├── Exits pointer lock (`exitPointerLock()`)
+       └── Sets `isDesktopOpen = true` in WorldViewport
+       │
+       ▼
+[DesktopShell] (React Presentation Layer)
+       ├── Mounts full-screen glassmorphism desktop environment
+       ├── Displays first-time beginner orientation modal
+       ├── Boots Taskbar with Start menu, live M3 clock, and host isolation indicator
+       └── Spawns default application (CyberOS Terminal)
+```
+
+### 8.2 Boundary: Presentation State vs Authoritative State
+
+To maintain strict Clean Architecture, Cyberlife maintains a clear division between presentation state and simulation state:
+
+| State Item | Layer | Location | Rationale |
+|---|---|---|---|
+| **Window Positions & Sizes** | Presentation | `useWindowManager` (React) | Ephemeral UI layout coordinates; zero gameplay effect |
+| **Active & Focused Window (Z-Index)** | Presentation | `useWindowManager` (React) | Visual stacking and focus order |
+| **Window Minimized / Restored** | Presentation | `useWindowManager` (React) | Viewport display state |
+| **Terminal Command History** | Presentation | `TerminalApp` (React state) | Ephemeral arrow-key navigation buffer for session |
+| **Simulation Date & Clock** | Simulation | `SimulationState.time` (Headless) | Authoritative world time read via `context.simClock` |
+| **Player Credentials & Money** | Simulation | `SimulationState.player` (Headless) | Authoritative persona and financial balances |
+| **Workstation Access Flags** | Simulation | `SimulationState.worldFlags` (Headless)| Dispatched via `SetWorldFlag` (`has_accessed_workstation`) |
+
+### 8.3 Input Isolation Architecture
+
+While the virtual desktop is active:
+1. `PlayerController.handleKeyDown` and `handleKeyUp` check `if (this.isInputDisabled) return;` at the very start of input processing, completely isolating 3D movement (`WASD`, Arrow keys, Camera toggle `V`) from terminal typing.
+2. `WorldCameraController.setEnabled(false)` and `exitPointerLock()` prevent mouse look from moving the camera while clicking desktop elements.
+3. Closing the desktop via the `Exit Desktop [Esc]` taskbar button or pressing the `Escape` key restores movement and camera controls with zero position loss.
+
+### 8.4 Terminal Parser & Security Boundary
+
+The simulated terminal (`src/simulation/cyber/terminal/`) operates as a completely headless, sandboxed command processor:
+- **Zero Host Execution**: The parser explicitly tokens input strings and routes them to registered handlers. It never invokes `child_process`, `eval`, `Function`, or browser networking APIs.
+- **Shell Injection Rejection**: Common shell operators (`|`, `;`, `&`, `>`, `<`, backticks) are safely rejected at tokenization time with educational explanations explaining that Cyberlife utilizes a purpose-built simulated command environment.
+- **Deterministic Evaluation**: Each command receives a read-only `TerminalExecutionContext` containing the active username, machine hostname, workstation location ID, simulation clock, and state revision. Given identical input and context, the output is 100% deterministic.
+- **Extensibility Contract**: New simulated cybersecurity tools (e.g. M5's `nmap`, `curl`, `siem-query`) register as typed `TerminalCommandHandler` instances in `TerminalCommandRegistry` without expanding host permissions.
+
+

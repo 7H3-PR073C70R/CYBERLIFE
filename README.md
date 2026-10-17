@@ -269,30 +269,39 @@ For full developer tutorials, consult [DEVELOPMENT_GUIDE.md](file:///Users/prote
 
 ## 11. Current Status
 
-- **Active Milestone**: **Milestone 3 — Simulation Engine & State Management** (Completed and Verified).
+- **Active Milestone**: **Milestone 4 — Virtual Desktop & Interaction Systems** (Completed and Verified).
 - **Completed Deliverables**:
-  - **Authoritative Headless Simulation Engine (`src/simulation/`)**:
-    - **Zero Outer Dependency Boundary**: Strict zero imports of Three.js, WebGL, React, or browser DOM in `src/domain/` and `src/simulation/`.
-    - **Immutable State Model (`SimulationState`)**: Versioned schema (`schemaVersion: 1`), monotonically increasing state revision, elapsed simulation seconds, calendar time, player attributes, currency, inventory, world flags, and scheduled duration timers.
-    - **Integer Currency Model (`Money`)**: Non-negative integer kobo representation (100 kobo = ₦1.00 Naira) preventing floating-point calculation errors, supporting exact arithmetic, comparisons, and currency formatting.
-    - **Pure Command Reducers & Validation (`handleCommand`)**: Synchronous command dispatch validating all inputs, rejecting invalid requests with stable `SimulationErrorCode` values without state mutation, executing atomic transitions, enforcing invariant validation, and emitting typed domain events.
-    - **No-Op Command Policy**: Valid commands producing zero state delta return `isNoOp: true`, preserving state revision and emitting zero events.
-    - **Deterministic Clock & Calendar**: Elapsed simulation seconds mapped deterministically to a 12-hour civil calendar clock with formatted time (`08:00 AM`) and date strings (`Monday, Oct 12, 2026`).
-    - **Deterministic Duration Timers (`timerManager`)**: In-game duration timers evaluated during clock advancement, executing due actions in deterministic priority order (`dueTime`, `creationSequence`, `timerId`) without browser `setTimeout`.
-    - **Domain Event Bus (`SimulationEngine`)**: Isolated listener error handling preventing subscriber exceptions from corrupting committed transitions, with both state and event-specific subscription models.
-    - **Application & Presentation Integration**: React `SimulationProvider`, `useSimulation()`, and `useOptionalSimulation()` hooks; live HUD integration (simulation clock and funds display); and an unobtrusive `DevSimulationDrawer` for developer verification.
-  - **Explorable Historic Lagos Island District (`WorldEnvironment.ts`, `LagosProps.ts`, `Building.ts`)**:
-    - Broad Street commercial spine, Marina waterfront boulevard, Balogun / Idumota market street, and Tinubu Square civic plaza with full M2 movement, collision, camera, and transition continuity.
+  - **In-World Workstation Integration (`WorldEnvironment.ts`, `WorldSceneManager.ts`, `WorldViewport.tsx`)**:
+    - Proximity interactable workstation desks in Cedarline corporate lobby and Apartment interior with prompt `access Cedarline corporate terminal [E]`.
+    - Seamless transition to virtual desktop with strict 3D movement and camera isolation (`PlayerController.isInputDisabled`, `WorldCameraController.setEnabled(false)`, `exitPointerLock()`).
+    - Smooth return-to-world on `Escape` key or `Exit Desktop` taskbar action, restoring player controls with zero position loss.
+  - **Virtual Desktop Environment (`src/presentation/desktop/`)**:
+    - Glassmorphism CyberOS desktop with wallpaper, watermark, desktop icons, and empty desktop hint.
+    - Draggable window manager (`useWindowManager`, `WindowFrame.tsx`) with boundary clamping, minimizing, restoring, and z-index focus stacking.
+    - Single-instance application policy focusing existing windows on duplicate launch.
+    - Taskbar (`Taskbar.tsx`) with CyberOS Start menu, active window tabs, live M3 simulation clock, green `Simulated OS` host isolation badge, and `Exit Desktop` button.
+  - **Headless Terminal Engine (`src/simulation/cyber/terminal/`)**:
+    - Pure parser and registry (`TerminalCommandParser.ts`, `TerminalCommandRegistry.ts`) with zero outer dependencies.
+    - Explicit M4 command set: `help`, `clear`, `whoami`, `date`, `status`, `history`.
+    - `date` command synchronously reading authoritative M3 simulation clock (`08:00 AM, Monday, Oct 12, 2026`).
+    - Absolute host sandbox isolation: zero host execution, shell injection prevention (`;`, `|`, `&`, `>`, `<` rejected with friendly guidance).
+  - **Discoverable Applications**:
+    - `TerminalApp`: Prompt, scrollable output, Up/Down arrow history recall, 1-click quick command suggestion chips (`[help]`, `[whoami]`, `[date]`, `[status]`, `[history]`, `[clear]`), and beginner hint banner.
+    - `FieldGuideApp`: Multi-tab cybersecurity reference book (Basics, Command Reference, Core Concepts, and Safety Guarantee).
+    - `SystemInfoApp`: Read-only virtual node specs synchronized with M3 state revision and simulation clock.
+    - `NotesApp`: IT onboarding memo and session scratchpad.
+  - **Accessible Player Guidance (`ObjectiveTrackerHUD.tsx`)**:
+    - First-time desktop orientation modal explaining fictional sandbox nature and safety guarantee.
+    - 8-part task guidance structure with `[Repeat Instructions]` toggle.
   - **Automated Test Suite**:
-    - 194 passing tests across 28 test files with 0 failures in headless Node/Vitest.
-    - $\ge 90\%$ branch coverage across all core reducers (`commandHandler.ts` at 93.18%, `invariants.ts` at 100%, `playerSystem.ts` at 96.29%, `inventorySystem.ts` at 96.29%, `worldFlagsSystem.ts` at 100%).
+    - 239 passing tests across 33 test files with 0 failures in headless Node/Vitest.
+    - 16 terminal parser tests, 8 window manager tests, 8 terminal app tests, 7 desktop shell tests, and 6 workstation integration tests.
   - **Real Browser Verification**:
-    - Live browser validation confirming WebGL 60 FPS rendering, HUD simulation clock (`08:00 AM`) and funds (`₦2,500.00`) display, interactive Dev Simulation Drawer, and camera mode switching.
-- **Explicit Exclusions (Deferred to M4+)**:
-  - Interactive virtual desktop OS and window manager (deferred to M4).
-  - Simulated cybersecurity terminal tools, IAM policies, and SIEM logs (deferred to M5).
+    - Live browser validation confirming workstation approach, desktop transition, window management, terminal commands, quick chips, and clean exit back to 3D world.
+- **Explicit Exclusions (Deferred to M5+)**:
+  - Full cybersecurity tools (`nmap`, `curl`, `grep`, `siem-query`) and virtual network topology (deferred to M5).
   - Complete Aster Incident investigation mission graph (deferred to M6).
-- **Next Milestone**: **Milestone 4 — Interaction System & Hybrid Desktop** (In-world interaction triggers, branching dialogue engine, virtual desktop shell, and terminal window).
+- **Next Milestone**: **Milestone 5 — Cybersecurity Simulation & Tools** (Synthetic subnets, IAM policies, SIEM logs, simulated AI agent, and cybersecurity terminal tools).
 
 ---
 
@@ -300,14 +309,16 @@ For full developer tutorials, consult [DEVELOPMENT_GUIDE.md](file:///Users/prote
 
 | Action | Primary Control | Secondary Control | Notes |
 |---|---|---|---|
-| **Move Forward** | `W` | `Up Arrow` | Normalized diagonal speed |
-| **Move Backward** | `S` | `Down Arrow` | Normalized diagonal speed |
-| **Move Left** | `A` | `Left Arrow` | Camera-relative lateral motion |
-| **Move Right** | `D` | `Right Arrow` | Camera-relative lateral motion |
+| **Move Forward** | `W` | `Up Arrow` | Normalized diagonal speed (isolated while in Desktop) |
+| **Move Backward** | `S` | `Down Arrow` | Normalized diagonal speed (isolated while in Desktop) |
+| **Move Left** | `A` | `Left Arrow` | Camera-relative lateral motion (isolated while in Desktop) |
+| **Move Right** | `D` | `Right Arrow` | Camera-relative lateral motion (isolated while in Desktop) |
 | **Switch Camera Mode** | `V` | HUD Toggle Button | Toggles between 3rd-Person and 1st-Person |
-| **Interact / Enter** | `E` | HUD `[E] Activate` | Activates nearest eligible target within radius |
+| **Interact / Enter Workstation** | `E` | HUD `[E] Activate` | Activates workstation desk, door, or noticeboard |
+| **Exit Desktop / Release Look** | `Escape` | Taskbar `Exit Desktop` | Closes virtual desktop and restores 3D controls |
 | **Look Around** | `Mouse` | — | Active in 1st-person mode with pointer lock |
-| **Release Pointer Lock** | `Escape` | — | Releases mouse cursor safely |
+| **Terminal Command History** | `Up / Down Arrows`| — | Cycles through previously entered terminal commands |
+| **Quick Command Execution** | Click suggestion chip | — | 1-click execution for `[help]`, `[whoami]`, `[date]`, etc. |
 | **Toggle Controls Guide**| HUD `Controls [WASD]`| HUD `Hide Guide [X]` | Opens/dismisses accessible controls help |
 | **Open Dev Sim Drawer** | HUD `[Dev Sim]` | HUD `[Close]` | Opens developer simulation inspector |
 
@@ -322,8 +333,8 @@ For full developer tutorials, consult [DEVELOPMENT_GUIDE.md](file:///Users/prote
 | **M2** | 3D Neighborhood & Player Controller | Walkable 3D city block, collision, 1st/3rd person camera, triggers | **Completed** |
 | **M2.5** | Lagos Island Environment | Authentic Lagos Island district: Broad St, Marina, Balogun market, Danfo | **Completed** |
 | **M3** | Simulation Engine & State Management | Headless authoritative state machine, CommandBus, pure reducers | **Completed** |
-| **M4** | Interaction System & Hybrid Desktop | Interaction prompts, branching dialogue UI, virtual desktop shell | *Next* |
-| **M5** | Cybersecurity Simulation & Tools | Virtual network, IAM, SIEM logs, simulated AI agent, terminal tools |
+| **M4** | Virtual Desktop & Interaction Systems | In-world workstation, window manager, terminal, apps, guidance | **Completed** |
+| **M5** | Cybersecurity Simulation & Tools | Virtual network, IAM, SIEM logs, simulated AI agent, terminal tools | *Next* |
 | **M6** | Aster Incident Mission | Complete 10-stage investigation, containment, remediation, reporting |
 | **M7** | NPCs & Persistent Consequences | NPC memory, reactive dialogue, simulated email and news feeds |
 | **M8** | Career, Economy, & Life Simulation | Banking, rent, workstation hardware upgrades, energy/fatigue |

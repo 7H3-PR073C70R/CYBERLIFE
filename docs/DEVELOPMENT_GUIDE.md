@@ -39,45 +39,93 @@ Before writing any code, memorize these four golden rules:
 
 ## 3. How-To Guides
 
-### 3.1 How to Add a New Simulated Cyber Tool
+### 3.1 How to Add a New Simulated Terminal Command
 
-To introduce a new command-line utility (e.g., `netstat` or `dns-lookup`):
+The M4 terminal engine in `src/simulation/cyber/terminal/` provides a sandboxed, extensible command registry (`TerminalCommandRegistry`). To register an explicitly implemented command:
 
-1. **Define the Command Specification in Domain**:
-   Create the tool contract in `src/domain/cyber/tools.ts`:
+1. **Define the Handler Function**:
+   Create a function complying with the `TerminalCommandHandler` interface:
    ```typescript
-   export interface ToolExecutionRequest {
-     command: string;
-     args: string[];
-     currentHostId: string;
-     userContext: SimulatedUserContext;
-   }
+   import { TerminalCommandHandler, TerminalCommandResult, TerminalExecutionContext } from '@/simulation/cyber/terminal';
 
-   export interface ToolExecutionResult {
-     stdout: string;
-     stderr: string;
-     exitCode: number;
+   export const pingCommandHandler: TerminalCommandHandler = (
+     args: string[],
+     context: TerminalExecutionContext
+   ): TerminalCommandResult => {
+     if (args.length === 0) {
+       return {
+         output: 'Usage: ping <target-host>\nSimulates ICMP reachability to an in-game synthetic host.',
+         exitCode: 1,
+       };
+     }
+
+     const target = args[0];
+     return {
+       output: `PING ${target} (10.0.4.1): 56 data bytes\n64 bytes from 10.0.4.1: icmp_seq=0 ttl=64 time=1.24 ms\n--- ${target} ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss`,
+       exitCode: 0,
+     };
+   };
+   ```
+
+2. **Register the Handler with `TerminalCommandRegistry`**:
+   In `src/simulation/cyber/terminal/TerminalCommandRegistry.ts`:
+   ```typescript
+   registry.register({
+     name: 'ping',
+     description: 'Simulate synthetic network reachability testing',
+     usage: 'ping <hostname>',
+     category: 'network',
+     execute: pingCommandHandler,
+   });
+   ```
+
+3. **Key Architectural Guarantees**:
+   - **Zero Host Execution**: Never pass command strings to Node.js `child_process`, `eval`, or browser `fetch`.
+   - **Deterministic Output**: Consume `context.simClock` (the M3 simulation clock) and `context.locationId` rather than real system time.
+   - **Input Sanitization**: The parser trims whitespace, lowercases command names, strips surrounding quotes on arguments, and rejects shell piping (`|`, `;`, `&`, `>`, `<`) before invoking your handler.
+
+4. **Write Headless Unit Tests**:
+   Add test cases in `tests/unit/simulation/cyber/TerminalCommandParser.test.ts` verifying valid arguments, missing arguments, output strings, and exit codes.
+
+---
+
+### 3.2 How to Add a New Desktop Application
+
+To add a new application to the CyberOS virtual desktop (`src/presentation/desktop/`):
+
+1. **Define the Application ID and Registry Metadata**:
+   In `src/presentation/desktop/types.ts`:
+   ```typescript
+   export type AppId = 'terminal' | 'field-guide' | 'system-info' | 'notes' | 'my-new-app';
+
+   // In APP_REGISTRY:
+   'my-new-app': {
+     id: 'my-new-app',
+     name: 'Network Monitor',
+     icon: '📡',
+     description: 'Synthetic network traffic and packet inspection viewer',
+     defaultWidth: 700,
+     defaultHeight: 480,
+     minWidth: 400,
+     minHeight: 300,
    }
    ```
 
-2. **Implement the Synthetic Evaluator in Simulation**:
-   Create `src/simulation/cyber/tools/DnsLookupTool.ts`:
-   - Parse flags and arguments safely without shell evaluation.
-   - Query the simulation's virtual DNS table in `CyberSimulationState`.
-   - Return formatted text output.
-   - Never execute real DNS queries.
+2. **Create the React Component**:
+   In `src/presentation/desktop/apps/MyNewApp.tsx`:
+   - Build a standard React component.
+   - Access simulation state via `useSimulation()` or pass needed context as props.
+   - Ensure the component handles keyboard focus responsibly and adheres to accessible semantics.
 
-3. **Register in Tool Registry**:
-   Add the tool name to `src/simulation/cyber/terminal/ToolRegistry.ts`:
-   ```typescript
-   registry.register('dns-lookup', new DnsLookupTool());
+3. **Wire into `WindowFrame` Renderer in `DesktopShell.tsx`**:
+   Add a case to `renderAppContent(appId)`:
+   ```tsx
+   case 'my-new-app':
+     return <MyNewApp />;
    ```
 
-4. **Write a Headless Unit Test**:
-   In `tests/unit/simulation/cyber/DnsLookupTool.test.ts`:
-   - Initialize mock cyber state with a virtual domain record (`gateway.cedarline.internal -> 10.0.1.1`).
-   - Execute the tool with mock arguments.
-   - Assert `exitCode === 0` and `stdout` contains the expected IP.
+4. **Add Unit Tests**:
+   Create a component test verifying launch, rendering, and interaction behavior.
 
 ---
 

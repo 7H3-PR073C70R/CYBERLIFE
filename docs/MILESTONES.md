@@ -216,39 +216,62 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 
 ---
 
-## M4 — Interaction System & Hybrid Desktop
+## M4 — Interaction System & Hybrid Desktop *(Completed)*
 
-- **Purpose**: Implement the dual-mode interaction layer: in-world interaction prompts, branching dialogue interface, the high-fidelity virtual desktop with window management, and foundational player guidance surfaces.
+- **Status**: Completed and Verified.
+- **Purpose**: Implement the dual-mode interaction layer: in-world workstation triggers, the high-fidelity virtual desktop with window management, a sandboxed command-line terminal, discoverable applications, and foundational player guidance surfaces.
 - **Scope**:
-  - World-space to screen-space interaction prompt rendering.
-  - Authoritative dialogue execution engine supporting branching dialogue trees, player choices, and conditional unlocks.
-  - Virtual desktop environment: draggable, resizable windows, taskbar, dock, notification tray.
-  - Virtual terminal window shell with command input buffer, history, and ANSI text rendering.
-  - Reusable player guidance surfaces: Objective Tracker HUD, in-world waypoint navigation, desktop visual focus indicators, and 1-click terminal command copy/paste buttons (see [PLAYER_GUIDANCE.md](file:///Users/protector/Documents/projects/cyberlife/docs/PLAYER_GUIDANCE.md)).
-  - Quick-access mobile overlay HUD for notifications and field notes.
+  - In-world workstation interactables registered in Cedarline lobby and Apartment interior (`interact_cedarline_workstation`, `interact_apartment_workstation`) with proximity prompt `access Cedarline corporate terminal [E]`.
+  - Seamless desktop modal transition with 3D player movement and camera controls isolated (`isInputDisabled = true`, `WorldCameraController.setEnabled(false)`, `exitPointerLock()`).
+  - Virtual desktop environment (`DesktopShell`): draggable window manager, taskbar with Start menu, running window tabs, live M3 simulation clock, green `Simulated OS` host isolation indicator, and desktop watermark.
+  - Multi-window management (`useWindowManager`): opening, minimizing, restoring, focusing (z-index stacking), dragging within safe boundaries, single-instance application policy, and empty desktop state.
+  - Headless terminal command parser and registry (`src/simulation/cyber/terminal/`):
+    - Explicit commands: `help`, `clear`, `whoami`, `date` (reading M3 simulation clock), `status` (read-only node specs), `history`.
+    - Sanitized tokenization: whitespace trimming, case-insensitivity, argument quote extraction.
+    - Security boundaries: zero host execution, shell injection prevention (`;`, `|`, `&`, `>`, `<` rejected with friendly guidance).
+    - Synchronous deterministic evaluation using `TerminalExecutionContext`.
+  - Discoverable Core Applications:
+    - `TerminalApp`: scrollable synthetic stream, Up/Down arrow history, quick command suggestion chips (`[help]`, `[whoami]`, `[date]`, `[status]`, `[history]`, `[clear]`), and beginner hint banner.
+    - `FieldGuideApp`: multi-tab reference book (Basics, Command Reference, Core Concepts, and Safety Guarantee).
+    - `SystemInfoApp`: read-only virtual node specifications synchronized with M3 state revision and simulation clock.
+    - `NotesApp`: IT onboarding memo and session scratchpad.
+  - Accessible Player Guidance:
+    - First-time desktop orientation modal explaining fictional sandbox nature and safety guarantee.
+    - `ObjectiveTrackerHUD` with 8-part task guidance structure and `[Repeat Instructions]` toggle.
 - **Dependencies**: M2, M3.
 - **Deliverables**:
-  - `InteractionManager` linking spatial triggers to UI presentation.
-  - `DialogueBox` React component supporting branching dialogue with NPC portrait and choice list.
-  - `DesktopShell` window manager supporting minimize, maximize, drag, focus, and close.
-  - `TerminalApp` component capable of receiving keyboard input, displaying synthetic stream output, and supporting 1-click command paste.
-  - `ObjectiveTrackerHUD` component rendering 8-part task steps with `[Repeat Instructions]` button.
+  - Headless terminal subsystem in `src/simulation/cyber/terminal/` (`TerminalCommandParser.ts`, `TerminalCommandRegistry.ts`, `types.ts`, `index.ts`).
+  - Virtual desktop presentation subsystem in `src/presentation/desktop/` (`DesktopShell.tsx`, `Taskbar.tsx`, `WindowFrame.tsx`, `useWindowManager.ts`, `types.ts`, `apps/TerminalApp.tsx`, `apps/FieldGuideApp.tsx`, `apps/SystemInfoApp.tsx`, `apps/NotesApp.tsx`, `index.ts`).
+  - Workstation interactables, triggers, and input isolation in `src/presentation/world/` (`PlayerController.ts`, `WorldCameraController.ts`, `WorldEnvironment.ts`, `WorldSceneManager.ts`, `WorldViewport.tsx`).
+  - Enhanced `ObjectiveTrackerHUD.tsx` in `src/presentation/hud/`.
+  - Complete glassmorphism desktop theme in `src/styles/index.css`.
+  - Comprehensive automated test suite: 239 tests passing across 33 test files (0 failures).
 - **Acceptance Criteria**:
-  - Pressing `E` near an interactable object opens the appropriate interface (dialogue or virtual desktop).
-  - Pressing `Esc` closes desktop or exits dialogue cleanly, restoring 3D player movement controls.
-  - Virtual desktop windows can be opened, dragged, focused, and resized without glitching.
-  - Dialogue choices accurately dispatch commands and trigger narrative state updates.
-  - Objective Tracker displays active numbered tasks and updates reactively on simulation events.
-  - In Guided mode, target UI windows and buttons display subtle focus rings.
+  - [x] Approaching workstation desk in 3D world shows contextual prompt; pressing `E` launches virtual desktop.
+  - [x] Pressing `Escape` or clicking `Exit Desktop [Esc]` cleanly closes desktop and restores player movement and camera controls.
+  - [x] Typing into terminal never moves the 3D player avatar or rotates the camera.
+  - [x] Virtual desktop windows can be opened, dragged, minimized, restored, focused, and closed without off-screen clipping.
+  - [x] Single-instance application policy focuses existing window on duplicate launch request.
+  - [x] Terminal executes safe initial commands (`help`, `clear`, `whoami`, `date`, `status`, `history`).
+  - [x] Terminal `date` outputs exact M3 simulation calendar time (`08:00 AM, Monday, Oct 12, 2026`).
+  - [x] Terminal strictly rejects host breakout and shell operators (`|`, `;`, `&`, `>`, `<`) with friendly educational feedback.
+  - [x] 1-click quick command suggestion chips allow instant command insertion.
+  - [x] Terminal command history supports navigation via Up/Down arrow keys.
+  - [x] Objective Tracker displays active numbered tasks following the 8-part standard format with `[Repeat Instructions]` toggle.
+  - [x] Zero real host commands or external network traffic.
 - **Explicit Exclusions**:
   - Real OS shell integration (strictly synthetic terminal).
-  - Full suite of cyber tools (deferred to M5).
+  - Full suite of M5 cybersecurity tools (`nmap`, `curl`, `grep`, `siem-query` deferred to M5).
+  - Complete Aster Incident mission graph (deferred to M6).
 - **Required Validation**:
-  - UI component tests verifying window stacking order (z-index), drag constraints, and focus management.
-  - Dialogue tree integration test asserting choice branch resolution.
-  - Guidance HUD unit test asserting reactive step updates.
+  - Headless parser unit tests asserting valid, invalid, empty, case-insensitive, and shell-operator commands (16/16 tests passing).
+  - Window manager tests asserting open, close, minimize, restore, focus, and drag bounds (8/8 tests passing).
+  - Terminal app component tests asserting input submission, output rendering, clear, and history (8/8 tests passing).
+  - Desktop shell component tests asserting welcome banner, launch, taskbar, and escape key handling (7/7 tests passing).
+  - Workstation integration tests asserting proximity detection, desktop launch, and input isolation (6/6 tests passing).
+  - Live in-browser visual verification confirming workstation approach, desktop launch, terminal execution, and exit back to 3D world.
 - **Definition of Done**:
-  - Player can interact with NPCs in-world to talk, sit at desk to launch virtual desktop, interact with multiple windows smoothly, and see clear objective guidance.
+  - Player can approach workstation, press E to launch virtual desktop, manage multiple application windows, run safe simulated terminal commands reading M3 clock, navigate history, consult field guide, and return to the 3D world with all controls cleanly restored.
 
 ---
 

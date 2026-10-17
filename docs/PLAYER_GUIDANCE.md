@@ -47,6 +47,39 @@ Cyberlife makes 3D exploration intuitive for players who may never have played a
   - *What is "First-Person" vs. "Third-Person"?*: In Third-Person, you see your avatar from behind for full environmental awareness. In First-Person, you view the world through your character's eyes and move the mouse to look around.
   - *Safety Boundaries*: You cannot fall off the map or walk through buildings. Solid obstacles and district perimeter walls feature smooth wall-sliding collision resolution.
 
+### 1.4 Virtual Desktop & Simulated Terminal Guidance (Milestone 4)
+
+Cyberlife bridges 3D urban exploration with a fully simulated, beginner-friendly desktop computer experience. Players may have zero technical background, zero command-line experience, and no knowledge of terminal syntax:
+
+#### Approaching and Using a Workstation
+1. **Find an In-Game Workstation**: Approach the computer desk in Cedarline Services corporate lobby or inside your Broad Street apartment.
+2. **Contextual On-Screen Prompt**: When standing near the desk (within 2.2 meters), a glowing interaction prompt appears stating:
+   `Cedarline Workstation — access Cedarline corporate terminal [E]`
+3. **Press `E` to Transition**: Pressing `E` (or clicking the prompt button) transitions from 3D exploration into the CyberOS Virtual Desktop. 3D player movement is safely suspended so typing into the computer will not accidentally move your character.
+4. **Return Anytime**: Press the `Escape` key or click the `Exit Desktop [Esc]` button in the bottom-right taskbar tray at any time to return immediately to the 3D room with all controls restored.
+
+#### Beginner-First Desktop Environment
+- **Welcome Orientation Banner**: When the desktop opens for the first time, a prominent modal clearly explains:
+  - You are using a fictional computer inside Cyberlife.
+  - All operations run 100% inside an in-memory synthetic sandbox and can **never** affect your real computer.
+  - The Terminal window is ready for safe simulated commands.
+  - The Field Guide is available at any time for plain-English explanations.
+- **Taskbar & Application Launcher**: The bottom taskbar provides a Start menu (`CyberOS`), active window tabs, a live in-game simulation clock, a green `Simulated OS` host-isolation badge, and the `Exit Desktop` button.
+- **Discoverable Core Applications**:
+  - **CyberOS Terminal**: Safe command-line prompt for in-game investigation and system queries.
+  - **Field Guide**: A multi-tab reference book covering basics, command manual, security concepts (like comparing permissions to hotel room keys), and the strict safety guarantee.
+  - **System Info**: Read-only device specs confirming synthetic network status (`10.0.4.15`), host isolation, and current simulation date.
+  - **Notes & Activity**: IT security memo and session scratchpad for field notes.
+
+#### Demystifying the Command-Line Terminal
+- **Dismissible Beginner Hint**: The terminal opens with a prominent notification banner:
+  `💡 New to terminals? Click [help] above or type help and press Enter to see what you can do.`
+- **1-Click Quick Command Chips**: Directly above the prompt, interactive chips (`[help]`, `[whoami]`, `[date]`, `[status]`, `[history]`, `[clear]`) allow 1-click command execution without requiring manual typing.
+- **Command History Recall**: Pressing the `Up Arrow (↑)` and `Down Arrow (↓)` cycles through previously entered commands, making iteration effortless.
+- **Safe Recovery from Typos**: Typing an unrecognized command returns a constructive, non-judgmental suggestion:
+  `That command is not available in this simulated terminal. Type 'help' to see the commands you can use.`
+- **Piping & Shell Safety**: Typing Unix operators like `|`, `;`, or `>` produces an educational note explaining that Cyberlife provides an explicit simulated command registry rather than a raw operating-system shell.
+
 ---
 
 
