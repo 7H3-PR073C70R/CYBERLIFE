@@ -14,7 +14,7 @@ Cyberlife blends four distinct gameplay traditions into a unified browser experi
 - **Personal Life & Progression** *(inspired by The Sims)*: Managing personal finances, paying rent, balancing fatigue and focus, upgrading workstation hardware, and building professional reputation.
 - **Emerging AI-Era Threat Modeling**: Investigating simulated autonomous AI agents, excessive IAM privileges, indirect prompt injection, tool-calling hijackings, and data exposure.
 
-All gameplay runs locally in modern desktop web browsers without external game servers, live cloud connections, or third-party AI APIs.
+All gameplay runs locally in modern desktop web browsers without external game servers, live cloud connections, or third-party AI APIs. Crucially, **no prior cybersecurity knowledge or command-line experience is required**—an accessible, progressive player guidance system provides step-by-step instructions, visual evidence cues, and plain-language explanations throughout every mission (see [PLAYER_GUIDANCE.md](file:///Users/protector/Documents/projects/cyberlife/docs/PLAYER_GUIDANCE.md)).
 
 ---
 
@@ -25,8 +25,9 @@ All gameplay runs locally in modern desktop web browsers without external game s
 3. **Player-Directed Exploration and Personal Life**: Players seamlessly transition between walking neighborhood streets, talking with residents, sitting at workstations, and managing personal wellbeing.
 4. **AI-Native Simulated Threats**: Focuses on modern and emerging vulnerabilities—autonomous AI agents, prompt injection vectors, context poisoning, and privilege escalation.
 5. **Transferable Cybersecurity Learning**: Teaches real conceptual reasoning (how systems fail and how to defend them) without ever exposing or teaching weaponized exploit payloads.
-6. **Progression and Ownership**: Hard-won incident bounties translate into tangible hardware upgrades, higher consulting tiers, and an improved living environment.
-7. **Player Wellbeing and Privacy**: Strictly client-side execution with zero trackers, zero data harvesting, and no predatory monetization mechanics.
+6. **Accessible, Step-by-Step Player Guidance**: Designed for beginners with numbered actionable tasks, exact simulated command copy/paste, visual evidence highlights, contextual hints without penalties, and plain-language jargon explanations (see [PLAYER_GUIDANCE.md](file:///Users/protector/Documents/projects/cyberlife/docs/PLAYER_GUIDANCE.md)).
+7. **Progression and Ownership**: Hard-won incident bounties translate into tangible hardware upgrades, higher consulting tiers, and an improved living environment.
+8. **Player Wellbeing and Privacy**: Strictly client-side execution with zero trackers, zero data harvesting, and no predatory monetization mechanics.
 
 ---
 
@@ -154,6 +155,7 @@ cyberlife/
 │   ├── DEVELOPMENT_GUIDE.md            # Onboarding tutorials, how-tos, coding standards
 │   ├── SIMULATION_RULES.md             # Virtual network, IAM, prompt injection, and SIEM rules
 │   ├── ACCEPTANCE_CRITERIA.md          # Milestone verification matrices and quality gates
+│   ├── PLAYER_GUIDANCE.md              # Player assistance, instruction format, Aster walkthrough
 │   └── decisions/                      # Architecture Decision Records
 │       ├── ADR-001-simulation-boundary.md  # Virtual sandbox & host isolation
 │       ├── ADR-002-authoritative-state.md  # Headless engine & Command-Event CQRS
@@ -267,7 +269,7 @@ For full developer tutorials, consult [DEVELOPMENT_GUIDE.md](file:///Users/prote
 - **Completed Deliverables**:
   - Full workspace inspection and environment verification.
   - Project directory structure established across presentation, application, simulation, domain, content, and tests with boundary documentation.
-  - Core documentation suite created (`VISION.md`, `ARCHITECTURE.md`, `MILESTONES.md`, `DEVELOPMENT_GUIDE.md`, `SIMULATION_RULES.md`, `ACCEPTANCE_CRITERIA.md`).
+  - Core documentation suite created (`VISION.md`, `ARCHITECTURE.md`, `MILESTONES.md`, `DEVELOPMENT_GUIDE.md`, `SIMULATION_RULES.md`, `ACCEPTANCE_CRITERIA.md`, `PLAYER_GUIDANCE.md`).
   - Architectural Decision Records created (`ADR-001`, `ADR-002`, `ADR-003`).
   - Governance and version control configurations (`CONTRIBUTING.md`, `.gitignore`, `.editorconfig`).
 - **Next Milestone**: **Milestone 1 — Bootable Application Foundation** (Initializing `package.json`, TypeScript, Vite, React, Three.js shell, and automated test runners).

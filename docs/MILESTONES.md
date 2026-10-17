@@ -32,13 +32,14 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 - **Scope**:
   - Workspace inspection and environment verification.
   - Project directory layout across presentation, application, simulation, domain, content, and tests.
-  - Core project documentation (`README.md`, `CONTRIBUTING.md`, `docs/VISION.md`, `docs/ARCHITECTURE.md`, `docs/MILESTONES.md`, `docs/DEVELOPMENT_GUIDE.md`, `docs/SIMULATION_RULES.md`, `docs/ACCEPTANCE_CRITERIA.md`, and initial ADRs).
+  - Core project documentation (`README.md`, `CONTRIBUTING.md`, `docs/VISION.md`, `docs/ARCHITECTURE.md`, `docs/MILESTONES.md`, `docs/DEVELOPMENT_GUIDE.md`, `docs/SIMULATION_RULES.md`, `docs/ACCEPTANCE_CRITERIA.md`, `docs/PLAYER_GUIDANCE.md`, and initial ADRs).
   - Version control configurations (`.gitignore`, `.editorconfig`).
 - **Dependencies**: None.
 - **Deliverables**:
   - Validated repository structure with boundary documentation.
   - Root `README.md` containing all thirteen required project specifications.
   - Architectural specifications detailing layer isolation, command-event lifecycles, and headless simulation boundaries.
+  - Player guidance specification ([PLAYER_GUIDANCE.md](file:///Users/protector/Documents/projects/cyberlife/docs/PLAYER_GUIDANCE.md)) defining 8-part instruction format, 3 assistance tiers, terminal teaching contract, and Aster walkthrough.
   - Milestone roadmap with explicit gating and verification criteria.
   - Initial Architecture Decision Records (ADR-001, ADR-002, ADR-003).
 - **Acceptance Criteria**:
@@ -46,16 +47,18 @@ This document establishes the official sequential milestone roadmap for Cyberlif
   - [x] All required directories created with boundary documentation explaining responsibilities and constraints.
   - [x] Non-negotiable simulation safety boundary codified in documentation and ADRs.
   - [x] Architectural separation between Three.js rendering, React UI, and authoritative headless simulation documented.
+  - [x] Player guidance contract and accessibility standards fully documented without premature M0 runtime code.
   - [x] Milestone roadmap established from M0 to M11 with explicit Definition of Done.
 - **Explicit Exclusions**:
   - Application runtime code (Vite, React components, Three.js canvas setup deferred to M1).
+  - Runtime implementation of tutorial or guidance components (deferred to M4, M6, M10).
   - 3D asset imports or graphics shaders.
   - Live database integrations.
 - **Required Validation**:
   - File presence check for all documented specifications and directory boundaries.
   - Verification of `.gitignore` preventing accidental commits of secrets and dependencies.
 - **Definition of Done**:
-  - M0 documentation and repository structure committed to the `main` branch. Developer review confirms complete clarity for M1 kickoff.
+  - M0 documentation, player guidance contracts, and repository structure committed to the `main` branch. Developer review confirms complete clarity for M1 kickoff.
 
 ---
 
@@ -155,71 +158,79 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 
 ## M4 — Interaction System & Hybrid Desktop
 
-- **Purpose**: Implement the dual-mode interaction layer: in-world interaction prompts, branching dialogue interface, and the high-fidelity virtual desktop with window management.
+- **Purpose**: Implement the dual-mode interaction layer: in-world interaction prompts, branching dialogue interface, the high-fidelity virtual desktop with window management, and foundational player guidance surfaces.
 - **Scope**:
   - World-space to screen-space interaction prompt rendering.
   - Authoritative dialogue execution engine supporting branching dialogue trees, player choices, and conditional unlocks.
   - Virtual desktop environment: draggable, resizable windows, taskbar, dock, notification tray.
   - Virtual terminal window shell with command input buffer, history, and ANSI text rendering.
+  - Reusable player guidance surfaces: Objective Tracker HUD, in-world waypoint navigation, desktop visual focus indicators, and 1-click terminal command copy/paste buttons (see [PLAYER_GUIDANCE.md](file:///Users/protector/Documents/projects/cyberlife/docs/PLAYER_GUIDANCE.md)).
   - Quick-access mobile overlay HUD for notifications and field notes.
 - **Dependencies**: M2, M3.
 - **Deliverables**:
   - `InteractionManager` linking spatial triggers to UI presentation.
   - `DialogueBox` React component supporting branching dialogue with NPC portrait and choice list.
   - `DesktopShell` window manager supporting minimize, maximize, drag, focus, and close.
-  - `TerminalApp` component capable of receiving keyboard input and displaying synthetic stream output.
+  - `TerminalApp` component capable of receiving keyboard input, displaying synthetic stream output, and supporting 1-click command paste.
+  - `ObjectiveTrackerHUD` component rendering 8-part task steps with `[Repeat Instructions]` button.
 - **Acceptance Criteria**:
   - Pressing `E` near an interactable object opens the appropriate interface (dialogue or virtual desktop).
   - Pressing `Esc` closes desktop or exits dialogue cleanly, restoring 3D player movement controls.
   - Virtual desktop windows can be opened, dragged, focused, and resized without glitching.
   - Dialogue choices accurately dispatch commands and trigger narrative state updates.
+  - Objective Tracker displays active numbered tasks and updates reactively on simulation events.
+  - In Guided mode, target UI windows and buttons display subtle focus rings.
 - **Explicit Exclusions**:
   - Real OS shell integration (strictly synthetic terminal).
   - Full suite of cyber tools (deferred to M5).
 - **Required Validation**:
   - UI component tests verifying window stacking order (z-index), drag constraints, and focus management.
   - Dialogue tree integration test asserting choice branch resolution.
+  - Guidance HUD unit test asserting reactive step updates.
 - **Definition of Done**:
-  - Player can interact with NPCs in-world to talk, sit at desk to launch virtual desktop, and interact with multiple windows smoothly.
+  - Player can interact with NPCs in-world to talk, sit at desk to launch virtual desktop, interact with multiple windows smoothly, and see clear objective guidance.
 
 ---
 
 ## M5 — Cybersecurity Simulation & Tools
 
-- **Purpose**: Implement the simulated cyber ecosystem: virtual networks, identities, access control, SIEM logs, simulated AI agent execution, and command-line investigation tools.
+- **Purpose**: Implement the simulated cyber ecosystem: virtual networks, identities, access control, SIEM logs, simulated AI agent execution, and command-line investigation tools designed with accessible teaching contracts.
 - **Scope**:
   - Virtual network graph (IP addressing, subnets, routers, DNS, firewall rules).
   - Synthetic IAM (service accounts, user roles, API tokens, permission scopes).
   - Synthetic SIEM engine generating structured event logs (authentication, API calls, error spikes).
   - Simulated AI Agent model ("Aster"): system prompt template, tool-calling permissions, conversation log buffer.
   - Virtual terminal utilities: `nmap`, `curl`, `grep`, `cat`, `ssh`, `token-audit`, `siem-query`.
+  - Terminal teaching contract: understandable output, comprehensive `--help` flags, and plain-language mistake recovery suggestions.
 - **Dependencies**: M3, M4.
 - **Deliverables**:
   - Cyber simulation subsystem in `src/simulation/cyber/`.
-  - Synthetic terminal command evaluator with command allow-list parser.
+  - Synthetic terminal command evaluator with command allow-list parser and mistake-recovery suggestion engine.
   - Fictional Cedarline Services network and telemetry fixture data.
-  - Interactive terminal tools supporting search, log filtering, and token inspection.
+  - Interactive terminal tools supporting search, log filtering, and token inspection with clear tabular output.
 - **Acceptance Criteria**:
   - All terminal commands operate exclusively on simulated data structures; zero host OS or external network calls.
   - Terminal commands produce consistent, reproducible output matching simulated network state.
+  - Every tool supports a standard `--help` flag with clear explanations and example usage.
+  - Entering an unrecognized command or typo provides an immediate constructive suggestion (e.g. *"Did you mean: token-audit?"*).
   - Simulated AI agent displays observable audit trail of tool invocations and token consumption.
-  - Inputting invalid or unknown commands outputs standard Unix-style error messages without crashing.
 - **Explicit Exclusions**:
   - Live LLM API calls (all AI behaviors are model-simulated deterministically).
   - Actual weaponized exploit payloads or real network penetration capabilities.
 - **Required Validation**:
-  - Unit tests for every terminal utility verifying parameter parsing and output generation.
+  - Unit tests for every terminal utility verifying parameter parsing, output generation, and `--help` text.
   - Security audit test verifying terminal evaluator rejects dangerous shell escape sequences.
 - **Definition of Done**:
-  - Player can open in-game terminal, query simulated servers, read logs, inspect tokens, and observe AI agent behavior safely.
+  - Player can open in-game terminal, query simulated servers, read logs, inspect tokens, and observe AI agent behavior safely with clear explanations.
 
 ---
 
 ## M6 — Aster Incident Mission
 
-- **Purpose**: Build and integrate the complete end-to-end investigation mission: the Aster Incident at Cedarline Services.
+- **Purpose**: Build and integrate the complete end-to-end investigation mission: the Aster Incident at Cedarline Services, delivered as a fully guided, accessible experience.
 - **Scope**:
   - End-to-end incident lifecycle: Alert -> Triage -> Evidence Preservation -> Root Cause Analysis -> Containment -> Remediation -> Validation -> Reporting -> Reward.
+  - 10-step guided walkthrough implemented in accordance with [PLAYER_GUIDANCE.md](file:///Users/protector/Documents/projects/cyberlife/docs/PLAYER_GUIDANCE.md).
   - Evidence collection system: capturing log hashes, exporting token audit records, recording prompt injection vectors.
   - Containment action: revoking compromised IAM access token.
   - Remediation action: tightening AI agent tool permissions and updating prompt validation filters.
@@ -227,13 +238,14 @@ This document establishes the official sequential milestone roadmap for Cyberlif
   - Structured Incident Report submission UI with automated grading and idempotent bounty delivery.
 - **Dependencies**: M4, M5.
 - **Deliverables**:
-  - Mission definition file `public/content/missions/aster-incident.json`.
-  - Evidence Locker UI in virtual desktop.
+  - Mission definition file `public/content/missions/aster-incident.json` containing 8-part task definitions for all 10 stages.
+  - Evidence Locker UI in virtual desktop with 1-click SHA-256 hash generation and verification.
   - Incident Containment & Remediation terminal actions.
   - Incident Report authoring application and submission evaluation logic.
 - **Acceptance Criteria**:
-  - Player can complete all 10 stages of the Aster Incident from initial NPC dialogue to report submission.
-  - Evidence hashes must match synthetic artifact integrity checks.
+  - A first-time player with zero technical background can successfully complete all 10 stages of the Aster Incident using guided assistance.
+  - Every step provides explicit instructions: goal, why it matters, where to go, what to do, what to look for, and how to confirm success.
+  - Evidence hashes match synthetic artifact integrity checks.
   - Containment action correctly isolates the compromised resource in the simulation state.
   - Report grading evaluates factual accuracy of player conclusions and issues appropriate bounty payout.
   - Re-submitting or reloading after completion does not grant duplicate payouts (idempotency).
@@ -241,6 +253,7 @@ This document establishes the official sequential milestone roadmap for Cyberlif
   - Additional enterprise missions (focused exclusively on perfecting Aster Incident vertical slice).
 - **Required Validation**:
   - End-to-end automated integration test walking through the entire mission from command line to payout.
+  - Non-technical user walkthrough validation verifying step clarity and mistake recovery.
 - **Definition of Done**:
   - The Aster Incident is 100% playable, challenging, educational, and rewards are cleanly awarded.
 
@@ -332,27 +345,34 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 
 ## M10 — Onboarding & Learning
 
-- **Purpose**: Create an intuitive player onboarding flow, interactive tutorial, in-game Field Guide, and a secondary transfer-of-learning scenario.
+- **Purpose**: Create an intuitive player onboarding flow, interactive tutorial, configurable assistance tiers, persistent Mission Journal, in-game Field Guide, and a secondary transfer-of-learning scenario.
 - **Scope**:
   - First-time user tutorial introducing 3D movement, NPC interaction, and virtual desktop navigation.
+  - Three configurable assistance tiers: `Guided`, `Standard`, and `Independent` (see [PLAYER_GUIDANCE.md](file:///Users/protector/Documents/projects/cyberlife/docs/PLAYER_GUIDANCE.md)).
+  - Persistent Mission Journal retaining discovered clues, evidence hashes, and plain-language progress summaries.
   - Interactive "Field Guide" desktop application explaining core cybersecurity concepts (IAM, least privilege, prompt injection, evidence hashing).
-  - Contextual investigative hints triggered when player is stuck for extended durations.
+  - Contextual progressive hints (Level 1 Nudge -> Level 2 Explicit fallback) without reward penalties.
   - Second mini-scenario ("The Vector Injection") to test whether the player can transfer learning from the Aster Incident to a new prompt-injection case.
 - **Dependencies**: M6, M8, M9.
 - **Deliverables**:
   - Tutorial overlay and onboarding quest tracker.
+  - Assistance tier selector in game settings and HUD.
+  - `MissionJournalApp` desktop application retaining discovered clues and narrative theories.
   - `FieldGuideApp` desktop application with searchable reference articles.
   - Transfer scenario definition `public/content/missions/vector-injection.json`.
 - **Acceptance Criteria**:
   - New players can complete the initial orientation in under 5 minutes without external instructions.
+  - Players can toggle between `Guided`, `Standard`, and `Independent` modes at any time without losing progress or rewards.
+  - Using hints or playing on `Guided` mode never reduces mission rewards or marks completions as inferior.
   - Field Guide provides accurate, pedagogical explanations of concepts encountered in gameplay.
-  - Player successfully transfers knowledge of prompt injection to identify and remediate the secondary scenario.
+  - Player successfully transfers knowledge of prompt injection to identify and remediate the secondary scenario without jargon memorization.
 - **Explicit Exclusions**:
   - Unskippable, locked-input rail tutorials.
 - **Required Validation**:
   - User testing walkthrough verifying all tutorial prompts trigger and dismiss correctly.
+  - Verification that toggling assistance tiers does not alter simulation state or financial balances.
 - **Definition of Done**:
-  - Onboarding is frictionless; educational concepts are clearly documented in-game; transfer scenario validates learning retention.
+  - Onboarding is frictionless; educational concepts are clearly documented in-game; assistance tiers and journal work seamlessly; transfer scenario validates learning retention.
 
 ---
 

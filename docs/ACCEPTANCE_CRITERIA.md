@@ -21,6 +21,18 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 4. **Automated Testing**:
    - All unit and integration tests passing.
    - Deterministic test execution without race conditions or wall-clock dependencies.
+5. **Player Guidance & Accessibility Baseline** (see [PLAYER_GUIDANCE.md](file:///Users/protector/Documents/projects/cyberlife/docs/PLAYER_GUIDANCE.md)):
+   - A non-technical first-time player can understand every mission objective without prior cybersecurity knowledge.
+   - Every required action has explicit, actionable instructions following the standard 8-part format.
+   - Every required command is supported by the simulated terminal and documented in context with 1-click paste.
+   - Players always know where to act, what to observe, and how to confirm success.
+   - Technical terminology is explained in plain language at the point of use.
+   - Invalid actions produce understandable, recoverable feedback.
+   - Contextual hints are available on demand without restarting missions and without reducing rewards.
+   - Players can replay instructions and review discovered evidence via the Mission Journal.
+   - Guidance does not contradict actual simulation state or expected output.
+   - Independent play is available without withholding essential mission information.
+   - Core progression never depends on external AI or an internet connection.
 
 ---
 
@@ -30,7 +42,7 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 - [x] **Repository Initialized**: Git tracking enabled with clean initial commit.
 - [x] **Directory Structure**: All foundational directories created across presentation, application, simulation, domain, content, and tests.
 - [x] **Boundary Documentation**: Architectural boundaries and layer responsibilities documented in directory READMEs.
-- [x] **Root README**: Comprehensive README covering overview, pillars, stack, safety boundary, Aster Incident, architecture, repository structure, prerequisites, workflow, status, roadmap, and contributing standards.
+- [x] **Root README**: Comprehensive README covering overview, pillars, stack, safety boundary, Aster Incident, architecture, repository structure, prerequisites, workflow, status, roadmap, player guidance, and contributing standards.
 - [x] **Core Docs**: Complete set of initial documents created:
   - `docs/VISION.md`
   - `docs/ARCHITECTURE.md`
@@ -38,10 +50,12 @@ Every milestone deliverable must satisfy the following baseline quality gates:
   - `docs/DEVELOPMENT_GUIDE.md`
   - `docs/SIMULATION_RULES.md`
   - `docs/ACCEPTANCE_CRITERIA.md`
+  - `docs/PLAYER_GUIDANCE.md`
   - `docs/decisions/ADR-001-simulation-boundary.md`
   - `docs/decisions/ADR-002-authoritative-state.md`
   - `docs/decisions/ADR-003-persistence-strategy.md`
 - [x] **Safety Boundary Enshrined**: Explicit prohibition of real-world command execution and network scanning codified.
+- [x] **Player Guidance Contract Established**: Comprehensive player guidance specification ([PLAYER_GUIDANCE.md](file:///Users/protector/Documents/projects/cyberlife/docs/PLAYER_GUIDANCE.md)) created and cross-referenced, defining 8-part instruction format, 3 assistance tiers, terminal teaching contract, and Aster walkthrough without premature gameplay implementation in M0.
 
 ---
 
@@ -81,6 +95,9 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 - [ ] Sitting at the workstation desk opens the virtual desktop environment.
 - [ ] Virtual desktop window manager supports opening, dragging, minimizing, maximizing, focusing, and closing windows.
 - [ ] Terminal application window renders text prompt, captures keyboard input, and maintains command history.
+- [ ] `ObjectiveTrackerHUD` displays active numbered tasks following the 8-part standard format with `[Repeat Instructions]` button.
+- [ ] Virtual terminal includes 1-click `[Insert Command]` button allowing instant copy/paste of guidance commands.
+- [ ] In Guided mode, target UI windows and buttons display subtle animated focus rings.
 
 ---
 
@@ -88,6 +105,8 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 - [ ] Virtual network graph models Cedarline subnets, servers, and DNS records.
 - [ ] In-game terminal executes allow-listed utilities: `nmap`, `curl`, `grep`, `cat`, `ssh`, `siem-query`.
 - [ ] Inputting non-allowed commands displays simulated Unix command-not-found error without host breakout.
+- [ ] Every simulated tool provides comprehensive `--help` documentation explaining parameters and expected outputs.
+- [ ] Command syntax errors or typos provide constructive recovery suggestions (e.g., *"Did you mean: token-audit?"*).
 - [ ] Simulated AI agent "Aster" maintains observable execution logs and tool-calling audit trail.
 - [ ] SIEM log queries return structured synthetic events matching simulated network events.
 
@@ -95,6 +114,8 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 
 ### Milestone M6: Aster Incident Mission
 - [ ] Complete 10-step mission workflow playable from trigger to bounty payout.
+- [ ] A non-technical player can complete all 10 steps of the Aster Incident using guided assistance.
+- [ ] Every step provides explicit instructions: goal, why it matters, where to go, what to do, what to look for, and how to confirm success.
 - [ ] Evidence preservation system calculates and stores verifiable SHA-256 hashes of logs.
 - [ ] Revoking compromised token terminates unauthorized agent database access in simulation.
 - [ ] Tightening IAM policies and enabling prompt injection guards successfully remediates the incident.
@@ -130,9 +151,11 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 
 ### Milestone M10: Onboarding & Learning
 - [ ] First-time player tutorial smoothly guides movement, interaction, and desktop usage in $<5$ minutes.
+- [ ] Players can toggle between `Guided`, `Standard`, and `Independent` assistance tiers without penalty.
+- [ ] Persistent Mission Journal retains discovered clues, hashes, and narrative theories across sessions.
+- [ ] Contextual 2-tier hint engine (Nudge -> Explicit Fallback) provides guidance without deducting rewards or marking completions inferior.
 - [ ] In-game Field Guide provides clear explanations of IAM, least privilege, prompt injection, and log auditing.
-- [ ] Contextual hint engine offers progressive guidance when player is idle or stuck.
-- [ ] Secondary transfer scenario ("The Vector Injection") verifies that player can apply prompt-injection defense skills to a new context.
+- [ ] Secondary transfer scenario ("The Vector Injection") verifies that player can apply prompt-injection defense skills to a new context without jargon memorization.
 
 ---
 

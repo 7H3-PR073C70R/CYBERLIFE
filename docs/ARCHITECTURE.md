@@ -195,3 +195,39 @@ Every player action moves through a standardized lifecycle:
 | **Presentation** | React HUD, Window Manager, Dialogue UI | Component / Visual | Vitest + Testing Library | React, Tailwind/CSS |
 | **Presentation** | Three.js rendering, camera switching, mesh loading | Rendering Smoke | Vitest + Mock Canvas | Three.js |
 | **Full Game** | End-to-end Aster Incident investigation & completion | E2E | Playwright | Full Browser Environment |
+
+---
+
+## 7. Player Guidance & Accessible Task Assistance Architecture
+
+To support players with zero technical or command-line background (see [PLAYER_GUIDANCE.md](file:///Users/protector/Documents/projects/cyberlife/docs/PLAYER_GUIDANCE.md)), Cyberlife integrates an accessible guidance architecture across all layers without violating Clean Architecture:
+
+```
++-----------------------------------------------------------------------------------------+
+| PRESENTATION LAYER                                                                      |
+| - Objective Tracker HUD: Numbered micro-tasks, progress bars, [Repeat Instructions]     |
+| - Terminal Helper: 1-click [Insert Command] button & syntax autocomplete                |
+| - UI Focus System: Unobtrusive pulse rings on target windows/buttons in Guided mode     |
+| - 3D Waypoint Markers: Proximity outlines and navigation beacons in the physical world   |
++-------------------------------------------▲---------------------------------------------+
+                                            │ Projections & User Actions
++-------------------------------------------▼---------------------------------------------+
+| APPLICATION LAYER                                                                       |
+| - GuidanceCoordinator: Manages current 8-part task step and active AssistanceTier       |
+| - HintProvider: Evaluates idle timeouts/mistakes to offer 2-tier hints (Nudge/Explicit) |
+| - MissionJournalService: Persists discovered clues, hashes, and plain-language summaries|
++-------------------------------------------▲---------------------------------------------+
+                                            │ Listens to Domain Events
++-------------------------------------------▼---------------------------------------------+
+| SIMULATION ENGINE & DOMAIN CORE                                                         |
+| - Evaluates authoritative objective criteria (e.g. was token tok_01 actually revoked?)  |
+| - Emits `MissionObjectiveAchievedEvent` upon validated state changes                    |
+| - Invariant: Guidance helpers dispatch standard Commands; they never bypass domain rules|
++-----------------------------------------------------------------------------------------+
+```
+
+### Architectural Guarantees for Guidance
+1. **Unidirectional Guidance Flow**: Guidance state is a pure projection of the authoritative simulation state. If the simulation state indicates an incident is not contained, the guidance system cannot falsely display it as complete.
+2. **Deterministic Mistake Recovery**: When an invalid command is entered into the virtual terminal, the application layer matches the error against known common beginner mistakes and returns a constructive recovery hint without crashing or penalizing the player.
+3. **Assistance Tier Decoupling**: Switching between `Guided`, `Standard`, and `Independent` modes adjusts UI projections and hint visibility only; it has zero impact on simulation rules, mission rewards, or persistent state.
+
