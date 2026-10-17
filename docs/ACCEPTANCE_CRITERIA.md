@@ -59,15 +59,15 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 
 ---
 
-### Milestone M1: Bootable Application Foundation
-- [ ] `package.json` created with verified dependencies (React, Three.js, Vite, TypeScript, Vitest, Zod).
-- [ ] `vite.config.ts` configured and serving app locally with HMR.
-- [ ] `npm run dev` boots the application with zero terminal errors.
-- [ ] `npm run build` generates optimized production bundle in `dist/`.
-- [ ] `npm run typecheck` passes with zero diagnostics.
-- [ ] `npm run lint` passes with zero warnings.
-- [ ] Three.js WebGL canvas mounts and renders animated test geometry at 60 FPS.
-- [ ] Vitest test runner runs headless test suite and passes.
+### Milestone M1: Bootable Application Foundation *(Completed)*
+- [x] `package.json` created with verified dependencies (React, Three.js, Vite, TypeScript, Vitest, Zod).
+- [x] `vite.config.ts` configured and serving app locally with HMR.
+- [x] `npm run dev` boots the application with zero terminal errors.
+- [x] `npm run build` generates optimized production bundle in `dist/`.
+- [x] `npm run typecheck` passes with zero diagnostics.
+- [x] `npm run lint` passes with zero warnings.
+- [x] Three.js WebGL canvas mounts and renders animated test geometry at 60 FPS.
+- [x] Vitest test runner runs headless test suite and passes.
 
 ---
 

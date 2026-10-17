@@ -37,14 +37,14 @@ The planned technological baseline for Cyberlife has been architected for strict
 
 | Technology | Layer | Status | Responsibility |
 |---|---|---|---|
-| **TypeScript** | Universal | Baseline Architecture Defined | Strict type-safety, interface contracts, domain value objects |
-| **Three.js** | Presentation | Planned (M1–M2) | 3D rendering, scene graph, cameras (1st/3rd person), spatial triggers |
-| **React** | Presentation | Planned (M1, M4) | Game HUD, dialogue panels, virtual desktop window manager, virtual apps |
-| **Vite** | Build & Dev Tooling | Planned (M1) | Fast HMR dev server and optimized production bundling |
-| **Vitest** | Testing | Planned (M1, M3) | Fast, headless unit & integration test runner for simulation & domain |
-| **Playwright** | Testing | Planned (M1, M11) | End-to-end browser regression testing across Chromium, Firefox, WebKit |
-| **Zod** | Validation & Persistence | Planned (M1, M9) | Runtime schema validation for content, commands, and save game states |
-| **IndexedDB** | Persistence | Planned (M1, M9) | Non-blocking, versioned local browser storage with schema migrations |
+| **TypeScript** | Universal | Implemented & Verified (M1) | Strict type-safety, strict compiler checks, interface contracts |
+| **Three.js** | Presentation | Implemented & Verified (M1) | 3D rendering, canvas management, camera projection, animation loop |
+| **React** | Presentation | Implemented & Verified (M1) | Game HUD, status overlays, accessible guidance panels, shell composition |
+| **Vite** | Build & Dev Tooling | Implemented & Verified (M1) | Fast HMR dev server, optimized production bundling, code-splitting |
+| **Vitest** | Testing | Implemented & Verified (M1) | Fast, headless unit & component test runner with V8 coverage |
+| **Zod** | Validation & Persistence | Planned (M3, M9) | Runtime schema validation for content, commands, and save game states |
+| **Playwright** | Testing | Planned (M11) | Cross-browser end-to-end regression testing across Chromium, Firefox, WebKit |
+| **IndexedDB** | Persistence | Planned (M9) | Non-blocking, versioned local browser storage with schema migrations |
 
 > **Verification Note**: At Milestone 0, the repository structure, documentation, and architectural contracts are established. Runtime packages (`node_modules`) and build configurations will be installed and verified in Milestone 1.
 
@@ -218,32 +218,36 @@ To develop on Cyberlife, ensure your local environment meets the following requi
 
 ## 9. Installation and Startup
 
-### Current Status (Milestone 0)
-At Milestone 0, the repository structure and architectural documentation have been established. Project manifests (`package.json`) and runtime dependencies will be configured in Milestone 1.
-
 ```bash
 # 1. Clone the repository
-git clone https://github.com/organization/cyberlife.git
+git clone https://github.com/7H3-PR073C70R/CYBERLIFE.git
 cd cyberlife
 
-# 2. Inspect Milestone 0 documentation and structure
-ls -la docs/
+# 2. Install dependencies
+npm install
+
+# 3. Start local development server
+npm run dev
 ```
 
-### Planned Scripts (Configured in Milestone 1)
-The following scripts represent the standardized npm script contract that will be configured and verified during Milestone 1:
+### Verified Development & Quality Commands
+
+All commands below are configured and validated:
 
 | Command | Status | Description |
 |---|---|---|
-| `npm install` | *Planned (M1)* | Install project dependencies |
-| `npm run dev` | *Planned (M1)* | Start Vite local development server with HMR |
-| `npm run build` | *Planned (M1)* | Compile production bundle into `dist/` |
-| `npm run preview` | *Planned (M1)* | Locally preview production build |
-| `npm run typecheck` | *Planned (M1)* | Run strict TypeScript compiler verification (`tsc --noEmit`) |
-| `npm run lint` | *Planned (M1)* | Run ESLint and code style checks |
-| `npm run test` | *Planned (M1)* | Run Vitest unit and headless simulation tests |
-| `npm run test:coverage` | *Planned (M1)* | Generate test code coverage report |
-| `npm run test:e2e` | *Planned (M1)* | Run Playwright end-to-end browser test suite |
+| `npm install` | **Verified** | Install pinned dependencies |
+| `npm run dev` | **Verified** | Start Vite local development server with HMR at `http://localhost:5173` |
+| `npm run build` | **Verified** | Compile production bundle into `dist/` with chunk splitting |
+| `npm run preview` | **Verified** | Locally preview production build |
+| `npm run typecheck` | **Verified** | Run strict TypeScript compiler verification (`tsc --noEmit`) |
+| `npm run lint` | **Verified** | Run ESLint with `@typescript-eslint` and `react-hooks` |
+| `npm run lint:fix` | **Verified** | Auto-fix supported linter issues |
+| `npm run format` | **Verified** | Format codebase using Prettier |
+| `npm run format:check` | **Verified** | Verify formatting compliance with Prettier |
+| `npm run test` | **Verified** | Run Vitest unit, component, and lifecycle tests |
+| `npm run test:watch` | **Verified** | Run Vitest in interactive watch mode |
+| `npm run test:coverage` | **Verified** | Generate V8 test code coverage report |
 
 ---
 
@@ -265,24 +269,32 @@ For full developer tutorials, consult [DEVELOPMENT_GUIDE.md](file:///Users/prote
 
 ## 11. Current Status
 
-- **Active Milestone**: **Milestone 0 — Repository Foundation & Documentation** (Completed).
+- **Active Milestone**: **Milestone 1 — Bootable Application Foundation** (Completed and Verified).
 - **Completed Deliverables**:
-  - Full workspace inspection and environment verification.
-  - Project directory structure established across presentation, application, simulation, domain, content, and tests with boundary documentation.
-  - Core documentation suite created (`VISION.md`, `ARCHITECTURE.md`, `MILESTONES.md`, `DEVELOPMENT_GUIDE.md`, `SIMULATION_RULES.md`, `ACCEPTANCE_CRITERIA.md`, `PLAYER_GUIDANCE.md`).
-  - Architectural Decision Records created (`ADR-001`, `ADR-002`, `ADR-003`).
-  - Governance and version control configurations (`CONTRIBUTING.md`, `.gitignore`, `.editorconfig`).
-- **Next Milestone**: **Milestone 1 — Bootable Application Foundation** (Initializing `package.json`, TypeScript, Vite, React, Three.js shell, and automated test runners).
+  - Full workspace inspection and M0 architectural verification.
+  - Pinned `package.json` with zero vulnerabilities (`npm audit`).
+  - Strict TypeScript configuration (`tsconfig.json`) passing with zero diagnostics.
+  - Modern ESLint 9 configuration with TypeScript and React Hooks support passing with zero warnings.
+  - Prettier formatting with `.editorconfig` parity passing.
+  - Three.js WebGL rendering pipeline (`WorldSceneManager`) with isolated lifecycle, animation loop, resize handling, and complete resource disposal.
+  - Minimal responsive application shell (`App`, `WorldViewport`, `HUDShell`) with accessible guidance placeholders, WCAG AA contrast, and graceful WebGL fallback.
+  - Vitest test suite with 100% passing tests and high coverage across presentation components and scene lifecycle.
+  - Real browser smoke testing verified with automated screenshots and video recordings.
+- **Explicit M1 Exclusions (Deferred to M2+)**:
+  - 3D neighborhood geometry, collisions, and character controller (deferred to M2).
+  - Headless authoritative simulation engine (deferred to M3).
+  - Virtual desktop, terminal emulator, and dialogue UI (deferred to M4).
+- **Next Milestone**: **Milestone 2 — 3D Neighborhood & Player Controller** (Walkable urban neighborhood, collision boundaries, and 1st/3rd person camera system).
 
 ---
 
 ## 12. Milestone Roadmap Summary
 
-| Milestone | Title | Focus Area |
-|---|---|---|
-| **M0** | Repository Foundation & Documentation | Architecture, directory layout, ADRs, documentation *(Current)* |
-| **M1** | Bootable Application Foundation | Vite, React, Three.js canvas mount, TypeScript strictness, CI tests |
-| **M2** | 3D Neighborhood & Player Controller | Walkable 3D city block, collision, 1st/3rd person camera, triggers |
+| Milestone | Title | Focus Area | Status |
+|---|---|---|---|
+| **M0** | Repository Foundation & Documentation | Architecture, directory layout, ADRs, documentation | **Completed** |
+| **M1** | Bootable Application Foundation | Vite, React, Three.js canvas mount, TypeScript strictness, CI tests | **Completed** |
+| **M2** | 3D Neighborhood & Player Controller | Walkable 3D city block, collision, 1st/3rd person camera, triggers | *Next* |
 | **M3** | Simulation Engine & State Management | Headless authoritative state machine, CommandBus, pure reducers |
 | **M4** | Interaction System & Hybrid Desktop | Interaction prompts, branching dialogue UI, virtual desktop shell |
 | **M5** | Cybersecurity Simulation & Tools | Virtual network, IAM, SIEM logs, simulated AI agent, terminal tools |
