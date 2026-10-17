@@ -97,12 +97,15 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 
 ---
 
-### Milestone M3: Simulation Engine & State Management
-- [ ] Authoritative `SimulationEngine` executes deterministically in headless Node.js / Vitest.
-- [ ] In-game clock ticks and advances game time correctly.
-- [ ] State mutations occur strictly through validated `Command` dispatch.
-- [ ] `DomainEvent` emissions notify subscribers of state transitions.
-- [ ] Unit test suite achieves $\ge 90\%$ branch coverage across core reducers.
+### Milestone M3: Simulation Engine & State Management *(Completed)*
+- [x] Authoritative `SimulationEngine` executes deterministically in headless Node.js / Vitest with 0 DOM/Three.js dependencies.
+- [x] In-game clock ticks and advances game time correctly; calendar maps elapsed simulation seconds to civil date/time (`08:00 AM, Monday, Oct 12, 2026`).
+- [x] State mutations occur strictly through validated `Command` dispatch; rejected commands leave state untouched; accepted no-op commands preserve revision.
+- [x] `DomainEvent` emissions notify subscribers of state transitions; errors in listeners are isolated and cannot corrupt state.
+- [x] Unit test suite achieves $\ge 90\%$ branch coverage across core reducers (`commandHandler.ts` at 93.18%, `invariants.ts` at 100%, `playerSystem.ts` at 96.29%, `inventorySystem.ts` at 96.29%, `worldFlagsSystem.ts` at 100%).
+- [x] Non-negative integer currency (`Money` in kobo) prevents floating-point inaccuracy across all financial calculations.
+- [x] Duration timers execute deterministically without `setTimeout`.
+- [x] React integration (`SimulationProvider`, `useSimulation`, `useOptionalSimulation`) updates HUD and dev simulation drawer without creating duplicate engines or render loops.
 
 ---
 

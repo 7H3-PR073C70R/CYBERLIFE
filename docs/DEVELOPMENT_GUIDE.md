@@ -250,6 +250,80 @@ Movement and collision algorithms are 100% decoupled from WebGL:
 
 ---
 
+### 3.8 How to Add a New Simulation Command, Event, and Invariant Rule
+
+The simulation layer is 100% headless and authoritative. To extend it:
+
+#### Step 1: Define the Command in `src/simulation/commands/types.ts`
+Add the command interface to `SimulationCommand`:
+```typescript
+export interface MyNewCustomCommand {
+  readonly type: 'MyNewCustomCommand';
+  readonly targetId: string;
+  readonly amount: number;
+}
+
+export type SimulationCommand =
+  | AdvanceSimulationTimeCommand
+  // ... existing commands
+  | MyNewCustomCommand;
+```
+
+#### Step 2: Define Associated Domain Events in `src/simulation/events/types.ts`
+```typescript
+export interface MyCustomEventPayload {
+  readonly targetId: string;
+  readonly newAmount: number;
+}
+
+export type SimulationEvent =
+  // ... existing events
+  | TypedSimulationEvent<'MY_CUSTOM_EVENT', MyCustomEventPayload>;
+```
+
+#### Step 3: Implement Pure Reducer Logic in `src/simulation/commands/commandHandler.ts`
+1. Validate command arguments (check for non-finite numbers, empty strings, missing targets).
+2. If invalid, return `{ success: false, state: currentState, events: [], errorCode: 'INVALID_ARGUMENT', message: '...' }`.
+3. If valid, calculate candidate state `nextState`.
+4. Check if delta occurred; if `isEqual(nextState, currentState)`, return `{ success: true, isNoOp: true, state: currentState, events: [] }`.
+5. Check invariants: `validateSimulationState(nextState)`.
+6. Return `{ success: true, state: nextState, events: [createSimulationEvent('MY_CUSTOM_EVENT', payload, revision + 1, timestamp)] }`.
+
+#### Step 4: Write Headless Unit Tests in `tests/unit/simulation/`
+```typescript
+it('applies MyNewCustomCommand deterministically and emits MY_CUSTOM_EVENT', () => {
+  const state = createInitialSimulationState();
+  const result = handleCommand(state, {
+    type: 'MyNewCustomCommand',
+    targetId: 'target_01',
+    amount: 10,
+  });
+
+  expect(result.success).toBe(true);
+  expect(result.events[0].type).toBe('MY_CUSTOM_EVENT');
+  expect(result.state.metadata.revision).toBe(state.metadata.revision + 1);
+});
+```
+
+#### Step 5: Consume in React via `useSimulation()` or `useOptionalSimulation()`
+```tsx
+import { useSimulation } from '@/application/simulation';
+
+export const MyComponent: React.FC = () => {
+  const { state, dispatch } = useSimulation();
+
+  const handleAction = () => {
+    dispatch({
+      type: 'MyNewCustomCommand',
+      targetId: 'target_01',
+      amount: 10,
+    });
+  };
+
+  return <div>Current Funds: {Money.fromKobo(state.player.moneyKobo).format()}</div>;
+};
+```
+
 ## 4. Testing Standards & Conventions
 
 We follow the Test Pyramid:

@@ -8,6 +8,9 @@ import {
 } from './worldConfig';
 import { HUDShell } from '../hud/HUDShell';
 
+import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
+import { Money } from '@/domain/common/Money';
+
 export interface WorldViewportProps {
   onInitialized?: () => void;
   onError?: (error: Error) => void;
@@ -16,6 +19,9 @@ export interface WorldViewportProps {
 export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onError }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const managerRef = useRef<WorldSceneManager | null>(null);
+  const sim = useOptionalSimulation();
+  const simRef = useRef(sim);
+  simRef.current = sim;
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -43,10 +49,27 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
     try {
       const manager = new WorldSceneManager();
       manager.initialize(containerRef.current, {
-        onLocationChanged: loc => setCurrentLocation(loc),
+        onLocationChanged: loc => {
+          setCurrentLocation(loc);
+          if (simRef.current && simRef.current.state.player.locationId !== loc.id) {
+            simRef.current.dispatch({
+              type: 'SetLogicalPlayerLocation',
+              locationId: loc.id,
+            });
+          }
+        },
         onCameraModeChanged: mode => setCameraMode(mode),
         onInteractionTargetChanged: target => setActiveTarget(target),
-        onNoticeboardRead: notice => setNoticeMessage(notice),
+        onNoticeboardRead: notice => {
+          setNoticeMessage(notice);
+          if (simRef.current) {
+            simRef.current.dispatch({
+              type: 'SetWorldFlag',
+              key: 'has_read_community_noticeboard',
+              value: true,
+            });
+          }
+        },
       });
       managerRef.current = manager;
       setIsLoading(false);
@@ -177,6 +200,8 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
         currentLocationName={currentLocation.name}
         cameraMode={cameraMode}
         activeTarget={activeTarget}
+        simulationTimeString={sim ? sim.state.time.calendar.timeString : undefined}
+        playerFunds={sim ? Money.fromKobo(sim.state.player.moneyKobo).format() : undefined}
         onToggleCamera={handleToggleCamera}
         onInteract={handleInteract}
       />

@@ -172,32 +172,47 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 - **Definition of Done**:
   - Lagos Island environment is complete, walkable, authentic, and fully integrated with existing player movement, collision, camera, and interaction systems.
 
-## M3 — Simulation Engine & State Management
+## M3 — Simulation Engine & State Management *(Completed)*
 
-- **Purpose**: Build the authoritative, deterministic, headless game state machine that coordinates all world, cyber, life, and mission data without relying on DOM or WebGL.
+- **Status**: Completed and Verified.
+- **Purpose**: Build the authoritative, deterministic, headless game state machine that coordinates world, player attributes, currency, inventory, world flags, and scheduled timers without relying on DOM, WebGL, or Three.js.
 - **Scope**:
-  - Simulation loop and clock manager (in-game ticks, calendar time, duration timers).
-  - Immutable state tree storing world state, player attributes, cyber entities, and missions.
-  - Command dispatcher validating incoming actions against domain invariants.
-  - Pure state reducers generating state deltas and publishing typed domain events.
-  - Complete headless test harness verifying deterministic state transitions.
+  - Deterministic simulation clock and calendar calculation (elapsed seconds, civil calendar time `08:00 AM, Monday, Oct 12, 2026`).
+  - Authoritative duration timers evaluated during clock advancement with deterministic ordering (`dueTime`, `creationSequence`, `timerId`) without browser `setTimeout`.
+  - Strictly typed, versioned, immutable state model (`SimulationState`) covering metadata, time, player, inventory, world flags, and timers.
+  - Non-negative integer kobo currency model (`Money`) eliminating floating-point math inaccuracies.
+  - Synchronous command dispatch with atomic pre-validation, invariant checks, and transition execution for 11 commands.
+  - Consistent no-op policy returning `isNoOp: true`, preserving revision, and emitting no events when commands produce zero state delta.
+  - Monotonically indexed typed domain events emitted exclusively for accepted state changes with isolated listener error handling.
+  - React application integration (`SimulationProvider`, `useSimulation`, `useOptionalSimulation`) and developer verification drawer (`DevSimulationDrawer`).
 - **Dependencies**: M1.
 - **Deliverables**:
-  - `SimulationEngine` class in `src/simulation/engine/`.
-  - State reducers for world time, actor location, player stats, and inventory.
-  - `CommandBus` and `EventBus` interfaces in `src/application/`.
-  - Test suite proving 100% testability of game logic without browser APIs.
+  - `SimulationEngine` class in `src/simulation/SimulationEngine.ts`.
+  - Domain currency value object `src/domain/common/Money.ts` and error hierarchy `src/domain/errors/DomainError.ts`.
+  - Core state definitions, initial state creation, invariants, and freezing utilities in `src/simulation/core/`.
+  - Pure subsystems in `src/simulation/systems/` (`playerSystem.ts`, `inventorySystem.ts`, `worldFlagsSystem.ts`).
+  - Command definitions and pure reducer in `src/simulation/commands/` (`commandHandler.ts`).
+  - Domain event definitions and factory in `src/simulation/events/`.
+  - Simulation clock and timer manager in `src/simulation/time/`.
+  - React provider and hooks in `src/application/simulation/`.
+  - HUD integration and `DevSimulationDrawer.tsx` in `src/presentation/hud/`.
+  - Comprehensive unit and integration test suite (194 tests across 28 test files).
 - **Acceptance Criteria**:
-  - Simulation state advances deterministically given an initial seed and a sequence of commands.
-  - Invalid commands are rejected with typed domain errors without corrupting the state tree.
-  - Unit tests execute entirely in Node.js environment in under 1 second.
+  - [x] Simulation state advances deterministically given an initial seed and a sequence of commands.
+  - [x] Invalid commands are rejected with stable error codes without corrupting the state tree or emitting success events.
+  - [x] Simulation layer has zero dependencies on Three.js, React, or browser DOM.
+  - [x] Unit tests execute entirely in headless Node.js / Vitest environment.
+  - [x] Invariants strictly enforce non-negative integer currency, bounded player attributes [0, 100], and valid inventory stacking.
 - **Explicit Exclusions**:
-  - Three.js visual bindings (rendering listens to events; simulation knows nothing of rendering).
-  - Complex cyber exploits (abstract data structures only; full tools built in M5).
+  - Three.js visual bindings inside simulation (rendering listens to events/state; simulation knows nothing of rendering).
+  - Virtual desktop and window manager (deferred to M4).
+  - Simulated cyber terminal tools, IAM, and SIEM logs (deferred to M5).
+  - Aster incident mission graph (deferred to M6).
 - **Required Validation**:
-  - Headless unit test suite with 90%+ code coverage across simulation reducers and command handlers.
+  - Headless unit test suite with $\ge 90\%$ branch coverage across simulation reducers and command handlers (`commandHandler.ts` at 93.18%, `invariants.ts` at 100%, `systems/` at 96-100%).
+  - Full project check passing: `typecheck`, `test`, `lint`, `format:check`, `build`.
 - **Definition of Done**:
-  - State machine runs headlessly; commands update state reliably; domain events are properly received by subscribers.
+  - State machine runs headlessly; commands update state reliably; domain events are properly received by subscribers; application HUD and dev drawer reflect simulation state accurately.
 
 ---
 

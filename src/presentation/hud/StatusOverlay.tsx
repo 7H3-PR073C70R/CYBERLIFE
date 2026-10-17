@@ -6,18 +6,26 @@ export interface StatusOverlayProps {
   milestoneTitle?: string;
   currentLocationName?: string;
   cameraMode?: CameraMode;
+  simulationTimeString?: string;
+  playerFunds?: string;
   onToggleCamera?: () => void;
   onToggleHelp?: () => void;
+  onToggleDevDrawer?: () => void;
   isHelpOpen?: boolean;
+  isDevDrawerOpen?: boolean;
 }
 
 export const StatusOverlay: React.FC<StatusOverlayProps> = ({
   milestoneTitle = 'M2.5: Lagos Island',
   currentLocationName = 'Lagos Island — Broad Street & Marina',
   cameraMode = 'THIRD_PERSON',
+  simulationTimeString,
+  playerFunds,
   onToggleCamera,
   onToggleHelp,
+  onToggleDevDrawer,
   isHelpOpen = false,
+  isDevDrawerOpen = false,
 }) => {
   return (
     <header className="hud-header" role="banner">
@@ -35,6 +43,34 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
       </div>
 
       <div className="hud-status-group hud-interactive">
+        {/* Simulation Clock (if available) */}
+        {simulationTimeString && (
+          <div
+            className="hud-location-badge"
+            data-testid="hud-clock-badge"
+            role="status"
+            aria-label={`In-game simulation time: ${simulationTimeString}`}
+            style={{ borderColor: 'rgba(6, 182, 212, 0.4)' }}
+          >
+            <span aria-hidden="true">⏰</span>
+            <span>{simulationTimeString}</span>
+          </div>
+        )}
+
+        {/* Player Funds (if available) */}
+        {playerFunds && (
+          <div
+            className="hud-location-badge"
+            data-testid="hud-funds-badge"
+            role="status"
+            aria-label={`Player balance: ${playerFunds}`}
+            style={{ borderColor: 'rgba(245, 158, 11, 0.4)' }}
+          >
+            <span aria-hidden="true">💰</span>
+            <span>{playerFunds}</span>
+          </div>
+        )}
+
         {/* Current Location Badge */}
         <div
           className="hud-location-badge"
@@ -69,6 +105,24 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
           <span aria-hidden="true">🎮</span>
           <span>Controls [WASD]</span>
         </button>
+
+        {/* Dev Simulation Verification Drawer Toggle */}
+        {onToggleDevDrawer && (
+          <button
+            type="button"
+            className={`hud-controls-help-btn ${isDevDrawerOpen ? 'active' : ''}`}
+            onClick={onToggleDevDrawer}
+            aria-label="Toggle developer simulation verification inspector"
+            data-testid="hud-dev-sim-btn"
+            style={{
+              borderColor: 'rgba(245, 158, 11, 0.5)',
+              color: 'var(--color-accent-amber)',
+            }}
+          >
+            <span aria-hidden="true">⚙️</span>
+            <span>Dev Sim</span>
+          </button>
+        )}
 
         <div
           className="hud-system-status"

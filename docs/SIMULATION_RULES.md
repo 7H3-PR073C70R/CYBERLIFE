@@ -165,3 +165,105 @@ Incident response follows the industry-standard SANS/NIST lifecycle:
 [ LESSONS LEARNED / REPORTING ]
   Submit structured forensic report to Cedarline CISO.
 ```
+
+---
+
+## 7. Authoritative Simulation Engine Core Rules (Milestone 3)
+
+### 7.1 Authoritative State Model
+The root simulation state tree (`SimulationState`) is strictly typed, versioned, and immutable:
+
+```typescript
+export interface SimulationState {
+  readonly metadata: SimulationMetadata;
+  readonly time: SimulationTimeState;
+  readonly player: PlayerAttributes;
+  readonly inventory: SimulationInventoryState;
+  readonly worldFlags: Readonly<Record<string, WorldFlagValue>>;
+  readonly timers: readonly SimulationTimerState[];
+}
+```
+
+1. **`metadata`**:
+   - `schemaVersion`: Integer version number (starts at `1`).
+   - `revision`: Monotonically increasing revision counter (starts at `0`), incremented only when an accepted command produces a state delta.
+   - `worldId`: Active world identifier (`lagos_island`).
+   - `scenarioId`: Active scenario or `null`.
+2. **`time`**:
+   - `simulationTimeSeconds`: Integer elapsed seconds since world initialization ($t \ge 0$).
+   - `calendar`: Derived civil calendar representation (`year`, `month`, `day`, `dayOfWeek`, `hour`, `minute`, `second`, `timeString`, `dateString`).
+   - `timeScale`: Progression rate multiplier (default `1.0`).
+3. **`player`**:
+   - `id`: Stable string identifier (`player_01`).
+   - `displayName`: Human-readable name (`Tunde Balogun`).
+   - `health`: Clamped integer $[0, 100]$.
+   - `energy`: Clamped integer $[0, 100]$.
+   - `moneyKobo`: Non-negative integer representing funds in Nigerian kobo (100 kobo = ₦1.00 Naira).
+   - `locationId`: Current logical simulation zone (`neighborhood`, `apartment_interior`, `cedarline_interior`).
+4. **`inventory`**:
+   - `slots`: Array of slot entries `{ slotIndex, itemId, quantity }`.
+   - `maxSlots`: Fixed capacity limit (default `16`).
+5. **`worldFlags`**:
+   - Record of string keys mapping to `boolean | number | string | null`. Keys must match `/^[a-z0-9_-]{1,64}$/i`.
+6. **`timers`**:
+   - Array of scheduled future events `{ id, dueSimulationTime, creationSequence, action, payload }`.
+
+### 7.2 Integer Currency Specification (`Money`)
+- Currency is strictly represented as an integer number of **kobo**.
+- 1 Naira (₦) = 100 kobo.
+- Fractions of a kobo and negative balances are forbidden by domain invariants.
+- Arithmetic (`add`, `subtract`, `multiply`) operations are exact. Subtracting more than available balance throws an `InsufficientFundsError`.
+- Formatting automatically converts kobo to standard Nigerian Naira currency format (e.g. `250000 kobo` -> `"₦2,500.00"`).
+
+### 7.3 Simulation Clock & Calendar Rules
+- Simulation epoch starts at **Monday, October 12, 2026, 08:00:00 AM UTC** (`DEFAULT_SIMULATION_START_ISO`).
+- Advancing time by `deltaSeconds` ($>0$) increments `simulationTimeSeconds` monotonically and recalculates the civil calendar.
+- Time advancement is purely deterministic and independent of host computer wall-clock time or browser rendering frame rates.
+- Advancing by `0` seconds is accepted as a valid no-op (`isNoOp: true`), emitting no events and preserving the state revision.
+- Negative time advances are rejected with error code `INVALID_ARGUMENT`.
+
+### 7.4 Duration Timers
+- Timers model in-game future consequences (e.g., cooling down, rental due dates, delayed delivery).
+- Scheduled with an ID, a positive duration, an action identifier, and an optional payload.
+- Evaluated deterministically during `AdvanceSimulationTime` commands.
+- When simulation clock reaches or passes a timer's `dueSimulationTime`, the timer fires a `TIMER_DUE` event and is removed from the active timers list.
+- Timers fire exactly once. Advancing time across multiple deadlines processes all due timers in deterministic order:
+  1. Ascending `dueSimulationTime`
+  2. Ascending `creationSequence` (scheduling order)
+  3. Lexicographical `id`
+- Real-time browser primitives (`setTimeout`, `setInterval`) are strictly prohibited in the simulation layer.
+
+### 7.5 Inventory Constraints & Canonical Registry
+- Foundational item registry defines canonical properties:
+  - `item_resident_badge`: Resident Keycard, max stack 1.
+  - `item_notebook`: Field Operations Notebook, max stack 1.
+  - `item_usb_drive`: Encrypted USB Drive, max stack 5.
+  - `item_coffee`: Local Cafe Cold Brew, max stack 10.
+  - `item_kiosk_snack`: Suya Spiced Plantain Chips, max stack 20.
+- Stacking rules: adding an item attempts to fill existing non-full slots of the same item first before creating a new slot.
+- Removing an item requires sufficient quantity; attempting to remove more than present or removing nonexistent items is rejected with `INSUFFICIENT_INVENTORY`.
+- Negative, zero, or non-finite quantities are rejected with `INVALID_QUANTITY`.
+- Exceeding `maxSlots` is rejected with `INVENTORY_FULL`.
+
+### 7.6 Command Processing Lifecycle
+The engine processes commands synchronously through an immutable, atomic 6-stage lifecycle:
+1. **Receive**: Caller submits a typed `SimulationCommand` to `SimulationEngine.dispatch()`.
+2. **Pre-Validate**: Verify command arguments and pre-conditions against current state $S$. If invalid, return `{ success: false, errorCode, message }` immediately without mutating $S$.
+3. **Compute Next State**: Execute pure reducer logic in `commandHandler.ts` to construct candidate state $S'$.
+4. **Detect No-Op**: If $S' = S$ (no attributes, flags, or time changed), return `{ success: true, isNoOp: true, state: S, events: [] }` without incrementing revision.
+5. **Invariant Check**: Run `validateSimulationState(S')`. If any invariant is violated, throw or reject with `INVARIANT_VIOLATION` and do not commit $S'$.
+6. **Commit & Emit**: Increment `revision = revision + 1`, commit $S'$, notify subscribers, and return `{ success: true, state: S', events: [...] }`.
+
+### 7.7 Error Code Taxonomy (`SimulationErrorCode`)
+- `INVALID_COMMAND`: Unknown or unsupported command type.
+- `INVALID_ARGUMENT`: Non-finite numbers, empty strings, invalid types.
+- `INSUFFICIENT_FUNDS`: Debit exceeds available player balance.
+- `INSUFFICIENT_INVENTORY`: Requested item count unavailable.
+- `INVALID_QUANTITY`: Non-positive or non-integer inventory quantity.
+- `INVENTORY_FULL`: Exceeded maximum slot capacity.
+- `INVALID_FLAG_KEY`: World flag key does not meet character/length constraints.
+- `INVALID_FLAG_VALUE`: World flag value is an unsupported data type.
+- `INVALID_ATTRIBUTE`: Unknown player attribute key.
+- `TIMER_NOT_FOUND`: Attempted to cancel nonexistent timer ID.
+- `INVARIANT_VIOLATION`: State validation check failed.
+

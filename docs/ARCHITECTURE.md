@@ -79,43 +79,59 @@ Cyberlife strictly adheres to **Clean Architecture** (The Dependency Rule) and *
 
 ### 2.2 The Application Layer (`src/application/`)
 - **Responsibilities**:
-  - Providing the central `CommandBus` to validate and route incoming player actions to the simulation engine.
-  - Subscribing to simulation `DomainEvents` to trigger application-level side effects (audio cues, save-game triggers, toast notifications).
+  - Providing the `SimulationProvider` and React integration hooks (`useSimulation`, `useOptionalSimulation`).
+  - Connecting presentation components (HUD, Viewport) to the authoritative simulation engine without creating competing state copies.
+  - Subscribing to simulation `DomainEvents` to trigger application-level side effects (audio cues, notifications, location sync).
   - Orchestrating multi-step workflows like loading a saved game, exporting incident reports, or switching camera modes.
 - **Strict Invariants**:
   - Does not mutate domain entities directly; delegates all mutations to the simulation engine via commands.
-  - Implements ports/adapters to isolate third-party infrastructure (e.g., IndexedDB, Web Audio API).
+  - Viewports and controllers use optional simulation adapters to operate cleanly both inside and outside the provider context during headless unit testing.
 
 ### 2.3 The Simulation Layer (`src/simulation/`)
 - **Responsibilities**:
-  - The deterministic, tick-based or event-driven heart of Cyberlife.
-  - **Cyber Subsystem (`src/simulation/cyber`)**:
-    - Synthetic network graph: switches, firewalls, subnets, IP routes, DNS resolvers.
-    - Identity and Access Management (IAM): users, service accounts, roles, access tokens, permissions.
-    - Virtual Operating Systems: synthetic file trees, environment variables, running processes.
-    - Simulated AI Agent System: agent context, system prompt templates, tool-calling interfaces, permission boundaries, prompt-injection vulnerability evaluation.
-    - Security Information and Event Management (SIEM): telemetry logs, connection records, authentication attempts, audit events.
-  - **World Subsystem (`src/simulation/world`)**:
-    - In-game clock and day/night cycle.
-    - Location zones, indoor/outdoor transitions, collision bounds metadata.
-  - **Life & Economy Subsystem (`src/simulation/economy`)**:
-    - Player balance, bank accounts, expenses, equipment inventory.
-    - Stamina, fatigue, stress curves affecting player performance.
-  - **Narrative Subsystem (`src/simulation/narrative`)**:
-    - NPC awareness states, relationship scores, dialogue condition flags.
-    - Active mission state machine and objective evaluators.
+  - The deterministic, authoritative, headless heart of Cyberlife.
+  - **Core State & Invariants (`src/simulation/core/`)**:
+    - `SimulationState`: Authoritative typed model covering metadata (`schemaVersion: 1`, `revision`), `time`, `player`, `inventory`, `worldFlags`, and `timers`.
+    - `initialState.ts`: Predictable baseline state initialization.
+    - `invariants.ts`: Comprehensive invariant validator checking bounded attributes (0..100), non-negative integer currency, valid inventory stacking and quantities, flag key/value constraints, and chronological timer order.
+    - `stateUtils.ts`: Immutable state freezing and deep cloning utilities.
+  - **Time & Calendar Subsystem (`src/simulation/time/`)**:
+    - `calendar.ts`: Pure functional civil calendar calculation mapping elapsed simulation seconds to year, month, day, day-of-week, hour, minute, second, and formatted strings (`08:00 AM`, `Monday, Oct 12, 2026`).
+    - `timerManager.ts`: Deterministic in-game duration timer scheduling and execution without browser `setTimeout`. Prioritizes due timers by `dueTime`, `creationSequence`, and `timerId`.
+  - **Systems Subsystem (`src/simulation/systems/`)**:
+    - `playerSystem.ts`: Attribute clamped updates (`health`, `energy`), integer currency crediting and debiting, logical player location changes.
+    - `inventorySystem.ts`: Canonical item registry, adding/removing items, slot capacity, max stack enforcement, and item availability checks.
+    - `worldFlagsSystem.ts`: Typed string-keyed flag store supporting boolean, number, string, or null values with strict key format validation (`/^[a-z0-9_-]{1,64}$/i`).
+  - **Commands Subsystem (`src/simulation/commands/`)**:
+    - `commandHandler.ts`: Pure reducer executing atomic transitions for 11 distinct command types:
+      - `AdvanceSimulationTime`
+      - `ChangePlayerAttribute`, `SetPlayerAttribute`
+      - `CreditPlayerMoney`, `DebitPlayerMoney`
+      - `AddInventoryItem`, `RemoveInventoryItem`
+      - `SetWorldFlag`
+      - `SetLogicalPlayerLocation`
+      - `ScheduleTimer`, `CancelTimer`
+    - No-op commands return `isNoOp: true`, preserving state revision and emitting zero events.
+    - Invariant checks run before and after execution; invalid commands return structured error results with stable error codes without state mutation.
+  - **Events Subsystem (`src/simulation/events/`)**:
+    - Monotonically indexed typed domain events emitted exclusively for accepted state changes.
+  - **`SimulationEngine` (`src/simulation/SimulationEngine.ts`)**:
+    - Public facade providing synchronous command processing (`dispatch`), state queries (`getState`), state/event subscriptions (`subscribe`, `on`), isolated listener error handling, and clean disposal (`dispose`).
 - **Strict Invariants**:
-  - **Zero WebGL / DOM Imports**: Must run completely headlessly in Node.js or Vitest.
-  - **Pure State Transition**: Given initial state $S$ and command $C$, the engine produces state $S'$ and events $E$ deterministically.
-  - **Idempotent Incident Rewards**: Re-evaluating completed objectives or re-submitting reports must never grant duplicate currency or reputation.
+  - **Zero WebGL / DOM / Three.js / React Imports**: Must run completely headlessly in Node.js or Vitest.
+  - **Pure State Transition**: Given state $S$ and command $C$, produces next state $S'$ and events $E$ deterministically.
 
 ### 2.4 The Domain Layer (`src/domain/`)
 - **Responsibilities**:
-  - Defining pure TypeScript entities, value objects, domain errors, and interfaces.
-  - Enforcing invariants at construction time (e.g., valid IP format, non-negative currency, valid SHA-256 hash format).
+  - Pure domain value objects, entities, and error definitions.
+  - **Integer Currency Model (`src/domain/common/Money.ts`)**:
+    - Value object representing currency as an exact, non-negative integer number of kobo (100 kobo = ₦1.00 Naira).
+    - Prevents floating-point rounding errors in all financial transactions.
+    - Exposes immutable arithmetic (`add`, `subtract`, `multiply`), relational comparisons (`greaterThan`, `lessThan`, `equals`), and currency formatting (`format() -> "₦2,500.00"`).
+  - **Domain Errors (`src/domain/errors/DomainError.ts`)**:
+    - Typed error hierarchy: `ValidationError`, `InsufficientFundsError`, `InvalidArgumentError`, `InvariantViolationError`.
 - **Strict Invariants**:
   - Zero external dependencies (no libraries, no React, no Three.js).
-  - Entities encapsulate business logic and invariants; they are not anemic data bags.
 
 ### 2.5 The Persistence Layer (`src/application/persistence/`)
 - **Responsibilities**:

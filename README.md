@@ -269,38 +269,30 @@ For full developer tutorials, consult [DEVELOPMENT_GUIDE.md](file:///Users/prote
 
 ## 11. Current Status
 
-- **Active Milestone**: **Milestone 2.5 — Lagos Island Environment** (Completed and Verified).
+- **Active Milestone**: **Milestone 3 — Simulation Engine & State Management** (Completed and Verified).
 - **Completed Deliverables**:
+  - **Authoritative Headless Simulation Engine (`src/simulation/`)**:
+    - **Zero Outer Dependency Boundary**: Strict zero imports of Three.js, WebGL, React, or browser DOM in `src/domain/` and `src/simulation/`.
+    - **Immutable State Model (`SimulationState`)**: Versioned schema (`schemaVersion: 1`), monotonically increasing state revision, elapsed simulation seconds, calendar time, player attributes, currency, inventory, world flags, and scheduled duration timers.
+    - **Integer Currency Model (`Money`)**: Non-negative integer kobo representation (100 kobo = ₦1.00 Naira) preventing floating-point calculation errors, supporting exact arithmetic, comparisons, and currency formatting.
+    - **Pure Command Reducers & Validation (`handleCommand`)**: Synchronous command dispatch validating all inputs, rejecting invalid requests with stable `SimulationErrorCode` values without state mutation, executing atomic transitions, enforcing invariant validation, and emitting typed domain events.
+    - **No-Op Command Policy**: Valid commands producing zero state delta return `isNoOp: true`, preserving state revision and emitting zero events.
+    - **Deterministic Clock & Calendar**: Elapsed simulation seconds mapped deterministically to a 12-hour civil calendar clock with formatted time (`08:00 AM`) and date strings (`Monday, Oct 12, 2026`).
+    - **Deterministic Duration Timers (`timerManager`)**: In-game duration timers evaluated during clock advancement, executing due actions in deterministic priority order (`dueTime`, `creationSequence`, `timerId`) without browser `setTimeout`.
+    - **Domain Event Bus (`SimulationEngine`)**: Isolated listener error handling preventing subscriber exceptions from corrupting committed transitions, with both state and event-specific subscription models.
+    - **Application & Presentation Integration**: React `SimulationProvider`, `useSimulation()`, and `useOptionalSimulation()` hooks; live HUD integration (simulation clock and funds display); and an unobtrusive `DevSimulationDrawer` for developer verification.
   - **Explorable Historic Lagos Island District (`WorldEnvironment.ts`, `LagosProps.ts`, `Building.ts`)**:
-    - **Broad Street Commercial Spine**: Walkable central urban thoroughfare with asphalt roadway, dashed yellow road dividers, pedestrian sidewalks, curbs, drainage channels, and zebra crossings.
-    - **Marina Waterfront Boulevard & Lagos Lagoon**: Waterside promenade lined with royal palm trees, concrete seawall with safety railings, mooring bollards, and deep blue Lagos Lagoon waters.
-    - **Tinubu Square Civic Plaza**: Historic civic landmark featuring the central commemorative fountain monument, royal palm trees, perimeter wooden benches, and the Tinubu Square Community Noticeboard.
-    - **Balogun / Idumota Market Cluster**: Bustling commercial side lane featuring vibrant market storefronts with roll-down metal shutters, colorful striped canvas awnings, four market stalls with display crates, and official street signposts.
-    - **Iconic Local Elements**:
-      1. **Lagos Danfo Minibus**: The unmistakable yellow commercial minibus with twin black horizontal stripes parked curbside on Broad Street with collision physics.
-      2. **Concrete Utility Poles & Overhead Cables**: Utility poles with cross-arms, insulators, transformer canisters, and connecting overhead electrical wires.
-      3. **Official Lagos State Street Signs**: Green & white enamel signposts for `"BROAD STREET"`, `"MARINA ROAD"`, `"BALOGUN STREET"`, and `"TINUBU SQUARE"`.
-      4. **Rooftop Polyethylene Water Tanks**: Authentic black cylindrical water storage tanks with lids on elevated roof stands.
-  - **Varied Architectural Palette (`Building.ts`)**:
-    - **Afro-Brazilian Heritage Residential**: Warm ochre plaster facade, decorative arched window hoods, 2nd-floor wrought-iron style balcony, and rooftop water tank (**Player Apartment** at Broad Street 14).
-    - **Multi-Storey Commercial Towers**: Slate and corporate glass facade with reflective horizontal window ribbons, cantilevered entrance canopy, rooftop AC chiller equipment, telecommunications antenna mast with blinking red beacon (**Cedarline Services Marina HQ** and **Eko Merchant Bank Tower**).
-    - **Market Storefronts**: 2-storey commercial buildings with ground-floor roll-down security shutters, colorful striped canvas awnings, and painted business signboards (**Balogun Electronics & Cables**, **Eko Fabrics & Lace Emporium**).
-  - **Gameplay & Collision Continuity**:
-    - Omnidirectional player controller (W/A/S/D and Arrow keys) with normalized diagonal speed and frame-rate-independent delta time.
-    - Circle-against-AABB collision detection with smooth wall-sliding resolution on all buildings, seawall, Danfo bus, stalls, and monuments.
-    - Dual camera modes: 3rd-person follow/orbit mode and 1st-person eye-level mode with mouse-look pointer lock and vertical pitch clamping (±78°).
-    - Proximity interaction registry detecting nearby targets and displaying contextual HUD prompts (`[E] Activate`).
-    - Seamless location transitions between outdoor Lagos Island and dedicated interior rooms (**Player Apartment** and **Cedarline Services HQ**) with return spawn memory.
-    - Accessible beginner controls modal and plain-language guidance.
+    - Broad Street commercial spine, Marina waterfront boulevard, Balogun / Idumota market street, and Tinubu Square civic plaza with full M2 movement, collision, camera, and transition continuity.
   - **Automated Test Suite**:
-    - 72 passing tests across 16 test files with >93% line coverage and 0 failures.
+    - 194 passing tests across 28 test files with 0 failures in headless Node/Vitest.
+    - $\ge 90\%$ branch coverage across all core reducers (`commandHandler.ts` at 93.18%, `invariants.ts` at 100%, `playerSystem.ts` at 96.29%, `inventorySystem.ts` at 96.29%, `worldFlagsSystem.ts` at 100%).
   - **Real Browser Verification**:
-    - Live browser validation confirming WebGL 60 FPS rendering, tropical daylight lighting, landmark layout, collision resolution, interaction prompts, and location transitions.
-- **Explicit Exclusions (Deferred to M3+)**:
-  - Headless authoritative simulation engine (deferred to M3).
-  - Interactive virtual desktop OS and cybersecurity terminal emulator (deferred to M4 & M5).
+    - Live browser validation confirming WebGL 60 FPS rendering, HUD simulation clock (`08:00 AM`) and funds (`₦2,500.00`) display, interactive Dev Simulation Drawer, and camera mode switching.
+- **Explicit Exclusions (Deferred to M4+)**:
+  - Interactive virtual desktop OS and window manager (deferred to M4).
+  - Simulated cybersecurity terminal tools, IAM policies, and SIEM logs (deferred to M5).
   - Complete Aster Incident investigation mission graph (deferred to M6).
-- **Next Milestone**: **Milestone 3 — Simulation Engine & State Management** (Headless simulation state machine, CommandBus, pure state reducers, and event dispatching).
+- **Next Milestone**: **Milestone 4 — Interaction System & Hybrid Desktop** (In-world interaction triggers, branching dialogue engine, virtual desktop shell, and terminal window).
 
 ---
 
@@ -317,6 +309,7 @@ For full developer tutorials, consult [DEVELOPMENT_GUIDE.md](file:///Users/prote
 | **Look Around** | `Mouse` | — | Active in 1st-person mode with pointer lock |
 | **Release Pointer Lock** | `Escape` | — | Releases mouse cursor safely |
 | **Toggle Controls Guide**| HUD `Controls [WASD]`| HUD `Hide Guide [X]` | Opens/dismisses accessible controls help |
+| **Open Dev Sim Drawer** | HUD `[Dev Sim]` | HUD `[Close]` | Opens developer simulation inspector |
 
 ---
 
@@ -328,8 +321,8 @@ For full developer tutorials, consult [DEVELOPMENT_GUIDE.md](file:///Users/prote
 | **M1** | Bootable Application Foundation | Vite, React, Three.js canvas mount, TypeScript strictness, CI tests | **Completed** |
 | **M2** | 3D Neighborhood & Player Controller | Walkable 3D city block, collision, 1st/3rd person camera, triggers | **Completed** |
 | **M2.5** | Lagos Island Environment | Authentic Lagos Island district: Broad St, Marina, Balogun market, Danfo | **Completed** |
-| **M3** | Simulation Engine & State Management | Headless authoritative state machine, CommandBus, pure reducers | *Next* |
-| **M4** | Interaction System & Hybrid Desktop | Interaction prompts, branching dialogue UI, virtual desktop shell |
+| **M3** | Simulation Engine & State Management | Headless authoritative state machine, CommandBus, pure reducers | **Completed** |
+| **M4** | Interaction System & Hybrid Desktop | Interaction prompts, branching dialogue UI, virtual desktop shell | *Next* |
 | **M5** | Cybersecurity Simulation & Tools | Virtual network, IAM, SIEM logs, simulated AI agent, terminal tools |
 | **M6** | Aster Incident Mission | Complete 10-stage investigation, containment, remediation, reporting |
 | **M7** | NPCs & Persistent Consequences | NPC memory, reactive dialogue, simulated email and news feeds |
