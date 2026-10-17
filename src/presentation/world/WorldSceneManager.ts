@@ -65,6 +65,7 @@ export class WorldSceneManager {
 
   private frameCount = 0;
   private isDisposed = false;
+  private currentSimTime = '08:00 AM';
 
   /**
    * Checks whether the current browser environment supports WebGL.
@@ -251,12 +252,57 @@ export class WorldSceneManager {
     if (target.targetLocationId) {
       this.transitionController.transitionTo(target.targetLocationId);
     } else if (target.id.includes('workstation')) {
+      const mode = this.getCameraMode();
+      // Align player to chair at (0, 0, -2.85) facing north (-Z)
+      if (this.playerController) {
+        this.playerController.setPosition(0, 0, -2.85);
+        this.playerController.setYaw(0);
+      }
+      if (this.cameraController) {
+        this.cameraController.enterWorkstation(mode);
+      }
+      if (this.worldEnvironment) {
+        this.worldEnvironment.getWorkstationProps()?.setFirstPersonMode(mode === 'FIRST_PERSON');
+      }
+      this.setInputDisabled(true);
       this.onWorkstationOpen?.(target.id);
     } else if (target.id === 'interact_noticeboard') {
       this.onNoticeboardRead?.(
         'TINUBU SQUARE BULLETIN: Unusual system alert activity detected in Cedarline Services Marina staging cluster. Cedarline IT security staff meeting on Broad Street at 14:00.'
       );
     }
+  }
+
+  /**
+   * Exits the workstation session, restoring exploration camera mode and standing pose.
+   */
+  public exitWorkstationSession(): void {
+    if (this.cameraController) {
+      const restoredMode = this.cameraController.exitWorkstation();
+      this.onCameraModeChanged?.(restoredMode);
+    }
+    if (this.worldEnvironment) {
+      this.worldEnvironment.getWorkstationProps()?.setFirstPersonMode(false);
+    }
+    this.setInputDisabled(false);
+  }
+
+  public triggerTypingAnimation(): void {
+    this.playerAvatar?.triggerTyping();
+    this.worldEnvironment?.getWorkstationProps()?.triggerTyping();
+  }
+
+  public triggerMouseAnimation(): void {
+    this.playerAvatar?.triggerMouseUse();
+    this.worldEnvironment?.getWorkstationProps()?.triggerMouseUse();
+  }
+
+  public updateWorkstationTerminal(lines: string[]): void {
+    this.worldEnvironment?.getWorkstationProps()?.updateTerminalOutput(lines);
+  }
+
+  public setSimulationTime(timeStr: string): void {
+    this.currentSimTime = timeStr;
   }
 
   public setCallbacks(options: {
@@ -340,9 +386,9 @@ export class WorldSceneManager {
         this.cameraController.update(this.playerController.getPosition());
       }
 
-      // 3. Update Environment Markers
+      // 3. Update Environment Markers, Pedestrians, Traffic, and Workstation Screen
       if (this.worldEnvironment) {
-        this.worldEnvironment.update(deltaTime);
+        this.worldEnvironment.update(deltaTime, this.currentSimTime);
       }
 
       // 4. Proximity Interaction Check

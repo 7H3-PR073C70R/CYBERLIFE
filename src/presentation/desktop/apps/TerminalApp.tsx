@@ -1,8 +1,10 @@
 /**
- * Cyberlife — Terminal Application Component
+ * Cyberlife — Terminal Application Component (Parrot Security OS Inspired)
  *
  * Provides a beginner-friendly simulated command line prompt.
  * Strictly sandboxed; executes via TerminalCommandParser.
+ * Enforces manual typing: command chips display educational syntax & hints,
+ * but do not auto-fill or bypass manual input.
  */
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
@@ -21,16 +23,67 @@ export interface TerminalEntry {
 export interface TerminalAppProps {
   workstationId?: string;
   initialEntries?: TerminalEntry[];
+  onTyping?: () => void;
+  onTerminalOutput?: (lines: string[]) => void;
 }
+
+interface CommandHint {
+  command: string;
+  purpose: string;
+  example: string;
+  expectedOutput: string;
+}
+
+const COMMAND_HINTS: Record<string, CommandHint> = {
+  help: {
+    command: 'help',
+    purpose: 'Lists all available simulated commands in the sandboxed system.',
+    example: 'help',
+    expectedOutput: 'Table of supported commands with descriptions.',
+  },
+  whoami: {
+    command: 'whoami',
+    purpose:
+      'Displays your authenticated fictional cybersecurity username, role, and organization.',
+    example: 'whoami',
+    expectedOutput: 'tade_adebayo — Security Analyst Intern (Cedarline Services)',
+  },
+  date: {
+    command: 'date',
+    purpose: 'Reads the authoritative in-game civil calendar time from the simulation engine.',
+    example: 'date',
+    expectedOutput: '08:00 AM, Monday, Oct 12, 2026',
+  },
+  status: {
+    command: 'status',
+    purpose: 'Queries the synthetic workstation hostname, virtual IP, and network status.',
+    example: 'status',
+    expectedOutput: 'cedarline-sec-ws04.corp.local — 10.0.4.15/24 (Operational)',
+  },
+  history: {
+    command: 'history',
+    purpose: 'Lists the sequence of commands previously executed in this session.',
+    example: 'history',
+    expectedOutput: 'Numbered list of executed terminal commands.',
+  },
+  clear: {
+    command: 'clear',
+    purpose: 'Clears all visible terminal output lines from the screen buffer.',
+    example: 'clear',
+    expectedOutput: 'Clean empty terminal prompt.',
+  },
+};
 
 export const TerminalApp: React.FC<TerminalAppProps> = ({
   workstationId = 'interact_cedarline_workstation',
   initialEntries,
+  onTyping,
+  onTerminalOutput,
 }) => {
   const sim = useOptionalSimulation();
   const parser = useMemo(() => createDefaultTerminalParser(), []);
 
-  // Initial welcome greeting
+  // Initial welcome greeting (Parrot Security OS theme)
   const [entries, setEntries] = useState<TerminalEntry[]>(() => {
     if (initialEntries && initialEntries.length > 0) return initialEntries;
 
@@ -39,11 +92,12 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         id: 'init-1',
         command: '',
         stdout: [
-          'Cyberlife OS [Version 4.2.0-sandboxed]',
-          'Copyright (c) 2026 Cedarline Services & Cyberlife Initiative.',
-          'All operations in this terminal are 100% simulated within the game environment.',
+          'PARROT SECURITY OS // CYBERLIFE EDITION [v4.5-sandboxed]',
+          'Kernel: Linux 6.8.0-parrot-enterprise x86_64 // Node: Synthetic Lagos Cluster',
+          'Safety Boundary: 100% simulated sandbox. Zero host OS execution.',
           '',
           "Type 'help' to view available simulated commands.",
+          "Type 'whoami' to inspect your security credentials.",
         ],
         timestamp: '08:00 AM',
       },
@@ -53,7 +107,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
   const [inputVal, setInputVal] = useState('');
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
-  const [showHintBanner, setShowHintBanner] = useState(true);
+  const [selectedHintCmd, setSelectedHintCmd] = useState<string | null>(null);
 
   const terminalEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -105,7 +159,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         ? {
             id: workstationId,
             hostname: 'cedarline-sec-ws04.corp.local',
-            osVersion: 'CyberOS Enterprise v4.2 [Simulated Sandboxed Kernel]',
+            osVersion: 'Parrot Security OS v4.5 [Simulated Sandboxed Kernel]',
             ipAddress: '10.0.4.15',
             subnet: '255.255.255.0',
             status: 'Operational (Synthetic Enterprise Subnet)',
@@ -114,7 +168,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         : {
             id: workstationId,
             hostname: 'lagos-rig-dev01.local',
-            osVersion: 'CyberOS Workstation Edition v4.2',
+            osVersion: 'Parrot Security OS v4.5 [Home Rig]',
             ipAddress: '192.168.1.104',
             subnet: '255.255.255.0',
             status: 'Operational (Simulated Local Rig)',
@@ -138,6 +192,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
     if (result.clearScreen) {
       setEntries([]);
       setInputVal('');
+      onTerminalOutput?.([]);
       return;
     }
 
@@ -150,13 +205,20 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
       timestamp: ctx.simulationTime.timeString,
     };
 
-    setEntries(prev => [...prev, newEntry]);
+    setEntries(prev => {
+      const updated = [...prev, newEntry];
+      onTerminalOutput?.(result.stdout);
+      return updated;
+    });
     setInputVal('');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // Stop propagation so 3D world player controller never receives terminal keys
     e.stopPropagation();
+
+    // Trigger typing animation on character and physical workstation hands!
+    onTyping?.();
 
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -187,40 +249,45 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
       // Clear screen on Ctrl+L
       e.preventDefault();
       setEntries([]);
+      onTerminalOutput?.([]);
     }
   };
 
-  const insertCommand = (cmd: string) => {
-    setInputVal(cmd);
-    inputRef.current?.focus();
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputVal(e.target.value);
+    onTyping?.();
   };
 
   const promptPrefix = workstationId.includes('cedarline')
-    ? 'tade@cedarline:~$ '
-    : 'player@research-rig:~$ ';
+    ? 'tade@parrot-sec-ws04:~$ '
+    : 'player@parrot-rig:~$ ';
+
+  const activeHint = selectedHintCmd ? COMMAND_HINTS[selectedHintCmd] : null;
 
   return (
     <div
-      className="terminal-app-container"
+      className="terminal-app-container parrot-theme"
       role="region"
       aria-label="Simulated Terminal Session"
       onClick={() => inputRef.current?.focus()}
       data-testid="terminal-app-container"
     >
-      {/* Quick Suggestion Chips Header */}
+      {/* Educational Command Learning Toolbar */}
       <div className="terminal-toolbar">
         <div className="terminal-chips-group">
-          <span className="chips-label">Quick Commands:</span>
+          <span className="chips-label">Command Guide:</span>
           {['help', 'whoami', 'date', 'status', 'history', 'clear'].map(cmd => (
             <button
               key={cmd}
               type="button"
-              className="terminal-chip-btn"
+              className={`terminal-chip-btn ${selectedHintCmd === cmd ? 'chip-active' : ''}`}
               onClick={e => {
                 e.stopPropagation();
-                insertCommand(cmd);
+                // Mandatory manual typing: clicking teaches command purpose, does NOT auto-insert!
+                setSelectedHintCmd(prev => (prev === cmd ? null : cmd));
+                inputRef.current?.focus();
               }}
-              title={`Insert '${cmd}' command`}
+              title={`View guidance for '${cmd}' (manual typing required)`}
               data-testid={`terminal-chip-${cmd}`}
             >
               [{cmd}]
@@ -235,6 +302,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
             e.stopPropagation();
             setEntries([]);
             inputRef.current?.focus();
+            onTerminalOutput?.([]);
           }}
           title="Clear Terminal Output"
           data-testid="btn-terminal-clear"
@@ -243,31 +311,51 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         </button>
       </div>
 
-      {/* Beginner Guidance Hint Banner */}
-      {showHintBanner && (
+      {/* Educational Syntax & Purpose Card (Mandatory Manual Typing) */}
+      {activeHint && (
         <div
           className="terminal-hint-banner"
           role="note"
-          aria-label="Beginner Terminal Guidance"
+          aria-label={`Command Guide: ${activeHint.command}`}
           data-testid="terminal-hint-banner"
         >
           <div className="hint-content">
             <span className="hint-icon" aria-hidden="true">
-              💡
+              📖
             </span>
-            <span>
-              <strong>New to terminals?</strong> Click <code>[help]</code> above or type{' '}
-              <code>help</code> and press <kbd>Enter</kbd> to see what you can do.
-            </span>
+            <div>
+              <div style={{ color: 'var(--color-accent-cyan, #00e5ff)', fontWeight: 600 }}>
+                Command Guide: <code>{activeHint.command}</code>
+              </div>
+              <div
+                style={{
+                  color: 'var(--color-text-secondary, #94a3b8)',
+                  fontSize: '0.8rem',
+                  marginTop: '2px',
+                }}
+              >
+                {activeHint.purpose}
+              </div>
+              <div
+                style={{
+                  fontSize: '0.78rem',
+                  marginTop: '4px',
+                  color: 'var(--color-accent-emerald, #00e676)',
+                }}
+              >
+                ✍️ <strong>Manual Typing:</strong> Type <code>{activeHint.example}</code> into the
+                prompt below and press <kbd>Enter</kbd>.
+              </div>
+            </div>
           </div>
           <button
             type="button"
             className="btn-dismiss-hint"
             onClick={e => {
               e.stopPropagation();
-              setShowHintBanner(false);
+              setSelectedHintCmd(null);
             }}
-            aria-label="Dismiss beginner hint"
+            aria-label="Close command guide"
           >
             ✕
           </button>
@@ -315,14 +403,14 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
           type="text"
           className="terminal-text-input"
           value={inputVal}
-          onChange={e => setInputVal(e.target.value)}
+          onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck="false"
           aria-label="Terminal command input"
-          placeholder="Type a command (e.g. help, status, date)..."
+          placeholder="Type manually: help, whoami, date, status, history, clear..."
           data-testid="terminal-command-input"
         />
         <button

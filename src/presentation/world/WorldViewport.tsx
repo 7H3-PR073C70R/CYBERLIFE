@@ -128,7 +128,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   const handleCloseDesktop = useCallback(() => {
     setIsDesktopOpen(false);
     if (managerRef.current) {
-      managerRef.current.setInputDisabled(false);
+      managerRef.current.exitWorkstationSession();
     }
   }, []);
 
@@ -236,7 +236,14 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
 
       {/* M4 Virtual Desktop Overlay */}
       {isDesktopOpen && (
-        <DesktopShell workstationId={activeWorkstationId} onExitDesktop={handleCloseDesktop} />
+        <DesktopShell
+          workstationId={activeWorkstationId}
+          cameraMode={cameraMode}
+          onExitDesktop={handleCloseDesktop}
+          onTyping={() => managerRef.current?.triggerTypingAnimation()}
+          onMouseUse={() => managerRef.current?.triggerMouseAnimation()}
+          onTerminalOutput={lines => managerRef.current?.updateWorkstationTerminal(lines)}
+        />
       )}
     </div>
   );

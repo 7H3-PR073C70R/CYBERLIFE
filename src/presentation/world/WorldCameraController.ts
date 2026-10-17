@@ -23,6 +23,13 @@ export class WorldCameraController {
   private isEnabled = true;
   private onModeChanged?: (mode: CameraMode) => void;
 
+  // Workstation camera state (M4.5 Camera-Aware Interaction)
+  private isInWorkstation = false;
+  private workstationExplorationMode: CameraMode | null = null;
+  private transitionProgress = 1.0; // 0 = start of transition, 1 = settled
+  private savedCameraPosition = new THREE.Vector3();
+  private savedLookTarget = new THREE.Vector3();
+
   // Bound listeners
   private handleMouseMoveBound: (e: MouseEvent) => void;
   private handlePointerLockChangeBound: () => void;
@@ -79,14 +86,14 @@ export class WorldCameraController {
   }
 
   private handleClick(): void {
-    if (!this.isEnabled) return;
+    if (!this.isEnabled || this.isInWorkstation) return;
 
-    // In first person, clicking the canvas requests pointer lock for seamless mouse-look
+    // In first person exploration, clicking the canvas requests pointer lock for seamless mouse-look
     if (this.mode === 'FIRST_PERSON' && !this.isPointerLocked) {
       try {
         this.domElement.requestPointerLock?.();
       } catch {
-        // Pointer lock may be restricted by environment; fallback smoothly
+        // Fallback
       }
     }
   }
@@ -96,7 +103,7 @@ export class WorldCameraController {
   }
 
   private handleMouseMove(e: MouseEvent): void {
-    if (!this.isEnabled) return;
+    if (!this.isEnabled || this.isInWorkstation) return;
 
     // Allow mouse look in first-person (or if pointer-locked)
     if (this.mode !== 'FIRST_PERSON' && !this.isPointerLocked) return;
@@ -133,6 +140,7 @@ export class WorldCameraController {
   }
 
   public toggleMode(): CameraMode {
+    if (this.isInWorkstation) return this.mode;
     const next = this.mode === 'THIRD_PERSON' ? 'FIRST_PERSON' : 'THIRD_PERSON';
     this.setMode(next);
     return this.mode;
@@ -161,15 +169,76 @@ export class WorldCameraController {
     );
   }
 
+  /**
+   * Enters the workstation session. Transitions camera based on active exploration mode:
+   * - Third-Person: Positions over-the-shoulder showing seated character, hands, and laptop.
+   * - First-Person: Positions at seated eye-level focused directly on the computer screen.
+   */
+  public enterWorkstation(explorationMode: CameraMode): void {
+    this.isInWorkstation = true;
+    this.workstationExplorationMode = explorationMode;
+    this.exitPointerLock();
+
+    // Save starting camera state for smooth interpolation
+    this.savedCameraPosition.copy(this.camera.position);
+    this.camera.getWorldDirection(this.savedLookTarget);
+    this.savedLookTarget.add(this.camera.position);
+    this.transitionProgress = 0.0;
+
+    // Configure avatar visibility
+    if (explorationMode === 'THIRD_PERSON') {
+      this.avatar.setVisible(true);
+      this.avatar.setSitting(true);
+    } else {
+      // In first-person workstation, full avatar body is hidden so it doesn't clip
+      this.avatar.setVisible(false);
+      this.avatar.setSitting(true);
+    }
+  }
+
+  /**
+   * Exits the workstation session, restoring original exploration camera mode,
+   * orientation, and avatar standing state.
+   */
+  public exitWorkstation(): CameraMode {
+    this.isInWorkstation = false;
+    const restoredMode = this.workstationExplorationMode ?? 'THIRD_PERSON';
+    this.mode = restoredMode;
+    this.workstationExplorationMode = null;
+
+    this.avatar.setSitting(false);
+    this.applyModeVisibility();
+
+    if (restoredMode === 'FIRST_PERSON') {
+      // Restore look angles toward front
+      this.pitch = 0;
+    }
+
+    return restoredMode;
+  }
+
+  public isWorkstationActive(): boolean {
+    return this.isInWorkstation;
+  }
+
   private applyModeVisibility(): void {
-    // Hide avatar in 1st person so the camera does not clip inside the player head
-    this.avatar.setVisible(this.mode === 'THIRD_PERSON');
+    if (this.isInWorkstation) {
+      this.avatar.setVisible(this.workstationExplorationMode === 'THIRD_PERSON');
+    } else {
+      // Hide avatar in 1st person exploration so camera does not clip inside player head
+      this.avatar.setVisible(this.mode === 'THIRD_PERSON');
+    }
   }
 
   /**
    * Updates camera position and projection based on active player coordinates and look angles.
    */
   public update(playerPos: { x: number; y: number; z: number }): void {
+    if (this.isInWorkstation) {
+      this.updateWorkstationCamera();
+      return;
+    }
+
     if (this.mode === 'FIRST_PERSON') {
       // 1. First-Person Mode: Camera positioned directly at eye level
       const eyeY = playerPos.y + WORLD_CONFIG.player.eyeHeight;
@@ -210,6 +279,45 @@ export class WorldCameraController {
         playerPos.z + lookOffset.z
       );
       this.camera.lookAt(target);
+    }
+  }
+
+  /**
+   * Handles dedicated workstation camera compositions:
+   * - Third-Person: Over-the-shoulder framing the seated character, upper body, hands on keyboard/mouse, and laptop.
+   * - First-Person: Seated eye-level view focused directly on the computer screen.
+   */
+  private updateWorkstationCamera(): void {
+    const isTP = this.workstationExplorationMode === 'THIRD_PERSON';
+
+    let targetCamPos: THREE.Vector3;
+    let targetLookAt: THREE.Vector3;
+
+    if (isTP) {
+      // Dedicated Over-the-Shoulder Workstation Framing
+      // Slightly to the right and above character's shoulder:
+      // Player seated at (0, 0, -2.85), laptop at (0, 0.74, -3.32)
+      targetCamPos = new THREE.Vector3(0.48, 1.34, -2.05);
+      targetLookAt = new THREE.Vector3(-0.02, 0.94, -3.32);
+    } else {
+      // First-Person Seated Eye-Level Focused on Laptop Display
+      // Eyes at height 1.15m at chair position Z = -2.82m
+      targetCamPos = new THREE.Vector3(0.0, 1.16, -2.82);
+      targetLookAt = new THREE.Vector3(0.0, 0.92, -3.32);
+    }
+
+    // Smooth camera transition (lerp)
+    if (this.transitionProgress < 1.0) {
+      this.transitionProgress = Math.min(1.0, this.transitionProgress + 0.08);
+      const t = THREE.MathUtils.smoothstep(this.transitionProgress, 0, 1);
+      this.camera.position.lerpVectors(this.savedCameraPosition, targetCamPos, t);
+
+      const currentLook = new THREE.Vector3();
+      currentLook.lerpVectors(this.savedLookTarget, targetLookAt, t);
+      this.camera.lookAt(currentLook);
+    } else {
+      this.camera.position.copy(targetCamPos);
+      this.camera.lookAt(targetLookAt);
     }
   }
 

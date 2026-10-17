@@ -4,6 +4,9 @@ import { InteractionRegistry } from './InteractionRegistry';
 import { Building } from './entities/Building';
 import { InteractableMarker } from './entities/InteractableMarker';
 import { LagosProps } from './entities/LagosProps';
+import { WorkstationProps } from './entities/WorkstationProps';
+import { PedestrianSystem } from './entities/PedestrianSystem';
+import { TrafficSystem } from './entities/TrafficSystem';
 import { WORLD_CONFIG } from './worldConfig';
 
 export class WorldEnvironment {
@@ -13,6 +16,9 @@ export class WorldEnvironment {
 
   private buildings: Building[] = [];
   private markers: InteractableMarker[] = [];
+  private workstationProps: WorkstationProps | null = null;
+  private pedestrianSystem: PedestrianSystem | null = null;
+  private trafficSystem: TrafficSystem | null = null;
   private isOutdoor = true;
 
   constructor(collisionWorld: CollisionWorld, interactionRegistry: InteractionRegistry) {
@@ -68,6 +74,13 @@ export class WorldEnvironment {
 
     // 7. Perimeter Boundary Barriers
     this.buildPerimeterBoundaries();
+
+    // 8. Living City: Animated Pedestrians & Moving Vehicles
+    this.pedestrianSystem = new PedestrianSystem();
+    this.group.add(this.pedestrianSystem.getMesh());
+
+    this.trafficSystem = new TrafficSystem();
+    this.group.add(this.trafficSystem.getMesh());
   }
 
   /**
@@ -891,22 +904,10 @@ export class WorldEnvironment {
     sWallR.position.set(halfW / 2 + 1.0, roomH / 2, halfD);
     this.group.add(sWallR);
 
-    // Interior Furniture (Desk / Terminal Stand)
-    const deskGeo = new THREE.BoxGeometry(4.0, 0.85, 1.6);
-    const deskMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.6 });
-    const desk = new THREE.Mesh(deskGeo, deskMat);
-    desk.position.set(0, 0.42, -3.8);
-    desk.castShadow = true;
-    desk.receiveShadow = true;
-    this.group.add(desk);
+    // Interior Furniture: Detailed Physical Workstation (Desk, Laptop, Chair, Mouse)
+    this.workstationProps = new WorkstationProps({ isCedarline, accentColor });
+    this.group.add(this.workstationProps.getMesh());
     this.collisionWorld.addObstacle(-2.5, 2.5, -4.8, -2.8, 'Workstation Desk');
-
-    // Terminal Monitor on desk
-    const monitorGeo = new THREE.BoxGeometry(1.6, 0.9, 0.15);
-    const monitorMat = new THREE.MeshBasicMaterial({ color: accentColor });
-    const monitor = new THREE.Mesh(monitorGeo, monitorMat);
-    monitor.position.set(0, 1.35, -3.7);
-    this.group.add(monitor);
 
     // Workstation Interaction Trigger & Marker in front of desk
     const wsMarker = new InteractableMarker(0, -2.4, accentColor, 'Workstation Terminal');
@@ -942,11 +943,45 @@ export class WorldEnvironment {
     });
   }
 
-  public update(deltaTime: number): void {
+  public update(deltaTime: number, simulationTimeStr = '08:00 AM'): void {
     this.markers.forEach(m => m.update(deltaTime));
+    if (this.pedestrianSystem && this.isOutdoor) {
+      this.pedestrianSystem.update(deltaTime);
+    }
+    if (this.trafficSystem && this.isOutdoor) {
+      this.trafficSystem.update(deltaTime);
+    }
+    if (this.workstationProps && !this.isOutdoor) {
+      this.workstationProps.update(deltaTime, simulationTimeStr);
+    }
+  }
+
+  public getWorkstationProps(): WorkstationProps | null {
+    return this.workstationProps;
+  }
+
+  public getPedestrianSystem(): PedestrianSystem | null {
+    return this.pedestrianSystem;
+  }
+
+  public getTrafficSystem(): TrafficSystem | null {
+    return this.trafficSystem;
   }
 
   public clear(): void {
+    if (this.workstationProps) {
+      this.workstationProps.dispose();
+      this.workstationProps = null;
+    }
+    if (this.pedestrianSystem) {
+      this.pedestrianSystem.dispose();
+      this.pedestrianSystem = null;
+    }
+    if (this.trafficSystem) {
+      this.trafficSystem.dispose();
+      this.trafficSystem = null;
+    }
+
     this.buildings.forEach(b => b.dispose());
     this.buildings = [];
 

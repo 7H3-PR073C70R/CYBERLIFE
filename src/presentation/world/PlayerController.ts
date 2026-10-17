@@ -167,10 +167,13 @@ export class PlayerController {
    * @param cameraYaw Current view horizontal angle in radians
    */
   public update(deltaTime: number, cameraYaw: number): void {
-    if (this.isInputDisabled) return;
-
     // Clamp delta time to avoid large movement jumps after pausing
     const dt = Math.min(deltaTime, 0.1);
+
+    if (this.isInputDisabled) {
+      this.avatar.update(dt, false);
+      return;
+    }
 
     let moveForward = 0;
     let moveRight = 0;
@@ -181,7 +184,10 @@ export class PlayerController {
     if (this.keysPressed.has('KeyA') || this.keysPressed.has('ArrowLeft')) moveRight -= 1;
 
     // No movement input
-    if (moveForward === 0 && moveRight === 0) return;
+    if (moveForward === 0 && moveRight === 0) {
+      this.avatar.update(dt, false);
+      return;
+    }
 
     // 1. Normalize input vector to prevent faster diagonal movement
     const length = Math.sqrt(moveForward * moveForward + moveRight * moveRight);
@@ -217,6 +223,9 @@ export class PlayerController {
       const moveAngle = Math.atan2(worldDx, worldDz);
       this.setYaw(moveAngle);
     }
+
+    // 5. Update avatar walking animation
+    this.avatar.update(dt, true, 1.0);
   }
 
   public dispose(): void {

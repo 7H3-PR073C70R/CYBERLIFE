@@ -12,7 +12,7 @@ describe('TerminalApp Component', () => {
     );
 
     expect(screen.getByTestId('terminal-app-container')).toBeInTheDocument();
-    expect(screen.getByText(/Cyberlife OS/i)).toBeInTheDocument();
+    expect(screen.getByText(/Parrot Security OS/i)).toBeInTheDocument();
     expect(screen.getByTestId('terminal-command-input')).toBeInTheDocument();
     expect(screen.getByTestId('terminal-chip-help')).toBeInTheDocument();
     expect(screen.getByTestId('terminal-chip-whoami')).toBeInTheDocument();
@@ -62,7 +62,7 @@ describe('TerminalApp Component', () => {
     fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
     expect(screen.getByText(/cedarline-sec-ws04.corp.local/i)).toBeInTheDocument();
-    expect(screen.getByText(/CyberOS Enterprise v4.2/i)).toBeInTheDocument();
+    expect(screen.getByText(/Parrot Security OS v4.5/i)).toBeInTheDocument();
     expect(screen.getByText(/100% synthetic in-game sandbox/i)).toBeInTheDocument();
   });
 
@@ -100,7 +100,7 @@ describe('TerminalApp Component', () => {
     expect(input.value).toBe('');
   });
 
-  it('inserts command when clicking suggestion chips', () => {
+  it('displays guidance card and requires manual typing when clicking command guide chips without auto-filling input', () => {
     render(
       <SimulationProvider>
         <TerminalApp workstationId="interact_cedarline_workstation" />
@@ -111,7 +111,12 @@ describe('TerminalApp Component', () => {
     const statusChip = screen.getByTestId('terminal-chip-status');
 
     fireEvent.click(statusChip);
-    expect(input.value).toBe('status');
+    // Mandatory manual typing: command chips must NOT auto-fill input
+    expect(input.value).toBe('');
+    // Instead, educational guidance card is displayed
+    expect(screen.getByTestId('terminal-hint-banner')).toBeInTheDocument();
+    expect(screen.getByText(/Queries the synthetic workstation hostname/i)).toBeInTheDocument();
+    expect(screen.getByText(/Manual Typing:/i)).toBeInTheDocument();
   });
 
   it('clears screen output when Clear Screen button is clicked', () => {
@@ -122,13 +127,13 @@ describe('TerminalApp Component', () => {
     );
 
     // Initial greeting is present
-    expect(screen.getByText(/Cyberlife OS/i)).toBeInTheDocument();
+    expect(screen.getByText(/Parrot Security OS/i)).toBeInTheDocument();
 
     const clearBtn = screen.getByTestId('btn-terminal-clear');
     fireEvent.click(clearBtn);
 
     // Screen should now be cleared
-    expect(screen.queryByText(/Cyberlife OS/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Parrot Security OS/i)).not.toBeInTheDocument();
   });
 
   it('isolates keyboard events by stopping propagation', () => {
@@ -149,5 +154,28 @@ describe('TerminalApp Component', () => {
     });
 
     expect(parentHandler).not.toHaveBeenCalled();
+  });
+
+  it('triggers onTyping and onTerminalOutput callbacks', () => {
+    const onTyping = vi.fn();
+    const onTerminalOutput = vi.fn();
+
+    render(
+      <SimulationProvider>
+        <TerminalApp
+          workstationId="interact_cedarline_workstation"
+          onTyping={onTyping}
+          onTerminalOutput={onTerminalOutput}
+        />
+      </SimulationProvider>
+    );
+
+    const input = screen.getByTestId('terminal-command-input');
+    fireEvent.change(input, { target: { value: 'h' } });
+    expect(onTyping).toHaveBeenCalled();
+
+    fireEvent.change(input, { target: { value: 'help' } });
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+    expect(onTerminalOutput).toHaveBeenCalled();
   });
 });

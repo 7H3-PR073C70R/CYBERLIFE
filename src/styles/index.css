@@ -768,20 +768,185 @@ body,
    MILESTONE 4: VIRTUAL DESKTOP & APPLICATION INTERACTION SYSTEMS
    ========================================================================== */
 
-/* Fullscreen Virtual Desktop Overlay */
-.desktop-shell-container {
+/* ==========================================================================
+   MILESTONE 4.5: CAMERA-AWARE IMMERSIVE WORKSTATION & PARROT OS DESKTOP
+   ========================================================================== */
+
+/* Workstation Overlay Backdrop (Rendered over the 3D scene) */
+.workstation-overlay-backdrop {
   position: absolute;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   z-index: 50;
+  pointer-events: auto;
+  display: flex;
+  box-sizing: border-box;
+  background: radial-gradient(circle at 70% 50%, rgba(5, 12, 22, 0.52) 0%, rgba(2, 4, 8, 0.3) 100%);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  transition: all 300ms ease;
+}
+
+/* Third-Person Mode: Docked right so the seated character, desk, and office on left are visible */
+.workstation-overlay-backdrop.mode-third-person {
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1.5rem clamp(1rem, 2.5vw, 2.5rem);
+}
+
+/* First-Person Mode: Centered seated eye-level view focused on laptop with desk borders */
+.workstation-overlay-backdrop.mode-first-person {
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem clamp(1rem, 2.5vw, 2rem);
+}
+
+/* Virtual Desktop Shell Container (Bounded in 3D world on desktop viewports) */
+.desktop-shell-container {
+  position: relative;
   display: flex;
   flex-direction: column;
-  background: radial-gradient(circle at 50% 20%, #0d1728 0%, #070a12 100%);
+  background: radial-gradient(circle at 50% 20%, #0c1424 0%, #060910 100%);
   background-size: cover;
   overflow: hidden;
   user-select: none;
-  animation: fadeIn 200ms var(--ease-out);
+  animation: fadeIn 220ms var(--ease-out);
+  box-sizing: border-box;
+  border-radius: var(--radius-lg, 12px);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(0, 229, 255, 0.25),
+    0 0 40px rgba(0, 229, 255, 0.12);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+}
+
+.desktop-shell-container.mode-third-person {
+  width: min(880px, 58vw);
+  height: min(640px, 86vh);
+  max-height: 88vh;
+}
+
+.desktop-shell-container.mode-first-person {
+  width: min(940px, 76vw);
+  height: min(680px, 88vh);
+  max-height: 90vh;
+}
+
+/* Responsive adjustment for narrow screens */
+@media (max-width: 900px) {
+  .workstation-overlay-backdrop.mode-third-person,
+  .workstation-overlay-backdrop.mode-first-person {
+    justify-content: center;
+    padding: 0.5rem;
+  }
+  .desktop-shell-container.mode-third-person,
+  .desktop-shell-container.mode-first-person {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    border: none;
+  }
+}
+
+/* Parrot Security OS Top Bar */
+.workstation-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  min-height: 36px;
+  padding: 0 0.85rem;
+  background: #060a12;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.22);
+  font-size: 0.78rem;
+  z-index: 10;
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.parrot-os-badge {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: #00e5ff;
+  background: rgba(0, 229, 255, 0.12);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm, 4px);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+}
+
+.workstation-sub-tag {
+  color: #8b9bb4;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.top-bar-center {
+  display: flex;
+  align-items: center;
+}
+
+.mode-badge {
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: #00e676;
+  background: rgba(0, 230, 118, 0.1);
+  border: 1px solid rgba(0, 230, 118, 0.25);
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-sm, 4px);
+  white-space: nowrap;
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.top-clock {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #e2e8f0;
+}
+
+.btn-exit-workstation {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #fca5a5;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.73rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-sm, 4px);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-exit-workstation:hover {
+  background: rgba(239, 68, 68, 0.35);
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+/* Parrot Theme Polish */
+.parrot-theme {
+  --color-accent-parrot-cyan: #00e5ff;
+  --color-accent-parrot-green: #00e676;
+}
+
+.terminal-chip-btn.chip-active {
+  background: rgba(0, 229, 255, 0.3);
+  border-color: #00e5ff;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.35);
 }
 
 @keyframes fadeIn {

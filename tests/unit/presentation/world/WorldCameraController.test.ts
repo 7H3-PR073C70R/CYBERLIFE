@@ -96,4 +96,41 @@ describe('WorldCameraController', () => {
     expect(camera.position.z).toBe(playerPos.z);
     expect(camera.position.y).toBeCloseTo(playerPos.y + WORLD_CONFIG.player.eyeHeight);
   });
+
+  it('transitions to dedicated over-the-shoulder view in third-person workstation mode', () => {
+    controller.setMode('THIRD_PERSON');
+    controller.enterWorkstation('THIRD_PERSON');
+
+    // Camera target moves smoothly towards over-the-shoulder composition
+    for (let i = 0; i < 20; i++) {
+      controller.update({ x: 0, y: 0, z: -2.85 });
+    }
+    expect(camera.position.y).toBeGreaterThan(1.0);
+    expect(camera.position.x).toBeCloseTo(0.48, 1);
+    // In third person workstation mode, avatar must remain visible
+    expect(avatar.isVisible()).toBe(true);
+
+    // Exiting workstation restores third-person exploration mode
+    const restored = controller.exitWorkstation();
+    expect(restored).toBe('THIRD_PERSON');
+    expect(controller.getMode()).toBe('THIRD_PERSON');
+  });
+
+  it('transitions to seated eye-level view in first-person workstation mode without switching to 3rd person', () => {
+    controller.setMode('FIRST_PERSON');
+    controller.enterWorkstation('FIRST_PERSON');
+
+    for (let i = 0; i < 20; i++) {
+      controller.update({ x: 0, y: 0, z: -2.85 });
+    }
+    expect(controller.getMode()).toBe('FIRST_PERSON');
+    expect(camera.position.y).toBeCloseTo(1.16, 1);
+    // Avatar stays hidden to prevent clipping inside head
+    expect(avatar.isVisible()).toBe(false);
+
+    // Exiting workstation restores first-person exploration mode
+    const restored = controller.exitWorkstation();
+    expect(restored).toBe('FIRST_PERSON');
+    expect(controller.getMode()).toBe('FIRST_PERSON');
+  });
 });
