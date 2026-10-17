@@ -71,12 +71,16 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 
 ---
 
-### Milestone M2: 3D Neighborhood & Player Controller
-- [ ] 3D neighborhood block geometry modeled/loaded and rendered with lighting and shadows.
-- [ ] Player character moves smoothly via WASD keys with collision detection against buildings and fences.
-- [ ] Camera toggle between 1st person and 3rd person operates seamlessly with `V` key.
-- [ ] Entering interaction volumes around key objects triggers proximity HUD prompts.
-- [ ] Frame rate remains $\ge 60$ FPS on standard desktop displays.
+### Milestone M2: 3D Neighborhood & Player Controller *(Completed)*
+- [x] 3D neighborhood block geometry procedural generation and rendering with lighting, materials, and distinct landmarks (Player Apartment, Cedarline Services HQ, Neighborhood Hub).
+- [x] Player character moves smoothly via WASD / Arrow keys with normalized diagonal velocity and collision detection against buildings, props, and world boundaries.
+- [x] Wall-sliding collision resolution prevents sticking or tunnelling along solid obstacles.
+- [x] Camera toggle between 1st person (pointer lock, pitch clamping ±78°, hidden avatar) and 3rd person (orbit/follow, visible avatar) operates seamlessly via `V` key and HUD button.
+- [x] Entering interaction volumes around key objects triggers proximity HUD prompts (`[E] Enter Cedarline Services`, `[E] Enter Player Apartment`, `[E] Read Noticeboard`).
+- [x] Location transition system provides seamless movement between outdoor neighborhood and interior destinations with safe spawn placement and return memory.
+- [x] Accessible controls guide (`F1` / HUD click) provides beginner-friendly, plain-language navigation and interaction assistance.
+- [x] Zero regressions on M1 pipeline; 57 unit/integration tests passing; clean lint/typecheck/build; interactive browser smoke testing verified.
+- [x] Frame rate remains $\ge 60$ FPS on standard desktop displays.
 
 ---
 

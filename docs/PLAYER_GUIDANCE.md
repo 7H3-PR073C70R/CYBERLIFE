@@ -13,12 +13,36 @@ In titles like *Hacker Simulator*, complex terminal workflows become engaging be
 - **No Mystery Syntax**: When a terminal command is required, the game provides the exact supported command, explains each parameter in plain English, and highlights what output to inspect.
 - **Contextual Security Education**: Every technical action explains the underlying real-world security concept simply and intuitively (e.g. comparing an IAM policy to a building master keycard).
 - **Physical + Digital Wayfinding**: Players are guided both in the 3D physical world (where to walk, which door or desk to approach) and on the 2D virtual desktop (which app to open, which button to click).
-
 ### 1.2 Zero Penalties for Assistance
 - Using hints, viewing suggested commands, or playing on the highest guidance tier **never** reduces mission rewards, deducts currency, withholds achievements, or flags a mission completion as inferior.
 - Players may switch guidance tiers at any time in the settings or HUD without losing mission progress.
 
+### 1.3 Physical Exploration & World Navigation (Milestone 2)
+
+Cyberlife makes 3D exploration intuitive for players who may never have played a 3D computer game before:
+
+#### Core Movement Controls
+| Action | Key / Input | Plain-English Explanation |
+|---|---|---|
+| **Move Forward** | `W` or `↑` (Up Arrow) | Walks your character toward the direction you are facing. |
+| **Move Backward** | `S` or `↓` (Down Arrow) | Steps backward away from where you are facing. |
+| **Move Left / Right** | `A` / `D` or `←` / `→` | Steps sideways (strafing) without changing your facing angle. |
+| **Switch Camera Mode** | `V` or HUD Toggle Button | Alternates between Third-Person (viewing character from behind) and First-Person (seeing through your character's eyes). |
+| **Interact / Enter** | `E` key | Activates nearby doors, entrance markers, or bulletin boards when an on-screen prompt appears. |
+| **Release Mouse Look** | `Escape` key | Releases pointer control in First-Person mode so you can click HUD buttons or pause. |
+| **Open Controls Help** | `F1` or HUD "Controls Guide" Button | Opens the comprehensive in-game beginner guidance panel at any time. |
+
+#### Demystifying Gaming Concepts
+- **What is "WASD"?**: In many computer games, the letters W, A, S, and D form a convenient cluster under your left hand, acting just like directional arrow keys. Cyberlife supports both WASD and standard arrow keys.
+- **What is "First-Person" vs. "Third-Person"?**:
+  - *Third-Person*: You view your character (an avatar wearing a blue cyber-visor) from behind. This gives the best awareness of your surroundings.
+  - *First-Person*: The camera shifts to eye level. Moving your mouse turns your head smoothly to look around.
+- **What is "Pointer Lock"?**: When switching to First-Person mode, the browser hides your cursor so mouse movements turn your view continuously. Pressing `Escape` or clicking outside the window immediately releases the mouse.
+- **Finding Interactive Objects**: Important destinations (like building entrances and community bulletin boards) have glowing teal ground markers and diamond beacons. Walking close to them automatically displays a prompt card in the lower center of your screen.
+- **Safety Boundaries**: The neighborhood is surrounded by pedestrian barriers and buildings with solid collision boundaries. You cannot fall through the ground or walk through walls.
+
 ---
+
 
 ## 2. Standard 8-Part Instruction Format
 

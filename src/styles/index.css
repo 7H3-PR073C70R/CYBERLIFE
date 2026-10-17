@@ -250,6 +250,56 @@ body,
   text-transform: uppercase;
 }
 
+.hud-status-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.hud-location-badge {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-accent-cyan);
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.55rem 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.hud-camera-toggle-btn,
+.hud-controls-help-btn {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all var(--transition-fast);
+}
+
+.hud-camera-toggle-btn:hover,
+.hud-controls-help-btn:hover,
+.hud-controls-help-btn.active {
+  border-color: var(--color-accent-cyan);
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--color-accent-cyan);
+}
+
 .hud-system-status {
   display: flex;
   align-items: center;
@@ -286,13 +336,212 @@ body,
   }
 }
 
-/* Middle / Side Panels Container */
+/* Middle Layout Container: Left (Controls), Center (Interaction), Right (Objectives) */
 .hud-body {
+  position: relative;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: flex-start;
   flex: 1;
   padding: 1rem 0;
+  gap: 1.25rem;
+  pointer-events: none;
+}
+
+/* Movement Help Panel (Accessible Exploration Guide) */
+.movement-help-panel {
+  width: 340px;
+  max-width: calc(100vw - 2rem);
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.movement-help-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--color-bg-surface-elevated);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.movement-help-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-accent-cyan);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-icon-close {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast);
+}
+
+.btn-icon-close:hover {
+  color: var(--color-accent-rose);
+}
+
+.movement-help-body {
+  padding: 1rem;
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+}
+
+.movement-help-desc {
+  color: var(--color-text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
+}
+
+.controls-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+}
+
+.control-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.key-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid var(--color-accent-cyan);
+  color: var(--color-accent-cyan);
+  border-radius: var(--radius-sm);
+  padding: 0.1rem 0.4rem;
+}
+
+.control-action {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.movement-help-tip {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  background: rgba(15, 22, 36, 0.6);
+  border-left: 3px solid var(--color-accent-emerald);
+  padding: 0.5rem 0.65rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  line-height: 1.4;
+}
+
+/* Contextual Proximity Interaction Prompt (Center Screen) */
+.interaction-prompt-container {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 500px;
+  z-index: 15;
+}
+
+.interaction-prompt-card {
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-accent-cyan);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.35);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem 1.4rem;
+  animation: prompt-appear 200ms var(--ease-out);
+}
+
+@keyframes prompt-appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.interaction-prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.prompt-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-accent-cyan);
+  letter-spacing: 0.05em;
+}
+
+.prompt-target-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.prompt-target-desc {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.85rem;
+  line-height: 1.45;
+}
+
+.prompt-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.prompt-action-text {
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+}
+
+.btn-interact-action {
+  background: var(--color-accent-cyan);
+  color: var(--color-text-inverse);
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-interact-action:hover {
+  background: #7dd3fc;
+  box-shadow: var(--shadow-glow-cyan);
 }
 
 /* Objective Tracker Panel (Adhering to PLAYER_GUIDANCE standards) */

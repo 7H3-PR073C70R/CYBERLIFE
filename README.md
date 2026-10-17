@@ -269,33 +269,78 @@ For full developer tutorials, consult [DEVELOPMENT_GUIDE.md](file:///Users/prote
 
 ## 11. Current Status
 
-- **Active Milestone**: **Milestone 1 — Bootable Application Foundation** (Completed and Verified).
+- **Active Milestone**: **Milestone 2 — 3D Neighborhood & Player Controller** (Completed and Verified).
 - **Completed Deliverables**:
-  - Full workspace inspection and M0 architectural verification.
-  - Pinned `package.json` with zero vulnerabilities (`npm audit`).
-  - Strict TypeScript configuration (`tsconfig.json`) passing with zero diagnostics.
-  - Modern ESLint 9 configuration with TypeScript and React Hooks support passing with zero warnings.
-  - Prettier formatting with `.editorconfig` parity passing.
-  - Three.js WebGL rendering pipeline (`WorldSceneManager`) with isolated lifecycle, animation loop, resize handling, and complete resource disposal.
-  - Minimal responsive application shell (`App`, `WorldViewport`, `HUDShell`) with accessible guidance placeholders, WCAG AA contrast, and graceful WebGL fallback.
-  - Vitest test suite with 100% passing tests and high coverage across presentation components and scene lifecycle.
-  - Real browser smoke testing verified with automated screenshots and video recordings.
-- **Explicit M1 Exclusions (Deferred to M2+)**:
-  - 3D neighborhood geometry, collisions, and character controller (deferred to M2).
+  - **Explorable 3D Neighborhood Environment (`WorldEnvironment.ts`)**:
+    - Compact urban block with walkable asphalt road, raised sidewalks, road dividing dashes, streetlights, and perimeter barriers.
+    - 3 recognisable landmarks with distinct visual architecture and entrance signs:
+      1. **Player Apartment**: West sidewalk, blue entrance canopy and glowing windows.
+      2. **Cedarline Services HQ**: East sidewalk, corporate building with emerald green entrance marker and signage.
+      3. **Neighborhood Hub**: Central public kiosk plaza with community bulletin noticeboard.
+    - Dedicated, fully lit interior scenes (`cedarline_interior`, `apartment_interior`) featuring a workstation desk, terminal monitor, and exit door marker.
+  - **Responsive Player Controller (`PlayerController.ts` & `PlayerAvatar.ts`)**:
+    - Omnidirectional movement (W/A/S/D and Arrow keys) with normalized diagonal speed.
+    - Camera-relative motion vectors ensuring intuitive navigation.
+    - Window blur and focus loss handling to prevent stuck keys.
+    - Input suppression when typing in text fields or accessible dialogs.
+    - Stylized player avatar capsule with directional cyan visor.
+  - **Dual-Mode Camera System (`WorldCameraController.ts`)**:
+    - 3rd-person follow/orbit mode with smooth avatar tracking and visible player model.
+    - 1st-person eye-level mode with mouse-look pointer lock and avatar clipping avoidance.
+    - Clamped vertical pitch limits (-78° to +78°) preventing camera flipping.
+    - Dynamic camera mode toggle with HUD button and `V` shortcut.
+  - **AABB Collision World (`CollisionWorld.ts`)**:
+    - Circle-against-AABB obstacle collision checks.
+    - Diagonal wall-sliding resolution allowing smooth navigation along building walls.
+    - Strict playable boundary enforcement (`-28` to `+28` in X and Z).
+  - **Interaction Registry & Proximity HUD (`InteractionRegistry.ts`, `HUDShell.tsx`, `InteractionPrompt.tsx`)**:
+    - Proximity-based interaction detection with deterministic nearest-target selection.
+    - Contextual prompt cards displaying landmark title, description, and available action (`[E] Activate`).
+    - Noticeboard bulletin modal showing the Aster Incident teaser and Cedarline staff alert.
+  - **Location Transition Controller (`LocationTransitionController.ts`)**:
+    - Safe transitions between the outdoor neighborhood and interior scenes.
+    - Spawn coordinate safety preventing collision entanglement.
+    - Transition debouncing (150ms cooldown) to prevent accidental double-triggers.
+    - Automatic outdoor spawn point recall when returning from interiors.
+  - **Beginner-Friendly Player Guidance (`MovementHelp.tsx`)**:
+    - Compact, plain-language controls panel explaining WASD, camera modes, mouse look, and interactions.
+    - Accessible modal with keyboard focus management and dismiss/reopen capability.
+  - **Automated Test Suite**:
+    - 57 passing tests across 13 test files covering collisions, player movement, camera switching, interaction selection, and location transitions.
+  - **Real Browser Verification**:
+    - End-to-end browser smoke test with automated screenshots and video recordings confirming rendering, movement, interactions, and transitions.
+- **Explicit M2 Exclusions (Deferred to M3+)**:
   - Headless authoritative simulation engine (deferred to M3).
-  - Virtual desktop, terminal emulator, and dialogue UI (deferred to M4).
-- **Next Milestone**: **Milestone 2 — 3D Neighborhood & Player Controller** (Walkable urban neighborhood, collision boundaries, and 1st/3rd person camera system).
+  - Interactive virtual desktop OS and cybersecurity terminal emulator (deferred to M4 & M5).
+  - Complete Aster Incident investigation mission graph (deferred to M6).
+- **Next Milestone**: **Milestone 3 — Simulation Engine & State Management** (Headless simulation engine, CommandBus, pure state reducers, and event dispatching).
 
 ---
 
-## 12. Milestone Roadmap Summary
+## 12. Player Controls Reference
+
+| Action | Primary Control | Secondary Control | Notes |
+|---|---|---|---|
+| **Move Forward** | `W` | `Up Arrow` | Normalized diagonal speed |
+| **Move Backward** | `S` | `Down Arrow` | Normalized diagonal speed |
+| **Move Left** | `A` | `Left Arrow` | Camera-relative lateral motion |
+| **Move Right** | `D` | `Right Arrow` | Camera-relative lateral motion |
+| **Switch Camera Mode** | `V` | HUD Toggle Button | Toggles between 3rd-Person and 1st-Person |
+| **Interact / Enter** | `E` | HUD `[E] Activate` | Activates nearest eligible target within radius |
+| **Look Around** | `Mouse` | — | Active in 1st-person mode with pointer lock |
+| **Release Pointer Lock** | `Escape` | — | Releases mouse cursor safely |
+| **Toggle Controls Guide**| HUD `Controls [WASD]`| HUD `Hide Guide [X]` | Opens/dismisses accessible controls help |
+
+---
+
+## 13. Milestone Roadmap Summary
 
 | Milestone | Title | Focus Area | Status |
 |---|---|---|---|
 | **M0** | Repository Foundation & Documentation | Architecture, directory layout, ADRs, documentation | **Completed** |
 | **M1** | Bootable Application Foundation | Vite, React, Three.js canvas mount, TypeScript strictness, CI tests | **Completed** |
-| **M2** | 3D Neighborhood & Player Controller | Walkable 3D city block, collision, 1st/3rd person camera, triggers | *Next* |
-| **M3** | Simulation Engine & State Management | Headless authoritative state machine, CommandBus, pure reducers |
+| **M2** | 3D Neighborhood & Player Controller | Walkable 3D city block, collision, 1st/3rd person camera, triggers | **Completed** |
+| **M3** | Simulation Engine & State Management | Headless authoritative state machine, CommandBus, pure reducers | *Next* |
 | **M4** | Interaction System & Hybrid Desktop | Interaction prompts, branching dialogue UI, virtual desktop shell |
 | **M5** | Cybersecurity Simulation & Tools | Virtual network, IAM, SIEM logs, simulated AI agent, terminal tools |
 | **M6** | Aster Incident Mission | Complete 10-stage investigation, containment, remediation, reporting |

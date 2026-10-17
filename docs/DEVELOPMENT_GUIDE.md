@@ -112,27 +112,123 @@ Missions are authored declaratively in JSON with runtime Zod validation:
 
 ---
 
-### 3.3 How to Add an Interactable 3D World Object
+### 3.3 How to Add a Building or Environmental Prop
 
-1. **Create the Entity in Domain**:
-   Define its interaction metadata:
+1. **Instantiate a `Building` in `WorldEnvironment.ts`**:
    ```typescript
-   export interface InteractableTarget {
-     id: string;
-     type: 'WORKSTATION' | 'NPC' | 'DOOR' | 'DROPBOX';
-     position: [number, number, number];
-     interactionRadius: number;
-     promptLabel: string;
-   }
+   const cafeBuilding = new Building({
+     name: 'Corner Cyber Cafe',
+     x: 15,
+     z: 14,
+     width: 10,
+     height: 8,
+     depth: 10,
+     color: 0x1e293b,
+     trimColor: 0x0f172a,
+     accentColor: 0xf59e0b,
+     entranceSide: 'WEST', // 'NORTH' | 'SOUTH' | 'EAST' | 'WEST'
+   });
+   this.buildings.push(cafeBuilding);
+   this.group.add(cafeBuilding.getMesh());
    ```
 
-2. **Add 3D Representation in Presentation**:
-   In `src/presentation/world/objects/WorkstationMesh.tsx`:
-   - Mount Three.js mesh at the specified coordinates.
-   - Register the entity with the `SpatialTriggerSystem`.
+2. **Register Solid Collision Obstacle**:
+   Always register the building's bounding box with `CollisionWorld` so the player cannot walk through walls:
+   ```typescript
+   const bounds = cafeBuilding.getBoundingBox();
+   this.collisionWorld.addObstacle(
+     bounds.minX,
+     bounds.maxX,
+     bounds.minZ,
+     bounds.maxZ,
+     'Building: Corner Cyber Cafe'
+   );
+   ```
 
-3. **Wire Interaction Command**:
-   When the player enters the trigger radius and presses `E`, dispatch `TriggerInteractionCommand { targetId }`. The Application layer will route to the appropriate UI modal or virtual desktop.
+3. **Add Props or Street Furniture**:
+   Create standard Three.js meshes and add them to `this.group`. If the prop is solid (e.g. lamp post base, bench, planter), call `this.collisionWorld.addObstacle(minX, maxX, minZ, maxZ, label)`.
+
+---
+
+### 3.4 How to Define a Labelled Interactable
+
+1. **Create an `InteractableMarker`**:
+   ```typescript
+   const marker = new InteractableMarker(x, z, accentColor, 'Cafe Entrance');
+   this.markers.push(marker);
+   this.group.add(marker.getMesh());
+   ```
+
+2. **Register in `InteractionRegistry`**:
+   ```typescript
+   this.interactionRegistry.register({
+     id: 'interact_cafe_entrance',
+     name: 'Corner Cyber Cafe',
+     promptAction: 'enter the cafe to meet Marcus [E]',
+     description: 'A bustling neighborhood cafe popular with Cedarline engineering staff.',
+     position: [x, 0, z],
+     radius: 2.5,
+     targetLocationId: 'cafe_interior', // optional transition target
+   });
+   ```
+
+3. **Handle Activation**:
+   If `targetLocationId` is specified, `WorldSceneManager.triggerNearbyInteraction()` will automatically transition scenes. For dialogs or bulletins, handle the ID in the interaction callback.
+
+---
+
+### 3.5 How to Add a Location & Spawn Point
+
+1. **Define Location in `src/presentation/world/worldConfig.ts`**:
+   ```typescript
+   cafeInterior: {
+     id: 'cafe_interior',
+     name: 'Corner Cyber Cafe — Seating Area',
+     description: 'Warm cafe booths with public Wi-Fi and chatter.',
+     type: 'INTERIOR',
+     spawnPosition: [0, 0, 1.5],
+     spawnYaw: 0, // radians facing North
+   } as LocationDefinition,
+   ```
+
+2. **Add Interior Construction in `WorldEnvironment.ts`**:
+   In `buildInteriorScene(locationId)`:
+   - Handle the new ID, set room dimensions, floor, walls, and lighting.
+   - Always add an exit door marker and register `interact_exit_door` with `targetLocationId: 'neighborhood'`.
+
+---
+
+### 3.6 How to Test Movement and Collision Logic
+
+Movement and collision algorithms are 100% decoupled from WebGL:
+1. **Collision Tests (`tests/unit/presentation/world/CollisionWorld.test.ts`)**:
+   - Instantiate `new CollisionWorld(boundaries)`.
+   - Add obstacles with `addObstacle()`.
+   - Call `resolveMovement(startX, startZ, deltaX, deltaZ, radius)` and assert `result.x`, `result.z`, `result.isBlocked`, `result.isSliding`.
+2. **Player Movement Tests (`tests/unit/presentation/world/PlayerController.test.ts`)**:
+   - Dispatch synthetic keyboard events (`keydown`/`keyup`) on `window`.
+   - Call `playerController.update(deltaTime, cameraYaw)`.
+   - Assert updated coordinates and normalized diagonal velocity.
+
+---
+
+### 3.7 How to Avoid Duplicate Listeners and Render Loops
+
+- **Single Animation Loop**: Only `WorldSceneManager` runs `requestAnimationFrame`. React re-renders must never start secondary loops.
+- **Controlled Event Listeners**:
+  - `PlayerController` and `WorldCameraController` register window listeners in constructor and remove them completely in `dispose()`.
+  - `LocationTransitionController` cleans up transition timers.
+  - `WorldViewport` uses `useRef<WorldSceneManager>` and cleans up in the `useEffect` unmount callback:
+    ```typescript
+    useEffect(() => {
+      initializeScene();
+      return () => {
+        managerRef.current?.dispose();
+        managerRef.current = null;
+      };
+    }, [initializeScene]);
+    ```
+- **Safe Resource Cleanup**: Use `Set<THREE.BufferGeometry>` and `Set<THREE.Material>` in `clear()` and `dispose()` methods so shared meshes are never double-disposed.
 
 ---
 

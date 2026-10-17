@@ -96,35 +96,40 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 
 ---
 
-## M2 — 3D Neighborhood & Player Controller
+## M2 — 3D Neighborhood & Player Controller *(Completed)*
 
+- **Status**: Completed and Verified.
 - **Purpose**: Build the explorable, compact 3D urban neighborhood with smooth character movement, collision detection, switchable camera modes, and spatial interaction zones.
 - **Scope**:
-  - Compact urban neighborhood block (street, cafe exterior/interior, apartment building, alleyway, electronics shop).
-  - First-person and third-person camera system with smooth toggle (`V` key or settings).
-  - Responsive character controller (WASD movement, sprinting, collision resolution against obstacles).
-  - Spatial trigger zones registering player proximity to interactable entities (doors, terminals, NPCs).
-  - Basic day/night ambient lighting cycle.
+  - Compact urban neighborhood block (street, sidewalk, Player Apartment, Cedarline Services HQ, Neighborhood Hub, streetlights, props).
+  - First-person and third-person camera system with smooth toggle (`V` key or HUD toggle button).
+  - Responsive character controller (WASD / Arrow keys movement, normalized diagonal velocity, collision resolution with wall-sliding).
+  - Spatial interaction trigger zones registering player proximity to interactable entities (doors, entrance markers, noticeboards).
+  - Seamless location transitions between outdoor block and indoor environments with spawn memory.
 - **Dependencies**: M1.
 - **Deliverables**:
-  - Modular 3D scene environment in `src/presentation/world/`.
-  - `CameraController` supporting first-person and third-person views with mouse look.
-  - `PlayerController` with collision bounds and movement physics.
-  - `SpatialTriggerSystem` emitting proximity events to the UI layer.
+  - Modular 3D scene environment in `src/presentation/world/` (`WorldEnvironment.ts`, `Building.ts`, `InteractableMarker.ts`, `PlayerAvatar.ts`).
+  - `WorldCameraController` supporting first-person (pointer lock, pitch clamp ±78°) and third-person follow camera with avatar visibility toggle.
+  - `PlayerController` with collision bounds, wall-sliding resolution, frame-rate independent delta time, blur reset, and input isolation.
+  - `CollisionWorld` implementing 2D circle-vs-AABB intersection tests, boundary clamping, and sliding resolution.
+  - `InteractionRegistry` for proximity queries and deterministic nearest-target resolution.
+  - `LocationTransitionController` coordinating indoor/outdoor transitions and spawn memory.
+  - Accessible HUD components (`MovementHelp.tsx`, `InteractionPrompt.tsx`, `StatusOverlay.tsx`).
 - **Acceptance Criteria**:
-  - Player can smoothly navigate the neighborhood without falling through geometry or clipping through solid walls.
-  - Camera toggles between 1st person and 3rd person seamlessly with preserved orientation.
-  - Entering an interaction volume displays a clear HUD prompt (e.g., "[E] Talk to Marcus", "[E] Access Workstation").
-  - Sustained 60 FPS performance on standard integrated graphics hardware.
+  - [x] Player can smoothly navigate the neighborhood without falling through geometry or clipping through solid walls.
+  - [x] Camera toggles between 1st person and 3rd person seamlessly with preserved orientation and position.
+  - [x] Entering an interaction volume displays a clear HUD prompt (e.g., "[E] Enter Cedarline Services", "[E] Enter Player Apartment", "[E] Read Noticeboard").
+  - [x] Location transitions between outdoor neighborhood and interior room function reliably with safe spawn placement.
+  - [x] Sustained 60 FPS performance on standard integrated graphics hardware.
 - **Explicit Exclusions**:
-  - Complex character facial animations or ragdoll physics.
+  - Complex character facial animations or ragdoll physics (deferred to later milestones).
   - Large procedural city generation (neighborhood is compact and authored).
-  - In-depth dialogue execution (deferred to M4).
+  - In-depth dialogue execution or cyber terminals (deferred to M4 and M5).
 - **Required Validation**:
-  - Manual walk-through test validating collision on all neighborhood buildings and boundaries.
-  - Unit tests verifying camera math and vector coordinate transformations.
+  - Automated test suite (13 test suites, 57 unit/integration tests passing with 0 failures).
+  - Browser testing validating canvas mount, movement, camera switching, interaction prompt trigger, and dialog activation.
 - **Definition of Done**:
-  - Neighborhood geometry is complete, walkable, bounded, and triggers interaction prompts reliably.
+  - Neighborhood geometry is complete, walkable, bounded, and triggers interaction prompts reliably. All acceptance criteria verified in test suite and browser smoke run.
 
 ---
 

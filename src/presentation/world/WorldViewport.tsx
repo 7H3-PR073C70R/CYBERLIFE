@@ -1,5 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { WorldSceneManager } from './WorldSceneManager';
+import {
+  CameraMode,
+  LocationDefinition,
+  InteractableDefinition,
+  WORLD_CONFIG,
+} from './worldConfig';
+import { HUDShell } from '../hud/HUDShell';
 
 export interface WorldViewportProps {
   onInitialized?: () => void;
@@ -13,7 +20,15 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const initializeScene = React.useCallback(() => {
+  // M2 World and Camera State
+  const [currentLocation, setCurrentLocation] = useState<LocationDefinition>(
+    WORLD_CONFIG.locations.neighborhood
+  );
+  const [cameraMode, setCameraMode] = useState<CameraMode>('THIRD_PERSON');
+  const [activeTarget, setActiveTarget] = useState<InteractableDefinition | null>(null);
+  const [noticeMessage, setNoticeMessage] = useState<string | null>(null);
+
+  const initializeScene = useCallback(() => {
     if (!containerRef.current) return;
 
     setIsLoading(true);
@@ -27,7 +42,12 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
 
     try {
       const manager = new WorldSceneManager();
-      manager.initialize(containerRef.current);
+      manager.initialize(containerRef.current, {
+        onLocationChanged: loc => setCurrentLocation(loc),
+        onCameraModeChanged: mode => setCameraMode(mode),
+        onInteractionTargetChanged: target => setActiveTarget(target),
+        onNoticeboardRead: notice => setNoticeMessage(notice),
+      });
       managerRef.current = manager;
       setIsLoading(false);
       onInitialized?.();
@@ -50,6 +70,19 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
     };
   }, [initializeScene]);
 
+  const handleToggleCamera = () => {
+    if (managerRef.current) {
+      const newMode = managerRef.current.toggleCameraMode();
+      setCameraMode(newMode);
+    }
+  };
+
+  const handleInteract = () => {
+    if (managerRef.current) {
+      managerRef.current.triggerNearbyInteraction();
+    }
+  };
+
   return (
     <div
       ref={containerRef}
@@ -60,7 +93,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
         <div className="world-loading-overlay" role="status" aria-live="polite">
           <div className="spinner" aria-hidden="true" />
           <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem' }}>
-            Initializing 3D World Viewport...
+            Building 3D Neighborhood Environment...
           </p>
         </div>
       )}
@@ -89,6 +122,64 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
           </div>
         </div>
       )}
+
+      {/* Noticeboard Modal Alert (if reading community bulletin) */}
+      {noticeMessage && (
+        <div
+          role="dialog"
+          aria-label="Neighborhood Noticeboard Bulletin"
+          className="world-error-card hud-interactive"
+          style={{
+            position: 'absolute',
+            top: '5.5rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 25,
+            border: '1px solid var(--color-accent-amber)',
+            backgroundColor: 'var(--color-bg-surface-elevated)',
+          }}
+        >
+          <h3
+            style={{
+              color: 'var(--color-accent-amber)',
+              fontSize: '1rem',
+              marginBottom: '0.4rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+            }}
+          >
+            <span>📋</span> Community Incident Alert
+          </h3>
+          <p
+            style={{
+              color: 'var(--color-text-primary)',
+              fontSize: '0.85rem',
+              lineHeight: 1.5,
+              marginBottom: '0.75rem',
+            }}
+          >
+            {noticeMessage}
+          </p>
+          <button
+            type="button"
+            className="btn-primary"
+            style={{ fontSize: '0.8rem', padding: '0.35rem 0.8rem' }}
+            onClick={() => setNoticeMessage(null)}
+          >
+            Close Notice
+          </button>
+        </div>
+      )}
+
+      {/* 2D HUD Layer positioned above the 3D canvas */}
+      <HUDShell
+        currentLocationName={currentLocation.name}
+        cameraMode={cameraMode}
+        activeTarget={activeTarget}
+        onToggleCamera={handleToggleCamera}
+        onInteract={handleInteract}
+      />
     </div>
   );
 };

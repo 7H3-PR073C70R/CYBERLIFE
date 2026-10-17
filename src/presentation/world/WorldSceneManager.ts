@@ -1,21 +1,38 @@
 import * as THREE from 'three';
+import {
+  CameraMode,
+  LocationDefinition,
+  InteractableDefinition,
+  WORLD_CONFIG,
+} from './worldConfig';
+import { CollisionWorld } from './CollisionWorld';
+import { InteractionRegistry } from './InteractionRegistry';
+import { PlayerAvatar } from './entities/PlayerAvatar';
+import { PlayerController } from './PlayerController';
+import { WorldCameraController } from './WorldCameraController';
+import { WorldEnvironment } from './WorldEnvironment';
+import { LocationTransitionController } from './LocationTransitionController';
 
 export interface WorldSceneOptions {
   clearColor?: number;
   antialias?: boolean;
+  onInteractionTargetChanged?: (target: InteractableDefinition | null) => void;
+  onLocationChanged?: (location: LocationDefinition) => void;
+  onCameraModeChanged?: (mode: CameraMode) => void;
+  onNoticeboardRead?: (notice: string) => void;
 }
 
 export interface SceneStatistics {
   renderedFrames: number;
   isDisposed: boolean;
+  activeLocation: string;
+  cameraMode: CameraMode;
 }
 
 /**
  * WorldSceneManager encapsulates the Three.js rendering lifecycle:
- * Scene, Camera, Renderer, Animation loop, Viewport resizing, and Resource disposal.
- *
- * It fulfills Milestone 1 by establishing a clean, isolated boundary between
- * the React component tree and the WebGL rendering pipeline.
+ * Scene, Camera, Renderer, Animation loop, Player Controller, Collision World,
+ * Environment, Interaction Registry, and Location Transitions.
  */
 export class WorldSceneManager {
   private container: HTMLElement | null = null;
@@ -24,9 +41,25 @@ export class WorldSceneManager {
   private camera: THREE.PerspectiveCamera | null = null;
   private animationFrameId: number | null = null;
   private resizeObserver: ResizeObserver | null = null;
+  private clock: THREE.Clock | null = null;
 
-  // Placeholder meshes for M1 visual verification
-  private animatedMeshGroup: THREE.Group | null = null;
+  // M2 Subsystems
+  private collisionWorld: CollisionWorld | null = null;
+  private interactionRegistry: InteractionRegistry | null = null;
+  private playerAvatar: PlayerAvatar | null = null;
+  private playerController: PlayerController | null = null;
+  private cameraController: WorldCameraController | null = null;
+  private worldEnvironment: WorldEnvironment | null = null;
+  private transitionController: LocationTransitionController | null = null;
+
+  // Active interaction target tracking
+  private currentTargetId: string | null = null;
+
+  // Callbacks
+  private onInteractionTargetChanged?: (target: InteractableDefinition | null) => void;
+  private onLocationChanged?: (location: LocationDefinition) => void;
+  private onCameraModeChanged?: (mode: CameraMode) => void;
+  private onNoticeboardRead?: (notice: string) => void;
 
   private frameCount = 0;
   private isDisposed = false;
@@ -47,8 +80,7 @@ export class WorldSceneManager {
   }
 
   /**
-   * Initializes the Three.js scene, camera, renderer, and begins the animation loop.
-   * Throws an error if container is invalid or WebGL context cannot be created.
+   * Initializes the Three.js scene, camera, renderer, environment, controllers, and render loop.
    */
   public initialize(container: HTMLElement, options: WorldSceneOptions = {}): void {
     if (!container) {
@@ -65,19 +97,28 @@ export class WorldSceneManager {
 
     this.container = container;
     this.isDisposed = false;
+    this.clock = new THREE.Clock();
+
+    this.onInteractionTargetChanged = options.onInteractionTargetChanged;
+    this.onLocationChanged = options.onLocationChanged;
+    this.onCameraModeChanged = options.onCameraModeChanged;
+    this.onNoticeboardRead = options.onNoticeboardRead;
 
     // 1. Scene Setup
     const clearColor = options.clearColor ?? 0x070a10;
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(clearColor);
-    this.scene.fog = new THREE.FogExp2(clearColor, 0.035);
+    this.scene.fog = new THREE.FogExp2(clearColor, 0.025);
 
     // 2. Camera Setup
     const width = container.clientWidth || 800;
     const height = container.clientHeight || 600;
-    this.camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    this.camera.position.set(0, 3, 7);
-    this.camera.lookAt(0, 1, 0);
+    this.camera = new THREE.PerspectiveCamera(
+      WORLD_CONFIG.camera.fov,
+      width / height,
+      WORLD_CONFIG.camera.near,
+      WORLD_CONFIG.camera.far
+    );
 
     // 3. Renderer Setup
     try {
@@ -94,7 +135,7 @@ export class WorldSceneManager {
       const canvas = this.renderer.domElement;
       canvas.className = 'world-viewport-canvas';
       canvas.setAttribute('role', 'region');
-      canvas.setAttribute('aria-label', '3D World Viewport (Technical Placeholder Scene)');
+      canvas.setAttribute('aria-label', '3D World Viewport — Explorable Urban Neighborhood');
       this.container.appendChild(canvas);
     } catch (err) {
       this.dispose();
@@ -103,95 +144,143 @@ export class WorldSceneManager {
       );
     }
 
-    // 4. Construct Placeholder Scene Geometry (Floor Grid + Neutral Geometric Objects)
-    this.buildPlaceholderScene();
+    // 4. Core Subsystems Setup
+    this.collisionWorld = new CollisionWorld(WORLD_CONFIG.boundaries);
+    this.interactionRegistry = new InteractionRegistry();
 
-    // 5. Setup Resize Handling via ResizeObserver
+    // 5. Build Environment (Neighborhood block + 3 landmarks + collision obstacles)
+    this.worldEnvironment = new WorldEnvironment(this.collisionWorld, this.interactionRegistry);
+    this.scene.add(this.worldEnvironment.getMesh());
+
+    // 6. Lighting
+    this.setupLighting();
+
+    // 7. Player Avatar and Controller Setup
+    this.playerAvatar = new PlayerAvatar();
+    this.scene.add(this.playerAvatar.getMesh());
+
+    this.playerController = new PlayerController({
+      avatar: this.playerAvatar,
+      collisionWorld: this.collisionWorld,
+      initialPosition: [0, 0, 14],
+      initialYaw: 0,
+      onCameraToggle: () => this.toggleCameraMode(),
+      onInteract: () => this.triggerNearbyInteraction(),
+    });
+
+    // 8. Camera Controller Setup
+    this.cameraController = new WorldCameraController({
+      camera: this.camera,
+      domElement: this.renderer.domElement,
+      avatar: this.playerAvatar,
+      initialMode: 'THIRD_PERSON',
+      onModeChanged: mode => this.onCameraModeChanged?.(mode),
+    });
+
+    // 9. Location Transition Controller Setup
+    this.transitionController = new LocationTransitionController({
+      environment: this.worldEnvironment,
+      playerController: this.playerController,
+      cameraController: this.cameraController,
+      initialLocationId: 'neighborhood',
+      onLocationChanged: loc => this.onLocationChanged?.(loc),
+    });
+
+    // 10. Resize Handling
     this.setupResizeObserver();
 
-    // 6. Begin Animation Loop
+    // 11. Start Animation Loop
     this.startAnimationLoop();
   }
 
-  /**
-   * Builds placeholder technical geometry to prove lighting, shadows, and rendering work.
-   * Explicitly avoids pretending character controllers or complete neighborhood exist.
-   */
-  private buildPlaceholderScene(): void {
+  private setupLighting(): void {
     if (!this.scene) return;
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    // Ambient Moonlight / Sky Light
+    const ambientLight = new THREE.AmbientLight(0x94a3b8, 0.45);
     this.scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0x38bdf8, 1.2);
-    directionalLight.position.set(5, 10, 5);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 1024;
-    directionalLight.shadow.mapSize.height = 1024;
-    this.scene.add(directionalLight);
+    // Directional Urban Key Light (Simulating tall street illumination)
+    const dirLight = new THREE.DirectionalLight(0x38bdf8, 1.1);
+    dirLight.position.set(10, 20, 15);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.width = 1024;
+    dirLight.shadow.mapSize.height = 1024;
+    dirLight.shadow.camera.near = 0.5;
+    dirLight.shadow.camera.far = 60;
+    dirLight.shadow.camera.left = -25;
+    dirLight.shadow.camera.right = 25;
+    dirLight.shadow.camera.top = 25;
+    dirLight.shadow.camera.bottom = -25;
+    this.scene.add(dirLight);
 
-    const accentLight = new THREE.PointLight(0x00ff9d, 0.8, 15);
-    accentLight.position.set(-3, 2, 2);
-    this.scene.add(accentLight);
-
-    // Ground Grid & Floor
-    const gridHelper = new THREE.GridHelper(30, 30, 0x38bdf8, 0x1e293b);
-    gridHelper.position.y = 0;
-    this.scene.add(gridHelper);
-
-    const floorGeo = new THREE.PlaneGeometry(30, 30);
-    const floorMat = new THREE.MeshStandardMaterial({
-      color: 0x0a0f1d,
-      roughness: 0.8,
-      metalness: 0.2,
-    });
-    const floorMesh = new THREE.Mesh(floorGeo, floorMat);
-    floorMesh.rotation.x = -Math.PI / 2;
-    floorMesh.position.y = -0.01;
-    floorMesh.receiveShadow = true;
-    this.scene.add(floorMesh);
-
-    // Animated Central Placeholder Mesh Group
-    this.animatedMeshGroup = new THREE.Group();
-
-    // Central geometric focal point (Tech Node Octahedron)
-    const coreGeo = new THREE.OctahedronGeometry(1.2, 0);
-    const coreMat = new THREE.MeshStandardMaterial({
-      color: 0x38bdf8,
-      roughness: 0.2,
-      metalness: 0.8,
-      wireframe: false,
-    });
-    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-    coreMesh.position.y = 1.5;
-    coreMesh.castShadow = true;
-    this.animatedMeshGroup.add(coreMesh);
-
-    // Orbiting wireframe rings
-    const ringGeo = new THREE.TorusGeometry(2, 0.04, 16, 64);
-    const ringMat = new THREE.MeshBasicMaterial({
-      color: 0x38bdf8,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.6,
-    });
-    const ringMesh1 = new THREE.Mesh(ringGeo, ringMat);
-    ringMesh1.position.y = 1.5;
-    ringMesh1.rotation.x = Math.PI / 3;
-    this.animatedMeshGroup.add(ringMesh1);
-
-    const ringMesh2 = new THREE.Mesh(ringGeo, ringMat);
-    ringMesh2.position.y = 1.5;
-    ringMesh2.rotation.y = Math.PI / 4;
-    this.animatedMeshGroup.add(ringMesh2);
-
-    this.scene.add(this.animatedMeshGroup);
+    // Subtle Cyan Ground Fill Light
+    const hemiLight = new THREE.HemisphereLight(0x1e293b, 0x070a10, 0.4);
+    this.scene.add(hemiLight);
   }
 
   /**
-   * Resizes renderer and updates camera projection when container dimensions change.
+   * Toggles between First-Person and Third-Person camera modes.
    */
+  public toggleCameraMode(): CameraMode {
+    if (!this.cameraController) return 'THIRD_PERSON';
+    return this.cameraController.toggleMode();
+  }
+
+  public getCameraMode(): CameraMode {
+    return this.cameraController ? this.cameraController.getMode() : 'THIRD_PERSON';
+  }
+
+  /**
+   * Executes interaction with the nearest eligible interactable when E is pressed.
+   */
+  public triggerNearbyInteraction(): void {
+    if (!this.interactionRegistry || !this.playerController || !this.transitionController) return;
+
+    const pos = this.playerController.getPosition();
+    const nearest = this.interactionRegistry.findNearest(pos.x, pos.z);
+
+    if (!nearest) return;
+
+    const target = nearest.interactable;
+
+    // If target specifies a destination location, execute scene transition
+    if (target.targetLocationId) {
+      this.transitionController.transitionTo(target.targetLocationId);
+    } else if (target.id === 'interact_noticeboard') {
+      this.onNoticeboardRead?.(
+        'NOTICE: Unusual system alert activity detected in Cedarline Services staging cluster. Cedarline staff meeting outside Cafe at 14:00.'
+      );
+    }
+  }
+
+  public setCallbacks(options: {
+    onInteractionTargetChanged?: (target: InteractableDefinition | null) => void;
+    onLocationChanged?: (location: LocationDefinition) => void;
+    onCameraModeChanged?: (mode: CameraMode) => void;
+    onNoticeboardRead?: (notice: string) => void;
+  }): void {
+    if (options.onInteractionTargetChanged)
+      this.onInteractionTargetChanged = options.onInteractionTargetChanged;
+    if (options.onLocationChanged) this.onLocationChanged = options.onLocationChanged;
+    if (options.onCameraModeChanged) this.onCameraModeChanged = options.onCameraModeChanged;
+    if (options.onNoticeboardRead) this.onNoticeboardRead = options.onNoticeboardRead;
+  }
+
+  public getCurrentLocation(): LocationDefinition {
+    if (this.transitionController) {
+      return this.transitionController.getCurrentLocation();
+    }
+    return WORLD_CONFIG.locations.neighborhood;
+  }
+
+  public getPlayerPosition(): { x: number; y: number; z: number } {
+    if (this.playerController) {
+      return this.playerController.getPosition();
+    }
+    return { x: 0, y: 0, z: 0 };
+  }
+
   public resize(): void {
     if (!this.container || !this.renderer || !this.camera) return;
 
@@ -214,21 +303,41 @@ export class WorldSceneManager {
     this.resizeObserver.observe(this.container);
   }
 
-  /**
-   * Single, managed animation loop using requestAnimationFrame.
-   */
   private startAnimationLoop(): void {
     const animate = () => {
       if (this.isDisposed) return;
 
       this.frameCount++;
+      const deltaTime = this.clock ? this.clock.getDelta() : 0.016;
 
-      // Subtle rotation for technical placeholder meshes
-      if (this.animatedMeshGroup) {
-        this.animatedMeshGroup.rotation.y += 0.008;
-        this.animatedMeshGroup.rotation.x += 0.003;
+      // 1. Update Player Movement (camera-relative)
+      if (this.playerController && this.cameraController) {
+        this.playerController.update(deltaTime, this.cameraController.getYaw());
       }
 
+      // 2. Update Camera Position and Orientation
+      if (this.cameraController && this.playerController) {
+        this.cameraController.update(this.playerController.getPosition());
+      }
+
+      // 3. Update Environment Markers
+      if (this.worldEnvironment) {
+        this.worldEnvironment.update(deltaTime);
+      }
+
+      // 4. Proximity Interaction Check
+      if (this.interactionRegistry && this.playerController) {
+        const playerPos = this.playerController.getPosition();
+        const nearest = this.interactionRegistry.findNearest(playerPos.x, playerPos.z);
+        const newTargetId = nearest ? nearest.interactable.id : null;
+
+        if (newTargetId !== this.currentTargetId) {
+          this.currentTargetId = newTargetId;
+          this.onInteractionTargetChanged?.(nearest ? nearest.interactable : null);
+        }
+      }
+
+      // 5. Render Scene
       if (this.renderer && this.scene && this.camera) {
         this.renderer.render(this.scene, this.camera);
       }
@@ -239,19 +348,15 @@ export class WorldSceneManager {
     this.animationFrameId = requestAnimationFrame(animate);
   }
 
-  /**
-   * Returns operational statistics for diagnostics and testing.
-   */
   public getStatistics(): SceneStatistics {
     return {
       renderedFrames: this.frameCount,
       isDisposed: this.isDisposed,
+      activeLocation: this.getCurrentLocation().name,
+      cameraMode: this.getCameraMode(),
     };
   }
 
-  /**
-   * Thoroughly disposes WebGL resources, listeners, observers, and animation frames.
-   */
   public dispose(): void {
     this.isDisposed = true;
 
@@ -267,19 +372,47 @@ export class WorldSceneManager {
       this.resizeObserver = null;
     }
 
-    // 3. Dispose Meshes, Geometries, Materials, and Textures in Scene
+    // 3. Dispose Subsystems
+    if (this.playerController) {
+      this.playerController.dispose();
+      this.playerController = null;
+    }
+
+    if (this.cameraController) {
+      this.cameraController.dispose();
+      this.cameraController = null;
+    }
+
+    if (this.worldEnvironment) {
+      this.worldEnvironment.dispose();
+      this.worldEnvironment = null;
+    }
+
+    if (this.playerAvatar) {
+      this.playerAvatar.dispose();
+      this.playerAvatar = null;
+    }
+
+    if (this.collisionWorld) {
+      this.collisionWorld.clear();
+      this.collisionWorld = null;
+    }
+
+    if (this.interactionRegistry) {
+      this.interactionRegistry.clear();
+      this.interactionRegistry = null;
+    }
+
+    this.transitionController = null;
+
+    // 4. Dispose Scene Meshes & Lights
     if (this.scene) {
       this.scene.traverse(object => {
         if (object instanceof THREE.Mesh) {
-          if (object.geometry) {
-            object.geometry.dispose();
-          }
+          if (object.geometry) object.geometry.dispose();
           if (object.material) {
-            if (Array.isArray(object.material)) {
-              object.material.forEach(mat => mat.dispose());
-            } else {
-              object.material.dispose();
-            }
+            if (Array.isArray(object.material)) object.material.forEach(m => m.dispose());
+            else object.material.dispose();
           }
         }
       });
@@ -287,7 +420,7 @@ export class WorldSceneManager {
       this.scene = null;
     }
 
-    // 4. Dispose WebGL Renderer
+    // 5. Dispose WebGL Renderer
     if (this.renderer) {
       if (this.renderer.domElement && this.renderer.domElement.parentNode) {
         this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
@@ -296,8 +429,8 @@ export class WorldSceneManager {
       this.renderer = null;
     }
 
-    this.animatedMeshGroup = null;
     this.camera = null;
     this.container = null;
+    this.clock = null;
   }
 }

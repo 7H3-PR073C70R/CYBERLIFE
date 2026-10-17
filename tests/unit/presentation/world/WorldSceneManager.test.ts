@@ -78,4 +78,33 @@ describe('WorldSceneManager', () => {
     expect(stats.isDisposed).toBe(true);
     expect(container.querySelector('canvas')).toBeNull();
   });
+
+  it('toggles camera mode between THIRD_PERSON and FIRST_PERSON', () => {
+    const manager = new WorldSceneManager();
+    manager.initialize(container);
+
+    expect(manager.getCameraMode()).toBe('THIRD_PERSON');
+
+    const newMode = manager.toggleCameraMode();
+    expect(newMode).toBe('FIRST_PERSON');
+    expect(manager.getCameraMode()).toBe('FIRST_PERSON');
+
+    manager.dispose();
+  });
+
+  it('provides current location and player position', () => {
+    const manager = new WorldSceneManager();
+    manager.initialize(container);
+
+    const location = manager.getCurrentLocation();
+    expect(location.id).toBe('neighborhood');
+    expect(location.name).toBe('Downtown Urban Block');
+
+    const pos = manager.getPlayerPosition();
+    expect(pos).toHaveProperty('x');
+    expect(pos).toHaveProperty('y');
+    expect(pos).toHaveProperty('z');
+
+    manager.dispose();
+  });
 });
