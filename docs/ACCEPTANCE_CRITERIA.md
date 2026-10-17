@@ -84,6 +84,19 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 
 ---
 
+### Milestone M2.5: Lagos Island Environment *(Completed)*
+- [x] Historic Lagos Island street network modeled and rendered with Broad Street, Marina Road, Balogun Market Lane, and Tinubu Square.
+- [x] Varied architectural palette reflecting real Lagos Island heritage: Afro-Brazilian residences with arched windows and balconies, modern commercial banking towers, and market storefronts with roll-down metal shutters and striped awnings.
+- [x] Authentic local environmental details: iconic yellow Danfo commercial minibus with twin black racing stripes, Balogun market stalls with display crates, concrete utility poles with overhead wires, official Lagos State green/white street signs, and rooftop GeePee water tanks.
+- [x] Marina waterfront seawall with safety railings, mooring bollards, palm promenade, and deep blue Lagos Lagoon waters.
+- [x] Tinubu Square civic plaza with central commemorative fountain monument, benches, royal palms, and functional community noticeboard.
+- [x] Full collision blocking and wall-sliding resolution on all buildings, seawalls, Danfo bus, market stalls, and monuments.
+- [x] Seamless entrance and return transitions for Player Apartment (Broad Street 14) and Cedarline Services HQ (Marina Tower).
+- [x] 100% test pass rate across 16 test files (72 tests passing, >93% line coverage); strict type checking, linting, formatting, and production build verified.
+- [x] Real in-browser visual verification confirmed at 60 FPS.
+
+---
+
 ### Milestone M3: Simulation Engine & State Management
 - [ ] Authoritative `SimulationEngine` executes deterministically in headless Node.js / Vitest.
 - [ ] In-game clock ticks and advances game time correctly.

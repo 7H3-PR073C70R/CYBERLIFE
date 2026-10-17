@@ -269,51 +269,38 @@ For full developer tutorials, consult [DEVELOPMENT_GUIDE.md](file:///Users/prote
 
 ## 11. Current Status
 
-- **Active Milestone**: **Milestone 2 — 3D Neighborhood & Player Controller** (Completed and Verified).
+- **Active Milestone**: **Milestone 2.5 — Lagos Island Environment** (Completed and Verified).
 - **Completed Deliverables**:
-  - **Explorable 3D Neighborhood Environment (`WorldEnvironment.ts`)**:
-    - Compact urban block with walkable asphalt road, raised sidewalks, road dividing dashes, streetlights, and perimeter barriers.
-    - 3 recognisable landmarks with distinct visual architecture and entrance signs:
-      1. **Player Apartment**: West sidewalk, blue entrance canopy and glowing windows.
-      2. **Cedarline Services HQ**: East sidewalk, corporate building with emerald green entrance marker and signage.
-      3. **Neighborhood Hub**: Central public kiosk plaza with community bulletin noticeboard.
-    - Dedicated, fully lit interior scenes (`cedarline_interior`, `apartment_interior`) featuring a workstation desk, terminal monitor, and exit door marker.
-  - **Responsive Player Controller (`PlayerController.ts` & `PlayerAvatar.ts`)**:
-    - Omnidirectional movement (W/A/S/D and Arrow keys) with normalized diagonal speed.
-    - Camera-relative motion vectors ensuring intuitive navigation.
-    - Window blur and focus loss handling to prevent stuck keys.
-    - Input suppression when typing in text fields or accessible dialogs.
-    - Stylized player avatar capsule with directional cyan visor.
-  - **Dual-Mode Camera System (`WorldCameraController.ts`)**:
-    - 3rd-person follow/orbit mode with smooth avatar tracking and visible player model.
-    - 1st-person eye-level mode with mouse-look pointer lock and avatar clipping avoidance.
-    - Clamped vertical pitch limits (-78° to +78°) preventing camera flipping.
-    - Dynamic camera mode toggle with HUD button and `V` shortcut.
-  - **AABB Collision World (`CollisionWorld.ts`)**:
-    - Circle-against-AABB obstacle collision checks.
-    - Diagonal wall-sliding resolution allowing smooth navigation along building walls.
-    - Strict playable boundary enforcement (`-28` to `+28` in X and Z).
-  - **Interaction Registry & Proximity HUD (`InteractionRegistry.ts`, `HUDShell.tsx`, `InteractionPrompt.tsx`)**:
-    - Proximity-based interaction detection with deterministic nearest-target selection.
-    - Contextual prompt cards displaying landmark title, description, and available action (`[E] Activate`).
-    - Noticeboard bulletin modal showing the Aster Incident teaser and Cedarline staff alert.
-  - **Location Transition Controller (`LocationTransitionController.ts`)**:
-    - Safe transitions between the outdoor neighborhood and interior scenes.
-    - Spawn coordinate safety preventing collision entanglement.
-    - Transition debouncing (150ms cooldown) to prevent accidental double-triggers.
-    - Automatic outdoor spawn point recall when returning from interiors.
-  - **Beginner-Friendly Player Guidance (`MovementHelp.tsx`)**:
-    - Compact, plain-language controls panel explaining WASD, camera modes, mouse look, and interactions.
-    - Accessible modal with keyboard focus management and dismiss/reopen capability.
+  - **Explorable Historic Lagos Island District (`WorldEnvironment.ts`, `LagosProps.ts`, `Building.ts`)**:
+    - **Broad Street Commercial Spine**: Walkable central urban thoroughfare with asphalt roadway, dashed yellow road dividers, pedestrian sidewalks, curbs, drainage channels, and zebra crossings.
+    - **Marina Waterfront Boulevard & Lagos Lagoon**: Waterside promenade lined with royal palm trees, concrete seawall with safety railings, mooring bollards, and deep blue Lagos Lagoon waters.
+    - **Tinubu Square Civic Plaza**: Historic civic landmark featuring the central commemorative fountain monument, royal palm trees, perimeter wooden benches, and the Tinubu Square Community Noticeboard.
+    - **Balogun / Idumota Market Cluster**: Bustling commercial side lane featuring vibrant market storefronts with roll-down metal shutters, colorful striped canvas awnings, four market stalls with display crates, and official street signposts.
+    - **Iconic Local Elements**:
+      1. **Lagos Danfo Minibus**: The unmistakable yellow commercial minibus with twin black horizontal stripes parked curbside on Broad Street with collision physics.
+      2. **Concrete Utility Poles & Overhead Cables**: Utility poles with cross-arms, insulators, transformer canisters, and connecting overhead electrical wires.
+      3. **Official Lagos State Street Signs**: Green & white enamel signposts for `"BROAD STREET"`, `"MARINA ROAD"`, `"BALOGUN STREET"`, and `"TINUBU SQUARE"`.
+      4. **Rooftop Polyethylene Water Tanks**: Authentic black cylindrical water storage tanks with lids on elevated roof stands.
+  - **Varied Architectural Palette (`Building.ts`)**:
+    - **Afro-Brazilian Heritage Residential**: Warm ochre plaster facade, decorative arched window hoods, 2nd-floor wrought-iron style balcony, and rooftop water tank (**Player Apartment** at Broad Street 14).
+    - **Multi-Storey Commercial Towers**: Slate and corporate glass facade with reflective horizontal window ribbons, cantilevered entrance canopy, rooftop AC chiller equipment, telecommunications antenna mast with blinking red beacon (**Cedarline Services Marina HQ** and **Eko Merchant Bank Tower**).
+    - **Market Storefronts**: 2-storey commercial buildings with ground-floor roll-down security shutters, colorful striped canvas awnings, and painted business signboards (**Balogun Electronics & Cables**, **Eko Fabrics & Lace Emporium**).
+  - **Gameplay & Collision Continuity**:
+    - Omnidirectional player controller (W/A/S/D and Arrow keys) with normalized diagonal speed and frame-rate-independent delta time.
+    - Circle-against-AABB collision detection with smooth wall-sliding resolution on all buildings, seawall, Danfo bus, stalls, and monuments.
+    - Dual camera modes: 3rd-person follow/orbit mode and 1st-person eye-level mode with mouse-look pointer lock and vertical pitch clamping (±78°).
+    - Proximity interaction registry detecting nearby targets and displaying contextual HUD prompts (`[E] Activate`).
+    - Seamless location transitions between outdoor Lagos Island and dedicated interior rooms (**Player Apartment** and **Cedarline Services HQ**) with return spawn memory.
+    - Accessible beginner controls modal and plain-language guidance.
   - **Automated Test Suite**:
-    - 57 passing tests across 13 test files covering collisions, player movement, camera switching, interaction selection, and location transitions.
+    - 72 passing tests across 16 test files with >93% line coverage and 0 failures.
   - **Real Browser Verification**:
-    - End-to-end browser smoke test with automated screenshots and video recordings confirming rendering, movement, interactions, and transitions.
-- **Explicit M2 Exclusions (Deferred to M3+)**:
+    - Live browser validation confirming WebGL 60 FPS rendering, tropical daylight lighting, landmark layout, collision resolution, interaction prompts, and location transitions.
+- **Explicit Exclusions (Deferred to M3+)**:
   - Headless authoritative simulation engine (deferred to M3).
   - Interactive virtual desktop OS and cybersecurity terminal emulator (deferred to M4 & M5).
   - Complete Aster Incident investigation mission graph (deferred to M6).
-- **Next Milestone**: **Milestone 3 — Simulation Engine & State Management** (Headless simulation engine, CommandBus, pure state reducers, and event dispatching).
+- **Next Milestone**: **Milestone 3 — Simulation Engine & State Management** (Headless simulation state machine, CommandBus, pure state reducers, and event dispatching).
 
 ---
 
@@ -340,6 +327,7 @@ For full developer tutorials, consult [DEVELOPMENT_GUIDE.md](file:///Users/prote
 | **M0** | Repository Foundation & Documentation | Architecture, directory layout, ADRs, documentation | **Completed** |
 | **M1** | Bootable Application Foundation | Vite, React, Three.js canvas mount, TypeScript strictness, CI tests | **Completed** |
 | **M2** | 3D Neighborhood & Player Controller | Walkable 3D city block, collision, 1st/3rd person camera, triggers | **Completed** |
+| **M2.5** | Lagos Island Environment | Authentic Lagos Island district: Broad St, Marina, Balogun market, Danfo | **Completed** |
 | **M3** | Simulation Engine & State Management | Headless authoritative state machine, CommandBus, pure reducers | *Next* |
 | **M4** | Interaction System & Hybrid Desktop | Interaction prompts, branching dialogue UI, virtual desktop shell |
 | **M5** | Cybersecurity Simulation & Tools | Virtual network, IAM, SIEM logs, simulated AI agent, terminal tools |

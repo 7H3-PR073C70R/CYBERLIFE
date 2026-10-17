@@ -13,6 +13,7 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 - [M0 — Repository Foundation & Documentation](#m0--repository-foundation--documentation) *(Active / Completing)*
 - [M1 — Bootable Application Foundation](#m1--bootable-application-foundation)
 - [M2 — 3D Neighborhood & Player Controller](#m2--3d-neighborhood--player-controller)
+- [M2.5 — Lagos Island Environment](#m25--lagos-island-environment)
 - [M3 — Simulation Engine & State Management](#m3--simulation-engine--state-management)
 - [M4 — Interaction System & Hybrid Desktop](#m4--interaction-system--hybrid-desktop)
 - [M5 — Cybersecurity Simulation & Tools](#m5--cybersecurity-simulation--tools)
@@ -132,6 +133,44 @@ This document establishes the official sequential milestone roadmap for Cyberlif
   - Neighborhood geometry is complete, walkable, bounded, and triggers interaction prompts reliably. All acceptance criteria verified in test suite and browser smoke run.
 
 ---
+
+## M2.5 — Lagos Island Environment *(Completed)*
+
+- **Status**: Completed and Verified.
+- **Purpose**: Transform the generic procedural urban neighborhood into an authentic, explorable slice of historic Lagos Island, Nigeria.
+- **Scope**:
+  - Coherent street layout: Broad Street commercial spine, Marina waterfront boulevard, Balogun / Idumota market street, and Tinubu Square civic plaza.
+  - Multi-style architectural palette: Afro-Brazilian heritage buildings (arched windows, decorative balconies, warm ochre plaster), commercial corporate towers (window ribbons, chillers, antenna masts), and market storefronts (roll-down shutters, striped awnings).
+  - Authentic environmental details: parked yellow Danfo minibus with twin black stripes, Balogun market stalls with display crates, concrete utility poles with overhead electrical cables, official Lagos State green/white street signs, rooftop GeePee water tanks, and tropical royal palm trees.
+  - Marina waterfront with concrete seawall, safety railings, mooring bollards, and deep blue Lagos Lagoon waters.
+  - Tinubu Square central fountain & obelisk monument, perimeter benches, and Community Noticeboard.
+  - 100% preservation of M2 movement, wall-sliding collision physics, camera modes, and interior room transitions.
+- **Dependencies**: M2.
+- **Deliverables**:
+  - Upgraded `WorldEnvironment.ts` with complete Lagos Island street network and procedural district generation.
+  - `src/presentation/world/entities/Building.ts` supporting `AFRO_BRAZILIAN`, `COMMERCIAL_TOWER`, and `MARKET_STOREFRONT` styles.
+  - `src/presentation/world/entities/LagosProps.ts` procedural generators for Danfo bus, market stalls, utility poles, street signs, seawall, water tanks, and Tinubu monument.
+  - Expanded world bounds (`[-38, 38] × [-38, 38]`) and spawn configuration in `worldConfig.ts`.
+  - Realistic tropical daylighting with warm sunlight and coastal sky in `WorldSceneManager.ts`.
+- **Acceptance Criteria**:
+  - [x] Initial scene visibly reads as a dense, locally grounded Lagos Island district rather than a generic Western block.
+  - [x] Broad Street, Marina Road, Balogun Market Lane, and Tinubu Square form a coherent, navigable urban layout.
+  - [x] Market-inspired area features distinct storefronts, colorful awnings, stalls, and parked Danfo minibus.
+  - [x] Marina waterfront and Lagos Lagoon are visually distinct with seawall, safety railings, and palm trees.
+  - [x] Player can walk throughout the district with robust collision blocking and wall-sliding on all buildings and props.
+  - [x] Player Apartment and Cedarline Services HQ entrances and transitions remain functional in both directions.
+  - [x] Tinubu Square Community Noticeboard interaction functions with localized bulletin content.
+  - [x] Dual-mode camera (1st and 3rd person) functions seamlessly across the district.
+  - [x] 100% pass rate across automated tests (16 test files, 72 unit/component tests, >93% coverage).
+- **Explicit Exclusions**:
+  - Full metropolitan Lagos generation (scope is compact historic Lagos Island slice).
+  - Headless authoritative simulation engine (deferred to M3).
+  - Vehicle traffic simulation or pedestrian AI (deferred to future milestones).
+- **Required Validation**:
+  - Automated test suite (72 unit and component tests passing with 0 errors).
+  - Browser smoke testing verifying rendering, Danfo minibus, Balogun market, noticeboard, and interior transitions.
+- **Definition of Done**:
+  - Lagos Island environment is complete, walkable, authentic, and fully integrated with existing player movement, collision, camera, and interaction systems.
 
 ## M3 — Simulation Engine & State Management
 

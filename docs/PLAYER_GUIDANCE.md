@@ -17,7 +17,7 @@ In titles like *Hacker Simulator*, complex terminal workflows become engaging be
 - Using hints, viewing suggested commands, or playing on the highest guidance tier **never** reduces mission rewards, deducts currency, withholds achievements, or flags a mission completion as inferior.
 - Players may switch guidance tiers at any time in the settings or HUD without losing mission progress.
 
-### 1.3 Physical Exploration & World Navigation (Milestone 2)
+### 1.3 Physical Exploration & World Navigation (Milestones 2 & 2.5: Lagos Island)
 
 Cyberlife makes 3D exploration intuitive for players who may never have played a 3D computer game before:
 
@@ -32,14 +32,20 @@ Cyberlife makes 3D exploration intuitive for players who may never have played a
 | **Release Mouse Look** | `Escape` key | Releases pointer control in First-Person mode so you can click HUD buttons or pause. |
 | **Open Controls Help** | `F1` or HUD "Controls Guide" Button | Opens the comprehensive in-game beginner guidance panel at any time. |
 
-#### Demystifying Gaming Concepts
-- **What is "WASD"?**: In many computer games, the letters W, A, S, and D form a convenient cluster under your left hand, acting just like directional arrow keys. Cyberlife supports both WASD and standard arrow keys.
-- **What is "First-Person" vs. "Third-Person"?**:
-  - *Third-Person*: You view your character (an avatar wearing a blue cyber-visor) from behind. This gives the best awareness of your surroundings.
-  - *First-Person*: The camera shifts to eye level. Moving your mouse turns your head smoothly to look around.
-- **What is "Pointer Lock"?**: When switching to First-Person mode, the browser hides your cursor so mouse movements turn your view continuously. Pressing `Escape` or clicking outside the window immediately releases the mouse.
-- **Finding Interactive Objects**: Important destinations (like building entrances and community bulletin boards) have glowing teal ground markers and diamond beacons. Walking close to them automatically displays a prompt card in the lower center of your screen.
-- **Safety Boundaries**: The neighborhood is surrounded by pedestrian barriers and buildings with solid collision boundaries. You cannot fall through the ground or walk through walls.
+#### Navigating Lagos Island
+- **Orientation via Street Signs**: Look for official green & white enamel street signs at corners (`BROAD STREET`, `MARINA ROAD`, `BALOGUN STREET`, `TINUBU SQUARE`).
+- **Broad Street Commercial Spine**: The main central avenue running north-south. Here you will find the parked yellow **Danfo minibus**, heritage Afro-Brazilian buildings, and access to all key districts.
+- **Marina Waterfront**: Follow Broad Street south to reach the Marina promenade, palm trees, concrete seawall, and the calm waters of the Lagos Lagoon.
+- **Tinubu Square Civic Plaza**: A historic public plaza with a central stone fountain monument, benches, palm trees, and the **Community Noticeboard** on its eastern edge.
+- **Balogun / Idumota Market Lane**: Branching east from Broad Street, featuring vibrant market stalls with striped canopies, fruit/textile crates, and storefronts with roll-down metal shutters.
+- **Enterable Buildings**:
+  - *Player Apartment*: An ochre Afro-Brazilian 3-storey building with arched windows and balcony on Broad Street West. Approach the glowing cyan entrance marker and press `E` to enter.
+  - *Cedarline Services HQ*: A modern corporate glass/slate tower at the Marina/Broad Street junction. Approach the emerald green entrance marker and press `E` to enter.
+  - *Returning Outdoors*: Inside both rooms, approach the doorway exit marker and press `E` to return outdoors to Broad Street.
+- **Demystifying Gaming Concepts**:
+  - *What is "WASD"?*: In computer games, W, A, S, and D form a cluster under your left hand, acting just like directional arrow keys. Cyberlife supports both WASD and standard arrow keys.
+  - *What is "First-Person" vs. "Third-Person"?*: In Third-Person, you see your avatar from behind for full environmental awareness. In First-Person, you view the world through your character's eyes and move the mouse to look around.
+  - *Safety Boundaries*: You cannot fall off the map or walk through buildings. Solid obstacles and district perimeter walls feature smooth wall-sliding collision resolution.
 
 ---
 

@@ -48,16 +48,28 @@ Cyberlife strictly adheres to **Clean Architecture** (The Dependency Rule) and *
   - Managing first-person and third-person camera projections, frustum culling, post-processing, and spatial audio.
   - Rendering UI via React: the game HUD, contextual interaction prompts, accessible movement controls, and prototype overlays.
   - Capturing raw input (keyboard, mouse movement, pointer lock) and passing normalized user intents to the appropriate controllers.
-- **M2 Subsystems & Architecture Boundaries**:
-  - **`WorldSceneManager`**: Owns the WebGLRenderer, Three.js Scene, PerspectiveCamera, directional/ambient lighting, ResizeObserver, and animation loop. Orchestrates the player avatar, environment, collision queries, camera tracking, and callbacks to React.
-  - **`WorldEnvironment`**: Procedurally builds the outdoor neighborhood block (asphalt street, sidewalks, road markings, streetlights, perimeter walls, and landmarks) and interior destination scenes (`cedarline_interior`, `apartment_interior`). Implements safe, set-based geometry and material disposal to prevent double-disposal and WebGL context leakage.
-  - **`CollisionWorld`**: Manages 2D horizontal axis-aligned bounding boxes (AABBs) for buildings, kiosks, desks, and boundaries. Tests player circular footprint against obstacles and resolves collisions with wall-sliding along unblocked axes.
+- **M2 & M2.5 Subsystems & Architecture Boundaries**:
+  - **`WorldSceneManager`**: Owns the WebGLRenderer, Three.js Scene, PerspectiveCamera, tropical daylight lighting, ResizeObserver, and animation loop. Orchestrates the player avatar, Lagos Island environment, collision queries, camera tracking, and callbacks to React.
+  - **`WorldEnvironment`**: Procedurally builds the explorable historic Lagos Island district: Broad Street commercial spine, Marina waterfront boulevard, Balogun / Idumota market street, and Tinubu Square civic plaza, as well as interior destination scenes (`cedarline_interior`, `apartment_interior`). Implements safe, set-based geometry and material disposal to prevent double-disposal and WebGL context leakage.
+  - **`Building` (`src/presentation/world/entities/Building.ts`)**: Procedural building generator supporting multiple authentic architectural styles:
+    - *`AFRO_BRAZILIAN`*: Textured ochre/terracotta plaster facades, arched window hoods, decorative 2nd-floor wrought-iron style balconies, and parapet rooflines (e.g., Player Apartment at Broad Street 14, Tinubu Chambers).
+    - *`COMMERCIAL_TOWER`*: Multi-storey corporate office towers with reflective horizontal window ribbons, cantilevered entrance canopies, rooftop mechanical chillers, telecommunications antenna masts, and red warning beacons (e.g., Cedarline Services Marina HQ, Eko Merchant Bank Tower).
+    - *`MARKET_STOREFRONT`*: 2-storey commercial buildings featuring ground-floor corrugated roll-down metal security shutters, colorful striped canvas awnings, and painted commercial signboards (e.g., Balogun Electronics & Cables, Eko Fabrics & Lace Emporium).
+  - **`LagosProps` (`src/presentation/world/entities/LagosProps.ts`)**: Procedural generators for distinct Lagos Island environmental elements:
+    - *Danfo Commercial Minibus*: The iconic yellow commercial minibus with twin black racing stripes parked curbside on Broad Street with collision bounds.
+    - *Balogun Market Stalls*: Wooden market stalls with striped canvas canopies and display crates (produce, textiles, electronics).
+    - *Utility Poles & Overhead Cables*: Concrete utility poles with dual cross-arms, insulators, transformers, and connecting overhead electrical wires.
+    - *Official Lagos State Street Signs*: Green & white enamel signposts for `"BROAD STREET"`, `"MARINA ROAD"`, `"BALOGUN STREET"`, and `"TINUBU SQUARE"`.
+    - *Marina Seawall & Water*: Concrete seawall with safety railings, mooring bollards, palm promenade, and Lagos Lagoon waters.
+    - *Tinubu Square Monument*: Tiered stone fountain basin with commemorative central pillar/obelisk and bronze plaque.
+    - *Rooftop Water Tanks*: Ubiquitous black cylindrical polyethylene water storage tanks on elevated steel stands.
+  - **`CollisionWorld`**: Manages 2D horizontal axis-aligned bounding boxes (AABBs) for buildings, stalls, seawalls, Danfo bus, kiosks, desks, and boundaries. Tests player circular footprint against obstacles and resolves collisions with wall-sliding along unblocked axes.
   - **`PlayerController`**: Listens for keyboard movement inputs (`WASD`, arrow keys), normalizes diagonal vectors, applies camera-relative motion, tests collision resolution with `CollisionWorld`, handles window blur/focus loss, and prevents input capture while interacting with UI modals or form inputs.
   - **`WorldCameraController`**: Controls active camera mode:
     - *Third-Person*: Positions camera behind and slightly above avatar (`offset: { x: 0, y: 2.2, z: 4.8 }`), orbits based on player yaw, and shows player mesh.
     - *First-Person*: Places camera at player eye height (`1.65m`), hides avatar mesh to prevent clipping, and applies mouse-look with vertical pitch clamping (`±78°`).
   - **`InteractionRegistry`**: Registers world interactables with coordinates and radii. Evaluates proximity each frame, selects nearest eligible target deterministically, and notifies HUD listeners.
-  - **`LocationTransitionController`**: Safely switches scenes between the outdoor neighborhood and interior destinations. Debounces transitions (150ms cooldown), clears input state, teleports player and camera to safe spawn coordinates, and remembers outdoor return positions.
+  - **`LocationTransitionController`**: Safely switches scenes between the outdoor Lagos Island district and interior destinations. Debounces transitions (150ms cooldown), clears input state, teleports player and camera to safe spawn coordinates, and remembers outdoor return positions.
   - **`HUDShell` & Components (`MovementHelp`, `InteractionPrompt`, `StatusOverlay`)**: React presentation overlays positioned above the 3D canvas, displaying current location badge, camera mode toggle, contextual interaction cards, and accessible guidance.
 - **Strict Invariants**:
   - **No Authoritative State**: Must never calculate or store authoritative player currency, mission progress, incident containment status, or cyber credentials.

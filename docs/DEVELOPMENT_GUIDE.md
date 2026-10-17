@@ -112,41 +112,59 @@ Missions are authored declaratively in JSON with runtime Zod validation:
 
 ---
 
-### 3.3 How to Add a Building or Environmental Prop
+### 3.3 How to Add a Building or Lagos Environmental Prop
 
-1. **Instantiate a `Building` in `WorldEnvironment.ts`**:
+1. **Instantiate a `Building` with Architectural Style in `WorldEnvironment.ts`**:
+   `Building` supports authentic Lagos Island architectural styles:
+   - `'AFRO_BRAZILIAN'`: Arched window hoods, 2nd-floor wrought-iron balcony, parapet roof.
+   - `'COMMERCIAL_TOWER'`: Horizontal window ribbons, corporate entrance canopy, rooftop chillers/antenna.
+   - `'MARKET_STOREFRONT'`: Corrugated roll-down metal shutters, striped canvas awnings, shop signs.
+   - `'MODERN_OFFICE'`: Clean corporate facade.
+
    ```typescript
-   const cafeBuilding = new Building({
-     name: 'Corner Cyber Cafe',
+   const boutique = new Building({
+     name: 'Eko Fashion House',
      x: 15,
-     z: 14,
+     z: -14,
      width: 10,
      height: 8,
-     depth: 10,
-     color: 0x1e293b,
-     trimColor: 0x0f172a,
-     accentColor: 0xf59e0b,
-     entranceSide: 'WEST', // 'NORTH' | 'SOUTH' | 'EAST' | 'WEST'
+     depth: 8,
+     style: 'MARKET_STOREFRONT',
+     color: 0xfef3c7,
+     trimColor: 0x78350f,
+     accentColor: 0xd97706,
+     awningColors: [0xd97706, 0x15803d], // Amber & Green stripes
+     entranceSide: 'SOUTH',
+     hasWaterTank: true, // Adds rooftop GeePee tank
    });
-   this.buildings.push(cafeBuilding);
-   this.group.add(cafeBuilding.getMesh());
+   this.buildings.push(boutique);
+   this.group.add(boutique.getMesh());
    ```
 
 2. **Register Solid Collision Obstacle**:
    Always register the building's bounding box with `CollisionWorld` so the player cannot walk through walls:
    ```typescript
-   const bounds = cafeBuilding.getBoundingBox();
+   const bounds = boutique.getBoundingBox();
    this.collisionWorld.addObstacle(
      bounds.minX,
      bounds.maxX,
      bounds.minZ,
      bounds.maxZ,
-     'Building: Corner Cyber Cafe'
+     'Building: Eko Fashion House'
    );
    ```
 
-3. **Add Props or Street Furniture**:
-   Create standard Three.js meshes and add them to `this.group`. If the prop is solid (e.g. lamp post base, bench, planter), call `this.collisionWorld.addObstacle(minX, maxX, minZ, maxZ, label)`.
+3. **Add Props or Street Furniture via `LagosProps`**:
+   Use procedural generators in `src/presentation/world/entities/LagosProps.ts`:
+   - `LagosProps.createDanfoMinibus(x, z, rotationY)`: Lagos yellow minibus with twin black stripes.
+   - `LagosProps.createMarketStall(x, z, rotationY, color1, color2, name)`: Balogun market stall with canopy.
+   - `LagosProps.createUtilityPole(x, z)`: Concrete pole with cross-arms and transformer.
+   - `LagosProps.createStreetSign(x, z, streetName, rotationY)`: Lagos green & white enamel street sign.
+   - `LagosProps.createPalmTree(x, z, height)`: Tropical royal palm with segmented trunk.
+   - `LagosProps.createSeawall(z, minX, maxX)`: Concrete seawall with railings and mooring bollards.
+   - `LagosProps.createTinubuMonument(x, z)`: Tinubu Square central fountain & obelisk monument.
+
+   If the prop returns an `aabb`, register it with `this.collisionWorld.addObstacle(...)` so player movement cleanly collides and slides along it.
 
 ---
 
