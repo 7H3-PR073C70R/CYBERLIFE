@@ -19,6 +19,7 @@ import type {
 import { createSaveMetadata, validateSaveRecord } from './schema';
 import { calculateStateChecksum, verifyStateChecksum } from './checksum';
 import { migrateSaveRecord } from './migrations';
+import { createInitialCatalogueState } from '../../simulation/catalogue/catalogueHandler';
 
 export interface SaveManagerOptions {
   readonly engine: SimulationEngine;
@@ -298,6 +299,7 @@ export class SaveManager {
         guidanceMode: 'guided',
         activeStepId: 'step_intro_welcome',
       },
+      catalogue: state.catalogue ?? createInitialCatalogueState(),
     };
   }
 

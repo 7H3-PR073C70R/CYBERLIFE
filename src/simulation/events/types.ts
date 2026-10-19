@@ -39,7 +39,14 @@ export type SimulationEventType =
   | 'ONBOARDING_SKIPPED'
   | 'ONBOARDING_RESET'
   | 'GUIDANCE_HINT_DISMISSED'
-  | 'GUIDANCE_MODE_CHANGED';
+  | 'GUIDANCE_MODE_CHANGED'
+  | 'CATALOGUE_EXERCISE_STARTED'
+  | 'CATALOGUE_EXERCISE_ACTION_SUBMITTED'
+  | 'CATALOGUE_DETECTION_RULE_TUNED'
+  | 'PURPLE_SCENARIO_EXECUTED'
+  | 'RED_TEAM_FINDING_SUBMITTED'
+  | 'CATALOGUE_EXERCISE_COMPLETED'
+  | 'CATALOGUE_EXERCISE_RESET';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -417,7 +424,14 @@ export type SimulationEvent =
   | OnboardingSkippedEvent
   | OnboardingResetEvent
   | GuidanceHintDismissedEvent
-  | GuidanceModeChangedEvent;
+  | GuidanceModeChangedEvent
+  | CatalogueExerciseStartedEvent
+  | CatalogueExerciseActionSubmittedEvent
+  | CatalogueDetectionRuleTunedEvent
+  | PurpleScenarioExecutedEvent
+  | RedTeamFindingSubmittedEvent
+  | CatalogueExerciseCompletedEvent
+  | CatalogueExerciseResetEvent;
 
 export type OnboardingStepCompletedEvent = BaseSimulationEvent<
   'ONBOARDING_STEP_COMPLETED',
@@ -454,5 +468,67 @@ export type GuidanceModeChangedEvent = BaseSimulationEvent<
   'GUIDANCE_MODE_CHANGED',
   {
     readonly mode: 'guided' | 'experienced';
+  }
+>;
+
+export type CatalogueExerciseStartedEvent = BaseSimulationEvent<
+  'CATALOGUE_EXERCISE_STARTED',
+  {
+    readonly exerciseId: string;
+    readonly title: string;
+    readonly track: string;
+  }
+>;
+
+export type CatalogueExerciseActionSubmittedEvent = BaseSimulationEvent<
+  'CATALOGUE_EXERCISE_ACTION_SUBMITTED',
+  {
+    readonly exerciseId: string;
+    readonly actionType: string;
+    readonly payload?: Record<string, unknown>;
+  }
+>;
+
+export type CatalogueDetectionRuleTunedEvent = BaseSimulationEvent<
+  'CATALOGUE_DETECTION_RULE_TUNED',
+  {
+    readonly ruleId: string;
+    readonly updates: Record<string, unknown>;
+  }
+>;
+
+export type PurpleScenarioExecutedEvent = BaseSimulationEvent<
+  'PURPLE_SCENARIO_EXECUTED',
+  {
+    readonly runType: 'baseline' | 'replay';
+    readonly detected: boolean;
+    readonly falsePositiveCount: number;
+    readonly timeToDetectSeconds?: number | null;
+  }
+>;
+
+export type RedTeamFindingSubmittedEvent = BaseSimulationEvent<
+  'RED_TEAM_FINDING_SUBMITTED',
+  {
+    readonly findingId: string;
+    readonly targetHost: string;
+    readonly severity: string;
+  }
+>;
+
+export type CatalogueExerciseCompletedEvent = BaseSimulationEvent<
+  'CATALOGUE_EXERCISE_COMPLETED',
+  {
+    readonly exerciseId: string;
+    readonly isFirstCompletion: boolean;
+    readonly rewardKobo?: number;
+    readonly skillXpReward?: number;
+  }
+>;
+
+export type CatalogueExerciseResetEvent = BaseSimulationEvent<
+  'CATALOGUE_EXERCISE_RESET',
+  {
+    readonly exerciseId: string;
   }
 >;

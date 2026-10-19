@@ -50,6 +50,20 @@ export const SKILL_DEFINITIONS: Readonly<Record<SkillId, SkillDefinition>> = {
       'Methodical hardware and software diagnostics, service dependencies inspection, and bug isolation.',
     maxLevel: 10,
   },
+  attack_simulation: {
+    id: 'attack_simulation',
+    name: 'Attack Simulation & Offensive Testing',
+    description:
+      'Authorized adversary tactics, surface reconnaissance, trust boundary probing, and structured vulnerability reporting.',
+    maxLevel: 10,
+  },
+  detection_engineering: {
+    id: 'detection_engineering',
+    name: 'Detection Engineering & Rule Tuning',
+    description:
+      'Designing SIEM detection logic, evaluating false positives, measuring detection efficacy, and validating telemetry.',
+    maxLevel: 10,
+  },
 };
 
 export const XP_PER_LEVEL = 100;
@@ -67,6 +81,8 @@ export function createInitialSkillState(): Record<SkillId, SkillState> {
     evidence_handling: { id: 'evidence_handling', level: 1, xp: 0, totalXp: 0 },
     reporting: { id: 'reporting', level: 1, xp: 15, totalXp: 15 },
     troubleshooting: { id: 'troubleshooting', level: 1, xp: 20, totalXp: 20 },
+    attack_simulation: { id: 'attack_simulation', level: 1, xp: 10, totalXp: 10 },
+    detection_engineering: { id: 'detection_engineering', level: 1, xp: 10, totalXp: 10 },
   };
 }
 

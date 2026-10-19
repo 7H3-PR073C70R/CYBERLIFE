@@ -10,6 +10,8 @@ import { CareerState, JobBoardState, SkillId, SkillState, EconomyState } from '.
 import { createInitialSkillState } from '../career/skillDefinitions';
 import { DEFAULT_RECURRING_EXPENSES } from '../career/shopDefinitions';
 import { OnboardingSimulationState } from '../onboarding/types';
+import { CatalogueSimulationState } from '../catalogue/types';
+import { createInitialCatalogueState } from '../catalogue/catalogueHandler';
 
 export interface InitialStateOverrides {
   readonly schemaVersion?: number;
@@ -32,6 +34,7 @@ export interface InitialStateOverrides {
   readonly skills?: Readonly<Record<SkillId, SkillState>>;
   readonly economy?: EconomyState;
   readonly onboarding?: OnboardingSimulationState;
+  readonly catalogue?: CatalogueSimulationState;
 }
 
 /**
@@ -140,6 +143,7 @@ export function createInitialSimulationState(
       guidanceMode: 'guided',
       activeStepId: 'step_intro_welcome',
     },
+    catalogue: overrides?.catalogue ?? createInitialCatalogueState(),
   };
 
   validateSimulationState(state);

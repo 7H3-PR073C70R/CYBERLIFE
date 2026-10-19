@@ -32,6 +32,8 @@ export type SimulationErrorCode =
   | 'PURCHASE_LIMIT_REACHED'
   | 'EXPENSE_NOT_FOUND'
   | 'EXPENSE_NOT_OVERDUE'
+  | 'CATALOGUE_ENTRY_NOT_FOUND'
+  | 'CATALOGUE_EXERCISE_ERROR'
   | 'INVARIANT_VIOLATION';
 
 export interface AdvanceSimulationTimeCommand {
@@ -260,6 +262,45 @@ export interface SetGuidanceModeCommand {
   readonly mode: GuidanceMode;
 }
 
+import type { DetectionRule, RedTeamFinding } from '../catalogue/types';
+
+export interface StartCatalogueExerciseCommand {
+  readonly type: 'StartCatalogueExercise';
+  readonly exerciseId: string;
+}
+
+export interface SubmitExerciseActionCommand {
+  readonly type: 'SubmitExerciseAction';
+  readonly actionType: string;
+  readonly payload?: Record<string, unknown>;
+}
+
+export interface TuneDetectionRuleCommand {
+  readonly type: 'TuneDetectionRule';
+  readonly ruleId: string;
+  readonly updates: Partial<DetectionRule>;
+}
+
+export interface RunPurpleScenarioCommand {
+  readonly type: 'RunPurpleScenario';
+  readonly runType: 'baseline' | 'replay';
+}
+
+export interface SubmitRedTeamFindingCommand {
+  readonly type: 'SubmitRedTeamFinding';
+  readonly findingData: Omit<RedTeamFinding, 'findingId' | 'submittedAt' | 'isApproved'>;
+}
+
+export interface CompleteCatalogueExerciseCommand {
+  readonly type: 'CompleteCatalogueExercise';
+  readonly exerciseId: string;
+}
+
+export interface ResetCatalogueExerciseCommand {
+  readonly type: 'ResetCatalogueExercise';
+  readonly exerciseId: string;
+}
+
 export type SimulationCommand =
   | AdvanceSimulationTimeCommand
   | ChangePlayerAttributeCommand
@@ -297,7 +338,14 @@ export type SimulationCommand =
   | SkipOnboardingCommand
   | ResetOnboardingCommand
   | DismissGuidanceHintCommand
-  | SetGuidanceModeCommand;
+  | SetGuidanceModeCommand
+  | StartCatalogueExerciseCommand
+  | SubmitExerciseActionCommand
+  | TuneDetectionRuleCommand
+  | RunPurpleScenarioCommand
+  | SubmitRedTeamFindingCommand
+  | CompleteCatalogueExerciseCommand
+  | ResetCatalogueExerciseCommand;
 
 export interface CommandResult {
   readonly success: boolean;

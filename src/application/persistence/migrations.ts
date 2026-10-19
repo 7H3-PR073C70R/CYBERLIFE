@@ -11,6 +11,7 @@ import { CURRENT_SAVE_SCHEMA_VERSION } from './types';
 import { calculateStateChecksum } from './checksum';
 import { createInitialSkillState } from '../../simulation/career/skillDefinitions';
 import { DEFAULT_RECURRING_EXPENSES } from '../../simulation/career/shopDefinitions';
+import { createInitialCatalogueState } from '../../simulation/catalogue/catalogueHandler';
 
 export class MigrationError extends Error {
   constructor(message: string) {
@@ -162,6 +163,11 @@ function migrateV0ToV1(
       guidanceMode: 'guided',
       activeStepId: 'step_intro_welcome',
     };
+  }
+
+  // 6. Ensure catalogue state exists
+  if (!nextState.catalogue) {
+    nextState.catalogue = createInitialCatalogueState();
   }
 
   const now = new Date().toISOString();

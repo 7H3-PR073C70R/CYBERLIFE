@@ -26,6 +26,11 @@ export function createInitialWindows(
     career: { x: 90, y: 35 },
     saveManager: { x: 110, y: 50 },
     helpCenter: { x: 130, y: 60 },
+    catalogue: { x: 95, y: 35 },
+    files: { x: 105, y: 45 },
+    packetLens: { x: 120, y: 55 },
+    revLens: { x: 135, y: 65 },
+    ruleTuner: { x: 150, y: 75 },
   };
 
   const windows: Partial<Record<AppId, WindowState>> = {};

@@ -63,6 +63,13 @@ export function isObjectiveSatisfied(objective: JobObjective, state: SimulationS
         const toolsRan = (state.flags['cyber_tools_executed_count'] as number) ?? 0;
         return Boolean(hasNetFinding || toolsRan > 0);
       }
+      if (target === 'catalogue' || target === 'cybersim') {
+        const catalogueActive =
+          (state.catalogue?.completedExerciseIds.length ?? 0) > 0 ||
+          state.catalogue?.activeExerciseId !== null;
+        const toolsRan = (state.flags['cyber_tools_executed_count'] as number) ?? 0;
+        return Boolean(catalogueActive || toolsRan > 0);
+      }
       return false;
     }
 
@@ -71,8 +78,15 @@ export function isObjectiveSatisfied(objective: JobObjective, state: SimulationS
         return (
           (state.mission?.discoveredHosts.length ?? 0) +
             (state.mission?.inspectedServices.length ?? 0) +
-            (state.mission?.analyzedLogIds.length ?? 0) >
+            (state.mission?.analyzedLogIds.length ?? 0) +
+            (state.catalogue?.redFindings.length ?? 0) >
           0
+        );
+      }
+      if (target === 'red_finding' || target === 'attack_path') {
+        return (
+          (state.catalogue?.redFindings.length ?? 0) > 0 ||
+          state.flags['finding_red_finding'] === true
         );
       }
       if (state.flags[`finding_${target}`] === true) return true;
@@ -104,6 +118,12 @@ export function isObjectiveSatisfied(objective: JobObjective, state: SimulationS
     case 'VERIFY_SERVICE': {
       if (!target) return true;
       if (state.flags[`verified_${target}`] === true) return true;
+      if (target === 'detection_tune' || target === 'purple_replay') {
+        const hasReplayDetected = Boolean(
+          state.catalogue?.purpleRunHistory.some(r => r.runType === 'replay' && r.detected)
+        );
+        return hasReplayDetected || state.flags['verified_detection_tune'] === true;
+      }
       if (target === 'database_service') {
         const hasDb = state.mission?.inspectedServices.some(
           s => s.toLowerCase().includes('db') || s.includes('5432')

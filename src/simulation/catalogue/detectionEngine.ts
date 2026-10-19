@@ -47,7 +47,7 @@ export const PURPLE_SMB_LATERAL_SCENARIO: readonly AdversaryScenarioStep[] = [
     event: {
       id: 'SCEN-02',
       timestamp: '08:01:15 AM',
-      source: 'network',
+      source: 'system',
       severity: 'INFO',
       eventType: 'DNS_QUERY',
       hostId: 'app-portal-01',
@@ -70,8 +70,7 @@ export const PURPLE_SMB_LATERAL_SCENARIO: readonly AdversaryScenarioStep[] = [
       user: 'svc-aster',
       message:
         'SMB session established by svc-aster from 10.0.4.80 to share //filesrv-01/finance/payroll_q3_confidential.xlsx.',
-      details:
-        'Protocol SMBv3, client app-portal-01. Granted by wildcard corporate-admin role.',
+      details: 'Protocol SMBv3, client app-portal-01. Granted by wildcard corporate-admin role.',
     },
   },
   {

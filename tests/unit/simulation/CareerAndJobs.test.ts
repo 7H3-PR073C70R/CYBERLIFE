@@ -3,6 +3,7 @@ import { createInitialSimulationState } from '../../../src/simulation/core/initi
 import { handleCommand } from '../../../src/simulation/commands/commandHandler';
 import { SimulationState } from '../../../src/simulation/core/types';
 import { JOB_LISTINGS } from '../../../src/simulation/career/jobDefinitions';
+import { createInitialSkillState } from '../../../src/simulation/career/skillDefinitions';
 
 describe('Milestone 8: Career & Job Board System', () => {
   let state: SimulationState;
@@ -250,7 +251,7 @@ describe('Milestone 8: Career & Job Board System', () => {
         ],
       },
       skills: {
-        ...(state.skills ?? {}),
+        ...(state.skills ?? createInitialSkillState()),
         log_analysis: { id: 'log_analysis', level: 2, xp: 10, totalXp: 110 },
         network_fundamentals: { id: 'network_fundamentals', level: 2, xp: 20, totalXp: 120 },
         incident_response: { id: 'incident_response', level: 1, xp: 0, totalXp: 0 },
@@ -258,6 +259,8 @@ describe('Milestone 8: Career & Job Board System', () => {
         evidence_handling: { id: 'evidence_handling', level: 1, xp: 0, totalXp: 0 },
         reporting: { id: 'reporting', level: 1, xp: 0, totalXp: 0 },
         troubleshooting: { id: 'troubleshooting', level: 1, xp: 0, totalXp: 0 },
+        attack_simulation: { id: 'attack_simulation', level: 1, xp: 0, totalXp: 0 },
+        detection_engineering: { id: 'detection_engineering', level: 1, xp: 0, totalXp: 0 },
       },
     };
 

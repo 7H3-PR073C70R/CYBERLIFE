@@ -18,6 +18,30 @@ import {
 } from './types';
 import { DEFAULT_DETECTION_RULES, PRACTICAL_EXERCISES } from './catalogueDefinitions';
 import { PURPLE_SMB_LATERAL_SCENARIO, runPurpleScenarioEvaluation } from './detectionEngine';
+import { SimulationState } from '../core/types';
+import { CommandResult, SimulationErrorCode } from '../commands/types';
+import { createSimulationEvent } from '../events/eventFactory';
+import { SimulationEvent } from '../events/types';
+import { validateSimulationState } from '../core/invariants';
+import { deepFreeze } from '../core/stateUtils';
+import { creditPlayerMoney } from '../systems/playerSystem';
+import { awardSkillXp } from '../career/skillDefinitions';
+import { SkillId } from '../career/types';
+
+function makeFailure(
+  state: Readonly<SimulationState>,
+  errorCode: SimulationErrorCode,
+  message: string
+): CommandResult {
+  return {
+    success: false,
+    state,
+    events: [],
+    errorCode,
+    message,
+    isNoOp: false,
+  };
+}
 
 /**
  * Creates the initial catalogue simulation state for a new game.
@@ -133,7 +157,10 @@ export function handleRunPurpleScenario(
   state: CatalogueSimulationState,
   runType: 'baseline' | 'replay',
   simTimeSeconds: number
-): { nextState: CatalogueSimulationState; runResult: ReturnType<typeof runPurpleScenarioEvaluation> } {
+): {
+  nextState: CatalogueSimulationState;
+  runResult: ReturnType<typeof runPurpleScenarioEvaluation>;
+} {
   const runResult = runPurpleScenarioEvaluation(
     PURPLE_SMB_LATERAL_SCENARIO,
     state.detectionRules,
@@ -143,9 +170,7 @@ export function handleRunPurpleScenario(
 
   const updatedHistory = [runResult, ...state.purpleRunHistory];
 
-  let updatedCompletedObjectives = Array.isArray(
-    state.activeExerciseState?.completedObjectiveIds
-  )
+  const updatedCompletedObjectives = Array.isArray(state.activeExerciseState?.completedObjectiveIds)
     ? [...state.activeExerciseState.completedObjectiveIds]
     : [];
 
@@ -187,9 +212,7 @@ export function handleSubmitRedTeamFinding(
     isApproved: true,
   };
 
-  let updatedCompletedObjectives = Array.isArray(
-    state.activeExerciseState?.completedObjectiveIds
-  )
+  const updatedCompletedObjectives = Array.isArray(state.activeExerciseState?.completedObjectiveIds)
     ? [...state.activeExerciseState.completedObjectiveIds]
     : [];
 
@@ -261,5 +284,331 @@ export function handleResetCatalogueExercise(
     activeExerciseId: state.activeExerciseId === exerciseId ? null : state.activeExerciseId,
     activeExercisePhase: undefined,
     activeExerciseState: undefined,
+  };
+}
+
+export function handleSimulationStartCatalogueExercise(
+  currentState: Readonly<SimulationState>,
+  exerciseId: string
+): CommandResult {
+  const currentCat = currentState.catalogue ?? createInitialCatalogueState();
+  const { nextState: nextCat, exercise } = handleStartCatalogueExercise(currentCat, exerciseId);
+
+  if (!exercise) {
+    return makeFailure(
+      currentState,
+      'CATALOGUE_ENTRY_NOT_FOUND',
+      `Exercise with ID "${exerciseId}" not found in catalogue`
+    );
+  }
+
+  const simTime = currentState.time.simulationTimeSeconds;
+  const nextRevision = currentState.metadata.revision + 1;
+  const event = createSimulationEvent('CATALOGUE_EXERCISE_STARTED', simTime, nextRevision, {
+    exerciseId,
+    title: exercise.title,
+    track: exercise.track,
+  });
+
+  const nextState: SimulationState = {
+    ...currentState,
+    metadata: {
+      ...currentState.metadata,
+      revision: nextRevision,
+    },
+    catalogue: nextCat,
+  };
+
+  validateSimulationState(nextState);
+  return {
+    success: true,
+    state: deepFreeze(nextState),
+    events: [event],
+    message: `Started practical exercise: "${exercise.title}"`,
+  };
+}
+
+export function handleSimulationSubmitExerciseAction(
+  currentState: Readonly<SimulationState>,
+  actionType: string,
+  payload: Record<string, unknown> = {}
+): CommandResult {
+  const currentCat = currentState.catalogue ?? createInitialCatalogueState();
+  if (!currentCat.activeExerciseId) {
+    return makeFailure(
+      currentState,
+      'CATALOGUE_EXERCISE_ERROR',
+      'Cannot submit exercise action: no exercise is currently active'
+    );
+  }
+
+  const nextCat = handleSubmitExerciseAction(currentCat, actionType, payload);
+  const simTime = currentState.time.simulationTimeSeconds;
+  const nextRevision = currentState.metadata.revision + 1;
+  const event = createSimulationEvent(
+    'CATALOGUE_EXERCISE_ACTION_SUBMITTED',
+    simTime,
+    nextRevision,
+    {
+      exerciseId: currentCat.activeExerciseId,
+      actionType,
+      payload,
+    }
+  );
+
+  const nextState: SimulationState = {
+    ...currentState,
+    metadata: {
+      ...currentState.metadata,
+      revision: nextRevision,
+    },
+    catalogue: nextCat,
+  };
+
+  validateSimulationState(nextState);
+  return {
+    success: true,
+    state: deepFreeze(nextState),
+    events: [event],
+    message: `Submitted action "${actionType}" for exercise "${currentCat.activeExerciseId}"`,
+  };
+}
+
+export function handleSimulationTuneDetectionRule(
+  currentState: Readonly<SimulationState>,
+  ruleId: string,
+  updates: Partial<DetectionRule>
+): CommandResult {
+  const currentCat = currentState.catalogue ?? createInitialCatalogueState();
+  const nextCat = handleTuneDetectionRule(currentCat, ruleId, updates);
+  const simTime = currentState.time.simulationTimeSeconds;
+  const nextRevision = currentState.metadata.revision + 1;
+  const event = createSimulationEvent('CATALOGUE_DETECTION_RULE_TUNED', simTime, nextRevision, {
+    ruleId,
+    updates: updates as Record<string, unknown>,
+  });
+
+  const nextState: SimulationState = {
+    ...currentState,
+    metadata: {
+      ...currentState.metadata,
+      revision: nextRevision,
+    },
+    catalogue: nextCat,
+  };
+
+  validateSimulationState(nextState);
+  return {
+    success: true,
+    state: deepFreeze(nextState),
+    events: [event],
+    message: `Tuned detection rule "${ruleId}"`,
+  };
+}
+
+export function handleSimulationRunPurpleScenario(
+  currentState: Readonly<SimulationState>,
+  runType: 'baseline' | 'replay'
+): CommandResult {
+  const currentCat = currentState.catalogue ?? createInitialCatalogueState();
+  const simTime = currentState.time.simulationTimeSeconds;
+  const { nextState: nextCat, runResult } = handleRunPurpleScenario(currentCat, runType, simTime);
+  const nextRevision = currentState.metadata.revision + 1;
+
+  const event = createSimulationEvent('PURPLE_SCENARIO_EXECUTED', simTime, nextRevision, {
+    runType,
+    detected: runResult.detected,
+    falsePositiveCount: runResult.falsePositiveCount,
+    timeToDetectSeconds: runResult.timeToDetectSeconds,
+  });
+
+  const nextState: SimulationState = {
+    ...currentState,
+    metadata: {
+      ...currentState.metadata,
+      revision: nextRevision,
+    },
+    catalogue: nextCat,
+  };
+
+  validateSimulationState(nextState);
+  return {
+    success: true,
+    state: deepFreeze(nextState),
+    events: [event],
+    message: `Purple Team scenario executed (${runType}): detected=${runResult.detected}, falsePositives=${runResult.falsePositiveCount}`,
+  };
+}
+
+export function handleSimulationSubmitRedTeamFinding(
+  currentState: Readonly<SimulationState>,
+  findingData: Omit<RedTeamFinding, 'findingId' | 'submittedAt' | 'isApproved'>
+): CommandResult {
+  const currentCat = currentState.catalogue ?? createInitialCatalogueState();
+  const simTime = currentState.time.simulationTimeSeconds;
+  const nextCat = handleSubmitRedTeamFinding(currentCat, findingData, simTime);
+  const nextRevision = currentState.metadata.revision + 1;
+
+  const latestFindingId = String(nextCat.activeExerciseState?.latestFindingId ?? 'FIND-001');
+  const event = createSimulationEvent('RED_TEAM_FINDING_SUBMITTED', simTime, nextRevision, {
+    findingId: latestFindingId,
+    targetHost: findingData.targetHost,
+    severity: findingData.severity,
+  });
+
+  const nextState: SimulationState = {
+    ...currentState,
+    metadata: {
+      ...currentState.metadata,
+      revision: nextRevision,
+    },
+    catalogue: nextCat,
+  };
+
+  validateSimulationState(nextState);
+  return {
+    success: true,
+    state: deepFreeze(nextState),
+    events: [event],
+    message: `Authorized Red Team finding submitted: ${findingData.title} (${findingData.severity})`,
+  };
+}
+
+export function handleSimulationCompleteCatalogueExercise(
+  currentState: Readonly<SimulationState>,
+  exerciseId: string
+): CommandResult {
+  const currentCat = currentState.catalogue ?? createInitialCatalogueState();
+  const {
+    nextState: nextCat,
+    isFirstCompletion,
+    exercise,
+  } = handleCompleteCatalogueExercise(currentCat, exerciseId);
+
+  if (!exercise) {
+    return makeFailure(
+      currentState,
+      'CATALOGUE_ENTRY_NOT_FOUND',
+      `Exercise with ID "${exerciseId}" not found in catalogue`
+    );
+  }
+
+  const simTime = currentState.time.simulationTimeSeconds;
+  let nextRevision = currentState.metadata.revision + 1;
+  const events: SimulationEvent[] = [];
+
+  let updatedPlayer = currentState.player;
+  const updatedSkills = currentState.skills ? { ...currentState.skills } : undefined;
+
+  // Award rewards ONLY on first completion (idempotent)
+  if (isFirstCompletion) {
+    if (exercise.rewardKobo > 0) {
+      const prevKobo = updatedPlayer.moneyKobo;
+      updatedPlayer = creditPlayerMoney(updatedPlayer, exercise.rewardKobo);
+      events.push(
+        createSimulationEvent('PLAYER_MONEY_CHANGED', simTime, nextRevision, {
+          previousKobo: prevKobo,
+          newKobo: updatedPlayer.moneyKobo,
+          deltaKobo: exercise.rewardKobo,
+          operation: 'CREDIT' as const,
+          reason: `Catalogue exercise completion reward: ${exercise.title}`,
+        })
+      );
+      nextRevision += 1;
+    }
+
+    if (exercise.skillRewards && updatedSkills) {
+      for (const [skillKey, xp] of Object.entries(exercise.skillRewards)) {
+        const sId = skillKey as SkillId;
+        const currentSkill = updatedSkills[sId];
+        if (currentSkill && typeof xp === 'number' && xp > 0) {
+          const prevLevel = currentSkill.level;
+          const { nextState: nextSkillState } = awardSkillXp(currentSkill, xp);
+          updatedSkills[sId] = nextSkillState;
+
+          events.push(
+            createSimulationEvent('SKILL_PROGRESS_AWARDED', simTime, nextRevision, {
+              skillId: sId,
+              xpAwarded: xp,
+              previousLevel: prevLevel,
+              newLevel: nextSkillState.level,
+              totalXp: nextSkillState.totalXp,
+            })
+          );
+          nextRevision += 1;
+        }
+      }
+    }
+  }
+
+  events.push(
+    createSimulationEvent('CATALOGUE_EXERCISE_COMPLETED', simTime, nextRevision, {
+      exerciseId,
+      isFirstCompletion,
+      rewardKobo: isFirstCompletion ? exercise.rewardKobo : 0,
+      skillXpReward: isFirstCompletion ? exercise.rewardXp : 0,
+    })
+  );
+
+  const nextFlags = {
+    ...currentState.flags,
+    [`catalogue_completed_${exerciseId}`]: true,
+  };
+
+  const nextState: SimulationState = {
+    ...currentState,
+    metadata: {
+      ...currentState.metadata,
+      revision: nextRevision,
+    },
+    player: updatedPlayer,
+    skills: updatedSkills,
+    flags: nextFlags,
+    catalogue: nextCat,
+  };
+
+  validateSimulationState(nextState);
+  return {
+    success: true,
+    state: deepFreeze(nextState),
+    events,
+    message: isFirstCompletion
+      ? `Completed exercise: "${exercise.title}" (+₦${(exercise.rewardKobo / 100).toFixed(2)})`
+      : `Re-completed exercise: "${exercise.title}" (previously rewarded)`,
+  };
+}
+
+export function handleSimulationResetCatalogueExercise(
+  currentState: Readonly<SimulationState>,
+  exerciseId: string
+): CommandResult {
+  const currentCat = currentState.catalogue ?? createInitialCatalogueState();
+  const nextCat = handleResetCatalogueExercise(currentCat, exerciseId);
+  const simTime = currentState.time.simulationTimeSeconds;
+  const nextRevision = currentState.metadata.revision + 1;
+
+  const event = createSimulationEvent('CATALOGUE_EXERCISE_RESET', simTime, nextRevision, {
+    exerciseId,
+  });
+
+  const nextFlags = { ...currentState.flags };
+  delete nextFlags[`catalogue_completed_${exerciseId}`];
+
+  const nextState: SimulationState = {
+    ...currentState,
+    metadata: {
+      ...currentState.metadata,
+      revision: nextRevision,
+    },
+    flags: nextFlags,
+    catalogue: nextCat,
+  };
+
+  validateSimulationState(nextState);
+  return {
+    success: true,
+    state: deepFreeze(nextState),
+    events: [event],
+    message: `Reset practical exercise "${exerciseId}"`,
   };
 }

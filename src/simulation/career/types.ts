@@ -2,7 +2,8 @@
  * Cyberlife — Milestone 8: Career, Economy, Skills & Life Simulation Types
  */
 
-export type CareerPathId = 'career_it_support' | 'career_sec_analyst';
+export type CareerPathId =
+  'career_it_support' | 'career_sec_analyst' | 'career_red_sec' | 'career_purple_sec';
 
 export interface CareerLevelDefinition {
   readonly level: number;
@@ -39,7 +40,9 @@ export type SkillId =
   | 'security_fundamentals'
   | 'evidence_handling'
   | 'reporting'
-  | 'troubleshooting';
+  | 'troubleshooting'
+  | 'attack_simulation'
+  | 'detection_engineering';
 
 export interface SkillDefinition {
   readonly id: SkillId;

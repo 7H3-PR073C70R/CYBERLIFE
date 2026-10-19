@@ -53,7 +53,17 @@ describe('TerminalCommandParser & Registry', () => {
     expect(registry.has('logview')).toBe(true);
     expect(registry.has('evidence')).toBe(true);
     expect(registry.has('aster-admin')).toBe(true);
-    expect(registry.getAll().length).toBe(11);
+    expect(registry.has('catalogue')).toBe(true);
+    expect(registry.has('pwd')).toBe(true);
+    expect(registry.has('ls')).toBe(true);
+    expect(registry.has('cd')).toBe(true);
+    expect(registry.has('cat')).toBe(true);
+    expect(registry.has('grep')).toBe(true);
+    expect(registry.has('file')).toBe(true);
+    expect(registry.has('nmap')).toBe(true);
+    expect(registry.has('packetview')).toBe(true);
+    expect(registry.has('revview')).toBe(true);
+    expect(registry.getAll().length).toBe(21);
   });
 
   it('executes help command returning available commands and beginner tips', () => {
@@ -150,10 +160,10 @@ describe('TerminalCommandParser & Registry', () => {
 
   it('returns a constructive error message for unsupported commands', () => {
     const parser = createDefaultTerminalParser();
-    const result = parser.parseAndExecute('nmap -sV 10.0.4.15', mockContext);
+    const result = parser.parseAndExecute('hydra -l admin 10.0.4.15', mockContext);
 
     expect(result.isError).toBe(true);
-    expect(result.stdout[0]).toContain("Command 'nmap' is not recognized");
+    expect(result.stdout[0]).toContain("Command 'hydra' is not recognized");
     expect(result.stdout[1]).toContain("Type 'help'");
   });
 

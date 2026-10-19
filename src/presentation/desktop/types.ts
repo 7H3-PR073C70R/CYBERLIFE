@@ -12,7 +12,12 @@ export type AppId =
   | 'contacts'
   | 'career'
   | 'saveManager'
-  | 'helpCenter';
+  | 'helpCenter'
+  | 'catalogue'
+  | 'files'
+  | 'packetLens'
+  | 'revLens'
+  | 'ruleTuner';
 
 export interface AppDefinition {
   id: AppId;
@@ -135,5 +140,55 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
       'Searchable guide to controls, commands, Aster Incident steps, career mechanics, and troubleshooting.',
     defaultSize: { width: 780, height: 540 },
     minSize: { width: 440, height: 340 },
+  },
+  catalogue: {
+    id: 'catalogue',
+    title: 'Cyber Catalogue — Blue, Red & Purple Team Tracks',
+    shortTitle: 'Cyber Catalogue',
+    icon: '🛡️',
+    description:
+      'Structured cybersecurity learning catalogue spanning Blue defenders, Red attack simulators, Purple collaborative validation, and Shared foundations.',
+    defaultSize: { width: 880, height: 600 },
+    minSize: { width: 480, height: 380 },
+  },
+  files: {
+    id: 'files',
+    title: 'EkoSec File Manager — Sandboxed Virtual Filesystem',
+    shortTitle: 'Files',
+    icon: '📁',
+    description:
+      'Explore synthetic directories (/home/analyst, /var/log, /mnt/evidence, /etc/security), inspect evidence, and manage virtual files.',
+    defaultSize: { width: 780, height: 520 },
+    minSize: { width: 440, height: 320 },
+  },
+  packetLens: {
+    id: 'packetLens',
+    title: 'Packet Lens — Protocol Decoder & Stream Analyzer',
+    shortTitle: 'Packet Lens',
+    icon: '🔍',
+    description:
+      'Wireshark-inspired simulated packet capture inspector for /mnt/evidence/EVD-2026-001.pcap with protocol decoding, filtering, and hex/ASCII views.',
+    defaultSize: { width: 840, height: 560 },
+    minSize: { width: 480, height: 360 },
+  },
+  revLens: {
+    id: 'revLens',
+    title: 'Rev Lens — Static Binary & Pseudocode Analyzer',
+    shortTitle: 'Rev Lens',
+    icon: '🔬',
+    description:
+      'Ghidra-inspired static reverse-engineering viewer for aster_agent_daemon.bin featuring strings, decompiled pseudocode, and ELF header metadata.',
+    defaultSize: { width: 840, height: 560 },
+    minSize: { width: 480, height: 360 },
+  },
+  ruleTuner: {
+    id: 'ruleTuner',
+    title: 'Rule Tuner — Purple Team Detection Engineering Studio',
+    shortTitle: 'Rule Tuner',
+    icon: '🎯',
+    description:
+      'Detection engineering interface to author SIEM detection rules, tune alert thresholds, and replay synthetic attack scenarios to measure false positive/negative delta.',
+    defaultSize: { width: 840, height: 580 },
+    minSize: { width: 480, height: 380 },
   },
 };

@@ -180,4 +180,81 @@ export const JOB_LISTINGS: Readonly<Record<string, JobListing>> = {
       },
     ],
   },
+
+  job_red_surface_audit: {
+    id: 'job_red_surface_audit',
+    title: 'RedCell: Authorized Attack Surface & Identity Path Audit',
+    employer: 'RedCell Security Advisory',
+    contactNpcId: 'npc_femi',
+    description:
+      'Perform an authorized reconnaissance and privilege escalation path audit against Marina staging assets within documented Rules of Engagement.',
+    minCareerLevel: 1,
+    requiredSkills: {
+      attack_simulation: 1,
+      network_fundamentals: 1,
+    },
+    payoutKobo: 150_000,
+    careerXpReward: 100,
+    skillRewards: {
+      attack_simulation: 50,
+      reporting: 30,
+    },
+    estimatedMinutes: 15,
+    isRepeatable: false,
+    objectives: [
+      {
+        id: 'obj_red_roe_accept',
+        type: 'RUN_TOOL',
+        description: 'Review and accept authorized Rules of Engagement in the Cyber Catalogue.',
+        target: 'catalogue',
+        isCompleted: false,
+      },
+      {
+        id: 'obj_red_submit_finding',
+        type: 'RECORD_FINDING',
+        description: 'Submit an authorized Red Team finding identifying the lateral movement path.',
+        target: 'red_finding',
+        isCompleted: false,
+      },
+    ],
+  },
+
+  job_purple_siem_rule_tune: {
+    id: 'job_purple_siem_rule_tune',
+    title: 'Lagos Alliance: SIEM Detection Engineering & Replay Validation',
+    employer: 'Lagos Cyber Defense Alliance',
+    contactNpcId: 'npc_amina',
+    description:
+      'Analyze initial detection telemetry gaps on SMB lateral movement, tune correlation logic, and validate detection with 0 false positives.',
+    minCareerLevel: 1,
+    requiredSkills: {
+      detection_engineering: 1,
+      log_analysis: 1,
+    },
+    payoutKobo: 160_000,
+    careerXpReward: 110,
+    skillRewards: {
+      detection_engineering: 50,
+      log_analysis: 35,
+    },
+    estimatedMinutes: 15,
+    isRepeatable: false,
+    objectives: [
+      {
+        id: 'obj_purple_tune_rule',
+        type: 'RUN_TOOL',
+        description: 'Open SIEM Rule Editor and configure correlation rule parameters.',
+        target: 'catalogue',
+        isCompleted: false,
+      },
+      {
+        id: 'obj_purple_validate_replay',
+        type: 'VERIFY_SERVICE',
+        description:
+          'Replay the adversary scenario and verify detection firing with zero false positives.',
+        target: 'detection_tune',
+        isCompleted: false,
+      },
+    ],
+  },
 };

@@ -11,6 +11,7 @@
  */
 
 import { CatalogueEntry, PracticalExercise } from './types';
+import { CATALOGUE_ENTRIES, PRACTICAL_EXERCISES } from './catalogueDefinitions';
 
 export interface ValidationIssue {
   readonly type: 'error' | 'warning';
@@ -225,4 +226,13 @@ export function validateCatalogue(
     totalEntries: entries.length,
     playableEntriesCount: playableCount,
   };
+}
+
+export function validateCatalogueDefinitions(): CatalogueValidationResult {
+  return validateCatalogue(CATALOGUE_ENTRIES, PRACTICAL_EXERCISES);
+}
+
+export function findOrphanedExercises(): PracticalExercise[] {
+  const entryExerciseIds = new Set(CATALOGUE_ENTRIES.map(e => e.exerciseId).filter(Boolean));
+  return PRACTICAL_EXERCISES.filter(ex => !entryExerciseIds.has(ex.id));
 }

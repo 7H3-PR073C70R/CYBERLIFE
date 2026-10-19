@@ -48,6 +48,15 @@ import {
   handleDismissGuidanceHint,
   handleSetGuidanceMode,
 } from '../onboarding/onboardingHandler';
+import {
+  handleSimulationStartCatalogueExercise,
+  handleSimulationSubmitExerciseAction,
+  handleSimulationTuneDetectionRule,
+  handleSimulationRunPurpleScenario,
+  handleSimulationSubmitRedTeamFinding,
+  handleSimulationCompleteCatalogueExercise,
+  handleSimulationResetCatalogueExercise,
+} from '../catalogue/catalogueHandler';
 
 function makeFailure(
   state: Readonly<SimulationState>,
@@ -2036,6 +2045,38 @@ export function handleCommand(
 
       case 'SetGuidanceMode': {
         return handleSetGuidanceMode(currentState, command.mode);
+      }
+
+      case 'StartCatalogueExercise': {
+        return handleSimulationStartCatalogueExercise(currentState, command.exerciseId);
+      }
+
+      case 'SubmitExerciseAction': {
+        return handleSimulationSubmitExerciseAction(
+          currentState,
+          command.actionType,
+          command.payload
+        );
+      }
+
+      case 'TuneDetectionRule': {
+        return handleSimulationTuneDetectionRule(currentState, command.ruleId, command.updates);
+      }
+
+      case 'RunPurpleScenario': {
+        return handleSimulationRunPurpleScenario(currentState, command.runType);
+      }
+
+      case 'SubmitRedTeamFinding': {
+        return handleSimulationSubmitRedTeamFinding(currentState, command.findingData);
+      }
+
+      case 'CompleteCatalogueExercise': {
+        return handleSimulationCompleteCatalogueExercise(currentState, command.exerciseId);
+      }
+
+      case 'ResetCatalogueExercise': {
+        return handleSimulationResetCatalogueExercise(currentState, command.exerciseId);
       }
 
       default: {

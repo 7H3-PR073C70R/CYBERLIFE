@@ -89,8 +89,7 @@ export const CATALOGUE_ENTRIES: readonly CatalogueEntry[] = [
       'Role-based access control (RBAC)',
     ],
     relevantTools: ['netmap', 'svcscan', 'evidence', 'aster-admin'],
-    status: 'playable',
-    exerciseId: 'ex_blue_ir_aster',
+    status: 'planned',
     relatedRoleIds: ['role_incident_responder', 'role_forensics_analyst'],
     prerequisites: ['cat_blue_soc_triage'],
     mitreAttackTechniques: [
@@ -133,8 +132,7 @@ export const CATALOGUE_ENTRIES: readonly CatalogueEntry[] = [
     ],
     requiredKnowledge: ['IP addresses, subnets, and TCP port conventions'],
     relevantTools: ['netmap', 'svcscan'],
-    status: 'playable',
-    exerciseId: 'ex_blue_network_audit',
+    status: 'planned',
     relatedRoleIds: ['role_security_engineer', 'role_tier1_analyst'],
     prerequisites: ['cat_shared_networking'],
     mitreAttackTechniques: ['T1046 (Network Service Discovery)'],
@@ -304,8 +302,7 @@ export const CATALOGUE_ENTRIES: readonly CatalogueEntry[] = [
     ],
     requiredKnowledge: ['Common Vulnerabilities and Exposures (CVE) concepts, service banners'],
     relevantTools: ['svcscan', 'logview'],
-    status: 'playable',
-    exerciseId: 'ex_red_vuln_test',
+    status: 'planned',
     relatedRoleIds: ['role_pen_tester', 'role_appsec_analyst'],
     prerequisites: ['cat_red_recon_surface'],
     mitreAttackTechniques: ['T1190 (Exploit Public-Facing Application)'],
@@ -332,8 +329,7 @@ export const CATALOGUE_ENTRIES: readonly CatalogueEntry[] = [
     ],
     requiredKnowledge: ['Service accounts, network segmentation, lateral movement'],
     relevantTools: ['netmap', 'logview', 'evidence'],
-    status: 'playable',
-    exerciseId: 'ex_red_attack_path_eval',
+    status: 'planned',
     relatedRoleIds: ['role_pen_tester', 'role_security_architect'],
     prerequisites: ['cat_red_recon_surface', 'cat_blue_iam_least_privilege'],
     mitreAttackTechniques: ['T1021.002 (SMB/Windows Admin Shares)', 'T1078 (Valid Accounts)'],
@@ -369,7 +365,8 @@ export const CATALOGUE_ENTRIES: readonly CatalogueEntry[] = [
     track: 'red',
     discipline: 'adversary_emulation',
     title: 'Adversary Emulation & Safe Scenario Replay',
-    summary: 'Simulate specific threat actor tactics to test security posture against realistic threats.',
+    summary:
+      'Simulate specific threat actor tactics to test security posture against realistic threats.',
     description:
       'Adversary emulation tests enterprise defenses against known real-world threat actor playbooks. Replay safe, predefined sequences (initial access -> credential query -> file collection) to evaluate whether organizational detections fire reliably.',
     whyItMatters:
@@ -409,8 +406,7 @@ export const CATALOGUE_ENTRIES: readonly CatalogueEntry[] = [
     ],
     requiredKnowledge: ['Technical writing, severity frameworks (CVSS)'],
     relevantTools: ['evidence', 'aster-admin'],
-    status: 'playable',
-    exerciseId: 'ex_red_reporting_retest',
+    status: 'planned',
     relatedRoleIds: ['role_pen_tester', 'role_security_tester'],
     prerequisites: ['cat_red_recon_surface'],
     careerSkills: [{ skillId: 'reporting', targetLevel: 2 }],
@@ -424,7 +420,8 @@ export const CATALOGUE_ENTRIES: readonly CatalogueEntry[] = [
     track: 'purple',
     discipline: 'detection_validation',
     title: 'Detection Validation & Telemetry Gap Analysis',
-    summary: 'Run simulated attacks, evaluate SIEM detections, and identify unmonitored blind spots.',
+    summary:
+      'Run simulated attacks, evaluate SIEM detections, and identify unmonitored blind spots.',
     description:
       'Purple Teaming unites offensive testing and defensive operations. In this foundational module, run a controlled adversary behavior against simulated infrastructure, inspect generated SIEM logs, and evaluate whether an alert was triggered or if a detection gap exists.',
     whyItMatters:
@@ -479,8 +476,7 @@ export const CATALOGUE_ENTRIES: readonly CatalogueEntry[] = [
     ],
     requiredKnowledge: ['Boolean logic, event attributes, false positive concepts'],
     relevantTools: ['logview'],
-    status: 'playable',
-    exerciseId: 'ex_purple_rule_tuning',
+    status: 'informational',
     relatedRoleIds: ['role_detection_engineer', 'role_purple_analyst'],
     prerequisites: ['cat_purple_detection_validation'],
     mitreAttackTechniques: ['T1021.002 (SMB)', 'T1078.004 (Service Accounts)'],
@@ -539,8 +535,7 @@ export const CATALOGUE_ENTRIES: readonly CatalogueEntry[] = [
       'Security metrics (Time to Detect, Detection Rate, False Positive Rate)',
     ],
     relevantTools: ['logview'],
-    status: 'playable',
-    exerciseId: 'ex_purple_detection_tuning_replay',
+    status: 'informational',
     relatedRoleIds: ['role_purple_analyst', 'role_detection_engineer'],
     prerequisites: ['cat_purple_detection_validation', 'cat_purple_detection_engineering'],
     careerSkills: [
@@ -830,15 +825,15 @@ export const PRACTICAL_EXERCISES: readonly PracticalExercise[] = [
         id: 'rubric_red_reporting',
         criterion: 'Finding Documentation',
         weight: 35,
-        description:
-          'Documents high severity, business impact, and specific remediation advice.',
+        description: 'Documents high severity, business impact, and specific remediation advice.',
       },
     ],
     debrief:
       'Assessment Complete! As an authorized offensive security tester, your structured reconnaissance proved that unsegmented SMB access on port 445 coupled with wildcard service account permissions allowed an attacker on app-portal-01 to compromise filesrv-01. Your findings provide defenders with the exact evidence needed to justify network segmentation and IAM tightening.',
     rewardXp: 90,
-    rewardKobo: 90_000, // ₦900.00
+    rewardKobo: 100_000, // ₦1,000.00
     skillRewards: {
+      attack_simulation: 50,
       network_fundamentals: 40,
       troubleshooting: 30,
       reporting: 30,
@@ -920,6 +915,7 @@ export const PRACTICAL_EXERCISES: readonly PracticalExercise[] = [
     rewardXp: 120,
     rewardKobo: 120_000, // ₦1,200.00
     skillRewards: {
+      detection_engineering: 50,
       log_analysis: 60,
       security_fundamentals: 40,
       reporting: 30,

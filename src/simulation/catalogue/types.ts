@@ -113,13 +113,7 @@ export interface PracticalExercise {
 // ============================================================================
 
 export type DetectionRuleField =
-  | 'eventType'
-  | 'hostId'
-  | 'user'
-  | 'severity'
-  | 'source'
-  | 'serviceName'
-  | 'port';
+  'eventType' | 'hostId' | 'user' | 'severity' | 'source' | 'serviceName' | 'port';
 
 export type DetectionRuleOperator = 'EQUALS' | 'CONTAINS' | 'STARTS_WITH';
 

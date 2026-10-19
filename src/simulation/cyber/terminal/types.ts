@@ -18,9 +18,13 @@ export interface TerminalCommandResult {
   isError?: boolean;
   /** If true, the terminal client should clear previous screen output. */
   clearScreen?: boolean;
+  /** Optional updated virtual working directory if command changed directory. */
+  newDirectory?: string;
 }
 
 export interface TerminalExecutionContext {
+  /** Current virtual working directory in simulated filesystem (defaults to /home/analyst). */
+  currentDirectory?: string;
   /** Snapshot of in-game simulation calendar & time from M3 engine. */
   simulationTime: {
     timeString: string;

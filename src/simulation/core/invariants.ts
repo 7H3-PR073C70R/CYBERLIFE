@@ -381,4 +381,61 @@ export function validateSimulationState(state: SimulationState): void {
       throw new InvariantViolationError('onboarding.activeStepId must be a string or null');
     }
   }
+
+  // 14. Catalogue invariants (if present)
+  if (state.catalogue) {
+    const { catalogue } = state;
+    if (!Array.isArray(catalogue.completedEntryIds)) {
+      throw new InvariantViolationError('catalogue.completedEntryIds must be an array');
+    }
+    const seenEntries = new Set<string>();
+    for (const id of catalogue.completedEntryIds) {
+      if (!id || typeof id !== 'string') {
+        throw new InvariantViolationError(
+          'catalogue.completedEntryIds items must be non-empty strings'
+        );
+      }
+      if (seenEntries.has(id)) {
+        throw new InvariantViolationError(`Duplicate entry ID "${id}" in completedEntryIds`);
+      }
+      seenEntries.add(id);
+    }
+
+    if (!Array.isArray(catalogue.completedExerciseIds)) {
+      throw new InvariantViolationError('catalogue.completedExerciseIds must be an array');
+    }
+    const seenExercises = new Set<string>();
+    for (const id of catalogue.completedExerciseIds) {
+      if (!id || typeof id !== 'string') {
+        throw new InvariantViolationError(
+          'catalogue.completedExerciseIds items must be non-empty strings'
+        );
+      }
+      if (seenExercises.has(id)) {
+        throw new InvariantViolationError(`Duplicate exercise ID "${id}" in completedExerciseIds`);
+      }
+      seenExercises.add(id);
+    }
+
+    if (!Array.isArray(catalogue.detectionRules)) {
+      throw new InvariantViolationError('catalogue.detectionRules must be an array');
+    }
+
+    if (!Array.isArray(catalogue.purpleRunHistory)) {
+      throw new InvariantViolationError('catalogue.purpleRunHistory must be an array');
+    }
+
+    if (!Array.isArray(catalogue.redFindings)) {
+      throw new InvariantViolationError('catalogue.redFindings must be an array');
+    }
+
+    if (
+      !Number.isSafeInteger(catalogue.totalExercisesCompleted) ||
+      catalogue.totalExercisesCompleted < 0
+    ) {
+      throw new InvariantViolationError(
+        'catalogue.totalExercisesCompleted must be a non-negative safe integer'
+      );
+    }
+  }
 }
