@@ -20,6 +20,7 @@ import { FieldGuideApp } from './apps/FieldGuideApp';
 import { SystemInfoApp } from './apps/SystemInfoApp';
 import { NotesApp } from './apps/NotesApp';
 import { ActivityApp } from './apps/ActivityApp';
+import { IncidentApp } from './apps/IncidentApp';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { CameraMode } from '../world/worldConfig';
 
@@ -326,6 +327,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 {appId === 'systemInfo' && <SystemInfoApp workstationId={workstationId} />}
                 {appId === 'notes' && <NotesApp workstationId={workstationId} />}
                 {appId === 'activity' && <ActivityApp workstationId={workstationId} />}
+                {appId === 'incident' && <IncidentApp />}
               </WindowFrame>
             );
           })}

@@ -90,6 +90,19 @@ export const FICTIONAL_LOGS: readonly FictionalLogEntry[] = [
     details: 'Client IP: 10.0.4.22; Kerberos principal: folake_alabi@CORP.LOCAL.',
   },
   {
+    id: 'LOG-2026-107B',
+    timestamp: '07:51:30 AM',
+    source: 'file-server',
+    severity: 'WARN',
+    eventType: 'UNAUTHORIZED_FILE_READ',
+    hostId: 'filesrv-01',
+    user: 'svc-aster',
+    message:
+      'Service account svc-aster performed bulk read on confidential file //filesrv-01/dept_shares/finance/payroll_q3_confidential.xlsx.',
+    details:
+      'Read size: 4.2 MB; SMB handle #8812; authenticated via Bearer token issued to svc-aster on app-portal-01 with role:corporate-admin.',
+  },
+  {
     id: 'LOG-2026-108',
     timestamp: '07:53:30 AM',
     source: 'app-portal',
@@ -110,6 +123,19 @@ export const FICTIONAL_LOGS: readonly FictionalLogEntry[] = [
     user: 'system',
     message: 'Service tomcat-payroll-staging restarted automatically by supervisor watchdog.',
     details: 'Supervisor rule: restart on exit status 143. Uptime reset.',
+  },
+  {
+    id: 'LOG-2026-109B',
+    timestamp: '07:55:45 AM',
+    source: 'auth',
+    severity: 'WARN',
+    eventType: 'IAM_PRIVILEGE_MISMATCH',
+    hostId: 'mon-siem-01',
+    user: 'svc-aster',
+    message:
+      'SIEM anomaly detection alert: svc-aster granted administrative scope ["*"] inconsistent with documentation assistant purpose.',
+    details:
+      'Alert rule #IR-882: Service account privilege exceeds baseline role requirements. Recommended action: isolate service and enforce least privilege.',
   },
   {
     id: 'LOG-2026-108B',

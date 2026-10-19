@@ -20,6 +20,12 @@ import {
 import { setWorldFlag } from '../systems/worldFlagsSystem';
 import { deepFreeze } from '../core/stateUtils';
 import { DomainError } from '../../domain/errors/DomainError';
+import { createInitialAsterIncidentMissionState } from '../missions/initialMissionState';
+import {
+  validateRootCauseAssessment,
+  validateIncidentReport,
+  runSimulatedVerification,
+} from '../missions/asterIncidentGroundTruth';
 
 function makeFailure(
   state: Readonly<SimulationState>,
@@ -798,6 +804,596 @@ export function handleCommand(
           state: deepFreeze(nextState),
           events: [event],
           message: `Recorded cyber activity "${activityId}" for tool "${tool}"`,
+        };
+      }
+
+      // ======================================================================
+      // Milestone 6: The Aster Incident Mission Commands
+      // ======================================================================
+
+      case 'StartAsterMission': {
+        const mission = currentState.mission ?? createInitialAsterIncidentMissionState();
+        const nextRevision = currentState.metadata.revision + 1;
+        const event = createSimulationEvent(
+          'MISSION_STARTED',
+          currentState.time.simulationTimeSeconds,
+          nextRevision,
+          {
+            missionId: mission.missionId,
+            title: mission.title,
+          }
+        );
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          flags: {
+            ...currentState.flags,
+            mission_aster_active: true,
+            mission_aster_phase: mission.phase,
+          },
+          mission: {
+            ...mission,
+            hasStarted: true,
+          },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events: [event],
+          message: `Mission "${mission.title}" is active.`,
+        };
+      }
+
+      case 'AdvanceAsterMissionPhase': {
+        const mission = currentState.mission;
+        if (!mission) {
+          return makeFailure(currentState, 'INVALID_ARGUMENT', 'No mission active to advance');
+        }
+        const { targetPhase } = command;
+        const currentPhase = mission.phase;
+
+        if (currentPhase === targetPhase) {
+          return makeNoOp(currentState, `Mission is already in phase "${targetPhase}".`);
+        }
+
+        // Validate phase prerequisites
+        if (targetPhase === 'remediation' && !mission.isContained) {
+          return makeFailure(
+            currentState,
+            'INVALID_ARGUMENT',
+            'Cannot advance to remediation: Aster must first be contained to mitigate active data exfiltration.'
+          );
+        }
+        if (targetPhase === 'verification' && !mission.isRemediated) {
+          return makeFailure(
+            currentState,
+            'INVALID_ARGUMENT',
+            'Cannot advance to verification: Aster permissions have not been remediated.'
+          );
+        }
+        if (targetPhase === 'reporting' && !mission.isVerified) {
+          return makeFailure(
+            currentState,
+            'INVALID_ARGUMENT',
+            'Cannot advance to reporting: Remediation has not been verified.'
+          );
+        }
+        if (
+          targetPhase === 'completed' &&
+          (!mission.incidentReport || !mission.incidentReport.isApproved)
+        ) {
+          return makeFailure(
+            currentState,
+            'INVALID_ARGUMENT',
+            'Cannot complete mission: Incident report has not been submitted and approved.'
+          );
+        }
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const simTime = currentState.time.simulationTimeSeconds;
+
+        const event = createSimulationEvent('MISSION_PHASE_ADVANCED', simTime, nextRevision, {
+          missionId: mission.missionId,
+          previousPhase: currentPhase,
+          currentPhase: targetPhase,
+        });
+
+        const updatedObjectives = mission.objectives.map(obj => {
+          if (obj.phase === currentPhase && !obj.isCompleted) {
+            return { ...obj, isCompleted: true, completedAt: simTime };
+          }
+          return obj;
+        });
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          flags: {
+            ...currentState.flags,
+            mission_aster_phase: targetPhase,
+          },
+          mission: {
+            ...mission,
+            phase: targetPhase,
+            objectives: updatedObjectives,
+          },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events: [event],
+          message: `Mission advanced from "${currentPhase}" to "${targetPhase}".`,
+        };
+      }
+
+      case 'RecordMissionFinding': {
+        const mission = currentState.mission;
+        if (!mission) {
+          return makeFailure(currentState, 'INVALID_ARGUMENT', 'No mission active');
+        }
+        const { findingType, targetId } = command;
+        const cleanTarget = targetId.trim();
+
+        let discoveredHosts = mission.discoveredHosts;
+        let inspectedServices = mission.inspectedServices;
+        let analyzedLogIds = mission.analyzedLogIds;
+
+        if (findingType === 'host' && !discoveredHosts.includes(cleanTarget)) {
+          discoveredHosts = [...discoveredHosts, cleanTarget];
+        } else if (findingType === 'service' && !inspectedServices.includes(cleanTarget)) {
+          inspectedServices = [...inspectedServices, cleanTarget];
+        } else if (findingType === 'log' && !analyzedLogIds.includes(cleanTarget)) {
+          analyzedLogIds = [...analyzedLogIds, cleanTarget];
+        }
+
+        const simTime = currentState.time.simulationTimeSeconds;
+        const updatedObjectives = mission.objectives.map(obj => {
+          if (findingType === 'host' && obj.id === 'obj-assess-01' && !obj.isCompleted) {
+            return { ...obj, isCompleted: true, completedAt: simTime };
+          }
+          if (
+            findingType === 'service' &&
+            obj.id === 'obj-investigate-01' &&
+            inspectedServices.length >= 2 &&
+            !obj.isCompleted
+          ) {
+            return { ...obj, isCompleted: true, completedAt: simTime };
+          }
+          if (findingType === 'log' && obj.id === 'obj-investigate-02' && !obj.isCompleted) {
+            return { ...obj, isCompleted: true, completedAt: simTime };
+          }
+          return obj;
+        });
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const event = createSimulationEvent('MISSION_FINDING_RECORDED', simTime, nextRevision, {
+          missionId: mission.missionId,
+          findingType,
+          targetId: cleanTarget,
+        });
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          mission: {
+            ...mission,
+            discoveredHosts,
+            inspectedServices,
+            analyzedLogIds,
+            objectives: updatedObjectives,
+          },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events: [event],
+          message: `Recorded ${findingType} finding: "${cleanTarget}"`,
+        };
+      }
+
+      case 'PreserveMissionEvidence': {
+        const mission = currentState.mission;
+        if (!mission) {
+          return makeFailure(currentState, 'INVALID_ARGUMENT', 'No mission active');
+        }
+        const { evidenceId } = command;
+        const cleanId = evidenceId.trim().toUpperCase();
+
+        if (mission.preservedEvidenceIds.includes(cleanId)) {
+          return makeNoOp(currentState, `Evidence "${cleanId}" has already been preserved.`);
+        }
+
+        const preservedEvidenceIds = [...mission.preservedEvidenceIds, cleanId];
+        const simTime = currentState.time.simulationTimeSeconds;
+
+        const updatedObjectives = mission.objectives.map(obj => {
+          if (obj.id === 'obj-evidence-01' && !obj.isCompleted) {
+            return { ...obj, isCompleted: true, completedAt: simTime };
+          }
+          return obj;
+        });
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const hashSha256 = '3a5f9c12e82b4a11c3ab8bf7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa';
+        const event = createSimulationEvent('MISSION_EVIDENCE_PRESERVED', simTime, nextRevision, {
+          missionId: mission.missionId,
+          evidenceId: cleanId,
+          hashSha256,
+        });
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          flags: {
+            ...currentState.flags,
+            evidence_preserved_count: preservedEvidenceIds.length,
+          },
+          mission: {
+            ...mission,
+            preservedEvidenceIds,
+            objectives: updatedObjectives,
+          },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events: [event],
+          message: `Forensic evidence "${cleanId}" preserved with SHA-256 integrity hash.`,
+        };
+      }
+
+      case 'SubmitRootCauseAssessment': {
+        const mission = currentState.mission;
+        if (!mission) {
+          return makeFailure(currentState, 'INVALID_ARGUMENT', 'No mission active');
+        }
+
+        const result = validateRootCauseAssessment({
+          suspectedRootCause: command.suspectedRootCause,
+          affectedComponent: command.affectedComponent,
+          observedImpact: command.observedImpact,
+          supportingEvidenceIds: command.supportingEvidenceIds,
+        });
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const simTime = currentState.time.simulationTimeSeconds;
+
+        const event = createSimulationEvent('MISSION_ASSESSMENT_SUBMITTED', simTime, nextRevision, {
+          missionId: mission.missionId,
+          isAccurate: result.isAccurate,
+          feedback: result.feedback,
+        });
+
+        const assessment = {
+          suspectedRootCause: command.suspectedRootCause,
+          affectedComponent: command.affectedComponent,
+          observedImpact: command.observedImpact,
+          supportingEvidenceIds: command.supportingEvidenceIds,
+          uncertaintyOrNotes: command.uncertaintyOrNotes,
+          submittedAt: simTime,
+          isAccurate: result.isAccurate,
+          feedback: result.feedback,
+        };
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          flags: {
+            ...currentState.flags,
+            assessment_accurate: result.isAccurate,
+          },
+          mission: {
+            ...mission,
+            rootCauseAssessment: assessment,
+          },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events: [event],
+          message: result.feedback,
+        };
+      }
+
+      case 'ExecuteContainment': {
+        const mission = currentState.mission;
+        if (!mission) {
+          return makeFailure(currentState, 'INVALID_ARGUMENT', 'No mission active');
+        }
+        if (mission.isContained) {
+          return makeNoOp(currentState, 'Aster AI service is already in CONTAINED mode.');
+        }
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const simTime = currentState.time.simulationTimeSeconds;
+
+        const event = createSimulationEvent('MISSION_CONTAINMENT_EXECUTED', simTime, nextRevision, {
+          missionId: mission.missionId,
+          action: command.action,
+          targetHost: mission.asterService.hostId,
+        });
+
+        const updatedObjectives = mission.objectives.map(obj => {
+          if (obj.id === 'obj-containment-01' && !obj.isCompleted) {
+            return { ...obj, isCompleted: true, completedAt: simTime };
+          }
+          return obj;
+        });
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          flags: {
+            ...currentState.flags,
+            mission_aster_contained: true,
+            mission_aster_phase: 'remediation',
+          },
+          mission: {
+            ...mission,
+            isContained: true,
+            containmentTimestamp: simTime,
+            phase: mission.phase === 'containment' ? 'remediation' : mission.phase,
+            asterService: {
+              ...mission.asterService,
+              operationalMode: 'CONTAINED',
+              smbAccessAllowed: false,
+              databaseAccessAllowed: false,
+            },
+            objectives: updatedObjectives,
+          },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events: [event],
+          message:
+            'Containment successful: Aster AI service isolated from departmental storage & SMB shares. Active data exfiltration mitigated.',
+        };
+      }
+
+      case 'RemediatePermissions': {
+        const mission = currentState.mission;
+        if (!mission) {
+          return makeFailure(currentState, 'INVALID_ARGUMENT', 'No mission active');
+        }
+        const { targetPolicyRole, removeSmbAccess, removeDatabaseAccess, grantedScopes } = command;
+
+        if (targetPolicyRole !== 'kb-assistant' || !removeSmbAccess) {
+          return makeFailure(
+            currentState,
+            'INVALID_ARGUMENT',
+            'Remediation Rejected: Applying excessive role or retaining SMB file server access violates the Principle of Least Privilege. Select role:kb-assistant and remove SMB access.'
+          );
+        }
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const simTime = currentState.time.simulationTimeSeconds;
+
+        const event = createSimulationEvent('MISSION_REMEDIATION_APPLIED', simTime, nextRevision, {
+          missionId: mission.missionId,
+          role: targetPolicyRole,
+          previousRole: mission.asterService.activePolicyRole,
+        });
+
+        const updatedObjectives = mission.objectives.map(obj => {
+          if (obj.id === 'obj-remediation-01' && !obj.isCompleted) {
+            return { ...obj, isCompleted: true, completedAt: simTime };
+          }
+          return obj;
+        });
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          flags: {
+            ...currentState.flags,
+            mission_aster_remediated: true,
+            mission_aster_phase: 'verification',
+          },
+          mission: {
+            ...mission,
+            isRemediated: true,
+            remediationTimestamp: simTime,
+            phase: mission.phase === 'remediation' ? 'verification' : mission.phase,
+            asterService: {
+              ...mission.asterService,
+              operationalMode: 'REMEDIATED',
+              activePolicyRole: 'kb-assistant',
+              grantedScopes: grantedScopes.length > 0 ? grantedScopes : ['docs:read', 'kb:search'],
+              smbAccessAllowed: false,
+              databaseAccessAllowed: !removeDatabaseAccess ? false : false,
+              lastPolicyUpdateAt: simTime,
+            },
+            objectives: updatedObjectives,
+          },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events: [event],
+          message:
+            'Remediation Applied: Reconfigured svc-aster to least-privilege role "role:kb-assistant". Wildcard scopes and SMB access revoked.',
+        };
+      }
+
+      case 'VerifyRemediation': {
+        const mission = currentState.mission;
+        if (!mission) {
+          return makeFailure(currentState, 'INVALID_ARGUMENT', 'No mission active');
+        }
+        const simTime = currentState.time.simulationTimeSeconds;
+        const verificationResult = runSimulatedVerification(mission.asterService, simTime);
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const event = createSimulationEvent(
+          'MISSION_VERIFICATION_COMPLETED',
+          simTime,
+          nextRevision,
+          {
+            missionId: mission.missionId,
+            passed: verificationResult.passed,
+            message: verificationResult.message,
+          }
+        );
+
+        const updatedObjectives = mission.objectives.map(obj => {
+          if (obj.id === 'obj-verification-01' && verificationResult.passed && !obj.isCompleted) {
+            return { ...obj, isCompleted: true, completedAt: simTime };
+          }
+          return obj;
+        });
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          flags: {
+            ...currentState.flags,
+            mission_aster_verified: verificationResult.passed,
+            mission_aster_phase: verificationResult.passed ? 'reporting' : mission.phase,
+          },
+          mission: {
+            ...mission,
+            isVerified: verificationResult.passed,
+            verificationResult,
+            phase:
+              verificationResult.passed && mission.phase === 'verification'
+                ? 'reporting'
+                : mission.phase,
+            objectives: updatedObjectives,
+          },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: verificationResult.passed,
+          state: deepFreeze(nextState),
+          events: [event],
+          message: verificationResult.message,
+        };
+      }
+
+      case 'SubmitIncidentReport': {
+        const mission = currentState.mission;
+        if (!mission) {
+          return makeFailure(currentState, 'INVALID_ARGUMENT', 'No mission active');
+        }
+        const report = command.report;
+        const result = validateIncidentReport(report, {
+          isContained: mission.isContained,
+          isRemediated: mission.isRemediated,
+          isVerified: mission.isVerified,
+          asterService: mission.asterService,
+        });
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const simTime = currentState.time.simulationTimeSeconds;
+
+        const reportEvent = createSimulationEvent(
+          'MISSION_REPORT_SUBMITTED',
+          simTime,
+          nextRevision,
+          {
+            missionId: mission.missionId,
+            isApproved: result.isApproved,
+            score: result.score,
+            feedback: result.reviewerFeedback,
+          }
+        );
+
+        const events: SimulationEvent[] = [reportEvent];
+
+        if (result.isApproved) {
+          const completeEvent = createSimulationEvent('MISSION_COMPLETED', simTime, nextRevision, {
+            missionId: mission.missionId,
+            finalScore: result.score,
+            outcomeSummary: result.reviewerFeedback,
+          });
+          events.push(completeEvent);
+        }
+
+        const updatedObjectives = mission.objectives.map(obj => {
+          if (obj.id === 'obj-reporting-01' && result.isApproved && !obj.isCompleted) {
+            return { ...obj, isCompleted: true, completedAt: simTime };
+          }
+          return obj;
+        });
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          flags: {
+            ...currentState.flags,
+            mission_aster_report_approved: result.isApproved,
+            mission_aster_completed: result.isApproved,
+            mission_aster_score: result.score,
+            mission_aster_phase: result.isApproved ? 'completed' : mission.phase,
+          },
+          mission: {
+            ...mission,
+            incidentReport: {
+              ...report,
+              submittedAt: simTime,
+              score: result.score,
+              isApproved: result.isApproved,
+              reviewerFeedback: result.reviewerFeedback,
+            },
+            isCompleted: result.isApproved ? true : mission.isCompleted,
+            completedAt: result.isApproved ? simTime : mission.completedAt,
+            finalScore: result.isApproved ? result.score : mission.finalScore,
+            outcomeFeedback: result.reviewerFeedback,
+            phase: result.isApproved ? 'completed' : mission.phase,
+            objectives: updatedObjectives,
+          },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: result.isApproved,
+          state: deepFreeze(nextState),
+          events,
+          message: result.reviewerFeedback,
         };
       }
 

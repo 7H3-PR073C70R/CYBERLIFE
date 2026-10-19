@@ -13,6 +13,13 @@ import { WorldCameraController } from './WorldCameraController';
 import { WorldEnvironment } from './WorldEnvironment';
 import { LocationTransitionController } from './LocationTransitionController';
 
+export interface NpcDialogueData {
+  npcId: string;
+  name: string;
+  role: string;
+  dialogue: string;
+}
+
 export interface WorldSceneOptions {
   clearColor?: number;
   antialias?: boolean;
@@ -22,6 +29,7 @@ export interface WorldSceneOptions {
   onCameraModeChanged?: (mode: CameraMode) => void;
   onNoticeboardRead?: (notice: string) => void;
   onWorkstationOpen?: (workstationId: string) => void;
+  onNpcDialogue?: (dialogue: NpcDialogueData) => void;
 }
 
 export interface SceneStatistics {
@@ -63,6 +71,7 @@ export class WorldSceneManager {
   private onCameraModeChanged?: (mode: CameraMode) => void;
   private onNoticeboardRead?: (notice: string) => void;
   private onWorkstationOpen?: (workstationId: string) => void;
+  private onNpcDialogue?: (dialogue: NpcDialogueData) => void;
 
   private frameCount = 0;
   private isDisposed = false;
@@ -108,6 +117,7 @@ export class WorldSceneManager {
     this.onCameraModeChanged = options.onCameraModeChanged;
     this.onNoticeboardRead = options.onNoticeboardRead;
     this.onWorkstationOpen = options.onWorkstationOpen;
+    this.onNpcDialogue = options.onNpcDialogue;
 
     // 1. Scene Setup
     const clearColor = options.clearColor ?? 0x7dd3fc; // Warm coastal Lagos sky blue
@@ -271,6 +281,14 @@ export class WorldSceneManager {
       this.onNoticeboardRead?.(
         'TINUBU SQUARE BULLETIN: Unusual system alert activity detected in Cedarline Services Marina staging cluster. Cedarline IT security staff meeting on Broad Street at 14:00.'
       );
+    } else if (target.id === 'interact_npc_amina') {
+      this.onNpcDialogue?.({
+        npcId: 'npc_amina',
+        name: 'Amina Okonjo',
+        role: 'Lead Security Analyst',
+        dialogue:
+          'Tade, welcome to the SOC. We have an active incident: Aster AI was flagged for unauthorized SMB queries on filesrv-01. Head to your workstation, open the Terminal and Incident Portal, preserve the evidence, and investigate why Aster has excessive permissions. Good luck!',
+      });
     }
   }
 

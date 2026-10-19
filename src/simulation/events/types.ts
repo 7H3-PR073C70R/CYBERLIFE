@@ -11,7 +11,17 @@ export type SimulationEventType =
   | 'SIMULATION_TIMER_TRIGGERED'
   | 'SIMULATION_TIMER_SCHEDULED'
   | 'SIMULATION_TIMER_CANCELLED'
-  | 'CYBER_ACTIVITY_RECORDED';
+  | 'CYBER_ACTIVITY_RECORDED'
+  | 'MISSION_STARTED'
+  | 'MISSION_PHASE_ADVANCED'
+  | 'MISSION_FINDING_RECORDED'
+  | 'MISSION_EVIDENCE_PRESERVED'
+  | 'MISSION_ASSESSMENT_SUBMITTED'
+  | 'MISSION_CONTAINMENT_EXECUTED'
+  | 'MISSION_REMEDIATION_APPLIED'
+  | 'MISSION_VERIFICATION_COMPLETED'
+  | 'MISSION_REPORT_SUBMITTED'
+  | 'MISSION_COMPLETED';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -127,6 +137,96 @@ export type CyberActivityRecordedEvent = BaseSimulationEvent<
   }
 >;
 
+export type MissionStartedEvent = BaseSimulationEvent<
+  'MISSION_STARTED',
+  {
+    readonly missionId: string;
+    readonly title: string;
+  }
+>;
+
+export type MissionPhaseAdvancedEvent = BaseSimulationEvent<
+  'MISSION_PHASE_ADVANCED',
+  {
+    readonly missionId: string;
+    readonly previousPhase: string;
+    readonly currentPhase: string;
+  }
+>;
+
+export type MissionFindingRecordedEvent = BaseSimulationEvent<
+  'MISSION_FINDING_RECORDED',
+  {
+    readonly missionId: string;
+    readonly findingType: string;
+    readonly targetId: string;
+  }
+>;
+
+export type MissionEvidencePreservedEvent = BaseSimulationEvent<
+  'MISSION_EVIDENCE_PRESERVED',
+  {
+    readonly missionId: string;
+    readonly evidenceId: string;
+    readonly hashSha256: string;
+  }
+>;
+
+export type MissionAssessmentSubmittedEvent = BaseSimulationEvent<
+  'MISSION_ASSESSMENT_SUBMITTED',
+  {
+    readonly missionId: string;
+    readonly isAccurate: boolean;
+    readonly feedback: string;
+  }
+>;
+
+export type MissionContainmentExecutedEvent = BaseSimulationEvent<
+  'MISSION_CONTAINMENT_EXECUTED',
+  {
+    readonly missionId: string;
+    readonly action: string;
+    readonly targetHost: string;
+  }
+>;
+
+export type MissionRemediationAppliedEvent = BaseSimulationEvent<
+  'MISSION_REMEDIATION_APPLIED',
+  {
+    readonly missionId: string;
+    readonly role: string;
+    readonly previousRole: string;
+  }
+>;
+
+export type MissionVerificationCompletedEvent = BaseSimulationEvent<
+  'MISSION_VERIFICATION_COMPLETED',
+  {
+    readonly missionId: string;
+    readonly passed: boolean;
+    readonly message: string;
+  }
+>;
+
+export type MissionReportSubmittedEvent = BaseSimulationEvent<
+  'MISSION_REPORT_SUBMITTED',
+  {
+    readonly missionId: string;
+    readonly isApproved: boolean;
+    readonly score: number;
+    readonly feedback: string;
+  }
+>;
+
+export type MissionCompletedEvent = BaseSimulationEvent<
+  'MISSION_COMPLETED',
+  {
+    readonly missionId: string;
+    readonly finalScore: number;
+    readonly outcomeSummary: string;
+  }
+>;
+
 export type SimulationEvent =
   | SimulationTimeAdvancedEvent
   | PlayerAttributeChangedEvent
@@ -138,4 +238,14 @@ export type SimulationEvent =
   | SimulationTimerTriggeredEvent
   | SimulationTimerScheduledEvent
   | SimulationTimerCancelledEvent
-  | CyberActivityRecordedEvent;
+  | CyberActivityRecordedEvent
+  | MissionStartedEvent
+  | MissionPhaseAdvancedEvent
+  | MissionFindingRecordedEvent
+  | MissionEvidencePreservedEvent
+  | MissionAssessmentSubmittedEvent
+  | MissionContainmentExecutedEvent
+  | MissionRemediationAppliedEvent
+  | MissionVerificationCompletedEvent
+  | MissionReportSubmittedEvent
+  | MissionCompletedEvent;

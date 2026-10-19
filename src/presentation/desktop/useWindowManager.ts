@@ -16,6 +16,7 @@ export function createInitialWindows(
   initialOpenApp: AppId = 'terminal'
 ): Record<AppId, WindowState> {
   const initialPositions: Record<AppId, { x: number; y: number }> = {
+    incident: { x: 70, y: 30 },
     terminal: { x: 80, y: 40 },
     fieldGuide: { x: 120, y: 70 },
     systemInfo: { x: 160, y: 90 },

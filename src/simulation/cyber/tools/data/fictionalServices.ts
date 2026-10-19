@@ -144,6 +144,21 @@ export const FICTIONAL_SERVICES: readonly FictionalService[] = [
     securityNotes:
       'REQUIRES REVIEW: Unencrypted HTTP management console exposed on port 8080. Recommended for remediation to bind only to loopback interface.',
   },
+  {
+    id: 'svc-app-aster',
+    hostId: 'app-portal-01',
+    port: 5050,
+    protocol: 'tcp',
+    serviceName: 'aster-ai-core',
+    product: 'Aster AI Enterprise Engine',
+    version: 'v1.2.0-cedarline',
+    state: 'OPEN',
+    approved: false, // REQUIRES REVIEW
+    expectedPurpose:
+      'Internal enterprise AI assistant service for employee policy search and documentation Q&A.',
+    securityNotes:
+      'CRITICAL SECURITY REVIEW: Service account svc-aster operates with wildcard scope ["*"] and role:corporate-admin. Unrestricted network reachability allows unauthorized queries to departmental SMB shares and databases beyond documentation search scope.',
+  },
 
   // gw-core-01 (Perimeter Gateway)
   {

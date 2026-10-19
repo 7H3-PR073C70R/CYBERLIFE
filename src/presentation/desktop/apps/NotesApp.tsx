@@ -118,6 +118,19 @@ export const NotesApp: React.FC<NotesAppProps> = ({
             </button>
             <button
               type="button"
+              className="btn-scratchpad-action"
+              onClick={() =>
+                insertTemplate(
+                  '## Incident Report Draft: The Aster Incident\n1. Executive Summary: \n2. Timeline: \n3. Affected Systems: app-portal-01, filesrv-01\n4. Root Cause: Overprivileged role:corporate-admin [*]\n5. Containment: Severed SMB port 445\n6. Remediation: Replaced role with role:kb-assistant\n7. Verification: PASSED (200 OK on search, 403 Forbidden on SMB)'
+                )
+              }
+              title="Add Incident Report Template"
+              data-testid="btn-add-report-note"
+            >
+              + Incident Report
+            </button>
+            <button
+              type="button"
               className="btn-scratchpad-clear"
               onClick={() => setNotesText('')}
               title="Clear Scratchpad"

@@ -96,6 +96,13 @@ const COMMAND_HINTS: Record<string, CommandHint> = {
     example: 'evidence list',
     expectedOutput: 'Forensic evidence ledger with chain of custody and artifact content.',
   },
+  'aster-admin': {
+    command: 'aster-admin',
+    purpose:
+      'Manages Aster AI assistant operational state, IAM role, containment, and verification.',
+    example: 'aster-admin status',
+    expectedOutput: 'Service status banner with active IAM policy, scopes, and network status.',
+  },
 };
 
 export const TerminalApp: React.FC<TerminalAppProps> = ({
@@ -231,7 +238,10 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
 
     // If a cyber tool was executed, record cyber activity on the authoritative simulation engine
     const firstToken = trimmed.split(/\s+/)[0]?.toLowerCase();
-    if (firstToken && ['netmap', 'svcscan', 'logview', 'evidence'].includes(firstToken)) {
+    if (
+      firstToken &&
+      ['netmap', 'svcscan', 'logview', 'evidence', 'aster-admin'].includes(firstToken)
+    ) {
       sim?.dispatch({
         type: 'RecordCyberActivity',
         activityId: `act-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
@@ -241,6 +251,57 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         summary: `Executed command '${trimmed}' on ${ctx.workstation.hostname}`,
         success: !result.isError,
       });
+
+      // Synchronize findings and actions with The Aster Incident mission state
+      if (!result.isError && sim) {
+        if (firstToken === 'netmap') {
+          sim.dispatch({
+            type: 'RecordMissionFinding',
+            findingType: 'host',
+            targetId: '10.0.4.0/24',
+          });
+        } else if (firstToken === 'svcscan') {
+          const target = trimmed.split(/\s+/)[2] || 'app-portal-01';
+          sim.dispatch({
+            type: 'RecordMissionFinding',
+            findingType: 'service',
+            targetId: target,
+          });
+        } else if (firstToken === 'logview') {
+          sim.dispatch({
+            type: 'RecordMissionFinding',
+            findingType: 'log',
+            targetId: 'LOG-2026-107B',
+          });
+        } else if (firstToken === 'evidence') {
+          const target = trimmed.split(/\s+/)[2] || 'EVD-2026-004';
+          sim.dispatch({
+            type: 'RecordMissionFinding',
+            findingType: 'evidence',
+            targetId: target,
+          });
+        } else if (firstToken === 'aster-admin') {
+          if (trimmed.includes('contain')) {
+            sim.dispatch({
+              type: 'ExecuteContainment',
+              action: 'isolate_service',
+              reason: 'Terminal aster-admin command',
+            });
+          } else if (trimmed.includes('remediate') && trimmed.includes('kb-assistant')) {
+            sim.dispatch({
+              type: 'RemediatePermissions',
+              targetPolicyRole: 'kb-assistant',
+              removeSmbAccess: true,
+              removeDatabaseAccess: true,
+              grantedScopes: ['docs:read', 'kb:search'],
+            });
+          } else if (trimmed.includes('verify')) {
+            sim.dispatch({
+              type: 'VerifyRemediation',
+            });
+          }
+        }
+      }
     }
 
     setEntries(prev => {

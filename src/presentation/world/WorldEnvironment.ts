@@ -927,6 +927,52 @@ export class WorldEnvironment {
       radius: 2.2,
     });
 
+    if (isCedarline) {
+      // NPC Lead Security Analyst Amina Okonjo Station
+      const aminaDeskGeo = new THREE.BoxGeometry(1.6, 0.75, 0.8);
+      const aminaDeskMat = new THREE.MeshStandardMaterial({
+        color: 0x334155,
+        roughness: 0.5,
+        metalness: 0.2,
+      });
+      const aminaDesk = new THREE.Mesh(aminaDeskGeo, aminaDeskMat);
+      aminaDesk.position.set(3.2, 0.75 / 2, 0);
+      this.group.add(aminaDesk);
+
+      const aminaLaptopGeo = new THREE.BoxGeometry(0.35, 0.02, 0.25);
+      const aminaLaptopMat = new THREE.MeshStandardMaterial({ color: 0x0f172a });
+      const aminaLaptop = new THREE.Mesh(aminaLaptopGeo, aminaLaptopMat);
+      aminaLaptop.position.set(3.2, 0.76, 0);
+      this.group.add(aminaLaptop);
+
+      const aminaBodyGeo = new THREE.CylinderGeometry(0.22, 0.24, 0.9, 12);
+      const aminaBodyMat = new THREE.MeshStandardMaterial({ color: 0x0284c7 });
+      const aminaBody = new THREE.Mesh(aminaBodyGeo, aminaBodyMat);
+      aminaBody.position.set(3.2, 0.9, -0.6);
+      this.group.add(aminaBody);
+
+      const aminaHeadGeo = new THREE.SphereGeometry(0.16, 16, 16);
+      const aminaHeadMat = new THREE.MeshStandardMaterial({ color: 0x5c3a21 });
+      const aminaHead = new THREE.Mesh(aminaHeadGeo, aminaHeadMat);
+      aminaHead.position.set(3.2, 1.5, -0.6);
+      this.group.add(aminaHead);
+
+      const aminaMarker = new InteractableMarker(3.2, 0.5, 0x38bdf8, 'Amina Okonjo (Lead Analyst)');
+      this.markers.push(aminaMarker);
+      this.group.add(aminaMarker.getMesh());
+      this.collisionWorld.addObstacle(2.3, 4.1, -1.0, 0.5, 'Amina Okonjo Station');
+
+      this.interactionRegistry.register({
+        id: 'interact_npc_amina',
+        name: 'Amina Okonjo (Lead Security Analyst)',
+        promptAction: 'speak with Lead Analyst Amina Okonjo [E]',
+        description:
+          'Cedarline incident response lead supervising The Aster Incident investigation.',
+        position: [3.2, 0, 0.5],
+        radius: 2.4,
+      });
+    }
+
     // Exit Doorway Marker at (0, 0, 5.0)
     const exitMarker = new InteractableMarker(0, 5.0, accentColor, 'Exit Door');
     this.markers.push(exitMarker);

@@ -96,6 +96,64 @@ export interface RecordCyberActivityCommand {
   readonly metadata?: Readonly<Record<string, unknown>>;
 }
 
+import type { AsterIncidentPhase, AsterPolicyRole, IncidentReportData } from '../missions/types';
+
+export interface StartAsterMissionCommand {
+  readonly type: 'StartAsterMission';
+}
+
+export interface AdvanceAsterMissionPhaseCommand {
+  readonly type: 'AdvanceAsterMissionPhase';
+  readonly targetPhase: AsterIncidentPhase;
+}
+
+export interface RecordMissionFindingCommand {
+  readonly type: 'RecordMissionFinding';
+  readonly findingType: 'host' | 'service' | 'log' | 'evidence';
+  readonly targetId: string;
+  readonly summary?: string;
+}
+
+export interface PreserveMissionEvidenceCommand {
+  readonly type: 'PreserveMissionEvidence';
+  readonly evidenceId: string;
+  readonly source: string;
+  readonly description: string;
+  readonly reason: string;
+}
+
+export interface SubmitRootCauseAssessmentCommand {
+  readonly type: 'SubmitRootCauseAssessment';
+  readonly suspectedRootCause: string;
+  readonly affectedComponent: string;
+  readonly observedImpact: string;
+  readonly supportingEvidenceIds: readonly string[];
+  readonly uncertaintyOrNotes?: string;
+}
+
+export interface ExecuteContainmentCommand {
+  readonly type: 'ExecuteContainment';
+  readonly action: 'isolate_service' | 'revoke_token' | 'suspend_network';
+  readonly reason: string;
+}
+
+export interface RemediatePermissionsCommand {
+  readonly type: 'RemediatePermissions';
+  readonly targetPolicyRole: AsterPolicyRole;
+  readonly removeSmbAccess: boolean;
+  readonly removeDatabaseAccess: boolean;
+  readonly grantedScopes: readonly string[];
+}
+
+export interface VerifyRemediationCommand {
+  readonly type: 'VerifyRemediation';
+}
+
+export interface SubmitIncidentReportCommand {
+  readonly type: 'SubmitIncidentReport';
+  readonly report: IncidentReportData;
+}
+
 export type SimulationCommand =
   | AdvanceSimulationTimeCommand
   | ChangePlayerAttributeCommand
@@ -108,7 +166,16 @@ export type SimulationCommand =
   | SetLogicalPlayerLocationCommand
   | ScheduleTimerCommand
   | CancelTimerCommand
-  | RecordCyberActivityCommand;
+  | RecordCyberActivityCommand
+  | StartAsterMissionCommand
+  | AdvanceAsterMissionPhaseCommand
+  | RecordMissionFindingCommand
+  | PreserveMissionEvidenceCommand
+  | SubmitRootCauseAssessmentCommand
+  | ExecuteContainmentCommand
+  | RemediatePermissionsCommand
+  | VerifyRemediationCommand
+  | SubmitIncidentReportCommand;
 
 export interface CommandResult {
   readonly success: boolean;

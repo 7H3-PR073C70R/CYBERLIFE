@@ -155,6 +155,22 @@ export const helpCommand: TerminalCommandHandler = {
           ],
         };
       }
+      if (specificCmd === 'aster-admin') {
+        return {
+          stdout: [
+            'Command: aster-admin',
+            'Usage: aster-admin status | aster-admin policy | aster-admin contain | aster-admin remediate --role=kb-assistant | aster-admin verify',
+            'Description: Simulated administration and incident response console for Aster AI assistant.',
+            'Examples:',
+            '  aster-admin status                       - Inspect active operational mode and IAM role',
+            '  aster-admin policy                       - Compare active policy vs least-privilege baseline',
+            '  aster-admin contain                      - Isolate service and sever unauthorized SMB paths',
+            '  aster-admin remediate --role=kb-assistant  - Enforce least-privilege IAM policy',
+            '  aster-admin verify                       - Run live recovery verification test suite',
+            'Educational Note: Proper incident response isolates compromised services first, remediates permissions second, and verifies recovery before closure.',
+          ],
+        };
+      }
       return {
         stdout: [
           `No detailed manual entry for '${specificCmd}'.`,
@@ -177,9 +193,10 @@ export const helpCommand: TerminalCommandHandler = {
         '',
         'SIMULATED CYBERSECURITY TOOLS:',
         '  netmap   - Discover virtual hosts and inspect subnet inventory (e.g. "netmap hosts")',
-        '  svcscan  - Scan services, ports, and version banners (e.g. "svcscan inspect filesrv-01")',
-        '  logview  - Inspect and filter simulated event logs (e.g. "logview recent")',
-        '  evidence - View digital evidence, SHA-256 hashes, and chain of custody (e.g. "evidence list")',
+        '  svcscan     - Scan services, ports, and version banners (e.g. "svcscan inspect filesrv-01")',
+        '  logview     - Inspect and filter simulated event logs (e.g. "logview recent")',
+        '  evidence    - View digital evidence, SHA-256 hashes, and chain of custody (e.g. "evidence list")',
+        '  aster-admin - Aster AI service administration & incident response console (e.g. "aster-admin status")',
         '',
         'Tips for Beginners:',
         '  • Type any command name above and press Enter to execute it manually.',

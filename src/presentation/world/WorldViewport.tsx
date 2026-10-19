@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { WorldSceneManager } from './WorldSceneManager';
+import { WorldSceneManager, NpcDialogueData } from './WorldSceneManager';
 import {
   CameraMode,
   LocationDefinition,
@@ -42,6 +42,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   const [cameraMode, setCameraMode] = useState<CameraMode>('THIRD_PERSON');
   const [activeTarget, setActiveTarget] = useState<InteractableDefinition | null>(null);
   const [noticeMessage, setNoticeMessage] = useState<string | null>(null);
+  const [npcDialogue, setNpcDialogue] = useState<NpcDialogueData | null>(null);
 
   // M4 Virtual Desktop State
   const [isDesktopOpen, setIsDesktopOpen] = useState<boolean>(() => initialWsParam === 'open');
@@ -100,6 +101,15 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
             });
           }
         },
+        onNpcDialogue: dialogue => {
+          setNpcDialogue(dialogue);
+          if (simRef.current && simRef.current.state.mission?.phase === 'briefing') {
+            simRef.current.dispatch({
+              type: 'AdvanceAsterMissionPhase',
+              targetPhase: 'initial_assessment',
+            });
+          }
+        },
       });
       managerRef.current = manager;
       setIsLoading(false);
@@ -110,7 +120,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
       setIsLoading(false);
       onError?.(error);
     }
-  }, [onInitialized, onError]);
+  }, [initialLocParam, onInitialized, onError]);
 
   useEffect(() => {
     initializeScene();
@@ -229,6 +239,63 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
           >
             Close Notice
           </button>
+        </div>
+      )}
+
+      {/* NPC Dialogue Modal */}
+      {npcDialogue && (
+        <div
+          role="dialog"
+          aria-label={`Conversation with ${npcDialogue.name}`}
+          className="world-error-card hud-interactive"
+          style={{
+            position: 'absolute',
+            top: '5.5rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            maxWidth: '540px',
+            width: '90%',
+            zIndex: 25,
+            border: '1px solid var(--color-accent-cyan)',
+            backgroundColor: 'var(--color-bg-surface-elevated)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6)',
+          }}
+          data-testid="npc-dialogue-modal"
+        >
+          <div
+            style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}
+          >
+            <span style={{ fontSize: '1.4rem' }}>👩🏾‍💼</span>
+            <div>
+              <h3 style={{ color: 'var(--color-accent-cyan)', fontSize: '1rem', margin: 0 }}>
+                {npcDialogue.name}
+              </h3>
+              <span style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)' }}>
+                {npcDialogue.role} // Cedarline Incident Response
+              </span>
+            </div>
+          </div>
+          <p
+            style={{
+              color: 'var(--color-text-primary)',
+              fontSize: '0.85rem',
+              lineHeight: 1.5,
+              marginBottom: '0.85rem',
+            }}
+          >
+            &quot;{npcDialogue.dialogue}&quot;
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+            <button
+              type="button"
+              className="btn-primary"
+              style={{ fontSize: '0.8rem', padding: '0.35rem 0.8rem' }}
+              onClick={() => setNpcDialogue(null)}
+              data-testid="btn-close-npc-dialogue"
+            >
+              Understood, Amina
+            </button>
+          </div>
         </div>
       )}
 

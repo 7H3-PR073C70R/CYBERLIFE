@@ -60,6 +60,8 @@ export interface SimulationTimerState {
   readonly repeatIntervalSeconds?: number;
 }
 
+import type { AsterIncidentMissionState } from '../missions/types';
+
 export interface SimulationState {
   readonly metadata: SimulationMetadata;
   readonly time: SimulationTimeState;
@@ -68,4 +70,5 @@ export interface SimulationState {
   readonly flags: Readonly<Record<string, WorldFlagValue>>;
   readonly timers: ReadonlyArray<SimulationTimerState>;
   readonly nextTimerSequence: number;
+  readonly mission?: AsterIncidentMissionState;
 }

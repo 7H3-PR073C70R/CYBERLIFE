@@ -2,6 +2,8 @@ import { SimulationState } from './types';
 import { calculateCalendarTime, DEFAULT_SIMULATION_START_ISO } from '../time/calendar';
 import { validateSimulationState } from './invariants';
 import { deepFreeze } from './stateUtils';
+import { AsterIncidentMissionState } from '../missions/types';
+import { createInitialAsterIncidentMissionState } from '../missions/initialMissionState';
 
 export interface InitialStateOverrides {
   readonly schemaVersion?: number;
@@ -17,6 +19,7 @@ export interface InitialStateOverrides {
   readonly locationId?: string;
   readonly inventorySlots?: ReadonlyArray<{ readonly itemId: string; readonly quantity: number }>;
   readonly flags?: Readonly<Record<string, boolean | string | number>>;
+  readonly mission?: AsterIncidentMissionState;
 }
 
 /**
@@ -58,9 +61,12 @@ export function createInitialSimulationState(
     flags: overrides?.flags ?? {
       apartment_door_unlocked: true,
       has_read_community_noticeboard: false,
+      mission_aster_active: true,
+      mission_aster_phase: 'briefing',
     },
     timers: [],
     nextTimerSequence: 0,
+    mission: overrides?.mission ?? createInitialAsterIncidentMissionState(),
   };
 
   validateSimulationState(state);

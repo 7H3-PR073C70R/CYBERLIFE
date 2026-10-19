@@ -2,7 +2,7 @@
  * Cyberlife — Virtual Desktop Presentation Types
  */
 
-export type AppId = 'terminal' | 'fieldGuide' | 'systemInfo' | 'notes' | 'activity';
+export type AppId = 'terminal' | 'fieldGuide' | 'systemInfo' | 'notes' | 'activity' | 'incident';
 
 export interface AppDefinition {
   id: AppId;
@@ -27,6 +27,16 @@ export interface WindowState {
 }
 
 export const APP_REGISTRY: Record<AppId, AppDefinition> = {
+  incident: {
+    id: 'incident',
+    title: 'Incident Response Portal — The Aster Incident',
+    shortTitle: 'Incident Portal',
+    icon: '🚨',
+    description:
+      'Manage investigation phases, review briefing, submit root-cause assessment, verify remediation, and complete incident report.',
+    defaultSize: { width: 780, height: 560 },
+    minSize: { width: 440, height: 340 },
+  },
   terminal: {
     id: 'terminal',
     title: 'CyberOS Terminal',

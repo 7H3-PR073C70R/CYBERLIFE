@@ -8,6 +8,7 @@ export * from './netmap/NetmapTool';
 export * from './svcscan/SvcscanTool';
 export * from './logview/LogviewTool';
 export * from './evidence/EvidenceTool';
+export * from './aster/AsterAdminTool';
 export * from './data/fictionalHosts';
 export * from './data/fictionalServices';
 export * from './data/fictionalLogs';

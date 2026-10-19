@@ -15,6 +15,7 @@ import { NetmapTool } from './netmap/NetmapTool';
 import { SvcscanTool } from './svcscan/SvcscanTool';
 import { LogviewTool } from './logview/LogviewTool';
 import { EvidenceTool } from './evidence/EvidenceTool';
+import { AsterAdminTool } from './aster/AsterAdminTool';
 
 const MAX_INPUT_ARGS = 20;
 
@@ -98,5 +99,11 @@ export function createToolCommandHandler<TArgs, TResult>(
  * Returns instantiated instances of all 4 milestone 5 cybersecurity tools.
  */
 export function createDefaultCyberTools(): readonly CyberTool[] {
-  return [new NetmapTool(), new SvcscanTool(), new LogviewTool(), new EvidenceTool()];
+  return [
+    new NetmapTool(),
+    new SvcscanTool(),
+    new LogviewTool(),
+    new EvidenceTool(),
+    new AsterAdminTool(),
+  ];
 }

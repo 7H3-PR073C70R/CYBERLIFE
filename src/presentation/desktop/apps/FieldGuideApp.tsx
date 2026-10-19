@@ -19,7 +19,7 @@ type GuideTab = 'basics' | 'commands' | 'tools' | 'concepts' | 'safety';
 export const FieldGuideApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<GuideTab>('basics');
   const [selectedToolGuide, setSelectedToolGuide] = useState<
-    'netmap' | 'svcscan' | 'logview' | 'evidence'
+    'netmap' | 'svcscan' | 'logview' | 'evidence' | 'aster-admin'
   >('netmap');
 
   return (
@@ -294,7 +294,28 @@ export const FieldGuideApp: React.FC = () => {
                 </p>
                 <div className="cmd-usage">
                   <strong>Example:</strong> <code>evidence list</code> or{' '}
-                  <code>evidence inspect EVD-2026-001</code>
+                  <code>evidence inspect EVD-2026-001</code> or{' '}
+                  <code>
+                    evidence preserve EVD-2026-004 --reason=&quot;Pre-containment snapshot&quot;
+                  </code>
+                </div>
+              </div>
+
+              <div className="command-card">
+                <div className="command-header">
+                  <code>aster-admin &lt;command&gt;</code>
+                  <span className="cmd-badge" style={{ backgroundColor: '#ef4444' }}>
+                    Incident IR
+                  </span>
+                </div>
+                <p className="cmd-desc">
+                  Administrative console for Aster AI assistant runtime status, containment, IAM
+                  remediation, and verification.
+                </p>
+                <div className="cmd-usage">
+                  <strong>Example:</strong> <code>aster-admin status</code>,{' '}
+                  <code>aster-admin contain</code>, or{' '}
+                  <code>aster-admin remediate --role=kb-assistant</code>
                 </div>
               </div>
             </div>
@@ -312,7 +333,7 @@ export const FieldGuideApp: React.FC = () => {
 
             <div
               className="tool-selector-bar"
-              style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}
+              style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}
             >
               <button
                 type="button"
@@ -341,6 +362,14 @@ export const FieldGuideApp: React.FC = () => {
                 onClick={() => setSelectedToolGuide('evidence')}
               >
                 💼 evidence (Forensics)
+              </button>
+              <button
+                type="button"
+                className={`guide-tab-btn ${selectedToolGuide === 'aster-admin' ? 'tab-active' : ''}`}
+                onClick={() => setSelectedToolGuide('aster-admin')}
+                data-testid="tool-guide-aster-admin"
+              >
+                🤖 aster-admin (IR Console)
               </button>
             </div>
 
@@ -547,6 +576,52 @@ export const FieldGuideApp: React.FC = () => {
                 </div>
               </div>
             )}
+
+            {/* ASTER-ADMIN GUIDE */}
+            {selectedToolGuide === 'aster-admin' && (
+              <div className="tool-guide-card">
+                <h3 className="card-heading" style={{ color: '#ef4444' }}>
+                  🤖 Incident Response Administration Console (<code>aster-admin</code>)
+                </h3>
+                <p>
+                  <strong>What is it for?</strong> Provides authorized administrative control over
+                  internal AI assistant Aster on host <code>app-portal-01:5050</code>. Enables
+                  status inspection, network containment, IAM permission remediation, and empirical
+                  verification.
+                </p>
+
+                <h4 style={{ margin: '0.75rem 0 0.25rem 0' }}>Supported Syntax:</h4>
+                <ul style={{ lineHeight: 1.6 }}>
+                  <li>
+                    <code>aster-admin status</code> — Shows runtime status, active IAM role, granted
+                    scopes, and network isolation state.
+                  </li>
+                  <li>
+                    <code>aster-admin policy</code> — Displays Aster&apos;s active JSON IAM access
+                    policy manifest.
+                  </li>
+                  <li>
+                    <code>aster-admin contain</code> — Immediately severs SMB Port 445 network route
+                    and places Aster in restricted operating mode.
+                  </li>
+                  <li>
+                    <code>aster-admin remediate --role=kb-assistant</code> — Replaces overprivileged
+                    wildcard role with least-privilege knowledge-base search permissions.
+                  </li>
+                  <li>
+                    <code>aster-admin verify</code> — Runs automated end-to-end verification tests
+                    against actual simulated service boundaries.
+                  </li>
+                </ul>
+
+                <h4 style={{ margin: '0.75rem 0 0.25rem 0' }}>Incident Response Golden Rule:</h4>
+                <div style={{ color: 'var(--color-accent-amber)', fontSize: '0.85rem' }}>
+                  ⚠️ <em>Order of Operations:</em> Always preserve relevant evidence (such as{' '}
+                  <code>EVD-2026-004</code> and security logs) before executing containment or
+                  remediation. Once system state changes, unpreserved volatile evidence can be lost!
+                </div>
+              </div>
+            )}
           </section>
         )}
 
@@ -558,6 +633,48 @@ export const FieldGuideApp: React.FC = () => {
               Cyberlife uses real-world metaphors to make complex digital security concepts
               intuitive:
             </p>
+
+            <div className="guide-card">
+              <h3 className="card-heading">🚨 Incident Response Lifecycle</h3>
+              <p>
+                When a security breach or suspicious anomaly is detected, professional incident
+                responders follow a disciplined lifecycle rather than making ad-hoc changes:
+              </p>
+              <ul
+                style={{
+                  fontSize: '0.84rem',
+                  lineHeight: 1.5,
+                  margin: '0.4rem 0 0',
+                  paddingLeft: '1.2rem',
+                }}
+              >
+                <li>
+                  <strong>1. Assessment &amp; Scope:</strong> Confirm the alert, identify affected
+                  systems (e.g. <code>app-portal-01</code>, <code>filesrv-01</code>), and verify
+                  authorization.
+                </li>
+                <li>
+                  <strong>2. Evidence Preservation:</strong> Snapshot relevant logs and manifests
+                  before altering configuration.
+                </li>
+                <li>
+                  <strong>3. Containment:</strong> Halt ongoing harm (sever SMB route) without
+                  unnecessarily crashing legitimate services.
+                </li>
+                <li>
+                  <strong>4. Remediation:</strong> Fix the underlying root weakness (apply Least
+                  Privilege: <code>role:kb-assistant</code>).
+                </li>
+                <li>
+                  <strong>5. Verification:</strong> Prove empirically that legitimate features work
+                  while unauthorized actions are blocked.
+                </li>
+                <li>
+                  <strong>6. Post-Mortem &amp; Reporting:</strong> Document timeline, root cause,
+                  and recommendations to prevent recurrence.
+                </li>
+              </ul>
+            </div>
 
             <div className="guide-card">
               <h3 className="card-heading">🔑 IAM &amp; Least Privilege</h3>

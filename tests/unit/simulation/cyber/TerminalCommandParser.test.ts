@@ -52,7 +52,8 @@ describe('TerminalCommandParser & Registry', () => {
     expect(registry.has('svcscan')).toBe(true);
     expect(registry.has('logview')).toBe(true);
     expect(registry.has('evidence')).toBe(true);
-    expect(registry.getAll().length).toBe(10);
+    expect(registry.has('aster-admin')).toBe(true);
+    expect(registry.getAll().length).toBe(11);
   });
 
   it('executes help command returning available commands and beginner tips', () => {

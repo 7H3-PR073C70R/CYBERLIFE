@@ -22,15 +22,16 @@ import {
 import { getFictionalEvidence, findEvidenceById } from '../data/fictionalEvidence';
 import { TerminalCommandResult, TerminalExecutionContext } from '../../terminal/types';
 
-export type EvidenceAction = 'list' | 'inspect';
+export type EvidenceAction = 'list' | 'inspect' | 'preserve';
 
 export interface EvidenceArgs {
   action: EvidenceAction;
   evidenceId?: string;
+  source?: string;
 }
 
 export interface EvidenceResult {
-  mode: 'list' | 'inspect';
+  mode: 'list' | 'inspect' | 'preserve';
   items: readonly FictionalEvidenceItem[];
   singleItem?: FictionalEvidenceItem;
   notFoundId?: string;
@@ -87,6 +88,14 @@ export class EvidenceTool implements CyberTool<EvidenceArgs, EvidenceResult> {
       };
     }
 
+    if (action === 'preserve' || action === 'freeze' || action === 'save') {
+      const id = args[1]?.trim() || 'EVD-2026-004';
+      return {
+        success: true,
+        args: { action: 'preserve', evidenceId: id },
+      };
+    }
+
     if (action && /^evd-|^case-/i.test(action)) {
       return {
         success: true,
@@ -132,6 +141,16 @@ export class EvidenceTool implements CyberTool<EvidenceArgs, EvidenceResult> {
       };
     }
 
+    if (args.action === 'preserve') {
+      const targetId = args.evidenceId || 'EVD-2026-004';
+      const item = findEvidenceById(targetId) || findEvidenceById('EVD-2026-004');
+      return {
+        mode: 'preserve',
+        items: item ? [item] : [],
+        singleItem: item,
+      };
+    }
+
     return {
       mode: 'list',
       items: all,
@@ -144,6 +163,50 @@ export class EvidenceTool implements CyberTool<EvidenceArgs, EvidenceResult> {
     _context: TerminalExecutionContext
   ): TerminalCommandResult {
     const lines: string[] = [];
+
+    if (result.mode === 'preserve') {
+      const e = result.singleItem || {
+        id: 'EVD-2026-004',
+        title: 'Aster AI Assistant IAM Configuration & Token Manifest',
+        source: 'app-portal-01:/etc/aster/service.conf',
+        collectionTime: 'Monday, Oct 12, 2026 // 07:56:00 WAT',
+        evidenceType: 'Service Identity & Access Control Policy Dump (JSON)',
+        integrityStatus: 'VERIFIED',
+        hashSha256: '3a5f9c12e82b4a11c3ab8bf7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa',
+        description:
+          'Forensic configuration snapshot of Aster daemon on app-portal-01. Preserved prior to containment.',
+        requiredTier: 1,
+        chainOfCustody: [],
+      };
+
+      lines.push(
+        '================================================================================'
+      );
+      lines.push(`  FORENSIC EVIDENCE PRESERVED // ${e.id}: ${e.title}`);
+      lines.push(
+        '================================================================================'
+      );
+      lines.push('  Preservation Status: [VERIFIED & SEALED]');
+      lines.push(`  Fictional Source:    ${e.source}`);
+      lines.push(`  SHA-256 Checksum:    ${e.hashSha256}`);
+      lines.push('  Chain of Custody:    Transferred to Cedarline Evidence Locker.');
+      lines.push('');
+      lines.push('--- [ EDUCATIONAL GUIDANCE ] -------------------------------------------');
+      lines.push(
+        'Preserving evidence BEFORE taking containment or remediation actions guarantees that'
+      );
+      lines.push(
+        'system configurations and forensic proof are permanently recorded for root-cause analysis.'
+      );
+      lines.push(
+        '================================================================================'
+      );
+
+      return {
+        isError: false,
+        stdout: lines,
+      };
+    }
 
     if (result.mode === 'inspect') {
       if (!result.singleItem) {

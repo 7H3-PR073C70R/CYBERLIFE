@@ -144,4 +144,29 @@ export function validateSimulationState(state: SimulationState): void {
       `nextTimerSequence must be a non-negative safe integer, received ${state.nextTimerSequence}`
     );
   }
+
+  // 7. Mission invariants (if present)
+  if (state.mission) {
+    const { mission } = state;
+    if (mission.missionId !== 'the_aster_incident') {
+      throw new InvariantViolationError(`Unknown missionId: "${mission.missionId}"`);
+    }
+    const validPhases = [
+      'briefing',
+      'initial_assessment',
+      'investigation',
+      'evidence_preservation',
+      'containment',
+      'remediation',
+      'verification',
+      'reporting',
+      'completed',
+    ];
+    if (!validPhases.includes(mission.phase)) {
+      throw new InvariantViolationError(`Invalid mission phase: "${mission.phase}"`);
+    }
+    if (!Array.isArray(mission.objectives)) {
+      throw new InvariantViolationError('Mission objectives must be an array');
+    }
+  }
 }
