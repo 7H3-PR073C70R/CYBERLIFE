@@ -126,6 +126,8 @@ describe('Milestone 8: NPC Career & Job Dialogue Integration', () => {
     });
 
     expect(acceptRes.success).toBe(true);
-    expect(acceptRes.state.jobs?.activeJobs.some(j => j.listingId === 'job_marina_port_audit')).toBe(true);
+    expect(
+      acceptRes.state.jobs?.activeJobs.some(j => j.listingId === 'job_marina_port_audit')
+    ).toBe(true);
   });
 });

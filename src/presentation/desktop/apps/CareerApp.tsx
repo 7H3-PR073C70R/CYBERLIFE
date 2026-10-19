@@ -42,9 +42,14 @@ export const CareerApp: React.FC = () => {
   const state = sim?.state;
 
   const [activeTab, setActiveTab] = useState<CareerAppTab>('overview');
-  const [jobBoardSubtab, setJobBoardSubtab] = useState<'available' | 'active' | 'history'>('available');
+  const [jobBoardSubtab, setJobBoardSubtab] = useState<'available' | 'active' | 'history'>(
+    'available'
+  );
   const [selectedJobId, setSelectedJobId] = useState<string>('job_cedarline_triage');
-  const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
+  const [feedbackMessage, setFeedbackMessage] = useState<{
+    type: 'success' | 'error' | 'info';
+    text: string;
+  } | null>(null);
 
   // Authoritative state extractions
   const careerState = state?.career;
@@ -77,7 +82,9 @@ export const CareerApp: React.FC = () => {
     }
 
     if (completedHistory.length < nextLevelDef.minCompletedJobs) {
-      reasons.push(`Requires ${nextLevelDef.minCompletedJobs} completed tickets (Current: ${completedHistory.length})`);
+      reasons.push(
+        `Requires ${nextLevelDef.minCompletedJobs} completed tickets (Current: ${completedHistory.length})`
+      );
     }
 
     if (nextLevelDef.requiredSkillLevels) {
@@ -92,7 +99,8 @@ export const CareerApp: React.FC = () => {
 
     return {
       eligible: reasons.length === 0,
-      reasons: reasons.length > 0 ? reasons : ['All promotion criteria satisfied! Ready to advance.'],
+      reasons:
+        reasons.length > 0 ? reasons : ['All promotion criteria satisfied! Ready to advance.'],
     };
   }, [nextLevelDef, careerXp, skillsState, completedHistory]);
 
@@ -241,13 +249,23 @@ export const CareerApp: React.FC = () => {
       >
         {/* Title and Career Role Badge */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span style={{ fontSize: '18px' }} aria-hidden="true">💼</span>
+          <span style={{ fontSize: '18px' }} aria-hidden="true">
+            💼
+          </span>
           <div>
-            <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '0.02em', color: '#38bdf8' }}>
+            <div
+              style={{
+                fontWeight: 700,
+                fontSize: '14px',
+                letterSpacing: '0.02em',
+                color: '#38bdf8',
+              }}
+            >
               Career Hub & Financial Ledger
             </div>
             <div style={{ fontSize: '11px', color: '#94a3b8' }}>
-              {careerState?.roleTitle ?? 'Trainee Security Analyst'} • {careerState?.employer ?? 'Cedarline InfoSec'}
+              {careerState?.roleTitle ?? 'Trainee Security Analyst'} •{' '}
+              {careerState?.employer ?? 'Cedarline InfoSec'}
             </div>
           </div>
           <span
@@ -412,21 +430,21 @@ export const CareerApp: React.FC = () => {
               feedbackMessage.type === 'success'
                 ? 'rgba(16, 185, 129, 0.15)'
                 : feedbackMessage.type === 'error'
-                ? 'rgba(239, 68, 68, 0.15)'
-                : 'rgba(56, 189, 248, 0.15)',
+                  ? 'rgba(239, 68, 68, 0.15)'
+                  : 'rgba(56, 189, 248, 0.15)',
             borderBottom: `1px solid ${
               feedbackMessage.type === 'success'
                 ? 'rgba(16, 185, 129, 0.3)'
                 : feedbackMessage.type === 'error'
-                ? 'rgba(239, 68, 68, 0.3)'
-                : 'rgba(56, 189, 248, 0.3)'
+                  ? 'rgba(239, 68, 68, 0.3)'
+                  : 'rgba(56, 189, 248, 0.3)'
             }`,
             color:
               feedbackMessage.type === 'success'
                 ? '#34d399'
                 : feedbackMessage.type === 'error'
-                ? '#f87171'
-                : '#38bdf8',
+                  ? '#f87171'
+                  : '#38bdf8',
           }}
         >
           <span>{feedbackMessage.text}</span>
@@ -454,7 +472,10 @@ export const CareerApp: React.FC = () => {
         {/* TAB 1: CAREER OVERVIEW                                                    */}
         {/* ========================================================================= */}
         {activeTab === 'overview' && (
-          <div data-testid="career-overview-tab" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div
+            data-testid="career-overview-tab"
+            style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+          >
             {/* Career Status Card */}
             <div
               style={{
@@ -468,10 +489,19 @@ export const CareerApp: React.FC = () => {
               }}
             >
               <div>
-                <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    color: '#94a3b8',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
                   Current Designation
                 </span>
-                <div style={{ fontSize: '18px', fontWeight: 700, color: '#f8fafc', marginTop: '2px' }}>
+                <div
+                  style={{ fontSize: '18px', fontWeight: 700, color: '#f8fafc', marginTop: '2px' }}
+                >
                   {careerState?.roleTitle ?? 'Trainee Security Analyst'}
                 </div>
                 <div style={{ fontSize: '12px', color: '#38bdf8', marginTop: '2px' }}>
@@ -480,10 +510,19 @@ export const CareerApp: React.FC = () => {
               </div>
 
               <div>
-                <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    color: '#94a3b8',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
                   Organization & Branch
                 </span>
-                <div style={{ fontSize: '15px', fontWeight: 600, color: '#f8fafc', marginTop: '2px' }}>
+                <div
+                  style={{ fontSize: '15px', fontWeight: 600, color: '#f8fafc', marginTop: '2px' }}
+                >
                   {careerState?.employer ?? 'Cedarline InfoSec'}
                 </div>
                 <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
@@ -492,10 +531,19 @@ export const CareerApp: React.FC = () => {
               </div>
 
               <div>
-                <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    color: '#94a3b8',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
                   Career Progress
                 </span>
-                <div style={{ fontSize: '15px', fontWeight: 600, color: '#a78bfa', marginTop: '2px' }}>
+                <div
+                  style={{ fontSize: '15px', fontWeight: 600, color: '#a78bfa', marginTop: '2px' }}
+                >
                   Tier {currentLevel} • {careerState?.promotionsEarned ?? 0} Promotions
                 </div>
                 <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
@@ -504,10 +552,19 @@ export const CareerApp: React.FC = () => {
               </div>
 
               <div>
-                <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    color: '#94a3b8',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
                   Total Career XP
                 </span>
-                <div style={{ fontSize: '15px', fontWeight: 600, color: '#38bdf8', marginTop: '2px' }}>
+                <div
+                  style={{ fontSize: '15px', fontWeight: 600, color: '#38bdf8', marginTop: '2px' }}
+                >
                   {careerXp} XP
                 </div>
                 <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
@@ -525,7 +582,15 @@ export const CareerApp: React.FC = () => {
                 padding: '16px',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '8px',
+                }}
+              >
                 <div>
                   <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: '#f1f5f9' }}>
                     Next Tier: {nextLevelDef ? nextLevelDef.title : 'Maximum Level Achieved'}
@@ -555,15 +620,31 @@ export const CareerApp: React.FC = () => {
                       transition: 'all 0.15s ease',
                     }}
                   >
-                    {promotionEligibility.eligible ? 'Request Promotion Approval' : 'Requirements Incomplete'}
+                    {promotionEligibility.eligible
+                      ? 'Request Promotion Approval'
+                      : 'Requirements Incomplete'}
                   </button>
                 )}
               </div>
 
               {/* Requirements Checklist */}
               {nextLevelDef && (
-                <div style={{ marginTop: '14px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', paddingTop: '12px' }}>
-                  <div style={{ fontSize: '11px', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '8px' }}>
+                <div
+                  style={{
+                    marginTop: '14px',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                    paddingTop: '12px',
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      color: '#94a3b8',
+                      textTransform: 'uppercase',
+                      marginBottom: '8px',
+                    }}
+                  >
                     Advancement Criteria
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -596,10 +677,18 @@ export const CareerApp: React.FC = () => {
                 padding: '16px',
               }}
             >
-              <h3 style={{ margin: '0 0 12px', fontSize: '14px', fontWeight: 600, color: '#f1f5f9' }}>
+              <h3
+                style={{ margin: '0 0 12px', fontSize: '14px', fontWeight: 600, color: '#f1f5f9' }}
+              >
                 Career Path Roadmap — {pathDef?.title}
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                  gap: '12px',
+                }}
+              >
                 {pathDef?.levels.map(lvl => {
                   const isCurrent = lvl.level === currentLevel;
                   const isUnlocked = lvl.level <= currentLevel;
@@ -612,17 +701,37 @@ export const CareerApp: React.FC = () => {
                         border: isCurrent
                           ? '1px solid #38bdf8'
                           : isUnlocked
-                          ? '1px solid rgba(16, 185, 129, 0.3)'
-                          : '1px solid rgba(255, 255, 255, 0.06)',
+                            ? '1px solid rgba(16, 185, 129, 0.3)'
+                            : '1px solid rgba(255, 255, 255, 0.06)',
                         backgroundColor: isCurrent ? 'rgba(56, 189, 248, 0.06)' : '#070a12',
                       }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontSize: '11px', color: isCurrent ? '#38bdf8' : '#94a3b8', fontWeight: 600 }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: '11px',
+                            color: isCurrent ? '#38bdf8' : '#94a3b8',
+                            fontWeight: 600,
+                          }}
+                        >
                           Tier {lvl.level}
                         </span>
                         {isCurrent && (
-                          <span style={{ fontSize: '10px', color: '#38bdf8', backgroundColor: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px' }}>
+                          <span
+                            style={{
+                              fontSize: '10px',
+                              color: '#38bdf8',
+                              backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                              padding: '1px 6px',
+                              borderRadius: '4px',
+                            }}
+                          >
                             Current
                           </span>
                         )}
@@ -630,7 +739,14 @@ export const CareerApp: React.FC = () => {
                           <span style={{ fontSize: '10px', color: '#34d399' }}>Completed</span>
                         )}
                       </div>
-                      <div style={{ fontSize: '13px', fontWeight: 600, color: '#f8fafc', marginTop: '4px' }}>
+                      <div
+                        style={{
+                          fontSize: '13px',
+                          fontWeight: 600,
+                          color: '#f8fafc',
+                          marginTop: '4px',
+                        }}
+                      >
                         {lvl.title}
                       </div>
                       <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>
@@ -648,9 +764,19 @@ export const CareerApp: React.FC = () => {
         {/* TAB 2: JOB BOARD & ASSIGNMENTS                                            */}
         {/* ========================================================================= */}
         {activeTab === 'jobs' && (
-          <div data-testid="job-board-tab" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div
+            data-testid="job-board-tab"
+            style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
+          >
             {/* Sub-tab Navigation */}
-            <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '8px' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: '8px',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                paddingBottom: '8px',
+              }}
+            >
               <button
                 type="button"
                 data-testid="subtab-available-jobs"
@@ -706,12 +832,19 @@ export const CareerApp: React.FC = () => {
 
             {/* Subtab 1: Available Jobs */}
             {jobBoardSubtab === 'available' && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 1fr) minmax(320px, 1.4fr)', gap: '16px' }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'minmax(280px, 1fr) minmax(320px, 1.4fr)',
+                  gap: '16px',
+                }}
+              >
                 {/* Left: Job Tickets List */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {availableJobIds.length === 0 ? (
                     <div style={{ padding: '24px', textAlign: 'center', color: '#64748b' }}>
-                      No unaccepted jobs currently available. Check completed history or advance your skills!
+                      No unaccepted jobs currently available. Check completed history or advance
+                      your skills!
                     </div>
                   ) : (
                     availableJobIds.map(jobId => {
@@ -731,26 +864,76 @@ export const CareerApp: React.FC = () => {
                             borderRadius: '6px',
                             cursor: 'pointer',
                             backgroundColor: isSelected ? '#1e293b' : '#0f172a',
-                            border: isSelected ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.06)',
+                            border: isSelected
+                              ? '1px solid #38bdf8'
+                              : '1px solid rgba(255, 255, 255, 0.06)',
                             transition: 'all 0.1s ease',
                           }}
                         >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <span style={{ fontSize: '11px', color: '#94a3b8' }}>{def.employer}</span>
-                            <span style={{ fontSize: '12px', fontWeight: 700, color: '#34d399' }}>{reward}</span>
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'flex-start',
+                            }}
+                          >
+                            <span style={{ fontSize: '11px', color: '#94a3b8' }}>
+                              {def.employer}
+                            </span>
+                            <span style={{ fontSize: '12px', fontWeight: 700, color: '#34d399' }}>
+                              {reward}
+                            </span>
                           </div>
-                          <div style={{ fontSize: '13px', fontWeight: 600, color: '#f8fafc', marginTop: '4px' }}>
+                          <div
+                            style={{
+                              fontSize: '13px',
+                              fontWeight: 600,
+                              color: '#f8fafc',
+                              marginTop: '4px',
+                            }}
+                          >
                             {def.title}
                           </div>
-                          <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
-                            <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '4px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              gap: '6px',
+                              marginTop: '8px',
+                              flexWrap: 'wrap',
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontSize: '10px',
+                                padding: '2px 6px',
+                                borderRadius: '4px',
+                                backgroundColor: 'rgba(255,255,255,0.06)',
+                                color: '#cbd5e1',
+                              }}
+                            >
                               ⏱ {def.estimatedMinutes} mins
                             </span>
-                            <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '4px', backgroundColor: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8' }}>
+                            <span
+                              style={{
+                                fontSize: '10px',
+                                padding: '2px 6px',
+                                borderRadius: '4px',
+                                backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                                color: '#38bdf8',
+                              }}
+                            >
                               ⭐ +{def.careerXpReward} XP
                             </span>
                             {isAccepted && (
-                              <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '4px', backgroundColor: 'rgba(245, 158, 11, 0.2)', color: '#fbbf24' }}>
+                              <span
+                                style={{
+                                  fontSize: '10px',
+                                  padding: '2px 6px',
+                                  borderRadius: '4px',
+                                  backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                                  color: '#fbbf24',
+                                }}
+                              >
                                 Active
                               </span>
                             )}
@@ -775,7 +958,13 @@ export const CareerApp: React.FC = () => {
                     }}
                   >
                     <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
                         <span style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 600 }}>
                           {selectedJobDef.employer}
                         </span>
@@ -783,28 +972,67 @@ export const CareerApp: React.FC = () => {
                           {Money.fromKobo(selectedJobDef.payoutKobo).format()}
                         </span>
                       </div>
-                      <h3 style={{ margin: '4px 0', fontSize: '16px', fontWeight: 700, color: '#f8fafc' }}>
+                      <h3
+                        style={{
+                          margin: '4px 0',
+                          fontSize: '16px',
+                          fontWeight: 700,
+                          color: '#f8fafc',
+                        }}
+                      >
                         {selectedJobDef.title}
                       </h3>
-                      <p style={{ margin: '6px 0 0', fontSize: '12px', color: '#94a3b8', lineHeight: 1.5 }}>
+                      <p
+                        style={{
+                          margin: '6px 0 0',
+                          fontSize: '12px',
+                          color: '#94a3b8',
+                          lineHeight: 1.5,
+                        }}
+                      >
                         {selectedJobDef.description}
                       </p>
                     </div>
 
                     {/* Requirements */}
                     <div>
-                      <div style={{ fontSize: '11px', fontWeight: 600, color: '#cbd5e1', textTransform: 'uppercase', marginBottom: '6px' }}>
+                      <div
+                        style={{
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          color: '#cbd5e1',
+                          textTransform: 'uppercase',
+                          marginBottom: '6px',
+                        }}
+                      >
                         Prerequisites & Skills
                       </div>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                         {selectedJobDef.minCareerLevel && (
-                          <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '4px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#94a3b8' }}>
+                          <span
+                            style={{
+                              fontSize: '11px',
+                              padding: '3px 8px',
+                              borderRadius: '4px',
+                              backgroundColor: 'rgba(255,255,255,0.06)',
+                              color: '#94a3b8',
+                            }}
+                          >
                             Tier {selectedJobDef.minCareerLevel}+ Required
                           </span>
                         )}
                         {selectedJobDef.requiredSkills &&
                           Object.entries(selectedJobDef.requiredSkills).map(([sId, lvl]) => (
-                            <span key={sId} style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '4px', backgroundColor: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8' }}>
+                            <span
+                              key={sId}
+                              style={{
+                                fontSize: '11px',
+                                padding: '3px 8px',
+                                borderRadius: '4px',
+                                backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                                color: '#38bdf8',
+                              }}
+                            >
                               {SKILL_DEFINITIONS[sId as SkillId]?.name ?? sId} Level {lvl}+
                             </span>
                           ))}
@@ -813,12 +1041,29 @@ export const CareerApp: React.FC = () => {
 
                     {/* Objectives Checklist */}
                     <div>
-                      <div style={{ fontSize: '11px', fontWeight: 600, color: '#cbd5e1', textTransform: 'uppercase', marginBottom: '6px' }}>
+                      <div
+                        style={{
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          color: '#cbd5e1',
+                          textTransform: 'uppercase',
+                          marginBottom: '6px',
+                        }}
+                      >
                         Assignment Objectives
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         {selectedJobDef.objectives.map((obj: JobObjective) => (
-                          <div key={obj.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '12px', color: '#cbd5e1' }}>
+                          <div
+                            key={obj.id}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'flex-start',
+                              gap: '8px',
+                              fontSize: '12px',
+                              color: '#cbd5e1',
+                            }}
+                          >
                             <span style={{ color: '#64748b' }}>◻</span>
                             <span>{obj.description}</span>
                           </div>
@@ -827,7 +1072,13 @@ export const CareerApp: React.FC = () => {
                     </div>
 
                     {/* Action Button */}
-                    <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                    <div
+                      style={{
+                        marginTop: 'auto',
+                        paddingTop: '12px',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                      }}
+                    >
                       {activeAssignment?.listingId === selectedJobDef.id ? (
                         <button
                           type="button"
@@ -847,7 +1098,8 @@ export const CareerApp: React.FC = () => {
                         </button>
                       ) : activeAssignment ? (
                         <div style={{ fontSize: '12px', color: '#f59e0b', textAlign: 'center' }}>
-                          You have an active assignment. Complete or clear it before accepting another.
+                          You have an active assignment. Complete or clear it before accepting
+                          another.
                         </div>
                       ) : (
                         <button
@@ -879,9 +1131,18 @@ export const CareerApp: React.FC = () => {
             {jobBoardSubtab === 'active' && (
               <div>
                 {!activeAssignment ? (
-                  <div style={{ padding: '36px', textAlign: 'center', backgroundColor: '#0f172a', borderRadius: '8px' }}>
+                  <div
+                    style={{
+                      padding: '36px',
+                      textAlign: 'center',
+                      backgroundColor: '#0f172a',
+                      borderRadius: '8px',
+                    }}
+                  >
                     <span style={{ fontSize: '24px' }}>📋</span>
-                    <h3 style={{ margin: '8px 0 4px', fontSize: '15px', color: '#f1f5f9' }}>No Active Assignment</h3>
+                    <h3 style={{ margin: '8px 0 4px', fontSize: '15px', color: '#f1f5f9' }}>
+                      No Active Assignment
+                    </h3>
                     <p style={{ margin: '0 0 16px', fontSize: '12px', color: '#94a3b8' }}>
                       Browse the available tickets to pick up an authorized security work order.
                     </p>
@@ -918,12 +1179,25 @@ export const CareerApp: React.FC = () => {
                       const listing = JOB_DEFINITIONS[activeAssignment.listingId];
                       return (
                         <>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'flex-start',
+                            }}
+                          >
                             <div>
                               <span style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 600 }}>
                                 ACTIVE TICKET • {listing?.employer ?? 'Cedarline InfoSec'}
                               </span>
-                              <h2 style={{ margin: '4px 0', fontSize: '18px', fontWeight: 700, color: '#f8fafc' }}>
+                              <h2
+                                style={{
+                                  margin: '4px 0',
+                                  fontSize: '18px',
+                                  fontWeight: 700,
+                                  color: '#f8fafc',
+                                }}
+                              >
                                 {listing?.title ?? activeAssignment.listingId}
                               </h2>
                               <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#94a3b8' }}>
@@ -941,8 +1215,22 @@ export const CareerApp: React.FC = () => {
                           </div>
 
                           {/* Live Objectives Tracker */}
-                          <div style={{ backgroundColor: '#070a12', borderRadius: '6px', padding: '12px', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
-                            <div style={{ fontSize: '12px', fontWeight: 600, color: '#f1f5f9', marginBottom: '8px' }}>
+                          <div
+                            style={{
+                              backgroundColor: '#070a12',
+                              borderRadius: '6px',
+                              padding: '12px',
+                              border: '1px solid rgba(255, 255, 255, 0.06)',
+                            }}
+                          >
+                            <div
+                              style={{
+                                fontSize: '12px',
+                                fontWeight: 600,
+                                color: '#f1f5f9',
+                                marginBottom: '8px',
+                              }}
+                            >
                               Live In-Game Objective Status
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -956,15 +1244,32 @@ export const CareerApp: React.FC = () => {
                                     justifyContent: 'space-between',
                                     padding: '8px 10px',
                                     borderRadius: '4px',
-                                    backgroundColor: obj.isCompleted ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255, 255, 255, 0.03)',
-                                    border: obj.isCompleted ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(255, 255, 255, 0.05)',
+                                    backgroundColor: obj.isCompleted
+                                      ? 'rgba(16, 185, 129, 0.1)'
+                                      : 'rgba(255, 255, 255, 0.03)',
+                                    border: obj.isCompleted
+                                      ? '1px solid rgba(16, 185, 129, 0.3)'
+                                      : '1px solid rgba(255, 255, 255, 0.05)',
                                   }}
                                 >
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <span style={{ color: obj.isCompleted ? '#34d399' : '#64748b', fontSize: '14px', fontWeight: 700 }}>
+                                  <div
+                                    style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: obj.isCompleted ? '#34d399' : '#64748b',
+                                        fontSize: '14px',
+                                        fontWeight: 700,
+                                      }}
+                                    >
                                       {obj.isCompleted ? '✓' : '○'}
                                     </span>
-                                    <span style={{ fontSize: '12px', color: obj.isCompleted ? '#f1f5f9' : '#cbd5e1' }}>
+                                    <span
+                                      style={{
+                                        fontSize: '12px',
+                                        color: obj.isCompleted ? '#f1f5f9' : '#cbd5e1',
+                                      }}
+                                    >
                                       {obj.description}
                                     </span>
                                   </div>
@@ -973,7 +1278,9 @@ export const CareerApp: React.FC = () => {
                                       fontSize: '10px',
                                       padding: '2px 6px',
                                       borderRadius: '4px',
-                                      backgroundColor: obj.isCompleted ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.15)',
+                                      backgroundColor: obj.isCompleted
+                                        ? 'rgba(16, 185, 129, 0.2)'
+                                        : 'rgba(245, 158, 11, 0.15)',
                                       color: obj.isCompleted ? '#34d399' : '#fbbf24',
                                       fontWeight: 600,
                                     }}
@@ -986,7 +1293,14 @@ export const CareerApp: React.FC = () => {
                           </div>
 
                           {/* Verification and Submission Button */}
-                          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', paddingTop: '8px' }}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'flex-end',
+                              gap: '10px',
+                              paddingTop: '8px',
+                            }}
+                          >
                             <button
                               type="button"
                               data-testid="btn-verify-assignment"
@@ -1015,10 +1329,22 @@ export const CareerApp: React.FC = () => {
 
             {/* Subtab 3: Completed History */}
             {jobBoardSubtab === 'history' && (
-              <div data-testid="completed-history-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div
+                data-testid="completed-history-list"
+                style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+              >
                 {completedHistory.length === 0 ? (
-                  <div style={{ padding: '36px', textAlign: 'center', color: '#64748b', backgroundColor: '#0f172a', borderRadius: '8px' }}>
-                    No completed assignments yet. Finish your first ticket to establish your work record.
+                  <div
+                    style={{
+                      padding: '36px',
+                      textAlign: 'center',
+                      color: '#64748b',
+                      backgroundColor: '#0f172a',
+                      borderRadius: '8px',
+                    }}
+                  >
+                    No completed assignments yet. Finish your first ticket to establish your work
+                    record.
                   </div>
                 ) : (
                   completedHistory.map((record: JobEvaluationRecord) => (
@@ -1034,7 +1360,13 @@ export const CareerApp: React.FC = () => {
                         gap: '6px',
                       }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
                         <span style={{ fontSize: '14px', fontWeight: 600, color: '#f8fafc' }}>
                           {record.title}
                         </span>
@@ -1043,7 +1375,8 @@ export const CareerApp: React.FC = () => {
                         </span>
                       </div>
                       <div style={{ fontSize: '11px', color: '#94a3b8' }}>
-                        Organization: {record.employer} • Evaluation: <strong style={{ color: '#38bdf8' }}>{record.performanceRating}</strong>
+                        Organization: {record.employer} • Evaluation:{' '}
+                        <strong style={{ color: '#38bdf8' }}>{record.performanceRating}</strong>
                       </div>
                       <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#cbd5e1' }}>
                         {record.feedbackNotes}
@@ -1060,13 +1393,24 @@ export const CareerApp: React.FC = () => {
         {/* TAB 3: SKILLS MATRIX                                                      */}
         {/* ========================================================================= */}
         {activeTab === 'skills' && (
-          <div data-testid="skills-matrix-tab" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div
+            data-testid="skills-matrix-tab"
+            style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
+          >
             <div style={{ fontSize: '12px', color: '#94a3b8', lineHeight: 1.5 }}>
-              Cyberlife tracks 7 specialized cybersecurity disciplines on a scale from Level 1 (Novice) to Level 10 (Master).
-              Gain skill progress by executing real simulated investigation tools, analyzing logs, isolating incidents, and studying technical guides.
+              Cyberlife tracks 7 specialized cybersecurity disciplines on a scale from Level 1
+              (Novice) to Level 10 (Master). Gain skill progress by executing real simulated
+              investigation tools, analyzing logs, isolating incidents, and studying technical
+              guides.
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '12px',
+              }}
+            >
               {(Object.keys(SKILL_DEFINITIONS) as SkillId[]).map(skillId => {
                 const def = SKILL_DEFINITIONS[skillId];
                 const sState = skillsState[skillId] ?? { id: skillId, level: 1, xp: 0, totalXp: 0 };
@@ -1086,7 +1430,13 @@ export const CareerApp: React.FC = () => {
                       gap: '8px',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
                       <span style={{ fontSize: '14px', fontWeight: 600, color: '#f8fafc' }}>
                         {def?.name ?? skillId}
                       </span>
@@ -1108,11 +1458,29 @@ export const CareerApp: React.FC = () => {
 
                     {/* XP Progress Bar */}
                     <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: '#64748b', marginBottom: '3px' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          fontSize: '10px',
+                          color: '#64748b',
+                          marginBottom: '3px',
+                        }}
+                      >
                         <span>Progress to Level {Math.min(10, sState.level + 1)}</span>
-                        <span>{sState.xp} / 100 XP ({percent}%)</span>
+                        <span>
+                          {sState.xp} / 100 XP ({percent}%)
+                        </span>
                       </div>
-                      <div style={{ width: '100%', height: '6px', backgroundColor: '#070a12', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div
+                        style={{
+                          width: '100%',
+                          height: '6px',
+                          backgroundColor: '#070a12',
+                          borderRadius: '3px',
+                          overflow: 'hidden',
+                        }}
+                      >
                         <div
                           style={{
                             width: `${percent}%`,
@@ -1135,17 +1503,35 @@ export const CareerApp: React.FC = () => {
         {/* TAB 4: HARDWARE & SUPPLIES MARKET                                         */}
         {/* ========================================================================= */}
         {activeTab === 'market' && (
-          <div data-testid="shop-market-tab" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+          <div
+            data-testid="shop-market-tab"
+            style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '8px',
+              }}
+            >
               <div style={{ fontSize: '12px', color: '#94a3b8' }}>
-                Fictional hardware suppliers & local electronics vendor in Lagos Island. Purchases grant authentic in-game perks.
+                Fictional hardware suppliers & local electronics vendor in Lagos Island. Purchases
+                grant authentic in-game perks.
               </div>
               <div style={{ fontSize: '13px', color: '#cbd5e1' }}>
                 Your Balance: <strong style={{ color: '#34d399' }}>{formattedBalance}</strong>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '14px',
+              }}
+            >
               {Object.values(SHOP_CATALOGUE).map((item: ShopItem) => {
                 const slot = inventorySlots.find(s => s.itemId === item.id);
                 const ownedCount = slot ? slot.quantity : 0;
@@ -1169,18 +1555,40 @@ export const CareerApp: React.FC = () => {
                     }}
                   >
                     <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'flex-start',
+                        }}
+                      >
+                        <span
+                          style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase' }}
+                        >
                           {item.category}
                         </span>
                         <span style={{ fontSize: '14px', fontWeight: 700, color: '#34d399' }}>
                           {price}
                         </span>
                       </div>
-                      <div style={{ fontSize: '14px', fontWeight: 600, color: '#f8fafc', marginTop: '4px' }}>
+                      <div
+                        style={{
+                          fontSize: '14px',
+                          fontWeight: 600,
+                          color: '#f8fafc',
+                          marginTop: '4px',
+                        }}
+                      >
                         {item.name}
                       </div>
-                      <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px', lineHeight: 1.4 }}>
+                      <div
+                        style={{
+                          fontSize: '11px',
+                          color: '#94a3b8',
+                          marginTop: '4px',
+                          lineHeight: 1.4,
+                        }}
+                      >
                         {item.description}
                       </div>
                       <div
@@ -1211,11 +1619,19 @@ export const CareerApp: React.FC = () => {
                           fontWeight: 600,
                           fontSize: '12px',
                           cursor: canAfford && !atMaxLimit ? 'pointer' : 'not-allowed',
-                          backgroundColor: atMaxLimit ? '#334155' : canAfford ? '#38bdf8' : '#334155',
+                          backgroundColor: atMaxLimit
+                            ? '#334155'
+                            : canAfford
+                              ? '#38bdf8'
+                              : '#334155',
                           color: atMaxLimit || !canAfford ? '#64748b' : '#0f172a',
                         }}
                       >
-                        {atMaxLimit ? 'Owned (Max)' : canAfford ? `Buy for ${price}` : 'Insufficient Funds'}
+                        {atMaxLimit
+                          ? 'Owned (Max)'
+                          : canAfford
+                            ? `Buy for ${price}`
+                            : 'Insufficient Funds'}
                       </button>
 
                       {ownedCount > 0 && item.category === 'DOCUMENT' && (
@@ -1249,7 +1665,10 @@ export const CareerApp: React.FC = () => {
         {/* TAB 5: FINANCIAL LEDGER & EXPENSES                                         */}
         {/* ========================================================================= */}
         {activeTab === 'ledger' && (
-          <div data-testid="financial-ledger-tab" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div
+            data-testid="financial-ledger-tab"
+            style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+          >
             {/* Balance Overview Card */}
             <div
               style={{
@@ -1265,8 +1684,12 @@ export const CareerApp: React.FC = () => {
               }}
             >
               <div>
-                <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase' }}>Authoritative Balance</span>
-                <div style={{ fontSize: '24px', fontWeight: 700, color: '#34d399', marginTop: '2px' }}>
+                <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase' }}>
+                  Authoritative Balance
+                </span>
+                <div
+                  style={{ fontSize: '24px', fontWeight: 700, color: '#34d399', marginTop: '2px' }}
+                >
                   {formattedBalance}
                 </div>
                 <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
@@ -1277,11 +1700,15 @@ export const CareerApp: React.FC = () => {
               <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                 <div style={{ textAlign: 'right' }}>
                   <span style={{ fontSize: '11px', color: '#94a3b8' }}>Total Transactions</span>
-                  <div style={{ fontSize: '15px', fontWeight: 600, color: '#f1f5f9' }}>{transactions.length}</div>
+                  <div style={{ fontSize: '15px', fontWeight: 600, color: '#f1f5f9' }}>
+                    {transactions.length}
+                  </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <span style={{ fontSize: '11px', color: '#94a3b8' }}>Active Bills</span>
-                  <div style={{ fontSize: '15px', fontWeight: 600, color: '#f1f5f9' }}>{recurringExpenses.length}</div>
+                  <div style={{ fontSize: '15px', fontWeight: 600, color: '#f1f5f9' }}>
+                    {recurringExpenses.length}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1295,10 +1722,18 @@ export const CareerApp: React.FC = () => {
                 padding: '16px',
               }}
             >
-              <h3 style={{ margin: '0 0 10px', fontSize: '14px', fontWeight: 600, color: '#f1f5f9' }}>
+              <h3
+                style={{ margin: '0 0 10px', fontSize: '14px', fontWeight: 600, color: '#f1f5f9' }}
+              >
                 Scheduled Living Expenses & Rent
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px' }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                  gap: '12px',
+                }}
+              >
                 {recurringExpenses.map((expense: RecurringExpense) => {
                   const amount = Money.fromKobo(expense.amountKobo).format();
                   const isOverdue = expense.isOverdue;
@@ -1311,30 +1746,53 @@ export const CareerApp: React.FC = () => {
                         padding: '12px',
                         borderRadius: '6px',
                         backgroundColor: '#070a12',
-                        border: isOverdue ? '1px solid rgba(239, 68, 68, 0.4)' : '1px solid rgba(255, 255, 255, 0.06)',
+                        border: isOverdue
+                          ? '1px solid rgba(239, 68, 68, 0.4)'
+                          : '1px solid rgba(255, 255, 255, 0.06)',
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '6px',
                       }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
                         <span style={{ fontSize: '13px', fontWeight: 600, color: '#f8fafc' }}>
                           {expense.name}
                         </span>
-                        <span style={{ fontSize: '13px', fontWeight: 700, color: isOverdue ? '#f87171' : '#f1f5f9' }}>
+                        <span
+                          style={{
+                            fontSize: '13px',
+                            fontWeight: 700,
+                            color: isOverdue ? '#f87171' : '#f1f5f9',
+                          }}
+                        >
                           {amount}
                         </span>
                       </div>
                       <div style={{ fontSize: '11px', color: '#94a3b8' }}>
                         Interval: Every {expense.intervalSeconds / 86400} simulation days
                       </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginTop: '6px',
+                        }}
+                      >
                         <span
                           style={{
                             fontSize: '10px',
                             padding: '2px 6px',
                             borderRadius: '4px',
-                            backgroundColor: isOverdue ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+                            backgroundColor: isOverdue
+                              ? 'rgba(239, 68, 68, 0.15)'
+                              : 'rgba(16, 185, 129, 0.15)',
                             color: isOverdue ? '#f87171' : '#34d399',
                             fontWeight: 600,
                           }}
@@ -1376,13 +1834,21 @@ export const CareerApp: React.FC = () => {
                 padding: '16px',
               }}
             >
-              <h3 style={{ margin: '0 0 10px', fontSize: '14px', fontWeight: 600, color: '#f1f5f9' }}>
+              <h3
+                style={{ margin: '0 0 10px', fontSize: '14px', fontWeight: 600, color: '#f1f5f9' }}
+              >
                 Authoritative Audit Trail ({transactions.length} Transactions)
               </h3>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
                   <thead>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)', color: '#94a3b8', textAlign: 'left' }}>
+                    <tr
+                      style={{
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: '#94a3b8',
+                        textAlign: 'left',
+                      }}
+                    >
                       <th style={{ padding: '8px 6px' }}>Type</th>
                       <th style={{ padding: '8px 6px' }}>Description</th>
                       <th style={{ padding: '8px 6px', textAlign: 'right' }}>Amount</th>
@@ -1410,7 +1876,9 @@ export const CareerApp: React.FC = () => {
                                   fontSize: '10px',
                                   padding: '2px 6px',
                                   borderRadius: '4px',
-                                  backgroundColor: isCredit ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                                  backgroundColor: isCredit
+                                    ? 'rgba(16, 185, 129, 0.1)'
+                                    : 'rgba(239, 68, 68, 0.1)',
                                   color: isCredit ? '#34d399' : '#f87171',
                                   fontWeight: 600,
                                 }}
@@ -1418,7 +1886,9 @@ export const CareerApp: React.FC = () => {
                                 {tx.type}
                               </span>
                             </td>
-                            <td style={{ padding: '8px 6px', color: '#f1f5f9' }}>{tx.description}</td>
+                            <td style={{ padding: '8px 6px', color: '#f1f5f9' }}>
+                              {tx.description}
+                            </td>
                             <td
                               style={{
                                 padding: '8px 6px',
@@ -1429,7 +1899,9 @@ export const CareerApp: React.FC = () => {
                             >
                               {isCredit ? `+${amountStr}` : `-${amountStr}`}
                             </td>
-                            <td style={{ padding: '8px 6px', textAlign: 'right', color: '#cbd5e1' }}>
+                            <td
+                              style={{ padding: '8px 6px', textAlign: 'right', color: '#cbd5e1' }}
+                            >
                               {balanceStr}
                             </td>
                           </tr>

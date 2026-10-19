@@ -66,4 +66,26 @@ describe('FieldGuideApp Component', () => {
     expect(screen.getByText(/The Non-Negotiable Safety Guarantee/i)).toBeInTheDocument();
     expect(screen.getByText(/No Host OS Execution/i)).toBeInTheDocument();
   });
+
+  it('switches to Career Skills tab and displays career progression principles', () => {
+    render(<FieldGuideApp />);
+
+    expect(screen.getByTestId('guide-tab-career')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('guide-tab-career'));
+
+    expect(screen.getByTestId('guide-section-career')).toBeInTheDocument();
+    expect(screen.getByText(/Finding & Evaluating Jobs/i)).toBeInTheDocument();
+    expect(screen.getByText(/The 7 Core Professional Skills/i)).toBeInTheDocument();
+    expect(screen.getByText(/Economy, Inventory & Daily Living/i)).toBeInTheDocument();
+  });
+
+  it('allows filtering topics using the guide search input', () => {
+    render(<FieldGuideApp />);
+
+    const searchInput = screen.getByTestId('field-guide-search-input');
+    expect(searchInput).toBeInTheDocument();
+
+    fireEvent.change(searchInput, { target: { value: 'evidence' } });
+    expect(searchInput).toHaveValue('evidence');
+  });
 });

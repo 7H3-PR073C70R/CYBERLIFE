@@ -34,7 +34,12 @@ export type SimulationEventType =
   | 'ITEM_PURCHASED'
   | 'FINANCIAL_TRANSACTION_RECORDED'
   | 'RECURRING_EXPENSE_PAID'
-  | 'RECURRING_EXPENSE_OVERDUE';
+  | 'RECURRING_EXPENSE_OVERDUE'
+  | 'ONBOARDING_STEP_COMPLETED'
+  | 'ONBOARDING_SKIPPED'
+  | 'ONBOARDING_RESET'
+  | 'GUIDANCE_HINT_DISMISSED'
+  | 'GUIDANCE_MODE_CHANGED';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -407,4 +412,47 @@ export type SimulationEvent =
   | ItemPurchasedEvent
   | FinancialTransactionRecordedEvent
   | RecurringExpensePaidEvent
-  | RecurringExpenseOverdueEvent;
+  | RecurringExpenseOverdueEvent
+  | OnboardingStepCompletedEvent
+  | OnboardingSkippedEvent
+  | OnboardingResetEvent
+  | GuidanceHintDismissedEvent
+  | GuidanceModeChangedEvent;
+
+export type OnboardingStepCompletedEvent = BaseSimulationEvent<
+  'ONBOARDING_STEP_COMPLETED',
+  {
+    readonly stepId: string;
+    readonly nextStepId?: string | null;
+    readonly totalCompleted: number;
+    readonly isIntroCompleted: boolean;
+  }
+>;
+
+export type OnboardingSkippedEvent = BaseSimulationEvent<
+  'ONBOARDING_SKIPPED',
+  {
+    readonly timestamp: number;
+  }
+>;
+
+export type OnboardingResetEvent = BaseSimulationEvent<
+  'ONBOARDING_RESET',
+  {
+    readonly timestamp: number;
+  }
+>;
+
+export type GuidanceHintDismissedEvent = BaseSimulationEvent<
+  'GUIDANCE_HINT_DISMISSED',
+  {
+    readonly hintId: string;
+  }
+>;
+
+export type GuidanceModeChangedEvent = BaseSimulationEvent<
+  'GUIDANCE_MODE_CHANGED',
+  {
+    readonly mode: 'guided' | 'experienced';
+  }
+>;

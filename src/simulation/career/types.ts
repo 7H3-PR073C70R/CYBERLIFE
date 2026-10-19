@@ -58,11 +58,7 @@ export interface SkillState {
 export type JobStatus = 'AVAILABLE' | 'ACTIVE' | 'COMPLETED' | 'FAILED';
 
 export type JobObjectiveType =
-  | 'RUN_TOOL'
-  | 'RECORD_FINDING'
-  | 'PRESERVE_EVIDENCE'
-  | 'VERIFY_SERVICE'
-  | 'SUBMIT_REPORT';
+  'RUN_TOOL' | 'RECORD_FINDING' | 'PRESERVE_EVIDENCE' | 'VERIFY_SERVICE' | 'SUBMIT_REPORT';
 
 export interface JobObjective {
   readonly id: string;
@@ -111,12 +107,7 @@ export interface JobBoardState {
   readonly completedJobHistory: ReadonlyArray<JobEvaluationRecord>;
 }
 
-export type TransactionType =
-  | 'INITIAL_BALANCE'
-  | 'JOB_PAYOUT'
-  | 'PURCHASE'
-  | 'EXPENSE'
-  | 'REFUND';
+export type TransactionType = 'INITIAL_BALANCE' | 'JOB_PAYOUT' | 'PURCHASE' | 'EXPENSE' | 'REFUND';
 
 export interface FinancialTransaction {
   readonly id: string;

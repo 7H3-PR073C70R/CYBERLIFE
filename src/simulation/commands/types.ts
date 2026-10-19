@@ -234,6 +234,32 @@ export interface PayRecurringExpenseCommand {
   readonly expenseId: string;
 }
 
+import type { GuidanceMode } from '../onboarding/types';
+
+export interface CompleteOnboardingStepCommand {
+  readonly type: 'CompleteOnboardingStep';
+  readonly stepId: string;
+  readonly nextStepId?: string | null;
+}
+
+export interface SkipOnboardingCommand {
+  readonly type: 'SkipOnboarding';
+}
+
+export interface ResetOnboardingCommand {
+  readonly type: 'ResetOnboarding';
+}
+
+export interface DismissGuidanceHintCommand {
+  readonly type: 'DismissGuidanceHint';
+  readonly hintId: string;
+}
+
+export interface SetGuidanceModeCommand {
+  readonly type: 'SetGuidanceMode';
+  readonly mode: GuidanceMode;
+}
+
 export type SimulationCommand =
   | AdvanceSimulationTimeCommand
   | ChangePlayerAttributeCommand
@@ -266,7 +292,12 @@ export type SimulationCommand =
   | PromoteCareerCommand
   | PurchaseItemCommand
   | StudyLearningMaterialCommand
-  | PayRecurringExpenseCommand;
+  | PayRecurringExpenseCommand
+  | CompleteOnboardingStepCommand
+  | SkipOnboardingCommand
+  | ResetOnboardingCommand
+  | DismissGuidanceHintCommand
+  | SetGuidanceModeCommand;
 
 export interface CommandResult {
   readonly success: boolean;

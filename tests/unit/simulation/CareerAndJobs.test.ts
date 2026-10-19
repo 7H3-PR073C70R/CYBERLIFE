@@ -172,12 +172,18 @@ describe('Milestone 8: Career & Job Board System', () => {
     expect(comp1.success).toBe(true);
 
     // Attempting to complete again must fail (job is no longer active)
-    const comp2 = handleCommand(comp1.state, { type: 'CompleteJob', jobId: 'job_cedarline_triage' });
+    const comp2 = handleCommand(comp1.state, {
+      type: 'CompleteJob',
+      jobId: 'job_cedarline_triage',
+    });
     expect(comp2.success).toBe(false);
     expect(comp2.errorCode).toBe('JOB_NOT_FOUND');
 
     // Attempting to accept again must fail (non-repeatable job)
-    const reAccept = handleCommand(comp1.state, { type: 'AcceptJob', jobId: 'job_cedarline_triage' });
+    const reAccept = handleCommand(comp1.state, {
+      type: 'AcceptJob',
+      jobId: 'job_cedarline_triage',
+    });
     expect(reAccept.success).toBe(false);
     expect(reAccept.errorCode).toBe('JOB_ALREADY_COMPLETED');
   });

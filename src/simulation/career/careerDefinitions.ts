@@ -11,7 +11,8 @@ export const CAREER_PATHS: Readonly<Record<CareerPathId, CareerPathDefinition>> 
       {
         level: 1,
         title: 'Trainee Analyst',
-        description: 'Entry-level orientation role focused on log ingestion, triage, and basic workstation tooling.',
+        description:
+          'Entry-level orientation role focused on log ingestion, triage, and basic workstation tooling.',
         minXp: 0,
         requiredSkillLevels: {
           log_analysis: 1,
@@ -23,7 +24,8 @@ export const CAREER_PATHS: Readonly<Record<CareerPathId, CareerPathDefinition>> 
       {
         level: 2,
         title: 'Junior SOC Analyst',
-        description: 'Active monitoring of security event streams, triage of endpoint anomalies, and preliminary triage.',
+        description:
+          'Active monitoring of security event streams, triage of endpoint anomalies, and preliminary triage.',
         minXp: 100,
         requiredSkillLevels: {
           log_analysis: 2,
@@ -36,7 +38,8 @@ export const CAREER_PATHS: Readonly<Record<CareerPathId, CareerPathDefinition>> 
       {
         level: 3,
         title: 'Incident Response Specialist',
-        description: 'Lead investigative containment, cryptographic evidence custody, and stakeholder executive debriefs.',
+        description:
+          'Lead investigative containment, cryptographic evidence custody, and stakeholder executive debriefs.',
         minXp: 300,
         requiredSkillLevels: {
           log_analysis: 3,
@@ -59,7 +62,8 @@ export const CAREER_PATHS: Readonly<Record<CareerPathId, CareerPathDefinition>> 
       {
         level: 1,
         title: 'Helpdesk Support Tech',
-        description: 'First-line support addressing ticket escalations, port checks, and workstation diagnostics.',
+        description:
+          'First-line support addressing ticket escalations, port checks, and workstation diagnostics.',
         minXp: 0,
         requiredSkillLevels: {
           troubleshooting: 1,
@@ -71,7 +75,8 @@ export const CAREER_PATHS: Readonly<Record<CareerPathId, CareerPathDefinition>> 
       {
         level: 2,
         title: 'Systems Support Specialist',
-        description: 'Subnet mapping, service inventory management, and network hardware taps deployment.',
+        description:
+          'Subnet mapping, service inventory management, and network hardware taps deployment.',
         minXp: 100,
         requiredSkillLevels: {
           troubleshooting: 2,
@@ -83,7 +88,8 @@ export const CAREER_PATHS: Readonly<Record<CareerPathId, CareerPathDefinition>> 
       {
         level: 3,
         title: 'IT Operations Lead',
-        description: 'Coordinate enterprise infrastructure reliability, uptime monitoring, and vendor compliance.',
+        description:
+          'Coordinate enterprise infrastructure reliability, uptime monitoring, and vendor compliance.',
         minXp: 300,
         requiredSkillLevels: {
           troubleshooting: 3,
@@ -97,10 +103,7 @@ export const CAREER_PATHS: Readonly<Record<CareerPathId, CareerPathDefinition>> 
   },
 };
 
-export function getCareerLevelDefinition(
-  pathId: CareerPathId,
-  level: number
-) {
+export function getCareerLevelDefinition(pathId: CareerPathId, level: number) {
   const path = CAREER_PATHS[pathId];
   if (!path) return undefined;
   return path.levels.find(l => l.level === level);

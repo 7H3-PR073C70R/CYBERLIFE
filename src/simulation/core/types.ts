@@ -62,7 +62,15 @@ export interface SimulationTimerState {
 
 import type { AsterIncidentMissionState } from '../missions/types';
 import type { NpcSimulationState, ActiveDialogueState } from '../actors/types';
-import type { CareerState, JobBoardState, SkillId, SkillState, EconomyState } from '../career/types';
+import type {
+  CareerState,
+  JobBoardState,
+  SkillId,
+  SkillState,
+  EconomyState,
+} from '../career/types';
+import type { OnboardingSimulationState } from '../onboarding/types';
+import type { CatalogueSimulationState } from '../catalogue/types';
 
 export interface SimulationState {
   readonly metadata: SimulationMetadata;
@@ -79,4 +87,6 @@ export interface SimulationState {
   readonly jobs?: JobBoardState;
   readonly skills?: Readonly<Record<SkillId, SkillState>>;
   readonly economy?: EconomyState;
+  readonly onboarding?: OnboardingSimulationState;
+  readonly catalogue?: CatalogueSimulationState;
 }

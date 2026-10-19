@@ -9,6 +9,7 @@ import { NPC_PROFILES } from '../actors/npcProfiles';
 import { CareerState, JobBoardState, SkillId, SkillState, EconomyState } from '../career/types';
 import { createInitialSkillState } from '../career/skillDefinitions';
 import { DEFAULT_RECURRING_EXPENSES } from '../career/shopDefinitions';
+import { OnboardingSimulationState } from '../onboarding/types';
 
 export interface InitialStateOverrides {
   readonly schemaVersion?: number;
@@ -30,6 +31,7 @@ export interface InitialStateOverrides {
   readonly jobs?: JobBoardState;
   readonly skills?: Readonly<Record<SkillId, SkillState>>;
   readonly economy?: EconomyState;
+  readonly onboarding?: OnboardingSimulationState;
 }
 
 /**
@@ -129,6 +131,14 @@ export function createInitialSimulationState(
         ...e,
         nextDueSimulationTime: simulationTimeSeconds + e.intervalSeconds,
       })),
+    },
+    onboarding: overrides?.onboarding ?? {
+      introCompleted: false,
+      introSkipped: false,
+      completedStepIds: [],
+      dismissedHintIds: [],
+      guidanceMode: 'guided',
+      activeStepId: 'step_intro_welcome',
     },
   };
 

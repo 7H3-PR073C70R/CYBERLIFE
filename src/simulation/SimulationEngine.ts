@@ -1,5 +1,6 @@
 import { SimulationState } from './core/types';
 import { createInitialSimulationState, InitialStateOverrides } from './core/initialState';
+import { validateSimulationState } from './core/invariants';
 import { handleCommand } from './commands/commandHandler';
 import { SimulationCommand, CommandResult } from './commands/types';
 import { SimulationEvent, SimulationEventType } from './events/types';
@@ -49,6 +50,40 @@ export class SimulationEngine {
    */
   public getState(): Readonly<SimulationState> {
     return this._state;
+  }
+
+  /**
+   * Restores authoritative simulation state from a loaded save record.
+   * Validates state invariants, updates internal state, and notifies listeners.
+   */
+  public loadState(newState: Readonly<SimulationState>): void {
+    if (this._isDisposed) {
+      throw new Error('Cannot load state into a disposed SimulationEngine instance');
+    }
+
+    // Enforce full domain invariant check
+    validateSimulationState(newState as SimulationState);
+
+    // Commit state
+    this._state = newState;
+
+    // Notify state listeners of state change
+    for (const listener of this._stateListeners) {
+      try {
+        listener(this._state, []);
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        this._handleListenerError(error, { listenerType: 'state' });
+      }
+    }
+  }
+
+  /**
+   * Resets the simulation engine to a fresh initial game state.
+   */
+  public resetToNewGame(overrides?: InitialStateOverrides): void {
+    const freshState = createInitialSimulationState(overrides);
+    this.loadState(freshState);
   }
 
   /**

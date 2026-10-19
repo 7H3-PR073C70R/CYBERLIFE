@@ -140,19 +140,20 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const [selectedHintCmd, setSelectedHintCmd] = useState<string | null>(null);
 
+  const terminalScrollAreaRef = useRef<HTMLDivElement | null>(null);
   const terminalEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  // Auto-scroll on new entry
+  // Auto-scroll on new entry within the terminal's own scroll container
   useEffect(() => {
-    if (typeof terminalEndRef.current?.scrollIntoView === 'function') {
-      terminalEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (terminalScrollAreaRef.current) {
+      terminalScrollAreaRef.current.scrollTop = terminalScrollAreaRef.current.scrollHeight;
     }
   }, [entries]);
 
-  // Focus input on mount
+  // Focus input on mount without scrolling parent windows or workspace
   useEffect(() => {
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
   }, []);
 
   const buildContext = useCallback((): TerminalExecutionContext => {
@@ -368,7 +369,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
       className="terminal-app-container parrot-theme"
       role="region"
       aria-label="Simulated Terminal Session"
-      onClick={() => inputRef.current?.focus()}
+      onClick={() => inputRef.current?.focus({ preventScroll: true })}
       data-testid="terminal-app-container"
     >
       {/* Educational Command Learning Toolbar */}
@@ -395,7 +396,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
                 e.stopPropagation();
                 // Mandatory manual typing: clicking teaches command purpose, does NOT auto-insert!
                 setSelectedHintCmd(prev => (prev === cmd ? null : cmd));
-                inputRef.current?.focus();
+                inputRef.current?.focus({ preventScroll: true });
               }}
               title={`View guidance for '${cmd}' (manual typing required)`}
               data-testid={`terminal-chip-${cmd}`}
@@ -474,6 +475,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
 
       {/* Terminal Log Output */}
       <div
+        ref={terminalScrollAreaRef}
         className="terminal-scroll-area"
         role="log"
         aria-live="polite"

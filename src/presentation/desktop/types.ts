@@ -10,7 +10,9 @@ export type AppId =
   | 'activity'
   | 'incident'
   | 'contacts'
-  | 'career';
+  | 'career'
+  | 'saveManager'
+  | 'helpCenter';
 
 export interface AppDefinition {
   id: AppId;
@@ -113,5 +115,25 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
       'Track Lagos Island professional contacts, colleagues, community relations, and schedules.',
     defaultSize: { width: 720, height: 500 },
     minSize: { width: 440, height: 320 },
+  },
+  saveManager: {
+    id: 'saveManager',
+    title: 'Persistence Vault & System Recovery',
+    shortTitle: 'Save Vault',
+    icon: '💾',
+    description:
+      'Manage persistent save slots, audit integrity checksums, restore shadow crash backups, and start new game sessions.',
+    defaultSize: { width: 780, height: 540 },
+    minSize: { width: 440, height: 340 },
+  },
+  helpCenter: {
+    id: 'helpCenter',
+    title: 'Help Center & Searchable Knowledge Base',
+    shortTitle: 'Help Center',
+    icon: '❓',
+    description:
+      'Searchable guide to controls, commands, Aster Incident steps, career mechanics, and troubleshooting.',
+    defaultSize: { width: 780, height: 540 },
+    minSize: { width: 440, height: 340 },
   },
 };

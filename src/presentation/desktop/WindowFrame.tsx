@@ -91,9 +91,9 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({
         top: 0,
         left: 0,
         right: 0,
-        bottom: '48px', // above taskbar
+        bottom: 0,
         width: '100%',
-        height: 'calc(100% - 48px)',
+        height: '100%',
         zIndex: windowState.zIndex,
       }
     : {

@@ -80,7 +80,8 @@ export const ITEM_REGISTRY: Readonly<Record<string, ItemDefinition>> = {
   item_lagos_coffee_mug: {
     id: 'item_lagos_coffee_mug',
     name: 'Broad Street Tech Hub Ceramic Mug',
-    description: 'Sturdy Lagos-crafted ceramic mug. Keeps hot brew close during long triage sessions.',
+    description:
+      'Sturdy Lagos-crafted ceramic mug. Keeps hot brew close during long triage sessions.',
     category: 'CONSUMABLE',
     maxStack: 5,
   },

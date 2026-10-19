@@ -4,7 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const WebSocket = require('ws');
 
-const ARTIFACT_DIR = '/Users/protector/.gemini/antigravity-ide/brain/96d1a3b9-ae85-4f82-bb34-9f6a64fa7e1a';
+const ARTIFACT_DIR =
+  '/Users/protector/.gemini/antigravity-ide/brain/96d1a3b9-ae85-4f82-bb34-9f6a64fa7e1a';
 const CHROME_PORT = 9336;
 const USER_DATA_DIR = '/tmp/chrome-m8-pristine-verify';
 
@@ -30,17 +31,19 @@ function startChrome() {
 
 function fetchJson(url) {
   return new Promise((resolve, reject) => {
-    http.get(url, res => {
-      let data = '';
-      res.on('data', chunk => (data += chunk));
-      res.on('end', () => {
-        try {
-          resolve(JSON.parse(data));
-        } catch (e) {
-          reject(e);
-        }
-      });
-    }).on('error', reject);
+    http
+      .get(url, res => {
+        let data = '';
+        res.on('data', chunk => (data += chunk));
+        res.on('end', () => {
+          try {
+            resolve(JSON.parse(data));
+          } catch (e) {
+            reject(e);
+          }
+        });
+      })
+      .on('error', reject);
   });
 }
 

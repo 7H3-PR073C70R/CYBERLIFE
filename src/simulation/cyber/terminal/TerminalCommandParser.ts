@@ -12,6 +12,33 @@
 import { TerminalCommandResult, TerminalExecutionContext } from './types';
 import { TerminalCommandRegistry, createDefaultCommandRegistry } from './TerminalCommandRegistry';
 
+function levenshtein(a: string, b: string): number {
+  const m = a.length;
+  const n = b.length;
+  const dp: number[] = new Array<number>(n + 1).fill(0);
+  for (let j = 0; j <= n; j++) {
+    dp[j] = j;
+  }
+
+  for (let i = 1; i <= m; i++) {
+    let prev = i;
+    for (let j = 1; j <= n; j++) {
+      const diag = dp[j - 1] ?? 0;
+      const top = dp[j] ?? 0;
+      let cur: number;
+      if (a[i - 1] === b[j - 1]) {
+        cur = diag;
+      } else {
+        cur = 1 + Math.min(prev, top, diag);
+      }
+      dp[j - 1] = prev;
+      prev = cur;
+    }
+    dp[n] = prev;
+  }
+  return dp[n] ?? Math.max(m, n);
+}
+
 export class TerminalCommandParser {
   private registry: TerminalCommandRegistry;
 
@@ -107,12 +134,59 @@ export class TerminalCommandParser {
     // 4. Look up in registry
     const handler = this.registry.get(commandName);
     if (!handler) {
+      // 4a. Check known real shell commands to guide players
+      const COMMON_SHELL_COMMANDS: Record<string, string> = {
+        ls: "In Cyberlife, file and artifact browsing is handled via dedicated apps or tools. Try 'evidence list' or 'logview recent'.",
+        dir: "In Cyberlife, file and artifact browsing is handled via dedicated apps or tools. Try 'evidence list' or 'logview recent'.",
+        cd: "Directory navigation is managed visually via desktop applications. Type 'help' to see available terminal tools.",
+        cat: "To view forensic artifacts or evidence contents, use 'evidence inspect <evidence-id>'.",
+        ping: "To discover active network devices on the subnet, use 'netmap hosts'.",
+        nmap: "In Cyberlife, network discovery uses 'netmap hosts' and port/service inspection uses 'svcscan inspect <host>'.",
+        wireshark:
+          "Network and security telemetry is inspected using 'logview recent' or 'logview filter'.",
+        sudo: "Administrative incident actions are executed using 'aster-admin' (e.g. 'aster-admin status').",
+        exit: "To exit the virtual desktop, click the 'Exit Desktop' button at the top-right or press [Esc].",
+        quit: "To exit the virtual desktop, click the 'Exit Desktop' button at the top-right or press [Esc].",
+      };
+
+      const stdoutLines = [
+        `Command '${commandName}' is not recognized in this simulated terminal.`,
+        "Type 'help' to view the list of supported in-game commands.",
+      ];
+
+      if (COMMON_SHELL_COMMANDS[commandName]) {
+        stdoutLines.push(`Notice: '${commandName}' is a real-world utility.`);
+        stdoutLines.push(COMMON_SHELL_COMMANDS[commandName]);
+      } else {
+        // 4b. Find closest matching command (Levenshtein / prefix match)
+        const allRegistered = this.registry.getAll().map(h => h.name.toLowerCase());
+        let bestMatch: string | null = null;
+        let minDistance = 3; // Max threshold
+
+        for (const candidate of allRegistered) {
+          if (candidate.startsWith(commandName) || commandName.startsWith(candidate)) {
+            bestMatch = candidate;
+            break;
+          }
+          const dist = levenshtein(commandName, candidate);
+          if (dist < minDistance) {
+            minDistance = dist;
+            bestMatch = candidate;
+          }
+        }
+
+        if (bestMatch) {
+          stdoutLines.push(`💡 Did you mean: '${bestMatch}'?`);
+        }
+      }
+
+      stdoutLines.push(
+        'Open the Field Guide app (📖) on your desktop for detailed tool manuals and tutorials.'
+      );
+
       return {
         isError: true,
-        stdout: [
-          `Command '${commandName}' is not recognized in this simulated terminal.`,
-          "Type 'help' to view the list of supported in-game commands.",
-        ],
+        stdout: stdoutLines,
       };
     }
 

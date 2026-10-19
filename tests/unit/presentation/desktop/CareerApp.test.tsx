@@ -94,7 +94,9 @@ describe('CareerApp Component', () => {
 
     // Alert feedback banner should report incomplete objectives
     expect(screen.getByTestId('career-feedback-banner')).toBeInTheDocument();
-    expect(screen.getByTestId('career-feedback-banner')).toHaveTextContent(/pending objectives|cannot complete/i);
+    expect(screen.getByTestId('career-feedback-banner')).toHaveTextContent(
+      /pending objectives|cannot complete/i
+    );
   });
 
   it('renders all 7 cybersecurity skills with levels and progress bars', () => {

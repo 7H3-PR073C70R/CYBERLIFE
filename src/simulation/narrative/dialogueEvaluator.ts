@@ -97,7 +97,10 @@ export function isDialogueConditionMet(
   }
 
   // Minimum career level check
-  if (condition.minCareerLevel !== undefined && (context.careerLevel ?? 1) < condition.minCareerLevel) {
+  if (
+    condition.minCareerLevel !== undefined &&
+    (context.careerLevel ?? 1) < condition.minCareerLevel
+  ) {
     return false;
   }
 

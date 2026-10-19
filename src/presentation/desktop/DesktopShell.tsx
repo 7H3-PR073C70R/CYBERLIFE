@@ -23,6 +23,8 @@ import { ActivityApp } from './apps/ActivityApp';
 import { IncidentApp } from './apps/IncidentApp';
 import { ContactsApp } from './apps/ContactsApp';
 import { CareerApp } from './apps/CareerApp';
+import { SaveManagerApp } from './apps/SaveManagerApp';
+import { HelpCenterApp } from './apps/HelpCenterApp';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { CameraMode } from '../world/worldConfig';
 
@@ -141,7 +143,14 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
         </div>
 
         {/* Workspace Area */}
-        <div className="desktop-workspace" data-testid="desktop-workspace">
+        <div
+          className="desktop-workspace"
+          data-testid="desktop-workspace"
+          onScroll={e => {
+            e.currentTarget.scrollTop = 0;
+            e.currentTarget.scrollLeft = 0;
+          }}
+        >
           {/* Ambient Lagos Cyber Watermark */}
           <div className="desktop-watermark" aria-hidden="true">
             <div className="watermark-logo">PARROT SEC OS</div>
@@ -332,6 +341,8 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 {appId === 'incident' && <IncidentApp />}
                 {appId === 'contacts' && <ContactsApp />}
                 {appId === 'career' && <CareerApp />}
+                {appId === 'saveManager' && <SaveManagerApp />}
+                {appId === 'helpCenter' && <HelpCenterApp />}
               </WindowFrame>
             );
           })}

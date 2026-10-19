@@ -1,5 +1,6 @@
 import React from 'react';
 import { CameraMode } from '../world/worldConfig';
+import { SaveStatusIndicator } from './SaveStatusIndicator';
 
 export interface StatusOverlayProps {
   version?: string;
@@ -11,8 +12,12 @@ export interface StatusOverlayProps {
   onToggleCamera?: () => void;
   onToggleHelp?: () => void;
   onToggleDevDrawer?: () => void;
+  onToggleSaveModal?: () => void;
+  onToggleTour?: () => void;
+  onToggleControls?: () => void;
   isHelpOpen?: boolean;
   isDevDrawerOpen?: boolean;
+  isControlsOpen?: boolean;
 }
 
 export const StatusOverlay: React.FC<StatusOverlayProps> = ({
@@ -24,8 +29,12 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
   onToggleCamera,
   onToggleHelp,
   onToggleDevDrawer,
+  onToggleSaveModal,
+  onToggleTour,
+  onToggleControls,
   isHelpOpen = false,
   isDevDrawerOpen = false,
+  isControlsOpen = false,
 }) => {
   return (
     <header className="hud-header" role="banner">
@@ -82,6 +91,9 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
           <span>{currentLocationName}</span>
         </div>
 
+        {/* Persistence Save / Load Indicator & Modal Button */}
+        {onToggleSaveModal && <SaveStatusIndicator onOpenSaveModal={onToggleSaveModal} />}
+
         {/* Camera Mode Toggle Button */}
         <button
           type="button"
@@ -94,7 +106,43 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
           <span>{cameraMode === 'THIRD_PERSON' ? '3rd Person [V]' : '1st Person [V]'}</span>
         </button>
 
-        {/* Controls Help Toggle Button */}
+        {/* First-Launch Introduction Tour Button */}
+        {onToggleTour && (
+          <button
+            type="button"
+            className="hud-controls-help-btn"
+            onClick={onToggleTour}
+            aria-label="Open first-launch orientation tour"
+            data-testid="hud-tour-btn"
+            style={{
+              borderColor: 'rgba(56, 189, 248, 0.4)',
+              color: 'var(--color-accent-cyan)',
+            }}
+          >
+            <span aria-hidden="true">🚀</span>
+            <span>Tour</span>
+          </button>
+        )}
+
+        {/* Full Controls & Game Reference Modal Button */}
+        {onToggleControls && (
+          <button
+            type="button"
+            className={`hud-controls-help-btn ${isControlsOpen ? 'active' : ''}`}
+            onClick={onToggleControls}
+            aria-label="Toggle full controls and game reference modal"
+            data-testid="hud-controls-modal-btn"
+            style={{
+              borderColor: 'rgba(16, 185, 129, 0.4)',
+              color: 'var(--color-accent-emerald)',
+            }}
+          >
+            <span aria-hidden="true">⌨️</span>
+            <span>Help [H]</span>
+          </button>
+        )}
+
+        {/* Movement Help Drawer Toggle Button */}
         <button
           type="button"
           className={`hud-controls-help-btn ${isHelpOpen ? 'active' : ''}`}
@@ -103,7 +151,7 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
           data-testid="hud-controls-help-btn"
         >
           <span aria-hidden="true">🎮</span>
-          <span>Controls [WASD]</span>
+          <span>Movement [M]</span>
         </button>
 
         {/* Dev Simulation Verification Drawer Toggle */}

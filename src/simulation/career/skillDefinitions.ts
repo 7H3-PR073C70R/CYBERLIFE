@@ -4,43 +4,50 @@ export const SKILL_DEFINITIONS: Readonly<Record<SkillId, SkillDefinition>> = {
   log_analysis: {
     id: 'log_analysis',
     name: 'Log Analysis & SIEM Triage',
-    description: 'Analyzing security event streams, auth logs, syslogs, and identifying suspicious intrusion telemetry.',
+    description:
+      'Analyzing security event streams, auth logs, syslogs, and identifying suspicious intrusion telemetry.',
     maxLevel: 10,
   },
   network_fundamentals: {
     id: 'network_fundamentals',
     name: 'Network Fundamentals & Port Auditing',
-    description: 'Understanding TCP/IP, subnets, routing, port discovery, and diagnosing network perimeter exposures.',
+    description:
+      'Understanding TCP/IP, subnets, routing, port discovery, and diagnosing network perimeter exposures.',
     maxLevel: 10,
   },
   incident_response: {
     id: 'incident_response',
     name: 'Incident Response & Containment',
-    description: 'Coordinating containment actions, mitigating active intrusions, and isolating compromised workloads.',
+    description:
+      'Coordinating containment actions, mitigating active intrusions, and isolating compromised workloads.',
     maxLevel: 10,
   },
   security_fundamentals: {
     id: 'security_fundamentals',
     name: 'Security Governance & IAM',
-    description: 'Principle of least privilege, role-based access control, cryptographic hygiene, and security policies.',
+    description:
+      'Principle of least privilege, role-based access control, cryptographic hygiene, and security policies.',
     maxLevel: 10,
   },
   evidence_handling: {
     id: 'evidence_handling',
     name: 'Evidence Custody & Forensics',
-    description: 'Preserving digital artefacts, verifying cryptographic SHA-256 hashes, and documenting forensic chain of custody.',
+    description:
+      'Preserving digital artefacts, verifying cryptographic SHA-256 hashes, and documenting forensic chain of custody.',
     maxLevel: 10,
   },
   reporting: {
     id: 'reporting',
     name: 'Technical Writing & Reporting',
-    description: 'Synthesizing incident root causes, drafting executive summaries, and communicating risk to stakeholders.',
+    description:
+      'Synthesizing incident root causes, drafting executive summaries, and communicating risk to stakeholders.',
     maxLevel: 10,
   },
   troubleshooting: {
     id: 'troubleshooting',
     name: 'Systems Diagnostics & Troubleshooting',
-    description: 'Methodical hardware and software diagnostics, service dependencies inspection, and bug isolation.',
+    description:
+      'Methodical hardware and software diagnostics, service dependencies inspection, and bug isolation.',
     maxLevel: 10,
   },
 };

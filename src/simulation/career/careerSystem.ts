@@ -39,10 +39,7 @@ function makeFailure(
 /**
  * Checks whether an objective in an assignment is satisfied based on authoritative state.
  */
-export function isObjectiveSatisfied(
-  objective: JobObjective,
-  state: SimulationState
-): boolean {
+export function isObjectiveSatisfied(objective: JobObjective, state: SimulationState): boolean {
   if (objective.isCompleted) return true;
 
   const target = objective.target?.toLowerCase();
@@ -81,7 +78,9 @@ export function isObjectiveSatisfied(
       if (state.flags[`finding_${target}`] === true) return true;
       if (state.flags[`recorded_finding_${target}`] === true) return true;
       const inHosts = state.mission?.discoveredHosts.some(h => h.toLowerCase().includes(target));
-      const inServices = state.mission?.inspectedServices.some(s => s.toLowerCase().includes(target));
+      const inServices = state.mission?.inspectedServices.some(s =>
+        s.toLowerCase().includes(target)
+      );
       const inLogs = state.mission?.analyzedLogIds.some(l => l.toLowerCase().includes(target));
       if (inHosts || inServices || inLogs) return true;
       return (
@@ -95,7 +94,9 @@ export function isObjectiveSatisfied(
     case 'PRESERVE_EVIDENCE': {
       if (!target) return (state.mission?.preservedEvidenceIds.length ?? 0) > 0;
       if (state.flags[`evidence_${target}`] === true) return true;
-      const inEvidence = state.mission?.preservedEvidenceIds.some(e => e.toLowerCase().includes(target));
+      const inEvidence = state.mission?.preservedEvidenceIds.some(e =>
+        e.toLowerCase().includes(target)
+      );
       if (inEvidence) return true;
       return (state.mission?.preservedEvidenceIds.length ?? 0) > 0;
     }
@@ -104,19 +105,26 @@ export function isObjectiveSatisfied(
       if (!target) return true;
       if (state.flags[`verified_${target}`] === true) return true;
       if (target === 'database_service') {
-        const hasDb = state.mission?.inspectedServices.some(s => s.toLowerCase().includes('db') || s.includes('5432'));
+        const hasDb = state.mission?.inspectedServices.some(
+          s => s.toLowerCase().includes('db') || s.includes('5432')
+        );
         const toolsCount = (state.flags['cyber_tools_executed_count'] as number) ?? 0;
-        return Boolean(hasDb || toolsCount >= 2 || state.flags['verified_database_service'] === true);
+        return Boolean(
+          hasDb || toolsCount >= 2 || state.flags['verified_database_service'] === true
+        );
       }
       if (target === 'containment_policy') {
         return Boolean(
           state.mission?.isContained ||
-            state.mission?.isRemediated ||
-            state.flags['verified_containment_policy'] === true
+          state.mission?.isRemediated ||
+          state.flags['verified_containment_policy'] === true
         );
       }
       if (target === 'forensic_integrity') {
-        return (state.mission?.preservedEvidenceIds.length ?? 0) >= 1 || state.flags['verified_forensic_integrity'] === true;
+        return (
+          (state.mission?.preservedEvidenceIds.length ?? 0) >= 1 ||
+          state.flags['verified_forensic_integrity'] === true
+        );
       }
       return false;
     }
@@ -177,7 +185,11 @@ export function handleAcceptJob(
 
   // Check if non-repeatable job was already completed
   if (!listing.isRepeatable && jobs.completedJobHistory.some(j => j.jobId === jobId)) {
-    return makeFailure(currentState, 'JOB_ALREADY_COMPLETED', `Job "${jobId}" has already been completed`);
+    return makeFailure(
+      currentState,
+      'JOB_ALREADY_COMPLETED',
+      `Job "${jobId}" has already been completed`
+    );
   }
 
   // Check career level requirements
@@ -269,7 +281,11 @@ export function handleCompleteJob(
 
   const listing = JOB_LISTINGS[jobId];
   if (!listing) {
-    return makeFailure(currentState, 'JOB_NOT_FOUND', `Job listing definition "${jobId}" not found`);
+    return makeFailure(
+      currentState,
+      'JOB_NOT_FOUND',
+      `Job listing definition "${jobId}" not found`
+    );
   }
 
   const rawAssignment = jobs.activeJobs[assignmentIndex];
@@ -395,7 +411,8 @@ export function handleCompleteJob(
     payoutKobo: listing.payoutKobo,
     careerXpEarned: listing.careerXpReward,
     performanceRating: 'EXEMPLARY',
-    feedbackNotes: 'All forensic and technical objectives validated against authoritative simulation state.',
+    feedbackNotes:
+      'All forensic and technical objectives validated against authoritative simulation state.',
   };
 
   const nextActiveJobs = jobs.activeJobs.filter(j => j.listingId !== jobId);
@@ -411,7 +428,7 @@ export function handleCompleteJob(
     if (nextCompletedHistory.some(h => h.jobId === jKey) && !candidateJob.isRepeatable) continue;
     if (nextActiveJobs.some(a => a.listingId === jKey)) continue;
     // If player meets min level or completed >= 1 job, unlock next tier
-    if (candidateJob.minCareerLevel <= (updatedCareer.currentLevel + 1)) {
+    if (candidateJob.minCareerLevel <= updatedCareer.currentLevel + 1) {
       availableSet.add(jKey);
     }
   }
@@ -604,7 +621,11 @@ export function handlePurchaseItem(
 ): CommandResult {
   const item = SHOP_CATALOGUE[itemId];
   if (!item) {
-    return makeFailure(currentState, 'ITEM_NOT_IN_CATALOGUE', `Item "${itemId}" not found in shop catalogue`);
+    return makeFailure(
+      currentState,
+      'ITEM_NOT_IN_CATALOGUE',
+      `Item "${itemId}" not found in shop catalogue`
+    );
   }
 
   // Check ownership limit
@@ -772,7 +793,11 @@ export function handleStudyLearningMaterial(
       );
     }
   } else {
-    return makeFailure(currentState, 'INVALID_ARGUMENT', `Item "${itemId}" is not a studyable learning material`);
+    return makeFailure(
+      currentState,
+      'INVALID_ARGUMENT',
+      `Item "${itemId}" is not a studyable learning material`
+    );
   }
 
   const nextFlags = {
@@ -813,15 +838,27 @@ export function handlePayRecurringExpense(
 
   const expIndex = economy.recurringExpenses.findIndex(e => e.id === expenseId);
   if (expIndex === -1) {
-    return makeFailure(currentState, 'EXPENSE_NOT_FOUND', `Recurring expense "${expenseId}" not found`);
+    return makeFailure(
+      currentState,
+      'EXPENSE_NOT_FOUND',
+      `Recurring expense "${expenseId}" not found`
+    );
   }
 
   const exp = economy.recurringExpenses[expIndex];
   if (!exp) {
-    return makeFailure(currentState, 'EXPENSE_NOT_FOUND', `Recurring expense "${expenseId}" not found`);
+    return makeFailure(
+      currentState,
+      'EXPENSE_NOT_FOUND',
+      `Recurring expense "${expenseId}" not found`
+    );
   }
   if (!exp.isOverdue) {
-    return makeFailure(currentState, 'EXPENSE_NOT_OVERDUE', `Expense "${exp.name}" is not currently overdue`);
+    return makeFailure(
+      currentState,
+      'EXPENSE_NOT_OVERDUE',
+      `Expense "${exp.name}" is not currently overdue`
+    );
   }
 
   if (currentState.player.moneyKobo < exp.amountKobo) {

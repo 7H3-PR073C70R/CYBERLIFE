@@ -180,7 +180,9 @@ describe('Milestone 8: Economy, Purchases & Recurring Expenses', () => {
     expect(overdueEvent).toBeDefined();
 
     // Check expense state
-    const rentExp = advanceRes.state.economy?.recurringExpenses.find(e => e.id === 'expense_apartment_rent');
+    const rentExp = advanceRes.state.economy?.recurringExpenses.find(
+      e => e.id === 'expense_apartment_rent'
+    );
     expect(rentExp?.isOverdue).toBe(true);
 
     // Balance remains non-negative! (50,000 - 40,000 internet = 10,000 kobo)
@@ -202,7 +204,9 @@ describe('Milestone 8: Economy, Purchases & Recurring Expenses', () => {
 
     expect(payRes.success).toBe(true);
     expect(payRes.state.player.moneyKobo).toBe(200_000 - 120_000);
-    const updatedRent = payRes.state.economy?.recurringExpenses.find(e => e.id === 'expense_apartment_rent');
+    const updatedRent = payRes.state.economy?.recurringExpenses.find(
+      e => e.id === 'expense_apartment_rent'
+    );
     expect(updatedRent?.isOverdue).toBe(false);
   });
 });

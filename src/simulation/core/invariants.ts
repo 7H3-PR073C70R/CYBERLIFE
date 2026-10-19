@@ -332,4 +332,53 @@ export function validateSimulationState(state: SimulationState): void {
       }
     }
   }
+
+  // 12. Onboarding invariants (if present)
+  if (state.onboarding) {
+    const { onboarding } = state;
+    if (typeof onboarding.introCompleted !== 'boolean') {
+      throw new InvariantViolationError('onboarding.introCompleted must be a boolean');
+    }
+    if (typeof onboarding.introSkipped !== 'boolean') {
+      throw new InvariantViolationError('onboarding.introSkipped must be a boolean');
+    }
+    if (onboarding.guidanceMode !== 'guided' && onboarding.guidanceMode !== 'experienced') {
+      throw new InvariantViolationError(
+        `onboarding.guidanceMode must be "guided" or "experienced", received "${onboarding.guidanceMode}"`
+      );
+    }
+    if (!Array.isArray(onboarding.completedStepIds)) {
+      throw new InvariantViolationError('onboarding.completedStepIds must be an array');
+    }
+    const seenSteps = new Set<string>();
+    for (const stepId of onboarding.completedStepIds) {
+      if (!stepId || typeof stepId !== 'string') {
+        throw new InvariantViolationError(
+          'onboarding.completedStepIds items must be non-empty strings'
+        );
+      }
+      if (seenSteps.has(stepId)) {
+        throw new InvariantViolationError(`Duplicate step ID "${stepId}" in completedStepIds`);
+      }
+      seenSteps.add(stepId);
+    }
+    if (!Array.isArray(onboarding.dismissedHintIds)) {
+      throw new InvariantViolationError('onboarding.dismissedHintIds must be an array');
+    }
+    const seenHints = new Set<string>();
+    for (const hintId of onboarding.dismissedHintIds) {
+      if (!hintId || typeof hintId !== 'string') {
+        throw new InvariantViolationError(
+          'onboarding.dismissedHintIds items must be non-empty strings'
+        );
+      }
+      if (seenHints.has(hintId)) {
+        throw new InvariantViolationError(`Duplicate hint ID "${hintId}" in dismissedHintIds`);
+      }
+      seenHints.add(hintId);
+    }
+    if (onboarding.activeStepId !== null && typeof onboarding.activeStepId !== 'string') {
+      throw new InvariantViolationError('onboarding.activeStepId must be a string or null');
+    }
+  }
 }

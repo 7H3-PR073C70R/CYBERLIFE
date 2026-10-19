@@ -24,6 +24,8 @@ export function createInitialWindows(
     activity: { x: 240, y: 130 },
     contacts: { x: 100, y: 50 },
     career: { x: 90, y: 35 },
+    saveManager: { x: 110, y: 50 },
+    helpCenter: { x: 130, y: 60 },
   };
 
   const windows: Partial<Record<AppId, WindowState>> = {};

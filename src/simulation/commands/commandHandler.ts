@@ -41,6 +41,13 @@ import {
   processRecurringExpensesOnTimeAdvance,
 } from '../career/careerSystem';
 import { JOB_LISTINGS } from '../career/jobDefinitions';
+import {
+  handleCompleteOnboardingStep,
+  handleSkipOnboarding,
+  handleResetOnboarding,
+  handleDismissGuidanceHint,
+  handleSetGuidanceMode,
+} from '../onboarding/onboardingHandler';
 
 function makeFailure(
   state: Readonly<SimulationState>,
@@ -130,8 +137,11 @@ export function handleCommand(
         }
 
         // Process recurring living expenses (e.g. apartment rent, fiber internet)
-        const { player: expPlayer, economy: expEconomy, events: expEvents } =
-          processRecurringExpensesOnTimeAdvance(currentState, newSimTime, nextRevision);
+        const {
+          player: expPlayer,
+          economy: expEconomy,
+          events: expEvents,
+        } = processRecurringExpensesOnTimeAdvance(currentState, newSimTime, nextRevision);
         events.push(...expEvents);
 
         const nextState: SimulationState = {
@@ -1460,9 +1470,7 @@ export function handleCommand(
           careerLevel: currentState.career?.currentLevel,
           completedJobs: currentState.jobs?.completedJobHistory.map(j => j.jobId),
           skills: currentState.skills
-            ? Object.fromEntries(
-                Object.entries(currentState.skills).map(([k, v]) => [k, v.level])
-              )
+            ? Object.fromEntries(Object.entries(currentState.skills).map(([k, v]) => [k, v.level]))
             : undefined,
         };
 
@@ -1577,9 +1585,7 @@ export function handleCommand(
           careerLevel: currentState.career?.currentLevel,
           completedJobs: currentState.jobs?.completedJobHistory.map(j => j.jobId),
           skills: currentState.skills
-            ? Object.fromEntries(
-                Object.entries(currentState.skills).map(([k, v]) => [k, v.level])
-              )
+            ? Object.fromEntries(Object.entries(currentState.skills).map(([k, v]) => [k, v.level]))
             : undefined,
         };
 
@@ -2010,6 +2016,26 @@ export function handleCommand(
 
       case 'PayRecurringExpense': {
         return handlePayRecurringExpense(currentState, command.expenseId);
+      }
+
+      case 'CompleteOnboardingStep': {
+        return handleCompleteOnboardingStep(currentState, command.stepId, command.nextStepId);
+      }
+
+      case 'SkipOnboarding': {
+        return handleSkipOnboarding(currentState);
+      }
+
+      case 'ResetOnboarding': {
+        return handleResetOnboarding(currentState);
+      }
+
+      case 'DismissGuidanceHint': {
+        return handleDismissGuidanceHint(currentState, command.hintId);
+      }
+
+      case 'SetGuidanceMode': {
+        return handleSetGuidanceMode(currentState, command.mode);
       }
 
       default: {
