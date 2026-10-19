@@ -26,7 +26,15 @@ export type SimulationEventType =
   | 'NPC_DIALOGUE_CHOICE_SELECTED'
   | 'NPC_DIALOGUE_ENDED'
   | 'NPC_RELATIONSHIP_CHANGED'
-  | 'NPC_MEMORY_RECORDED';
+  | 'NPC_MEMORY_RECORDED'
+  | 'JOB_ACCEPTED'
+  | 'JOB_COMPLETED'
+  | 'CAREER_PROMOTED'
+  | 'SKILL_PROGRESS_AWARDED'
+  | 'ITEM_PURCHASED'
+  | 'FINANCIAL_TRANSACTION_RECORDED'
+  | 'RECURRING_EXPENSE_PAID'
+  | 'RECURRING_EXPENSE_OVERDUE';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -281,6 +289,90 @@ export type NpcMemoryRecordedEvent = BaseSimulationEvent<
   }
 >;
 
+export type JobAcceptedEvent = BaseSimulationEvent<
+  'JOB_ACCEPTED',
+  {
+    readonly jobId: string;
+    readonly title: string;
+    readonly employer: string;
+    readonly payoutKobo: number;
+  }
+>;
+
+export type JobCompletedEvent = BaseSimulationEvent<
+  'JOB_COMPLETED',
+  {
+    readonly jobId: string;
+    readonly title: string;
+    readonly payoutKobo: number;
+    readonly careerXpEarned: number;
+    readonly performanceRating: string;
+  }
+>;
+
+export type CareerPromotedEvent = BaseSimulationEvent<
+  'CAREER_PROMOTED',
+  {
+    readonly pathId: string;
+    readonly previousLevel: number;
+    readonly newLevel: number;
+    readonly roleTitle: string;
+  }
+>;
+
+export type SkillProgressAwardedEvent = BaseSimulationEvent<
+  'SKILL_PROGRESS_AWARDED',
+  {
+    readonly skillId: string;
+    readonly xpAwarded: number;
+    readonly previousLevel: number;
+    readonly newLevel: number;
+    readonly totalXp: number;
+  }
+>;
+
+export type ItemPurchasedEvent = BaseSimulationEvent<
+  'ITEM_PURCHASED',
+  {
+    readonly itemId: string;
+    readonly itemName: string;
+    readonly priceKobo: number;
+    readonly remainingMoneyKobo: number;
+  }
+>;
+
+export type FinancialTransactionRecordedEvent = BaseSimulationEvent<
+  'FINANCIAL_TRANSACTION_RECORDED',
+  {
+    readonly transactionId: string;
+    readonly type: string;
+    readonly amountKobo: number;
+    readonly direction: 'CREDIT' | 'DEBIT';
+    readonly balanceAfterKobo: number;
+    readonly description: string;
+  }
+>;
+
+export type RecurringExpensePaidEvent = BaseSimulationEvent<
+  'RECURRING_EXPENSE_PAID',
+  {
+    readonly expenseId: string;
+    readonly name: string;
+    readonly amountKobo: number;
+    readonly balanceAfterKobo: number;
+  }
+>;
+
+export type RecurringExpenseOverdueEvent = BaseSimulationEvent<
+  'RECURRING_EXPENSE_OVERDUE',
+  {
+    readonly expenseId: string;
+    readonly name: string;
+    readonly amountKobo: number;
+    readonly playerMoneyKobo: number;
+  }
+>;
+
 export type SimulationEvent =
   | SimulationTimeAdvancedEvent
   | PlayerAttributeChangedEvent
@@ -307,4 +399,12 @@ export type SimulationEvent =
   | NpcDialogueChoiceSelectedEvent
   | NpcDialogueEndedEvent
   | NpcRelationshipChangedEvent
-  | NpcMemoryRecordedEvent;
+  | NpcMemoryRecordedEvent
+  | JobAcceptedEvent
+  | JobCompletedEvent
+  | CareerPromotedEvent
+  | SkillProgressAwardedEvent
+  | ItemPurchasedEvent
+  | FinancialTransactionRecordedEvent
+  | RecurringExpensePaidEvent
+  | RecurringExpenseOverdueEvent;

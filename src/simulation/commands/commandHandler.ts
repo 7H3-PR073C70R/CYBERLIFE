@@ -31,6 +31,16 @@ import { getNpcProfile } from '../actors/npcProfiles';
 import { getDialogueGraph } from '../../content/dialogue/npcDialogueData';
 import { isDialogueConditionMet } from '../narrative/dialogueEvaluator';
 import { DialogueEvaluationContext } from '../narrative/dialogueTypes';
+import {
+  handleAcceptJob,
+  handleCompleteJob,
+  handlePromoteCareer,
+  handlePurchaseItem,
+  handleStudyLearningMaterial,
+  handlePayRecurringExpense,
+  processRecurringExpensesOnTimeAdvance,
+} from '../career/careerSystem';
+import { JOB_LISTINGS } from '../career/jobDefinitions';
 
 function makeFailure(
   state: Readonly<SimulationState>,
@@ -119,6 +129,11 @@ export function handleCommand(
           );
         }
 
+        // Process recurring living expenses (e.g. apartment rent, fiber internet)
+        const { player: expPlayer, economy: expEconomy, events: expEvents } =
+          processRecurringExpensesOnTimeAdvance(currentState, newSimTime, nextRevision);
+        events.push(...expEvents);
+
         const nextState: SimulationState = {
           ...currentState,
           metadata: {
@@ -129,6 +144,8 @@ export function handleCommand(
             simulationTimeSeconds: newSimTime,
             calendar: newCalendar,
           },
+          player: expPlayer,
+          economy: expEconomy,
           timers: remainingTimers,
         };
 
@@ -787,11 +804,14 @@ export function handleCommand(
           }
         );
 
+        const toolLower = tool.trim().toLowerCase();
         const nextFlags = {
           ...currentState.flags,
           cyber_last_activity_id: activityId.trim(),
           cyber_last_tool: tool.trim(),
           cyber_tools_executed_count: currentCount + 1,
+          [`cyber_tool_executed_${toolLower}`]: true,
+          [`ran_tool_${toolLower}`]: true,
         };
 
         const nextState: SimulationState = {
@@ -1437,6 +1457,13 @@ export function handleCommand(
           memory: existingNpc.memory,
           flags: currentState.flags,
           missionPhase: currentState.mission?.phase,
+          careerLevel: currentState.career?.currentLevel,
+          completedJobs: currentState.jobs?.completedJobHistory.map(j => j.jobId),
+          skills: currentState.skills
+            ? Object.fromEntries(
+                Object.entries(currentState.skills).map(([k, v]) => [k, v.level])
+              )
+            : undefined,
         };
 
         const selectedNodeId =
@@ -1547,6 +1574,13 @@ export function handleCommand(
           memory: npcState.memory,
           flags: currentState.flags,
           missionPhase: currentState.mission?.phase,
+          careerLevel: currentState.career?.currentLevel,
+          completedJobs: currentState.jobs?.completedJobHistory.map(j => j.jobId),
+          skills: currentState.skills
+            ? Object.fromEntries(
+                Object.entries(currentState.skills).map(([k, v]) => [k, v.level])
+              )
+            : undefined,
         };
 
         if (!isDialogueConditionMet(choice.condition, evalContext)) {
@@ -1564,6 +1598,7 @@ export function handleCommand(
         let lastRelDelta: { delta: number; reason: string; timestamp: number } | undefined;
         const updatedFlags = { ...currentState.flags };
         let updatedMission = currentState.mission ? { ...currentState.mission } : undefined;
+        let updatedJobs = currentState.jobs ? { ...currentState.jobs } : undefined;
         const newTopics = [...npcState.memory.topicsDiscussed];
         const newChoices = [...npcState.memory.choicesMade];
         if (!newChoices.includes(choiceId)) {
@@ -1654,6 +1689,42 @@ export function handleCommand(
                 }
                 break;
               }
+              case 'ACCEPT_JOB': {
+                if (
+                  updatedJobs &&
+                  !updatedJobs.activeJobs.some(j => j.listingId === action.jobId)
+                ) {
+                  const listing = JOB_LISTINGS[action.jobId];
+                  if (listing) {
+                    updatedJobs = {
+                      ...updatedJobs,
+                      availableJobIds: updatedJobs.availableJobIds.filter(
+                        id => id !== action.jobId
+                      ),
+                      activeJobs: [
+                        ...updatedJobs.activeJobs,
+                        {
+                          listingId: action.jobId,
+                          acceptedAtSimulationSeconds: simTime,
+                          objectives: listing.objectives.map(o => ({
+                            ...o,
+                            isCompleted: false,
+                          })),
+                        },
+                      ],
+                    };
+                    events.push(
+                      createSimulationEvent('JOB_ACCEPTED', simTime, nextRevision, {
+                        jobId: listing.id,
+                        title: listing.title,
+                        employer: listing.employer,
+                        payoutKobo: listing.payoutKobo,
+                      })
+                    );
+                  }
+                }
+                break;
+              }
             }
           }
         }
@@ -1702,6 +1773,7 @@ export function handleCommand(
           },
           flags: updatedFlags,
           mission: updatedMission,
+          jobs: updatedJobs,
           npcs: {
             ...(currentState.npcs ?? {}),
             [npcId]: updatedNpc,
@@ -1914,6 +1986,30 @@ export function handleCommand(
           events: [event],
           message: `Recorded memory for ${npcId}`,
         };
+      }
+
+      case 'AcceptJob': {
+        return handleAcceptJob(currentState, command.jobId);
+      }
+
+      case 'CompleteJob': {
+        return handleCompleteJob(currentState, command.jobId);
+      }
+
+      case 'PromoteCareer': {
+        return handlePromoteCareer(currentState, command.targetPathId);
+      }
+
+      case 'PurchaseItem': {
+        return handlePurchaseItem(currentState, command.itemId);
+      }
+
+      case 'StudyLearningMaterial': {
+        return handleStudyLearningMaterial(currentState, command.itemId);
+      }
+
+      case 'PayRecurringExpense': {
+        return handlePayRecurringExpense(currentState, command.expenseId);
       }
 
       default: {

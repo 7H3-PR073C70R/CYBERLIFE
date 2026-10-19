@@ -3,7 +3,14 @@
  */
 
 export type AppId =
-  'terminal' | 'fieldGuide' | 'systemInfo' | 'notes' | 'activity' | 'incident' | 'contacts';
+  | 'terminal'
+  | 'fieldGuide'
+  | 'systemInfo'
+  | 'notes'
+  | 'activity'
+  | 'incident'
+  | 'contacts'
+  | 'career';
 
 export interface AppDefinition {
   id: AppId;
@@ -37,6 +44,16 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
       'Manage investigation phases, review briefing, submit root-cause assessment, verify remediation, and complete incident report.',
     defaultSize: { width: 780, height: 560 },
     minSize: { width: 440, height: 340 },
+  },
+  career: {
+    id: 'career',
+    title: 'Career Hub, Job Board & Financial Ledger',
+    shortTitle: 'Career & Market',
+    icon: '💼',
+    description:
+      'Manage cybersecurity career path, accept verified tickets, level up skills, purchase hardware upgrades, and audit finances.',
+    defaultSize: { width: 840, height: 580 },
+    minSize: { width: 480, height: 380 },
   },
   terminal: {
     id: 'terminal',

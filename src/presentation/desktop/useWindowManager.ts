@@ -23,6 +23,7 @@ export function createInitialWindows(
     notes: { x: 200, y: 110 },
     activity: { x: 240, y: 130 },
     contacts: { x: 100, y: 50 },
+    career: { x: 90, y: 35 },
   };
 
   const windows: Partial<Record<AppId, WindowState>> = {};

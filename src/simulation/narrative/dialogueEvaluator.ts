@@ -96,6 +96,27 @@ export function isDialogueConditionMet(
     return false;
   }
 
+  // Minimum career level check
+  if (condition.minCareerLevel !== undefined && (context.careerLevel ?? 1) < condition.minCareerLevel) {
+    return false;
+  }
+
+  // Required completed job check
+  if (
+    condition.requiredCompletedJobId &&
+    !(context.completedJobs ?? []).includes(condition.requiredCompletedJobId)
+  ) {
+    return false;
+  }
+
+  // Minimum skill level check
+  if (condition.minSkillLevel) {
+    const curLevel = context.skills?.[condition.minSkillLevel.skillId] ?? 0;
+    if (curLevel < condition.minSkillLevel.level) {
+      return false;
+    }
+  }
+
   return true;
 }
 

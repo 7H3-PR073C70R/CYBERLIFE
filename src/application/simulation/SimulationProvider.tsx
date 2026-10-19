@@ -19,11 +19,12 @@ export const SimulationProvider: React.FC<SimulationProviderProps> = ({
       setLastEvents(events);
     });
 
+    if (typeof window !== 'undefined') {
+      (window as unknown as { __CYBERLIFE_SIM__?: typeof engine }).__CYBERLIFE_SIM__ = engine;
+    }
+
     return () => {
       unsubscribe();
-      if (!propEngine) {
-        engine.dispose();
-      }
     };
   }, [engine, propEngine]);
 

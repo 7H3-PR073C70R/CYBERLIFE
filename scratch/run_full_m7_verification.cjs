@@ -4,7 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const WebSocket = require('ws');
 
-const ARTIFACT_DIR = '/Users/protector/.gemini/antigravity-ide/brain/96d1a3b9-ae85-4f82-bb34-9f6a64fa7e1a';
+const ARTIFACT_DIR =
+  '/Users/protector/.gemini/antigravity-ide/brain/96d1a3b9-ae85-4f82-bb34-9f6a64fa7e1a';
 const CHROME_PORT = 9334;
 const USER_DATA_DIR = '/tmp/chrome-m7-full-verify';
 
@@ -23,24 +24,26 @@ function startChrome() {
     '--window-size=1280,800',
     '--no-first-run',
     '--no-default-browser-check',
-    'http://localhost:5173/'
+    'http://localhost:5173/',
   ];
   return spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', chromeArgs);
 }
 
 function fetchJson(url) {
   return new Promise((resolve, reject) => {
-    http.get(url, res => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try {
-          resolve(JSON.parse(data));
-        } catch (e) {
-          reject(e);
-        }
-      });
-    }).on('error', reject);
+    http
+      .get(url, res => {
+        let data = '';
+        res.on('data', chunk => (data += chunk));
+        res.on('end', () => {
+          try {
+            resolve(JSON.parse(data));
+          } catch (e) {
+            reject(e);
+          }
+        });
+      })
+      .on('error', reject);
   });
 }
 
@@ -112,7 +115,7 @@ class CDPClient {
       key,
       code,
       windowsVirtualKeyCode: keyCode,
-      nativeVirtualKeyCode: keyCode
+      nativeVirtualKeyCode: keyCode,
     });
     await sleep(40);
     await this.send('Input.dispatchKeyEvent', {
@@ -120,7 +123,7 @@ class CDPClient {
       key,
       code,
       windowsVirtualKeyCode: keyCode,
-      nativeVirtualKeyCode: keyCode
+      nativeVirtualKeyCode: keyCode,
     });
     await sleep(40);
   }

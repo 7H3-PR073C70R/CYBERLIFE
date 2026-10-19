@@ -22,6 +22,16 @@ export type SimulationErrorCode =
   | 'DIALOGUE_CHOICE_NOT_FOUND'
   | 'DIALOGUE_CONDITION_NOT_MET'
   | 'NO_ACTIVE_DIALOGUE'
+  | 'JOB_NOT_FOUND'
+  | 'JOB_ALREADY_ACTIVE'
+  | 'JOB_ALREADY_COMPLETED'
+  | 'JOB_REQUIREMENTS_NOT_MET'
+  | 'JOB_OBJECTIVES_INCOMPLETE'
+  | 'CAREER_NOT_PROMOTION_ELIGIBLE'
+  | 'ITEM_NOT_IN_CATALOGUE'
+  | 'PURCHASE_LIMIT_REACHED'
+  | 'EXPENSE_NOT_FOUND'
+  | 'EXPENSE_NOT_OVERDUE'
   | 'INVARIANT_VIOLATION';
 
 export interface AdvanceSimulationTimeCommand {
@@ -192,6 +202,38 @@ export interface RecordNpcMemoryCommand {
   readonly commitment?: string;
 }
 
+import type { CareerPathId } from '../career/types';
+
+export interface AcceptJobCommand {
+  readonly type: 'AcceptJob';
+  readonly jobId: string;
+}
+
+export interface CompleteJobCommand {
+  readonly type: 'CompleteJob';
+  readonly jobId: string;
+}
+
+export interface PromoteCareerCommand {
+  readonly type: 'PromoteCareer';
+  readonly targetPathId?: CareerPathId;
+}
+
+export interface PurchaseItemCommand {
+  readonly type: 'PurchaseItem';
+  readonly itemId: string;
+}
+
+export interface StudyLearningMaterialCommand {
+  readonly type: 'StudyLearningMaterial';
+  readonly itemId: string;
+}
+
+export interface PayRecurringExpenseCommand {
+  readonly type: 'PayRecurringExpense';
+  readonly expenseId: string;
+}
+
 export type SimulationCommand =
   | AdvanceSimulationTimeCommand
   | ChangePlayerAttributeCommand
@@ -218,7 +260,13 @@ export type SimulationCommand =
   | SelectDialogueChoiceCommand
   | EndDialogueCommand
   | ChangeNpcRelationshipCommand
-  | RecordNpcMemoryCommand;
+  | RecordNpcMemoryCommand
+  | AcceptJobCommand
+  | CompleteJobCommand
+  | PromoteCareerCommand
+  | PurchaseItemCommand
+  | StudyLearningMaterialCommand
+  | PayRecurringExpenseCommand;
 
 export interface CommandResult {
   readonly success: boolean;

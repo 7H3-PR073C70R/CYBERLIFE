@@ -225,4 +225,111 @@ export function validateSimulationState(state: SimulationState): void {
       throw new InvariantViolationError('activeDialogue.currentNodeId must be a non-empty string');
     }
   }
+
+  // 10. Career invariants (if present)
+  if (state.career) {
+    const { career } = state;
+    if (!career.currentPathId || typeof career.currentPathId !== 'string') {
+      throw new InvariantViolationError('career.currentPathId must be a non-empty string');
+    }
+    if (!Number.isSafeInteger(career.currentLevel) || career.currentLevel < 1) {
+      throw new InvariantViolationError(
+        `career.currentLevel must be a positive safe integer >= 1, received ${career.currentLevel}`
+      );
+    }
+    if (!career.roleTitle || typeof career.roleTitle !== 'string') {
+      throw new InvariantViolationError('career.roleTitle must be a non-empty string');
+    }
+    if (!career.employer || typeof career.employer !== 'string') {
+      throw new InvariantViolationError('career.employer must be a non-empty string');
+    }
+    if (!Number.isSafeInteger(career.xp) || career.xp < 0) {
+      throw new InvariantViolationError(
+        `career.xp must be a non-negative safe integer, received ${career.xp}`
+      );
+    }
+  }
+
+  // 11. Job board invariants (if present)
+  if (state.jobs) {
+    const { jobs } = state;
+    if (!Array.isArray(jobs.availableJobIds)) {
+      throw new InvariantViolationError('jobs.availableJobIds must be an array');
+    }
+    if (!Array.isArray(jobs.activeJobs)) {
+      throw new InvariantViolationError('jobs.activeJobs must be an array');
+    }
+    if (!Array.isArray(jobs.completedJobHistory)) {
+      throw new InvariantViolationError('jobs.completedJobHistory must be an array');
+    }
+  }
+
+  // 12. Skills invariants (if present)
+  if (state.skills) {
+    const { skills } = state;
+    if (typeof skills !== 'object' || skills === null) {
+      throw new InvariantViolationError('skills state must be an object');
+    }
+    for (const [skillId, skill] of Object.entries(skills)) {
+      if (!skill || typeof skill !== 'object') {
+        throw new InvariantViolationError(`Invalid skill state for "${skillId}"`);
+      }
+      if (!Number.isSafeInteger(skill.level) || skill.level < 1 || skill.level > 10) {
+        throw new InvariantViolationError(
+          `Skill "${skillId}" level must be an integer in [1, 10], received ${skill.level}`
+        );
+      }
+      if (!Number.isSafeInteger(skill.xp) || skill.xp < 0) {
+        throw new InvariantViolationError(
+          `Skill "${skillId}" xp must be a non-negative integer, received ${skill.xp}`
+        );
+      }
+      if (!Number.isSafeInteger(skill.totalXp) || skill.totalXp < 0) {
+        throw new InvariantViolationError(
+          `Skill "${skillId}" totalXp must be a non-negative integer, received ${skill.totalXp}`
+        );
+      }
+    }
+  }
+
+  // 13. Economy invariants (if present)
+  if (state.economy) {
+    const { economy } = state;
+    if (!Array.isArray(economy.transactions)) {
+      throw new InvariantViolationError('economy.transactions must be an array');
+    }
+    for (const tx of economy.transactions) {
+      if (!tx.id || typeof tx.id !== 'string') {
+        throw new InvariantViolationError('FinancialTransaction.id must be a non-empty string');
+      }
+      if (!Number.isSafeInteger(tx.amountKobo) || tx.amountKobo <= 0) {
+        throw new InvariantViolationError(
+          `FinancialTransaction.amountKobo must be a positive safe integer, received ${tx.amountKobo}`
+        );
+      }
+      if (!Number.isSafeInteger(tx.balanceAfterKobo) || tx.balanceAfterKobo < 0) {
+        throw new InvariantViolationError(
+          `FinancialTransaction.balanceAfterKobo must be a non-negative safe integer, received ${tx.balanceAfterKobo}`
+        );
+      }
+    }
+    if (!Array.isArray(economy.recurringExpenses)) {
+      throw new InvariantViolationError('economy.recurringExpenses must be an array');
+    }
+    for (const exp of economy.recurringExpenses) {
+      if (!exp.id || typeof exp.id !== 'string') {
+        throw new InvariantViolationError('RecurringExpense.id must be a non-empty string');
+      }
+      if (!Number.isSafeInteger(exp.amountKobo) || exp.amountKobo <= 0) {
+        throw new InvariantViolationError(
+          `RecurringExpense.amountKobo must be a positive safe integer, received ${exp.amountKobo}`
+        );
+      }
+      if (!Number.isSafeInteger(exp.intervalSeconds) || exp.intervalSeconds <= 0) {
+        throw new InvariantViolationError(
+          `RecurringExpense.intervalSeconds must be a positive safe integer, received ${exp.intervalSeconds}`
+        );
+      }
+    }
+  }
 }

@@ -77,6 +77,90 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
           text: 'I am auditing the IAM credentials and service configuration now.',
           nextNodeId: 'amina_exit_workstation',
         },
+        {
+          id: 'amina_ask_career',
+          text: 'Amina, what are Cedarline’s expectations for advancing to Junior SOC Analyst?',
+          nextNodeId: 'amina_career_guidance',
+        },
+        {
+          id: 'amina_ask_triage_job',
+          text: 'Are there any active internal SOC tickets available for triage?',
+          nextNodeId: 'amina_job_offer_triage',
+        },
+        {
+          id: 'amina_praise_triage_completed',
+          text: 'I completed the internal ticket triaging the svc-aster credential spike.',
+          nextNodeId: 'amina_job_triage_feedback',
+          condition: {
+            requiredCompletedJobId: 'job_cedarline_triage',
+          },
+        },
+      ],
+    },
+    amina_career_guidance: {
+      id: 'amina_career_guidance',
+      speakerId: 'npc_amina',
+      text: 'To qualify for Junior SOC Analyst, you must demonstrate real execution across at least 2 verified incident tickets, achieve 100 Career XP, and raise your Log Analysis, Network Fundamentals, and Security Governance skills to Level 2. Once eligible, you can submit your advancement request through your Workstation Career Portal.',
+      choices: [
+        {
+          id: 'amina_guidance_ack',
+          text: 'Understood, Amina. I will review active listings on the Career dashboard.',
+          nextNodeId: 'amina_exit_workstation',
+          actions: [
+            {
+              type: 'CHANGE_RELATIONSHIP',
+              delta: 5,
+              reason: 'Amina appreciates your career ambition and disciplined approach.',
+            },
+          ],
+        },
+      ],
+    },
+    amina_job_offer_triage: {
+      id: 'amina_job_offer_triage',
+      speakerId: 'npc_amina',
+      text: 'Yes! We have an internal Cedarline ticket: "Triage svc-aster Credential Spike". You will need to inspect authentication logs and record the unauthorized service account anomaly. It pays ₦750.00 upon verified completion.',
+      choices: [
+        {
+          id: 'amina_accept_triage',
+          text: 'I accept this ticket. I will examine the authentication logs immediately.',
+          nextNodeId: 'amina_exit_workstation',
+          actions: [
+            {
+              type: 'ACCEPT_JOB',
+              jobId: 'job_cedarline_triage',
+            },
+            {
+              type: 'CHANGE_RELATIONSHIP',
+              delta: 5,
+              reason: 'Amina is pleased with your readiness to take on internal tickets.',
+            },
+          ],
+        },
+        {
+          id: 'amina_decline_triage',
+          text: 'Let me finish my current workstation tasks first.',
+          nextNodeId: 'amina_exit_workstation',
+        },
+      ],
+    },
+    amina_job_triage_feedback: {
+      id: 'amina_job_triage_feedback',
+      speakerId: 'npc_amina',
+      text: 'Outstanding work on that ticket, Tade. Your log analysis was clean and the findings matched our authoritative telemetry. Keep this up and a promotion to Junior SOC Analyst will be well within reach.',
+      choices: [
+        {
+          id: 'amina_triage_ack',
+          text: 'Thank you, Amina. On to the next challenge.',
+          nextNodeId: 'amina_exit_workstation',
+          actions: [
+            {
+              type: 'CHANGE_RELATIONSHIP',
+              delta: 5,
+              reason: 'Shared satisfaction in closing a critical security ticket.',
+            },
+          ],
+        },
       ],
     },
     amina_priorities: {
@@ -571,6 +655,66 @@ export const FEMI_DIALOGUE_GRAPH: DialogueGraph = {
           id: 'femi_ret_leave',
           text: 'Returning to my terminal now to finalize the investigation.',
           nextNodeId: 'femi_exit',
+        },
+        {
+          id: 'femi_ask_contract',
+          text: 'Mr. Martins, does Marina Logistics have any active security audit contracts available?',
+          nextNodeId: 'femi_job_offer_port_audit',
+        },
+        {
+          id: 'femi_praise_port_audit',
+          text: 'The subnet port & service audit for Marina Logistics is completed and verified.',
+          nextNodeId: 'femi_port_audit_feedback',
+          condition: {
+            requiredCompletedJobId: 'job_marina_port_audit',
+          },
+        },
+      ],
+    },
+    femi_job_offer_port_audit: {
+      id: 'femi_job_offer_port_audit',
+      speakerId: 'npc_femi',
+      text: 'Marina Logistics has a contract listing right now: "Subnet Port & Service Audit". We need an analyst to run netmap across 192.168.10.0/24 and catalog our exposed database service. It pays ₦1,200.00 in verified funds.',
+      choices: [
+        {
+          id: 'femi_accept_audit',
+          text: 'I accept the contract. I will map the subnet and catalog the services.',
+          nextNodeId: 'femi_exit',
+          actions: [
+            {
+              type: 'ACCEPT_JOB',
+              jobId: 'job_marina_port_audit',
+            },
+            {
+              type: 'CHANGE_RELATIONSHIP',
+              delta: 5,
+              reason: 'Femi appreciates your proactive willingness to take on corporate contracts.',
+            },
+          ],
+        },
+        {
+          id: 'femi_decline_audit',
+          text: 'I will review the contract terms on the Career portal first.',
+          nextNodeId: 'femi_exit',
+        },
+      ],
+    },
+    femi_port_audit_feedback: {
+      id: 'femi_port_audit_feedback',
+      speakerId: 'npc_femi',
+      text: 'Excellent work on the Marina audit, Vance. Clean port inventory, no service disruption, and verifiable telemetry. Your ₦1,200.00 contract payout was processed in full.',
+      choices: [
+        {
+          id: 'femi_audit_ack',
+          text: 'Thank you, Mr. Martins. Always ready for high-stakes audits.',
+          nextNodeId: 'femi_exit',
+          actions: [
+            {
+              type: 'CHANGE_RELATIONSHIP',
+              delta: 10,
+              reason: 'Femi is impressed with your validated contract delivery.',
+            },
+          ],
         },
       ],
     },

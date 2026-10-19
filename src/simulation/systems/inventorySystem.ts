@@ -49,6 +49,48 @@ export const ITEM_REGISTRY: Readonly<Record<string, ItemDefinition>> = {
     category: 'EQUIPMENT',
     maxStack: 2,
   },
+  item_ram_upgrade: {
+    id: 'item_ram_upgrade',
+    name: '16GB Workstation ECC RAM Kit',
+    description: 'High-speed error-correcting memory module for workstation query buffering.',
+    category: 'EQUIPMENT',
+    maxStack: 1,
+  },
+  item_sec_cert_guide: {
+    id: 'item_sec_cert_guide',
+    name: 'Security+ & SOC Analyst Study Manual',
+    description: 'Official Lagos Tech Guild curriculum manual for security certifications.',
+    category: 'DOCUMENT',
+    maxStack: 1,
+  },
+  item_network_handbook: {
+    id: 'item_network_handbook',
+    name: 'Enterprise Network Protocols Handbook',
+    description: 'Practical guide to IP routing, subnet masks, and firewall state inspection.',
+    category: 'DOCUMENT',
+    maxStack: 1,
+  },
+  item_lanyard_cedarline: {
+    id: 'item_lanyard_cedarline',
+    name: 'Cedarline Corporate Security Lanyard',
+    description: 'Distinctive teal corporate lanyard with an anti-tamper badge sleeve.',
+    category: 'EQUIPMENT',
+    maxStack: 1,
+  },
+  item_lagos_coffee_mug: {
+    id: 'item_lagos_coffee_mug',
+    name: 'Broad Street Tech Hub Ceramic Mug',
+    description: 'Sturdy Lagos-crafted ceramic mug. Keeps hot brew close during long triage sessions.',
+    category: 'CONSUMABLE',
+    maxStack: 5,
+  },
+  item_privacy_screen_filter: {
+    id: 'item_privacy_screen_filter',
+    name: '3M Polarization Privacy Display Filter',
+    description: 'Anti-glare micro-louver screen filter that blocks lateral viewing angles.',
+    category: 'EQUIPMENT',
+    maxStack: 1,
+  },
 };
 
 /**

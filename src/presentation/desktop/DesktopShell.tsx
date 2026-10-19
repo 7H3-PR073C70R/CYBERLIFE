@@ -22,6 +22,7 @@ import { NotesApp } from './apps/NotesApp';
 import { ActivityApp } from './apps/ActivityApp';
 import { IncidentApp } from './apps/IncidentApp';
 import { ContactsApp } from './apps/ContactsApp';
+import { CareerApp } from './apps/CareerApp';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { CameraMode } from '../world/worldConfig';
 
@@ -330,6 +331,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 {appId === 'activity' && <ActivityApp workstationId={workstationId} />}
                 {appId === 'incident' && <IncidentApp />}
                 {appId === 'contacts' && <ContactsApp />}
+                {appId === 'career' && <CareerApp />}
               </WindowFrame>
             );
           })}

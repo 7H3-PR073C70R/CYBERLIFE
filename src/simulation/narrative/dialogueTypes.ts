@@ -13,6 +13,9 @@ export interface DialogueCondition {
   readonly forbiddenTopic?: string;
   readonly requiredChoice?: string;
   readonly requiresMetBefore?: boolean;
+  readonly minCareerLevel?: number;
+  readonly requiredCompletedJobId?: string;
+  readonly minSkillLevel?: { readonly skillId: string; readonly level: number };
 }
 
 export type DialogueAction =
@@ -39,6 +42,10 @@ export type DialogueAction =
       readonly type: 'RECORD_FINDING';
       readonly findingType: 'host' | 'service' | 'log' | 'evidence';
       readonly targetId: string;
+    }
+  | {
+      readonly type: 'ACCEPT_JOB';
+      readonly jobId: string;
     };
 
 export interface DialogueChoice {
@@ -62,6 +69,9 @@ export interface DialogueEvaluationContext {
   readonly memory: NpcMemoryState;
   readonly flags: Readonly<Record<string, WorldFlagValue>>;
   readonly missionPhase?: AsterIncidentPhase;
+  readonly careerLevel?: number;
+  readonly completedJobs?: readonly string[];
+  readonly skills?: Readonly<Record<string, number>>;
 }
 
 export interface DialogueGraph {

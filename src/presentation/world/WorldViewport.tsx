@@ -9,6 +9,7 @@ import {
 import { HUDShell } from '../hud/HUDShell';
 import { DesktopShell } from '../desktop/DesktopShell';
 import { DialogueOverlay } from '../dialogue/DialogueOverlay';
+import { AppId } from '../desktop/types';
 
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { Money } from '@/domain/common/Money';
@@ -33,6 +34,8 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
     typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const initialLocParam = initialParams?.get('location');
   const initialWsParam = initialParams?.get('workstation');
+  const initialAppParam = initialParams?.get('app') as AppId | null;
+  const initialNpcParam = initialParams?.get('npc');
 
   // M2 World and Camera State
   const [currentLocation, setCurrentLocation] = useState<LocationDefinition>(() => {
@@ -43,7 +46,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   const [cameraMode, setCameraMode] = useState<CameraMode>('THIRD_PERSON');
   const [activeTarget, setActiveTarget] = useState<InteractableDefinition | null>(null);
   const [noticeMessage, setNoticeMessage] = useState<string | null>(null);
-  const [activeNpcId, setActiveNpcId] = useState<string | null>(null);
+  const [activeNpcId, setActiveNpcId] = useState<string | null>(() => initialNpcParam ?? null);
 
   // M4 Virtual Desktop State
   const [isDesktopOpen, setIsDesktopOpen] = useState<boolean>(() => initialWsParam === 'open');
@@ -110,10 +113,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
               type: 'StartNpcDialogue',
               npcId,
             });
-            if (
-              simRef.current.state.mission?.phase === 'briefing' &&
-              npcId === 'npc_amina'
-            ) {
+            if (simRef.current.state.mission?.phase === 'briefing' && npcId === 'npc_amina') {
               simRef.current.dispatch({
                 type: 'AdvanceAsterMissionPhase',
                 targetPhase: 'initial_assessment',
@@ -295,6 +295,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
         <DesktopShell
           workstationId={activeWorkstationId}
           cameraMode={cameraMode}
+          initialApp={initialAppParam ?? undefined}
           onExitDesktop={handleCloseDesktop}
           onTyping={() => managerRef.current?.triggerTypingAnimation()}
           onMouseUse={() => managerRef.current?.triggerMouseAnimation()}

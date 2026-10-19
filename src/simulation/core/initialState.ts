@@ -6,6 +6,9 @@ import { AsterIncidentMissionState } from '../missions/types';
 import { createInitialAsterIncidentMissionState } from '../missions/initialMissionState';
 import { NpcSimulationState } from '../actors/types';
 import { NPC_PROFILES } from '../actors/npcProfiles';
+import { CareerState, JobBoardState, SkillId, SkillState, EconomyState } from '../career/types';
+import { createInitialSkillState } from '../career/skillDefinitions';
+import { DEFAULT_RECURRING_EXPENSES } from '../career/shopDefinitions';
 
 export interface InitialStateOverrides {
   readonly schemaVersion?: number;
@@ -23,6 +26,10 @@ export interface InitialStateOverrides {
   readonly flags?: Readonly<Record<string, boolean | string | number>>;
   readonly mission?: AsterIncidentMissionState;
   readonly npcs?: Readonly<Record<string, NpcSimulationState>>;
+  readonly career?: CareerState;
+  readonly jobs?: JobBoardState;
+  readonly skills?: Readonly<Record<SkillId, SkillState>>;
+  readonly economy?: EconomyState;
 }
 
 /**
@@ -35,6 +42,8 @@ export function createInitialSimulationState(
   const startIso = overrides?.startIso ?? DEFAULT_SIMULATION_START_ISO;
   const simulationTimeSeconds = overrides?.simulationTimeSeconds ?? 0;
   const calendar = calculateCalendarTime(simulationTimeSeconds, startIso);
+
+  const initialMoneyKobo = overrides?.moneyKobo ?? 250_000; // ₦2,500.00
 
   const state: SimulationState = {
     metadata: {
@@ -52,7 +61,7 @@ export function createInitialSimulationState(
       name: overrides?.playerName ?? 'Babatunde Vance',
       health: overrides?.health ?? 100,
       energy: overrides?.energy ?? 100,
-      moneyKobo: overrides?.moneyKobo ?? 250_000, // ₦2,500.00
+      moneyKobo: initialMoneyKobo,
       locationId: overrides?.locationId ?? 'neighborhood',
     },
     inventory: {
@@ -89,6 +98,38 @@ export function createInitialSimulationState(
           },
         ])
       ),
+    career: overrides?.career ?? {
+      currentPathId: 'career_sec_analyst',
+      currentLevel: 1,
+      roleTitle: 'Trainee Analyst',
+      employer: 'Cedarline Solutions',
+      xp: 0,
+      promotionsEarned: 0,
+      promotionEligible: false,
+    },
+    jobs: overrides?.jobs ?? {
+      availableJobIds: ['job_cedarline_triage', 'job_marina_port_audit'],
+      activeJobs: [],
+      completedJobHistory: [],
+    },
+    skills: overrides?.skills ?? createInitialSkillState(),
+    economy: overrides?.economy ?? {
+      transactions: [
+        {
+          id: 'tx_initial_balance',
+          type: 'INITIAL_BALANCE',
+          amountKobo: initialMoneyKobo,
+          direction: 'CREDIT',
+          balanceAfterKobo: initialMoneyKobo,
+          timestamp: simulationTimeSeconds,
+          description: 'Initial relocation stipend & personal savings',
+        },
+      ],
+      recurringExpenses: DEFAULT_RECURRING_EXPENSES.map(e => ({
+        ...e,
+        nextDueSimulationTime: simulationTimeSeconds + e.intervalSeconds,
+      })),
+    },
   };
 
   validateSimulationState(state);
