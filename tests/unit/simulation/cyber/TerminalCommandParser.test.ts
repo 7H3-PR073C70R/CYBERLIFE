@@ -40,7 +40,7 @@ describe('TerminalCommandParser & Registry', () => {
     history: ['whoami', 'date'],
   };
 
-  it('initializes default registry with all 6 M4 commands', () => {
+  it('initializes default registry with standard commands and M5 cyber tools', () => {
     const registry = createDefaultCommandRegistry();
     expect(registry.has('help')).toBe(true);
     expect(registry.has('clear')).toBe(true);
@@ -48,7 +48,11 @@ describe('TerminalCommandParser & Registry', () => {
     expect(registry.has('date')).toBe(true);
     expect(registry.has('status')).toBe(true);
     expect(registry.has('history')).toBe(true);
-    expect(registry.getAll().length).toBe(6);
+    expect(registry.has('netmap')).toBe(true);
+    expect(registry.has('svcscan')).toBe(true);
+    expect(registry.has('logview')).toBe(true);
+    expect(registry.has('evidence')).toBe(true);
+    expect(registry.getAll().length).toBe(10);
   });
 
   it('executes help command returning available commands and beginner tips', () => {

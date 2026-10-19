@@ -16,6 +16,7 @@ import { LocationTransitionController } from './LocationTransitionController';
 export interface WorldSceneOptions {
   clearColor?: number;
   antialias?: boolean;
+  initialLocationId?: string;
   onInteractionTargetChanged?: (target: InteractableDefinition | null) => void;
   onLocationChanged?: (location: LocationDefinition) => void;
   onCameraModeChanged?: (mode: CameraMode) => void;
@@ -186,7 +187,7 @@ export class WorldSceneManager {
       environment: this.worldEnvironment,
       playerController: this.playerController,
       cameraController: this.cameraController,
-      initialLocationId: 'neighborhood',
+      initialLocationId: options.initialLocationId ?? 'neighborhood',
       onLocationChanged: loc => this.onLocationChanged?.(loc),
     });
 

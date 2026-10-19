@@ -1,8 +1,8 @@
 /**
- * Cyberlife — Notes & Activity Application Component
+ * Cyberlife — Notes & Findings Application Component
  *
  * Displays fictional in-game IT security onboarding memo, orientation checklist,
- * and a temporary local scratchpad for player notes.
+ * and an interactive local scratchpad for player investigation findings.
  *
  * SAFETY INVARIANT:
  * Does not read or write to the player's physical computer file system.
@@ -20,8 +20,12 @@ export const NotesApp: React.FC<NotesAppProps> = ({
   const isCedarline = workstationId.includes('cedarline');
 
   const [notesText, setNotesText] = useState<string>(
-    '# Investigation Scratchpad\n- Reviewed initial workstation environment\n- Terminal online and responsive\n'
+    '# Investigation Scratchpad & Findings\n- Initial workstation node checked via status\n- Terminal online and synchronized with simulation clock\n'
   );
+
+  const insertTemplate = (template: string) => {
+    setNotesText(prev => prev + '\n' + template + '\n');
+  };
 
   return (
     <div
@@ -44,18 +48,19 @@ export const NotesApp: React.FC<NotesAppProps> = ({
             <strong>From:</strong> Chidi Okafor (Lead Incident Response, Cedarline)
           </div>
           <div>
-            <strong>Subject:</strong> Workstation Onboarding &amp; Environment Setup
+            <strong>Subject:</strong> Workstation Onboarding &amp; Toolset Reference
           </div>
         </div>
         <div className="memo-body">
           <p>
             {isCedarline
-              ? 'Welcome to the Cedarline Security Operations Center at Marina Tower. Before accessing company production networks or investigating security alerts, please verify that your local terminal node is communicating properly with the simulation clock.'
+              ? 'Welcome to the Cedarline Security Operations Center at Marina Tower. Use your terminal to practice network discovery (netmap), service scanning (svcscan), log filtering (logview), and evidence review (evidence).'
               : 'Welcome to your private cybersecurity lab on Broad Street. Use this terminal environment to practice defensive tools, explore simulated logs, and conduct independent investigations.'}
           </p>
           <p>
-            Start by running <code>status</code> and <code>date</code> in your terminal. If you need
-            clarification on any syntax, review the <strong>Field Guide</strong> application.
+            Record any unusual observations or baseline notes in the scratchpad below. If you need
+            clarification on command syntax or security concepts, consult the{' '}
+            <strong>Field Guide</strong>.
           </p>
         </div>
       </div>
@@ -63,11 +68,66 @@ export const NotesApp: React.FC<NotesAppProps> = ({
       {/* Interactive Local Scratchpad */}
       <div className="notes-scratchpad-area">
         <div className="scratchpad-header">
-          <label htmlFor="player-scratchpad-input" className="scratchpad-title">
-            📝 Local Session Scratchpad
-          </label>
-          <span className="scratchpad-note">(Temporary session memory only)</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <label htmlFor="player-scratchpad-input" className="scratchpad-title">
+              📝 Investigation Findings Scratchpad
+            </label>
+            <span className="scratchpad-note">(In-game memory only)</span>
+          </div>
+
+          {/* Quick Note Templates */}
+          <div className="scratchpad-actions" style={{ display: 'flex', gap: '0.4rem' }}>
+            <button
+              type="button"
+              className="btn-scratchpad-action"
+              onClick={() =>
+                insertTemplate(
+                  '### Host Finding\n- Host ID: ws-finance-02 (10.0.4.22)\n- Role: Finance Desktop\n- Open Ports: 445/tcp (SMB), 3389/tcp (RDP)\n- Observation: Standard approved configuration'
+                )
+              }
+              title="Add Host Finding Template"
+              data-testid="btn-add-host-note"
+            >
+              + Host Note
+            </button>
+            <button
+              type="button"
+              className="btn-scratchpad-action"
+              onClick={() =>
+                insertTemplate(
+                  '### Log Observation\n- Log ID: LOG-2026-104 & 105\n- Source: auth (app-portal-01)\n- Assessment: Password retry succeeded; normal user typo.'
+                )
+              }
+              title="Add Log Finding Template"
+              data-testid="btn-add-log-note"
+            >
+              + Log Note
+            </button>
+            <button
+              type="button"
+              className="btn-scratchpad-action"
+              onClick={() =>
+                insertTemplate(
+                  '### Evidence Record\n- Evidence ID: EVD-2026-001\n- Integrity: VERIFIED (SHA-256 match)\n- Chain of Custody: Handled by Chidi Okafor'
+                )
+              }
+              title="Add Evidence Finding Template"
+              data-testid="btn-add-evidence-note"
+            >
+              + Evidence Note
+            </button>
+            <button
+              type="button"
+              className="btn-scratchpad-clear"
+              onClick={() => setNotesText('')}
+              title="Clear Scratchpad"
+              data-testid="btn-clear-notes"
+            >
+              Clear
+            </button>
+          </div>
         </div>
+
         <textarea
           id="player-scratchpad-input"
           className="scratchpad-textarea"

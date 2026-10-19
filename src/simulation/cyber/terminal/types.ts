@@ -40,6 +40,7 @@ export interface TerminalExecutionContext {
     displayName: string;
     role: string;
     organization: string;
+    accessTier?: number;
   };
   /** Fictional in-game workstation metadata. */
   workstation: {

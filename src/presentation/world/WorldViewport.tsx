@@ -27,18 +27,28 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Optional URL search parameters for direct workstation and scene testing
+  const initialParams =
+    typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const initialLocParam = initialParams?.get('location');
+  const initialWsParam = initialParams?.get('workstation');
+
   // M2 World and Camera State
-  const [currentLocation, setCurrentLocation] = useState<LocationDefinition>(
-    WORLD_CONFIG.locations.neighborhood
-  );
+  const [currentLocation, setCurrentLocation] = useState<LocationDefinition>(() => {
+    if (initialLocParam === 'cedarline_interior') return WORLD_CONFIG.locations.cedarlineInterior;
+    if (initialLocParam === 'apartment_interior') return WORLD_CONFIG.locations.apartmentInterior;
+    return WORLD_CONFIG.locations.neighborhood;
+  });
   const [cameraMode, setCameraMode] = useState<CameraMode>('THIRD_PERSON');
   const [activeTarget, setActiveTarget] = useState<InteractableDefinition | null>(null);
   const [noticeMessage, setNoticeMessage] = useState<string | null>(null);
 
   // M4 Virtual Desktop State
-  const [isDesktopOpen, setIsDesktopOpen] = useState<boolean>(false);
+  const [isDesktopOpen, setIsDesktopOpen] = useState<boolean>(() => initialWsParam === 'open');
   const [activeWorkstationId, setActiveWorkstationId] = useState<string>(
-    'interact_cedarline_workstation'
+    initialLocParam === 'apartment_interior'
+      ? 'interact_apartment_workstation'
+      : 'interact_cedarline_workstation'
   );
 
   const initializeScene = useCallback(() => {
@@ -56,6 +66,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
     try {
       const manager = new WorldSceneManager();
       manager.initialize(containerRef.current, {
+        initialLocationId: initialLocParam ?? 'neighborhood',
         onLocationChanged: loc => {
           setCurrentLocation(loc);
           if (simRef.current && simRef.current.state.player.locationId !== loc.id) {

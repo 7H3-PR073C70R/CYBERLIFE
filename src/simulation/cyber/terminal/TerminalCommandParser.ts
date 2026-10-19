@@ -72,6 +72,17 @@ export class TerminalCommandParser {
       return { stdout: [] };
     }
 
+    // 1b. Excessive input boundary check
+    if (trimmed.length > 512) {
+      return {
+        isError: true,
+        stdout: [
+          `Syntax notice: Command exceeds maximum input length limit of 512 characters (${trimmed.length} chars entered).`,
+          "Please shorten your command or type 'help' for usage instructions.",
+        ],
+      };
+    }
+
     // 2. Prohibit unhandled shell operators (pipes, redirects, backgrounding, semicolons, subshells)
     const shellOperatorMatch = /[|;<>&`$]/.exec(trimmed);
     if (shellOperatorMatch) {

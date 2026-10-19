@@ -10,7 +10,8 @@ export type SimulationEventType =
   | 'LOGICAL_PLAYER_LOCATION_CHANGED'
   | 'SIMULATION_TIMER_TRIGGERED'
   | 'SIMULATION_TIMER_SCHEDULED'
-  | 'SIMULATION_TIMER_CANCELLED';
+  | 'SIMULATION_TIMER_CANCELLED'
+  | 'CYBER_ACTIVITY_RECORDED';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -113,6 +114,19 @@ export type SimulationTimerCancelledEvent = BaseSimulationEvent<
   }
 >;
 
+export type CyberActivityRecordedEvent = BaseSimulationEvent<
+  'CYBER_ACTIVITY_RECORDED',
+  {
+    readonly activityId: string;
+    readonly tool: string;
+    readonly action: string;
+    readonly target?: string;
+    readonly summary: string;
+    readonly success: boolean;
+    readonly metadata?: Readonly<Record<string, unknown>>;
+  }
+>;
+
 export type SimulationEvent =
   | SimulationTimeAdvancedEvent
   | PlayerAttributeChangedEvent
@@ -123,4 +137,5 @@ export type SimulationEvent =
   | LogicalPlayerLocationChangedEvent
   | SimulationTimerTriggeredEvent
   | SimulationTimerScheduledEvent
-  | SimulationTimerCancelledEvent;
+  | SimulationTimerCancelledEvent
+  | CyberActivityRecordedEvent;

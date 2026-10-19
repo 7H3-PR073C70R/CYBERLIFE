@@ -11,6 +11,7 @@ describe('useWindowManager', () => {
     expect(windows.fieldGuide.isOpen).toBe(false);
     expect(windows.systemInfo.isOpen).toBe(false);
     expect(windows.notes.isOpen).toBe(false);
+    expect(windows.activity.isOpen).toBe(false);
   });
 
   it('opens an application and elevates its z-index', () => {

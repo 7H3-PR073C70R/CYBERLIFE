@@ -33,6 +33,13 @@ export class LocationTransitionController {
 
     const locId = options.initialLocationId ?? 'neighborhood';
     this.currentLocation = this.resolveLocation(locId);
+    if (this.currentLocation.type === 'INTERIOR') {
+      this.environment.buildInteriorScene(this.currentLocation.id);
+      const spawn = this.currentLocation.spawnPosition;
+      this.playerController.setPosition(spawn[0], spawn[1], spawn[2]);
+      this.playerController.setYaw(this.currentLocation.spawnYaw);
+      this.cameraController.setYaw(this.currentLocation.spawnYaw);
+    }
   }
 
   private resolveLocation(locationId: string): LocationDefinition {

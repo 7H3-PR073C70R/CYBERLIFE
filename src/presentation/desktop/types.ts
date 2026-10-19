@@ -2,7 +2,7 @@
  * Cyberlife — Virtual Desktop Presentation Types
  */
 
-export type AppId = 'terminal' | 'fieldGuide' | 'systemInfo' | 'notes';
+export type AppId = 'terminal' | 'fieldGuide' | 'systemInfo' | 'notes' | 'activity';
 
 export interface AppDefinition {
   id: AppId;
@@ -65,5 +65,15 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
       'Introductory orientation memo from Cedarline InfoSec and player session scratchpad.',
     defaultSize: { width: 580, height: 440 },
     minSize: { width: 360, height: 260 },
+  },
+  activity: {
+    id: 'activity',
+    title: 'Security Activity Log',
+    shortTitle: 'Activity',
+    icon: '📊',
+    description:
+      'Timeline of simulated workstation activities, tool executions, and security events.',
+    defaultSize: { width: 660, height: 460 },
+    minSize: { width: 380, height: 280 },
   },
 };

@@ -724,6 +724,83 @@ export function handleCommand(
         };
       }
 
+      case 'RecordCyberActivity': {
+        const { activityId, tool, action, target, summary, success, metadata } = command;
+        if (!activityId || typeof activityId !== 'string' || !activityId.trim()) {
+          return makeFailure(
+            currentState,
+            'INVALID_ARGUMENT',
+            'RecordCyberActivity requires a non-empty string activityId'
+          );
+        }
+        if (!tool || typeof tool !== 'string' || !tool.trim()) {
+          return makeFailure(
+            currentState,
+            'INVALID_ARGUMENT',
+            'RecordCyberActivity requires a non-empty string tool'
+          );
+        }
+        if (!action || typeof action !== 'string' || !action.trim()) {
+          return makeFailure(
+            currentState,
+            'INVALID_ARGUMENT',
+            'RecordCyberActivity requires a non-empty string action'
+          );
+        }
+        if (!summary || typeof summary !== 'string') {
+          return makeFailure(
+            currentState,
+            'INVALID_ARGUMENT',
+            'RecordCyberActivity requires a string summary'
+          );
+        }
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const currentCount =
+          typeof currentState.flags['cyber_tools_executed_count'] === 'number'
+            ? (currentState.flags['cyber_tools_executed_count'] as number)
+            : 0;
+
+        const event = createSimulationEvent(
+          'CYBER_ACTIVITY_RECORDED',
+          currentState.time.simulationTimeSeconds,
+          nextRevision,
+          {
+            activityId: activityId.trim(),
+            tool: tool.trim(),
+            action: action.trim(),
+            target: target?.trim(),
+            summary: summary.trim(),
+            success: Boolean(success),
+            metadata,
+          }
+        );
+
+        const nextFlags = {
+          ...currentState.flags,
+          cyber_last_activity_id: activityId.trim(),
+          cyber_last_tool: tool.trim(),
+          cyber_tools_executed_count: currentCount + 1,
+        };
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          flags: nextFlags,
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events: [event],
+          message: `Recorded cyber activity "${activityId}" for tool "${tool}"`,
+        };
+      }
+
       default: {
         const unknownCmd = command as { type?: string };
         return makeFailure(

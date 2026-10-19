@@ -20,6 +20,7 @@ export function createInitialWindows(
     fieldGuide: { x: 120, y: 70 },
     systemInfo: { x: 160, y: 90 },
     notes: { x: 200, y: 110 },
+    activity: { x: 240, y: 130 },
   };
 
   const windows: Partial<Record<AppId, WindowState>> = {};

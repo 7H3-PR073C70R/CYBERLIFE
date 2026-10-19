@@ -72,6 +72,30 @@ const COMMAND_HINTS: Record<string, CommandHint> = {
     example: 'clear',
     expectedOutput: 'Clean empty terminal prompt.',
   },
+  netmap: {
+    command: 'netmap',
+    purpose: 'Discovers reachable virtual hosts, addresses, and device roles on the subnet.',
+    example: 'netmap hosts',
+    expectedOutput: 'Table of reachable hosts, IP addresses, and device roles.',
+  },
+  svcscan: {
+    command: 'svcscan',
+    purpose: 'Queries active listeners, port numbers, software products, and version banners.',
+    example: 'svcscan inspect filesrv-01',
+    expectedOutput: 'Open port list with service banners, approved status, and security notes.',
+  },
+  logview: {
+    command: 'logview',
+    purpose: 'Queries and filters structured auth, firewall, and application event telemetry.',
+    example: 'logview recent',
+    expectedOutput: 'Chronological event log table with timestamps and severity ratings.',
+  },
+  evidence: {
+    command: 'evidence',
+    purpose: 'Catalogs digital forensic evidence objects, SHA-256 hashes, and custody records.',
+    example: 'evidence list',
+    expectedOutput: 'Forensic evidence ledger with chain of custody and artifact content.',
+  },
 };
 
 export const TerminalApp: React.FC<TerminalAppProps> = ({
@@ -205,6 +229,20 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
       timestamp: ctx.simulationTime.timeString,
     };
 
+    // If a cyber tool was executed, record cyber activity on the authoritative simulation engine
+    const firstToken = trimmed.split(/\s+/)[0]?.toLowerCase();
+    if (firstToken && ['netmap', 'svcscan', 'logview', 'evidence'].includes(firstToken)) {
+      sim?.dispatch({
+        type: 'RecordCyberActivity',
+        activityId: `act-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        tool: firstToken,
+        action: trimmed.split(/\s+/)[1] ?? 'exec',
+        target: trimmed.split(/\s+/)[2],
+        summary: `Executed command '${trimmed}' on ${ctx.workstation.hostname}`,
+        success: !result.isError,
+      });
+    }
+
     setEntries(prev => {
       const updated = [...prev, newEntry];
       onTerminalOutput?.(result.stdout);
@@ -276,7 +314,18 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
       <div className="terminal-toolbar">
         <div className="terminal-chips-group">
           <span className="chips-label">Command Guide:</span>
-          {['help', 'whoami', 'date', 'status', 'history', 'clear'].map(cmd => (
+          {[
+            'help',
+            'netmap',
+            'svcscan',
+            'logview',
+            'evidence',
+            'whoami',
+            'date',
+            'status',
+            'history',
+            'clear',
+          ].map(cmd => (
             <button
               key={cmd}
               type="button"
@@ -410,7 +459,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
           autoCapitalize="off"
           spellCheck="false"
           aria-label="Terminal command input"
-          placeholder="Type manually: help, whoami, date, status, history, clear..."
+          placeholder="Type manually: help, netmap, svcscan, logview, evidence..."
           data-testid="terminal-command-input"
         />
         <button

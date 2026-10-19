@@ -15,6 +15,10 @@ describe('TerminalApp Component', () => {
     expect(screen.getByText(/Parrot Security OS/i)).toBeInTheDocument();
     expect(screen.getByTestId('terminal-command-input')).toBeInTheDocument();
     expect(screen.getByTestId('terminal-chip-help')).toBeInTheDocument();
+    expect(screen.getByTestId('terminal-chip-netmap')).toBeInTheDocument();
+    expect(screen.getByTestId('terminal-chip-svcscan')).toBeInTheDocument();
+    expect(screen.getByTestId('terminal-chip-logview')).toBeInTheDocument();
+    expect(screen.getByTestId('terminal-chip-evidence')).toBeInTheDocument();
     expect(screen.getByTestId('terminal-chip-whoami')).toBeInTheDocument();
     expect(screen.getByTestId('terminal-chip-date')).toBeInTheDocument();
     expect(screen.getByTestId('terminal-chip-status')).toBeInTheDocument();
@@ -177,5 +181,37 @@ describe('TerminalApp Component', () => {
     fireEvent.change(input, { target: { value: 'help' } });
     fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
     expect(onTerminalOutput).toHaveBeenCalled();
+  });
+
+  it('executes netmap hosts and displays discovered subnet inventory', () => {
+    render(
+      <SimulationProvider>
+        <TerminalApp workstationId="interact_cedarline_workstation" />
+      </SimulationProvider>
+    );
+
+    const input = screen.getByTestId('terminal-command-input');
+    fireEvent.change(input, { target: { value: 'netmap hosts' } });
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+
+    expect(screen.getByText(/DISCOVERED SUBNET HOST INVENTORY/i)).toBeInTheDocument();
+    expect(screen.getByText(/filesrv-01/i)).toBeInTheDocument();
+  });
+
+  it('shows educational guidance card for netmap without auto-filling input', () => {
+    render(
+      <SimulationProvider>
+        <TerminalApp workstationId="interact_cedarline_workstation" />
+      </SimulationProvider>
+    );
+
+    const input = screen.getByTestId('terminal-command-input') as HTMLInputElement;
+    const netmapChip = screen.getByTestId('terminal-chip-netmap');
+
+    fireEvent.click(netmapChip);
+    expect(input.value).toBe('');
+    expect(screen.getByTestId('terminal-hint-banner')).toBeInTheDocument();
+    expect(screen.getByText(/Discovers reachable virtual hosts/i)).toBeInTheDocument();
+    expect(screen.getByText(/Manual Typing:/i)).toBeInTheDocument();
   });
 });

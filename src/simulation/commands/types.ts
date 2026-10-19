@@ -85,6 +85,17 @@ export interface CancelTimerCommand {
   readonly id: string;
 }
 
+export interface RecordCyberActivityCommand {
+  readonly type: 'RecordCyberActivity';
+  readonly activityId: string;
+  readonly tool: string;
+  readonly action: string;
+  readonly target?: string;
+  readonly summary: string;
+  readonly success: boolean;
+  readonly metadata?: Readonly<Record<string, unknown>>;
+}
+
 export type SimulationCommand =
   | AdvanceSimulationTimeCommand
   | ChangePlayerAttributeCommand
@@ -96,7 +107,8 @@ export type SimulationCommand =
   | SetWorldFlagCommand
   | SetLogicalPlayerLocationCommand
   | ScheduleTimerCommand
-  | CancelTimerCommand;
+  | CancelTimerCommand
+  | RecordCyberActivityCommand;
 
 export interface CommandResult {
   readonly success: boolean;
