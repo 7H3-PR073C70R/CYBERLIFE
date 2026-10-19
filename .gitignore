@@ -67,3 +67,6 @@ Thumbs.db
 .eslintcache
 .stylelintcache
 *.tsbuildinfo
+
+# Raw / Incoming Assets (Pre-optimization)
+assets_incoming/

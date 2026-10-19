@@ -1,6 +1,16 @@
 import * as THREE from 'three';
 import { CameraMode, WORLD_CONFIG } from './worldConfig';
 import { PlayerAvatar } from './entities/PlayerAvatar';
+import {
+  WorkstationCameraStateMachine,
+  WorkstationCameraState,
+  WorkstationCameraStateOptions,
+  WorkstationCameraEvents,
+} from './camera/WorkstationCameraStates';
+import {
+  WorkstationAnchorSet,
+  DEFAULT_WORKSTATION_ANCHORS,
+} from './WorkstationAnchors';
 
 export interface CameraControllerOptions {
   camera: THREE.PerspectiveCamera;
@@ -8,6 +18,10 @@ export interface CameraControllerOptions {
   avatar: PlayerAvatar;
   initialMode?: CameraMode;
   onModeChanged?: (mode: CameraMode) => void;
+  anchors?: WorkstationAnchorSet;
+  stateOptions?: WorkstationCameraStateOptions;
+  stateEvents?: WorkstationCameraEvents;
+  onWorkstationStateChanged?: (state: WorkstationCameraState) => void;
 }
 
 export class WorldCameraController {
@@ -22,13 +36,11 @@ export class WorldCameraController {
   private isPointerLocked = false;
   private isEnabled = true;
   private onModeChanged?: (mode: CameraMode) => void;
+  private onWorkstationStateChanged?: (state: WorkstationCameraState) => void;
 
-  // Workstation camera state (M4.5 Camera-Aware Interaction)
-  private isInWorkstation = false;
-  private workstationExplorationMode: CameraMode | null = null;
-  private transitionProgress = 1.0; // 0 = start of transition, 1 = settled
-  private savedCameraPosition = new THREE.Vector3();
-  private savedLookTarget = new THREE.Vector3();
+  // Workstation camera state machine
+  private stateMachine: WorkstationCameraStateMachine;
+  private lastPlayerPos = { x: 0, y: 0, z: 0 };
 
   // Bound listeners
   private handleMouseMoveBound: (e: MouseEvent) => void;
@@ -41,6 +53,26 @@ export class WorldCameraController {
     this.avatar = options.avatar;
     this.mode = options.initialMode ?? 'THIRD_PERSON';
     this.onModeChanged = options.onModeChanged;
+    this.onWorkstationStateChanged = options.onWorkstationStateChanged;
+
+    const mergedEvents: WorkstationCameraEvents = {
+      ...options.stateEvents,
+      onStateChange: (from, to) => {
+        this.onWorkstationStateChanged?.(to);
+        options.stateEvents?.onStateChange?.(from, to);
+      },
+    };
+
+    this.stateMachine = new WorkstationCameraStateMachine(
+      options.stateOptions,
+      mergedEvents
+    );
+
+    if (options.anchors) {
+      this.stateMachine.setAnchors(options.anchors);
+    } else {
+      this.stateMachine.setAnchors(DEFAULT_WORKSTATION_ANCHORS);
+    }
 
     this.handleMouseMoveBound = this.handleMouseMove.bind(this);
     this.handlePointerLockChangeBound = this.handlePointerLockChange.bind(this);
@@ -85,8 +117,33 @@ export class WorldCameraController {
     }
   }
 
+  public setAnchors(anchors: WorkstationAnchorSet): void {
+    this.stateMachine.setAnchors(anchors);
+  }
+
+  public getAnchors(): WorkstationAnchorSet {
+    return this.stateMachine.getAnchors();
+  }
+
+  public getStateMachine(): WorkstationCameraStateMachine {
+    return this.stateMachine;
+  }
+
+  public getWorkstationState(): WorkstationCameraState {
+    return this.stateMachine.getState();
+  }
+
+  public getOverlayOpacity(): number {
+    return this.stateMachine.getOverlayOpacity();
+  }
+
   private handleClick(): void {
-    if (!this.isEnabled || this.isInWorkstation) return;
+    if (
+      !this.isEnabled ||
+      this.stateMachine.isWorkstationActive() ||
+      this.stateMachine.isTransitioning()
+    )
+      return;
 
     // In first person exploration, clicking the canvas requests pointer lock for seamless mouse-look
     if (this.mode === 'FIRST_PERSON' && !this.isPointerLocked) {
@@ -103,7 +160,12 @@ export class WorldCameraController {
   }
 
   private handleMouseMove(e: MouseEvent): void {
-    if (!this.isEnabled || this.isInWorkstation) return;
+    if (
+      !this.isEnabled ||
+      this.stateMachine.isWorkstationActive() ||
+      this.stateMachine.isTransitioning()
+    )
+      return;
 
     // Allow mouse look in first-person (or if pointer-locked)
     if (this.mode !== 'FIRST_PERSON' && !this.isPointerLocked) return;
@@ -140,7 +202,7 @@ export class WorldCameraController {
   }
 
   public toggleMode(): CameraMode {
-    if (this.isInWorkstation) return this.mode;
+    if (this.stateMachine.isWorkstationActive()) return this.mode;
     const next = this.mode === 'THIRD_PERSON' ? 'FIRST_PERSON' : 'THIRD_PERSON';
     this.setMode(next);
     return this.mode;
@@ -170,30 +232,74 @@ export class WorldCameraController {
   }
 
   /**
-   * Enters the workstation session. Transitions camera based on active exploration mode:
-   * - Third-Person: Positions over-the-shoulder showing seated character, hands, and laptop.
-   * - First-Person: Positions at seated eye-level focused directly on the computer screen.
+   * Enters workstation directly without transition (useful for testing or initial page URL params).
    */
-  public enterWorkstation(explorationMode: CameraMode): void {
-    this.isInWorkstation = true;
-    this.workstationExplorationMode = explorationMode;
+  public enterWorkstationDirectly(explorationMode: CameraMode): void {
     this.exitPointerLock();
 
-    // Save starting camera state for smooth interpolation
-    this.savedCameraPosition.copy(this.camera.position);
-    this.camera.getWorldDirection(this.savedLookTarget);
-    this.savedLookTarget.add(this.camera.position);
-    this.transitionProgress = 0.0;
+    if (explorationMode === 'THIRD_PERSON') {
+      this.avatar.setVisible(true);
+      this.avatar.setSitting(true);
+    } else {
+      this.avatar.setVisible(false);
+      this.avatar.setSitting(true);
+    }
+
+    this.stateMachine.enterWorkstationDirectly(explorationMode);
+    this.camera.position.copy(this.stateMachine.getCurrentPosition());
+    this.camera.lookAt(this.stateMachine.getCurrentLookTarget());
+    this.camera.fov = this.stateMachine.getCurrentFov();
+    this.camera.updateProjectionMatrix();
+  }
+
+  /**
+   * Enters the workstation session from walking exploration.
+   */
+  public enterWorkstation(explorationMode: CameraMode): void {
+    this.exitPointerLock();
+
+    // Capture starting camera state for smooth time-based interpolation
+    const startCamPos = this.camera.position.clone();
+    const startLook = new THREE.Vector3();
+    this.camera.getWorldDirection(startLook);
+    startLook.add(this.camera.position);
 
     // Configure avatar visibility
     if (explorationMode === 'THIRD_PERSON') {
       this.avatar.setVisible(true);
       this.avatar.setSitting(true);
     } else {
-      // In first-person workstation, full avatar body is hidden so it doesn't clip
       this.avatar.setVisible(false);
       this.avatar.setSitting(true);
     }
+
+    this.stateMachine.enterWorkstation(
+      explorationMode,
+      startCamPos,
+      startLook,
+      this.camera.fov
+    );
+  }
+
+  /**
+   * Peeks out from full-screen computer back to seated third-person view.
+   */
+  public peekOut(): void {
+    this.stateMachine.peekOut();
+  }
+
+  /**
+   * Focuses from seated view back into full-screen computer view.
+   */
+  public focusScreen(): void {
+    this.stateMachine.dollyToScreen();
+  }
+
+  /**
+   * Toggles between SCREEN_FULLSCREEN and SEATED_THIRD_PERSON (peek out).
+   */
+  public togglePeek(): void {
+    this.stateMachine.togglePeek();
   }
 
   /**
@@ -201,16 +307,18 @@ export class WorldCameraController {
    * orientation, and avatar standing state.
    */
   public exitWorkstation(): CameraMode {
-    this.isInWorkstation = false;
-    const restoredMode = this.workstationExplorationMode ?? 'THIRD_PERSON';
+    const restoredMode = this.stateMachine.getExplorationMode();
     this.mode = restoredMode;
-    this.workstationExplorationMode = null;
+
+    const { targetPos, targetLook } = this.calculateWalkingCameraFraming(
+      this.lastPlayerPos,
+      restoredMode
+    );
 
     this.avatar.setSitting(false);
-    this.applyModeVisibility();
+    this.stateMachine.standUp(targetPos, targetLook);
 
     if (restoredMode === 'FIRST_PERSON') {
-      // Restore look angles toward front
       this.pitch = 0;
     }
 
@@ -218,12 +326,12 @@ export class WorldCameraController {
   }
 
   public isWorkstationActive(): boolean {
-    return this.isInWorkstation;
+    return this.stateMachine.isWorkstationActive();
   }
 
   private applyModeVisibility(): void {
-    if (this.isInWorkstation) {
-      this.avatar.setVisible(this.workstationExplorationMode === 'THIRD_PERSON');
+    if (this.stateMachine.isWorkstationActive()) {
+      this.avatar.setVisible(this.stateMachine.getExplorationMode() === 'THIRD_PERSON');
     } else {
       // Hide avatar in 1st person exploration so camera does not clip inside player head
       this.avatar.setVisible(this.mode === 'THIRD_PERSON');
@@ -231,38 +339,31 @@ export class WorldCameraController {
   }
 
   /**
-   * Updates camera position and projection based on active player coordinates and look angles.
+   * Calculates the standard exploration camera position and look-at point for walking.
    */
-  public update(playerPos: { x: number; y: number; z: number }): void {
-    if (this.isInWorkstation) {
-      this.updateWorkstationCamera();
-      return;
-    }
-
-    if (this.mode === 'FIRST_PERSON') {
-      // 1. First-Person Mode: Camera positioned directly at eye level
+  public calculateWalkingCameraFraming(
+    playerPos: { x: number; y: number; z: number },
+    mode: CameraMode
+  ): { targetPos: THREE.Vector3; targetLook: THREE.Vector3 } {
+    if (mode === 'FIRST_PERSON') {
       const eyeY = playerPos.y + WORLD_CONFIG.player.eyeHeight;
-      this.camera.position.set(playerPos.x, eyeY, playerPos.z);
+      const targetPos = new THREE.Vector3(playerPos.x, eyeY, playerPos.z);
 
-      // Compute look-at point from spherical angles (yaw and pitch)
       const cosPitch = Math.cos(this.pitch);
       const sinPitch = Math.sin(this.pitch);
       const cosYaw = Math.cos(this.yaw);
       const sinYaw = Math.sin(this.yaw);
 
-      const lookTarget = new THREE.Vector3(
+      const targetLook = new THREE.Vector3(
         playerPos.x - sinYaw * cosPitch,
         eyeY + sinPitch,
         playerPos.z - cosYaw * cosPitch
       );
-
-      this.camera.lookAt(lookTarget);
+      return { targetPos, targetLook };
     } else {
-      // 2. Third-Person Mode: Camera positioned behind and slightly above avatar
       const offset = WORLD_CONFIG.camera.thirdPersonOffset;
       const lookOffset = WORLD_CONFIG.camera.thirdPersonLookOffset;
 
-      // Orbit camera position behind player based on yaw
       const cosYaw = Math.cos(this.yaw);
       const sinYaw = Math.sin(this.yaw);
 
@@ -270,58 +371,69 @@ export class WorldCameraController {
       const camY = playerPos.y + offset.y;
       const camZ = playerPos.z + cosYaw * offset.z;
 
-      this.camera.position.set(camX, camY, camZ);
-
-      // Look at target around the chest/head of the avatar
-      const target = new THREE.Vector3(
+      const targetPos = new THREE.Vector3(camX, camY, camZ);
+      const targetLook = new THREE.Vector3(
         playerPos.x + lookOffset.x,
         playerPos.y + lookOffset.y,
         playerPos.z + lookOffset.z
       );
-      this.camera.lookAt(target);
+      return { targetPos, targetLook };
     }
   }
 
   /**
-   * Handles dedicated workstation camera compositions:
-   * - Third-Person: Over-the-shoulder framing the seated character, upper body, hands on keyboard/mouse, and laptop.
-   * - First-Person: Seated eye-level view focused directly on the computer screen.
+   * Updates camera position and projection based on active player coordinates,
+   * look angles, and workstation camera state machine transitions.
    */
-  private updateWorkstationCamera(): void {
-    const isTP = this.workstationExplorationMode === 'THIRD_PERSON';
+  public update(playerPos: { x: number; y: number; z: number }, deltaTime = 0.045): void {
+    this.lastPlayerPos = playerPos;
 
-    let targetCamPos: THREE.Vector3;
-    let targetLookAt: THREE.Vector3;
+    if (this.stateMachine.isWorkstationActive() || this.stateMachine.isTransitioning()) {
+      this.stateMachine.update(deltaTime);
 
-    if (isTP) {
-      // Dedicated Over-the-Shoulder Workstation Framing
-      // Slightly to the right and above character's shoulder:
-      // Player seated at (0, 0, -2.85), laptop at (0, 0.74, -3.32)
-      targetCamPos = new THREE.Vector3(0.48, 1.34, -2.05);
-      targetLookAt = new THREE.Vector3(-0.02, 0.94, -3.32);
-    } else {
-      // First-Person Seated Eye-Level Focused on Laptop Display
-      // Eyes at height 1.15m at chair position Z = -2.82m
-      targetCamPos = new THREE.Vector3(0.0, 1.16, -2.82);
-      targetLookAt = new THREE.Vector3(0.0, 0.92, -3.32);
+      this.camera.position.copy(this.stateMachine.getCurrentPosition());
+      this.camera.lookAt(this.stateMachine.getCurrentLookTarget());
+
+      const targetFov = this.stateMachine.getCurrentFov();
+      if (Math.abs(this.camera.fov - targetFov) > 0.05) {
+        this.camera.fov = targetFov;
+        this.camera.updateProjectionMatrix();
+      }
+
+      // If transition completed back to WALKING
+      if (!this.stateMachine.isWorkstationActive() && !this.stateMachine.isTransitioning()) {
+        this.applyModeVisibility();
+        this.camera.fov = WORLD_CONFIG.camera.fov;
+        this.camera.updateProjectionMatrix();
+      }
+      return;
     }
 
-    // Smooth camera transition (lerp)
-    if (this.transitionProgress < 1.0) {
-      this.transitionProgress = Math.min(1.0, this.transitionProgress + 0.08);
-      const t = THREE.MathUtils.smoothstep(this.transitionProgress, 0, 1);
-      this.camera.position.lerpVectors(this.savedCameraPosition, targetCamPos, t);
-
-      const currentLook = new THREE.Vector3();
-      currentLook.lerpVectors(this.savedLookTarget, targetLookAt, t);
-      this.camera.lookAt(currentLook);
+    // Walking camera update
+    if (this.mode === 'FIRST_PERSON') {
+      const { targetPos, targetLook } = this.calculateWalkingCameraFraming(
+        playerPos,
+        'FIRST_PERSON'
+      );
+      this.camera.position.copy(targetPos);
+      this.camera.lookAt(targetLook);
     } else {
-      this.camera.position.copy(targetCamPos);
-      this.camera.lookAt(targetLookAt);
+      const { targetPos, targetLook } = this.calculateWalkingCameraFraming(
+        playerPos,
+        'THIRD_PERSON'
+      );
+      this.camera.position.copy(targetPos);
+      this.camera.lookAt(targetLook);
+    }
+
+    if (Math.abs(this.camera.fov - WORLD_CONFIG.camera.fov) > 0.05) {
+      this.camera.fov = WORLD_CONFIG.camera.fov;
+      this.camera.updateProjectionMatrix();
     }
   }
 
   public dispose(): void {
     this.detachEventListeners();
+    this.stateMachine.reset();
   }
 }

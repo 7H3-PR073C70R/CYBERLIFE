@@ -10,6 +10,10 @@ import { SaveManagerModal } from './SaveManagerModal';
 import { FirstLaunchIntroModal } from '../onboarding/FirstLaunchIntroModal';
 import { ControlsReferenceModal } from '../onboarding/ControlsReferenceModal';
 import { ContextualGuidanceHUD } from '../onboarding/ContextualGuidanceHUD';
+import {
+  WorkstationSettingsModal,
+  WorkstationSettings,
+} from './WorkstationSettingsModal';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 
 export interface HUDShellProps {
@@ -21,6 +25,7 @@ export interface HUDShellProps {
   playerFunds?: string;
   onToggleCamera?: () => void;
   onInteract?: () => void;
+  onSettingsChanged?: (settings: WorkstationSettings) => void;
 }
 
 export const HUDShell: React.FC<HUDShellProps> = ({
@@ -32,6 +37,7 @@ export const HUDShell: React.FC<HUDShellProps> = ({
   playerFunds,
   onToggleCamera,
   onInteract,
+  onSettingsChanged,
 }) => {
   const sim = useOptionalSimulation();
   const onboarding = sim?.state.onboarding;
@@ -46,6 +52,7 @@ export const HUDShell: React.FC<HUDShellProps> = ({
   );
   const [isIntroModalOpen, setIsIntroModalOpen] = useState<boolean>(isIntroPending);
   const [isControlsModalOpen, setIsControlsModalOpen] = useState<boolean>(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   // Listen for 'H' / 'h' keyboard shortcut to toggle Controls Reference
   useEffect(() => {
@@ -86,9 +93,11 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         onToggleSaveModal={() => setIsSaveModalOpen(prev => !prev)}
         onToggleTour={() => setIsIntroModalOpen(true)}
         onToggleControls={() => setIsControlsModalOpen(true)}
+        onToggleSettings={() => setIsSettingsOpen(prev => !prev)}
         isHelpOpen={isMovementHelpOpen}
         isDevDrawerOpen={isDevDrawerOpen}
         isControlsOpen={isControlsModalOpen}
+        isSettingsOpen={isSettingsOpen}
       />
 
       {/* Middle Layout: Side Panels & Nearby Interaction Prompt */}
@@ -138,6 +147,13 @@ export const HUDShell: React.FC<HUDShellProps> = ({
 
       {/* Persistent Save/Load & Recovery Manager Modal */}
       <SaveManagerModal isOpen={isSaveModalOpen} onClose={() => setIsSaveModalOpen(false)} />
+
+      {/* Workstation & Experience Settings Modal */}
+      <WorkstationSettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        onSettingsChanged={onSettingsChanged}
+      />
     </div>
   );
 };

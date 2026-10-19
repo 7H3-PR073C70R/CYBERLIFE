@@ -15,9 +15,11 @@ export interface StatusOverlayProps {
   onToggleSaveModal?: () => void;
   onToggleTour?: () => void;
   onToggleControls?: () => void;
+  onToggleSettings?: () => void;
   isHelpOpen?: boolean;
   isDevDrawerOpen?: boolean;
   isControlsOpen?: boolean;
+  isSettingsOpen?: boolean;
 }
 
 export const StatusOverlay: React.FC<StatusOverlayProps> = ({
@@ -32,9 +34,11 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
   onToggleSaveModal,
   onToggleTour,
   onToggleControls,
+  onToggleSettings,
   isHelpOpen = false,
   isDevDrawerOpen = false,
   isControlsOpen = false,
+  isSettingsOpen = false,
 }) => {
   return (
     <header className="hud-header" role="banner">
@@ -169,6 +173,24 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
           >
             <span aria-hidden="true">⚙️</span>
             <span>Dev Sim</span>
+          </button>
+        )}
+
+        {/* Workstation & Experience Settings */}
+        {onToggleSettings && (
+          <button
+            type="button"
+            className={`hud-controls-help-btn ${isSettingsOpen ? 'active' : ''}`}
+            onClick={onToggleSettings}
+            aria-label="Toggle camera and workstation experience settings"
+            data-testid="hud-settings-btn"
+            style={{
+              borderColor: 'rgba(0, 229, 255, 0.4)',
+              color: 'var(--color-accent-cyan)',
+            }}
+          >
+            <span aria-hidden="true">⚙️</span>
+            <span>Settings</span>
           </button>
         )}
 

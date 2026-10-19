@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { ScreenRenderer, ScreenDesktopState } from '../ScreenRenderer';
 
 export interface WorkstationOptions {
   isCedarline?: boolean;
@@ -7,9 +8,7 @@ export interface WorkstationOptions {
 
 export class WorkstationProps {
   private group: THREE.Group;
-  private screenCanvas: HTMLCanvasElement;
-  private screenCtx: CanvasRenderingContext2D | null;
-  private screenTexture: THREE.CanvasTexture;
+  private screenRenderer: ScreenRenderer;
   private screenMesh: THREE.Mesh;
   private screenGlowLight: THREE.PointLight;
 
@@ -23,13 +22,6 @@ export class WorkstationProps {
   private typingTimer = 0;
   private mouseTimer = 0;
   private timePhase = 0;
-  private terminalLines: string[] = [
-    'tade@parrot-sec-ws04:~$ uname -a',
-    'Linux cyberlife 6.8.0-parrot-enterprise x86_64',
-    'tade@parrot-sec-ws04:~$ status',
-    '[OK] 10.0.4.15/24 SYNTHETIC NODE READY',
-    'tade@parrot-sec-ws04:~$ _',
-  ];
 
   constructor(options: WorkstationOptions = {}) {
     const isCedarline = options.isCedarline ?? true;
@@ -130,6 +122,7 @@ export class WorkstationProps {
     // Positioned in front of the desk at Z = -2.85m, facing -Z
     // -------------------------------------------------------------
     const chairGroup = new THREE.Group();
+    chairGroup.name = 'SEAT_ANCHOR';
     chairGroup.position.set(0, 0, -2.85);
     this.group.add(chairGroup);
 
@@ -230,6 +223,7 @@ export class WorkstationProps {
     const wellGeo = new THREE.BoxGeometry(0.32, 0.003, 0.13);
     const wellMat = new THREE.MeshStandardMaterial({ color: 0x161b22, roughness: 0.8 });
     const wellMesh = new THREE.Mesh(wellGeo, wellMat);
+    wellMesh.name = 'KEYBOARD_ANCHOR';
     wellMesh.position.set(0, 0.0125, -0.035);
     laptopGroup.add(wellMesh);
 
@@ -306,31 +300,19 @@ export class WorkstationProps {
     lidGroup.add(camMesh);
 
     // -------------------------------------------------------------
-    // Dynamic Active Screen Display (512x320 Canvas Texture)
+    // Dynamic Active Screen Display (1280x800 ScreenRenderer)
     // -------------------------------------------------------------
-    this.screenCanvas = document.createElement('canvas');
-    this.screenCanvas.width = 512;
-    this.screenCanvas.height = 320;
-    this.screenCtx = this.screenCanvas.getContext('2d');
-
-    this.renderScreenTexture('08:00 AM');
-
-    this.screenTexture = new THREE.CanvasTexture(this.screenCanvas);
-    this.screenTexture.generateMipmaps = false;
-    this.screenTexture.minFilter = THREE.LinearFilter;
-    this.screenTexture.magFilter = THREE.LinearFilter;
+    this.screenRenderer = new ScreenRenderer({ accentColor });
 
     const screenGeo = new THREE.PlaneGeometry(0.32, 0.2);
-    const screenMat = new THREE.MeshBasicMaterial({
-      map: this.screenTexture,
-      toneMapped: false,
-    });
-    this.screenMesh = new THREE.Mesh(screenGeo, screenMat);
+    this.screenMesh = new THREE.Mesh(screenGeo, this.screenRenderer.getMaterial());
+    this.screenMesh.name = 'SCREEN_QUAD';
+    this.screenMesh.userData = { width: 0.32, height: 0.2 };
     this.screenMesh.position.set(0, 0.118, 0.003);
     lidGroup.add(this.screenMesh);
 
     // Subtle Screen Glow Light casting on keyboard and hands
-    this.screenGlowLight = new THREE.PointLight(accentColor, 1.2, 1.2);
+    this.screenGlowLight = new THREE.PointLight(accentColor, 1.4, 1.4);
     this.screenGlowLight.position.set(0, 0.15, 0.1);
     lidGroup.add(this.screenGlowLight);
 
@@ -338,6 +320,7 @@ export class WorkstationProps {
     // 4. Mouse & Stitched Mousepad
     // -------------------------------------------------------------
     const mouseGroup = new THREE.Group();
+    mouseGroup.name = 'MOUSE_ANCHOR';
     mouseGroup.position.set(0.28, 0.7425, -3.32);
     this.group.add(mouseGroup);
 
@@ -440,82 +423,27 @@ export class WorkstationProps {
   }
 
   public updateTerminalOutput(lines: string[]): void {
-    this.terminalLines = lines.slice(-5);
+    this.screenRenderer.setTerminalLines(lines);
   }
 
-  /**
-   * Renders the dynamic 2D canvas texture displaying the Parrot OS desktop
-   * on the 3D laptop screen.
-   */
+  public updateDesktopState(state: Partial<ScreenDesktopState>): void {
+    this.screenRenderer.updateDesktopState(state);
+  }
+
+  public getScreenRenderer(): ScreenRenderer {
+    return this.screenRenderer;
+  }
+
   public renderScreenTexture(timeString: string): void {
-    if (!this.screenCtx) return;
-    const ctx = this.screenCtx;
-    const w = this.screenCanvas.width;
-    const h = this.screenCanvas.height;
-
-    // Background gradient (Parrot dark obsidian)
-    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
-    bgGrad.addColorStop(0, '#0a0f14');
-    bgGrad.addColorStop(1, '#121820');
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, w, h);
-
-    // Top System Bar
-    ctx.fillStyle = '#05080c';
-    ctx.fillRect(0, 0, w, 22);
-
-    ctx.fillStyle = '#00e5ff';
-    ctx.font = 'bold 10px monospace';
-    ctx.fillText('PARROT SEC OS // ENTERPRISE', 10, 15);
-
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '9px monospace';
-    ctx.fillText('CPU: 14%  RAM: 2.1/16GB  NET: 10.0.4.15', 200, 15);
-
-    ctx.fillStyle = '#00e676';
-    ctx.fillText(timeString, 440, 15);
-
-    // Terminal Window Area
-    ctx.fillStyle = '#04070a';
-    ctx.strokeStyle = '#00e5ff';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(16, 32, w - 32, h - 50);
-    ctx.fillRect(16, 32, w - 32, h - 50);
-
-    // Terminal Header
-    ctx.fillStyle = '#161b22';
-    ctx.fillRect(16, 32, w - 32, 18);
-    ctx.fillStyle = '#38bdf8';
-    ctx.font = '10px monospace';
-    ctx.fillText('bash - cyberlife@parrot-rig (sandboxed)', 24, 45);
-
-    // Terminal Window Dots
-    ctx.fillStyle = '#ef4444';
-    ctx.beginPath();
-    ctx.arc(w - 28, 41, 4, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Render Terminal Lines
-    ctx.fillStyle = '#00e676';
-    ctx.font = '11px monospace';
-    let yPos = 72;
-    this.terminalLines.forEach(line => {
-      ctx.fillText(line, 26, yPos);
-      yPos += 20;
-    });
-
-    if (this.screenTexture) {
-      this.screenTexture.needsUpdate = true;
-    }
+    this.screenRenderer.updateDesktopState({ simulationTime: timeString });
   }
 
   public update(deltaTime: number, simulationTimeStr = '08:00 AM'): void {
     this.timePhase += deltaTime;
 
-    // Periodically redraw screen (approx 5Hz is plenty for 3D world readability)
-    if (Math.floor(this.timePhase * 5) !== Math.floor((this.timePhase - deltaTime) * 5)) {
-      this.renderScreenTexture(simulationTimeStr);
-    }
+    // Update screen renderer
+    this.screenRenderer.updateDesktopState({ simulationTime: simulationTimeStr });
+    this.screenRenderer.update(deltaTime);
 
     // First person hands animation
     if (this.fpHandsGroup.visible) {
@@ -538,8 +466,8 @@ export class WorkstationProps {
   }
 
   public dispose(): void {
-    if (this.screenTexture) {
-      this.screenTexture.dispose();
+    if (this.screenRenderer) {
+      this.screenRenderer.dispose();
     }
     this.group.traverse(obj => {
       if (obj instanceof THREE.Mesh) {

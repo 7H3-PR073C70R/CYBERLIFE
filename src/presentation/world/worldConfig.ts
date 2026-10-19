@@ -49,6 +49,18 @@ export const WORLD_CONFIG = {
     firstPersonOffset: { x: 0, y: 1.65, z: 0 },
     pitchLimitMin: -Math.PI / 2.3, // ~-78 deg
     pitchLimitMax: Math.PI / 2.3, // ~+78 deg
+    // Dedicated Workstation Camera Transitions & Framing
+    workstation: {
+      sitDuration: 0.8, // s
+      dollyDuration: 0.7, // s
+      peekOutDuration: 0.6, // s
+      standDuration: 0.7, // s
+      reducedMotionDuration: 0.25, // s
+      screenFov: 52, // deg (narrower for crisp, undistorted monitor framing)
+      screenFillFraction: 0.85, // screen fills ~85% of viewport width
+      overlayCrossfadeStart: 0.7, // start DOM opacity crossfade at 70% of dolly
+      overlayCrossfadeDuration: 0.25, // s
+    },
   },
 
   // Locations in M2.5 (Historic Lagos Island)

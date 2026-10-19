@@ -32,25 +32,34 @@ import { RevLensApp } from './apps/RevLensApp';
 import { RuleTunerApp } from './apps/RuleTunerApp';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { CameraMode } from '../world/worldConfig';
+import { ScreenDesktopState } from '../world/ScreenRenderer';
 
 export interface DesktopShellProps {
   workstationId?: string;
   cameraMode?: CameraMode;
+  layout?: 'bounded' | 'fullscreen';
   onExitDesktop: () => void;
+  onPeekOut?: () => void;
+  showKeyHints?: boolean;
   initialApp?: AppId;
   onTyping?: () => void;
   onMouseUse?: () => void;
   onTerminalOutput?: (lines: string[]) => void;
+  onDesktopStateChange?: (state: Partial<ScreenDesktopState>) => void;
 }
 
 export const DesktopShell: React.FC<DesktopShellProps> = ({
   workstationId = 'interact_cedarline_workstation',
   cameraMode = 'THIRD_PERSON',
+  layout = 'bounded',
   onExitDesktop,
+  onPeekOut,
+  showKeyHints = true,
   initialApp = 'terminal',
   onTyping,
   onMouseUse,
   onTerminalOutput,
+  onDesktopStateChange,
 }) => {
   const sim = useOptionalSimulation();
   const desktopRef = useRef<HTMLDivElement | null>(null);
@@ -114,6 +123,13 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
         return;
       }
 
+      // Tab key: Peek out to seated view
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        onPeekOut?.();
+        return;
+      }
+
       // Alt+F1: Toggle Applications Menu
       if (e.altKey && e.key === 'F1') {
         e.preventDefault();
@@ -165,6 +181,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
     };
   }, [
     onExitDesktop,
+    onPeekOut,
     contextMenu,
     isStartMenuOpen,
     openApp,
@@ -184,7 +201,37 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
   const simulationTime = sim?.state.time.calendar.timeString ?? '08:00 AM';
   const simulationDate = sim?.state.time.calendar.dateString ?? 'Monday, Oct 12, 2026';
 
+  // Synchronize desktop state to 3D ScreenRenderer
+  useEffect(() => {
+    if (!onDesktopStateChange) return;
+    const openWins = appKeys
+      .filter(id => windows[id].isOpen)
+      .map(id => ({
+        id,
+        title: APP_REGISTRY[id]?.title ?? id,
+        isActive: activeWindowId === id,
+      }));
+
+    onDesktopStateChange({
+      wallpaperTheme,
+      workstationName,
+      simulationTime,
+      simulationDate,
+      openWindows: openWins,
+      activeAppTitle: activeWindowId ? APP_REGISTRY[activeWindowId as AppId]?.title : undefined,
+    });
+  }, [
+    wallpaperTheme,
+    workstationName,
+    simulationTime,
+    simulationDate,
+    windows,
+    activeWindowId,
+    onDesktopStateChange,
+  ]);
+
   const modeClass = cameraMode === 'THIRD_PERSON' ? 'mode-third-person' : 'mode-first-person';
+  const layoutClass = layout === 'fullscreen' ? 'layout-fullscreen' : 'layout-bounded';
 
   // Desktop background wallpaper style
   const getWallpaperBackground = () => {
@@ -201,7 +248,8 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
 
   return (
     <div
-      className={`workstation-overlay-backdrop ${modeClass}`}
+      className={`workstation-overlay-backdrop ${modeClass} ${layoutClass}`}
+      data-testid="workstation-overlay-backdrop"
       onMouseMove={() => onMouseUse?.()}
       onClick={() => {
         onMouseUse?.();
@@ -210,7 +258,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
     >
       <div
         ref={desktopRef}
-        className={`desktop-shell-container parrot-theme ${modeClass}`}
+        className={`desktop-shell-container parrot-theme ${modeClass} ${layoutClass}`}
         role="region"
         aria-label="EkoSec Cyberlife Virtual Desktop"
         data-testid="desktop-shell-container"
@@ -226,15 +274,39 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
           </div>
           <div className="top-bar-center">
             <span className="mode-badge">
-              {cameraMode === 'THIRD_PERSON'
-                ? '🎥 Over-The-Shoulder View (Character Seated)'
-                : '👁️ Seated Eye-Level View (Computer Focus)'}
+              {layout === 'fullscreen'
+                ? '🖥️ Full-Screen Monitor Focus'
+                : cameraMode === 'THIRD_PERSON'
+                  ? '🎥 Over-The-Shoulder View (Character Seated)'
+                  : '👁️ Seated Eye-Level View (Computer Focus)'}
             </span>
           </div>
           <div className="top-bar-right">
+            {showKeyHints && (
+              <div
+                className="desktop-key-hints-pill"
+                data-testid="desktop-key-hints-pill"
+                title="Workstation Controls"
+              >
+                <span><kbd>Tab</kbd> Peek</span>
+                <span className="dot-sep">•</span>
+                <span><kbd>Esc</kbd> Exit</span>
+              </div>
+            )}
             <span className="top-clock" title="Authoritative Simulation Clock">
               🕒 {simulationTime}
             </span>
+            {onPeekOut && (
+              <button
+                type="button"
+                className="btn-peek-workstation"
+                onClick={onPeekOut}
+                aria-label="Peek out to seated over-the-shoulder view"
+                data-testid="btn-peek-workstation-top"
+              >
+                <span>👁️</span> Peek Out [Tab]
+              </button>
+            )}
             <button
               type="button"
               className="btn-exit-workstation"

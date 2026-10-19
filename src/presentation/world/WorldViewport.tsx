@@ -10,6 +10,11 @@ import { HUDShell } from '../hud/HUDShell';
 import { DesktopShell } from '../desktop/DesktopShell';
 import { DialogueOverlay } from '../dialogue/DialogueOverlay';
 import { AppId } from '../desktop/types';
+import { WorkstationCameraState } from './camera/WorkstationCameraStates';
+import {
+  getStoredWorkstationSettings,
+  WorkstationSettings,
+} from '../hud/WorkstationSettingsModal';
 
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { Money } from '@/domain/common/Money';
@@ -50,6 +55,12 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
 
   // M4 Virtual Desktop State
   const [isDesktopOpen, setIsDesktopOpen] = useState<boolean>(() => initialWsParam === 'open');
+  const [workstationState, setWorkstationState] = useState<WorkstationCameraState>(
+    initialWsParam === 'open' ? 'SCREEN_FULLSCREEN' : 'WALKING'
+  );
+  const [workstationSettings, setWorkstationSettings] = useState<WorkstationSettings>(() =>
+    getStoredWorkstationSettings()
+  );
   const [activeWorkstationId, setActiveWorkstationId] = useState<string>(
     initialLocParam === 'apartment_interior'
       ? 'interact_apartment_workstation'
@@ -105,6 +116,12 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
             });
           }
         },
+        onWorkstationStateChanged: state => {
+          setWorkstationState(state);
+          if (state === 'WALKING') {
+            setIsDesktopOpen(false);
+          }
+        },
         onNpcInteract: npcId => {
           setActiveNpcId(npcId);
           manager.setInputDisabled(true);
@@ -122,6 +139,20 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
           }
         },
       });
+
+      // Apply initial workstation camera settings
+      manager.setWorkstationSettings(workstationSettings);
+
+      // Support instant workstation mode entry via URL parameter
+      if (initialWsParam === 'open') {
+        const targetWs =
+          initialLocParam === 'apartment_interior'
+            ? 'interact_apartment_workstation'
+            : 'interact_cedarline_workstation';
+        manager.enterWorkstationDirectly(targetWs);
+        setWorkstationState('SCREEN_FULLSCREEN');
+      }
+
       managerRef.current = manager;
       if (typeof window !== 'undefined') {
         (window as unknown as Record<string, unknown>).__CYBERLIFE_WORLD_MANAGER__ = manager;
@@ -135,7 +166,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
       setIsLoading(false);
       onError?.(error);
     }
-  }, [initialLocParam, onInitialized, onError, sim]);
+  }, [initialLocParam, initialWsParam, onInitialized, onError, sim, workstationSettings]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -171,11 +202,40 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   };
 
   const handleCloseDesktop = useCallback(() => {
-    setIsDesktopOpen(false);
     if (managerRef.current) {
       managerRef.current.exitWorkstationSession();
+    } else {
+      setIsDesktopOpen(false);
+      setWorkstationState('WALKING');
     }
   }, []);
+
+  const handleSettingsChanged = useCallback((settings: WorkstationSettings) => {
+    setWorkstationSettings(settings);
+    managerRef.current?.setWorkstationSettings(settings);
+  }, []);
+
+  // Keyboard shortcut listener when peeked out in SEATED_THIRD_PERSON
+  useEffect(() => {
+    if (!isDesktopOpen || workstationState !== 'SEATED_THIRD_PERSON') return;
+
+    const handlePeekedKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        e.stopPropagation();
+        managerRef.current?.focusWorkstationScreen();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        handleCloseDesktop();
+      }
+    };
+
+    window.addEventListener('keydown', handlePeekedKeyDown, true);
+    return () => {
+      window.removeEventListener('keydown', handlePeekedKeyDown, true);
+    };
+  }, [isDesktopOpen, workstationState, handleCloseDesktop]);
 
   const handleCloseDialogue = useCallback(() => {
     setActiveNpcId(null);
@@ -287,20 +347,64 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
           playerFunds={sim ? Money.fromKobo(sim.state.player.moneyKobo).format() : undefined}
           onToggleCamera={handleToggleCamera}
           onInteract={handleInteract}
+          onSettingsChanged={handleSettingsChanged}
         />
+      )}
+
+      {/* On-screen controls when peeked out at workstation */}
+      {isDesktopOpen && workstationState === 'SEATED_THIRD_PERSON' && (
+        <div className="workstation-peek-controls" data-testid="workstation-peek-controls">
+          <button
+            type="button"
+            className="btn-peek-action btn-peek-focus"
+            onClick={() => managerRef.current?.focusWorkstationScreen()}
+            aria-label="Focus screen (Tab)"
+          >
+            <span>🖥️</span> Focus Screen <kbd className="key-hint-badge">Tab</kbd>
+          </button>
+          <button
+            type="button"
+            className="btn-peek-action btn-peek-stand"
+            onClick={handleCloseDesktop}
+            aria-label="Stand up and leave workstation (Esc)"
+          >
+            <span>🚶</span> Stand Up <kbd className="key-hint-badge">Esc</kbd>
+          </button>
+        </div>
       )}
 
       {/* M4 Virtual Desktop Overlay */}
       {isDesktopOpen && (
-        <DesktopShell
-          workstationId={activeWorkstationId}
-          cameraMode={cameraMode}
-          initialApp={initialAppParam ?? undefined}
-          onExitDesktop={handleCloseDesktop}
-          onTyping={() => managerRef.current?.triggerTypingAnimation()}
-          onMouseUse={() => managerRef.current?.triggerMouseAnimation()}
-          onTerminalOutput={lines => managerRef.current?.updateWorkstationTerminal(lines)}
-        />
+        <div
+          className={`workstation-desktop-overlay ${
+            workstationState === 'SCREEN_FULLSCREEN' ? 'visible' : ''
+          }`}
+          data-testid="workstation-desktop-overlay"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 20,
+            pointerEvents: workstationState === 'SCREEN_FULLSCREEN' ? 'auto' : 'none',
+            opacity: workstationState === 'SCREEN_FULLSCREEN' ? 1 : 0,
+            transition: 'opacity 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        >
+          <DesktopShell
+            workstationId={activeWorkstationId}
+            cameraMode={cameraMode}
+            layout="fullscreen"
+            initialApp={initialAppParam ?? undefined}
+            onExitDesktop={handleCloseDesktop}
+            onPeekOut={() => managerRef.current?.peekOutWorkstation()}
+            showKeyHints={workstationSettings.showKeyHints}
+            onTyping={() => managerRef.current?.triggerTypingAnimation()}
+            onMouseUse={() => managerRef.current?.triggerMouseAnimation()}
+            onTerminalOutput={lines => managerRef.current?.updateWorkstationTerminal(lines)}
+            onDesktopStateChange={state =>
+              managerRef.current?.updateWorkstationDesktopState(state)
+            }
+          />
+        </div>
       )}
     </div>
   );

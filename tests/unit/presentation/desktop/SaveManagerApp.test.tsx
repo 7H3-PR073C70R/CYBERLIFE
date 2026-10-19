@@ -50,6 +50,10 @@ describe('SaveManagerApp Desktop Component', () => {
   it('switches to Integrity Audit tab and displays checksum', async () => {
     renderWithProviders();
 
+    await waitFor(() => {
+      expect(screen.getByTestId('app-slot-row-slot_1')).toBeInTheDocument();
+    });
+
     const auditTabBtn = screen.getByTestId('tab-save-audit');
     fireEvent.click(auditTabBtn);
 
@@ -61,6 +65,10 @@ describe('SaveManagerApp Desktop Component', () => {
 
   it('switches to State Snapshot tab and renders JSON textarea', async () => {
     renderWithProviders();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('app-slot-row-slot_1')).toBeInTheDocument();
+    });
 
     const rawTabBtn = screen.getByTestId('tab-save-raw');
     fireEvent.click(rawTabBtn);

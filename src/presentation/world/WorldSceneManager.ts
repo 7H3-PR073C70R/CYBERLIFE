@@ -12,6 +12,11 @@ import { PlayerController } from './PlayerController';
 import { WorldCameraController } from './WorldCameraController';
 import { WorldEnvironment } from './WorldEnvironment';
 import { LocationTransitionController } from './LocationTransitionController';
+import {
+  WorkstationCameraState,
+  WorkstationCameraStateOptions,
+} from './camera/WorkstationCameraStates';
+import { ScreenDesktopState } from './ScreenRenderer';
 
 export interface NpcDialogueData {
   npcId: string;
@@ -29,6 +34,7 @@ export interface WorldSceneOptions {
   onCameraModeChanged?: (mode: CameraMode) => void;
   onNoticeboardRead?: (notice: string) => void;
   onWorkstationOpen?: (workstationId: string) => void;
+  onWorkstationStateChanged?: (state: WorkstationCameraState) => void;
   onNpcDialogue?: (dialogue: NpcDialogueData) => void;
   onNpcInteract?: (npcId: string) => void;
 }
@@ -72,6 +78,7 @@ export class WorldSceneManager {
   private onCameraModeChanged?: (mode: CameraMode) => void;
   private onNoticeboardRead?: (notice: string) => void;
   private onWorkstationOpen?: (workstationId: string) => void;
+  private onWorkstationStateChanged?: (state: WorkstationCameraState) => void;
   private onNpcDialogue?: (dialogue: NpcDialogueData) => void;
   private onNpcInteract?: (npcId: string) => void;
 
@@ -119,6 +126,7 @@ export class WorldSceneManager {
     this.onCameraModeChanged = options.onCameraModeChanged;
     this.onNoticeboardRead = options.onNoticeboardRead;
     this.onWorkstationOpen = options.onWorkstationOpen;
+    this.onWorkstationStateChanged = options.onWorkstationStateChanged;
     this.onNpcDialogue = options.onNpcDialogue;
     this.onNpcInteract = options.onNpcInteract;
 
@@ -193,6 +201,12 @@ export class WorldSceneManager {
       avatar: this.playerAvatar,
       initialMode: 'THIRD_PERSON',
       onModeChanged: mode => this.onCameraModeChanged?.(mode),
+      onWorkstationStateChanged: state => {
+        this.onWorkstationStateChanged?.(state);
+        if (state === 'WALKING') {
+          this.setInputDisabled(false);
+        }
+      },
     });
 
     // 9. Location Transition Controller Setup
@@ -247,6 +261,25 @@ export class WorldSceneManager {
 
   public getCameraMode(): CameraMode {
     return this.cameraController ? this.cameraController.getMode() : 'THIRD_PERSON';
+  }
+
+  /**
+   * Directly enters the workstation screen without transitions (for instant testing or URL params).
+   */
+  public enterWorkstationDirectly(workstationId = 'interact_cedarline_workstation'): void {
+    const mode = this.getCameraMode();
+    if (this.playerController) {
+      this.playerController.setPosition(0, 0, -2.85);
+      this.playerController.setYaw(0);
+    }
+    if (this.cameraController) {
+      this.cameraController.enterWorkstationDirectly(mode);
+    }
+    if (this.worldEnvironment) {
+      this.worldEnvironment.getWorkstationProps()?.setFirstPersonMode(mode === 'FIRST_PERSON');
+    }
+    this.setInputDisabled(true);
+    this.onWorkstationOpen?.(workstationId);
   }
 
   /**
@@ -318,7 +351,34 @@ export class WorldSceneManager {
     if (this.worldEnvironment) {
       this.worldEnvironment.getWorkstationProps()?.setFirstPersonMode(false);
     }
-    this.setInputDisabled(false);
+  }
+
+  public peekOutWorkstation(): void {
+    this.cameraController?.peekOut();
+  }
+
+  public focusWorkstationScreen(): void {
+    this.cameraController?.focusScreen();
+  }
+
+  public toggleWorkstationPeek(): void {
+    this.cameraController?.togglePeek();
+  }
+
+  public getWorkstationCameraState(): WorkstationCameraState {
+    return this.cameraController?.getWorkstationState() ?? 'WALKING';
+  }
+
+  public getWorkstationOverlayOpacity(): number {
+    return this.cameraController?.getOverlayOpacity() ?? 0;
+  }
+
+  public updateWorkstationDesktopState(state: Partial<ScreenDesktopState>): void {
+    this.worldEnvironment?.getWorkstationProps()?.updateDesktopState(state);
+  }
+
+  public setWorkstationSettings(options: Partial<WorkstationCameraStateOptions>): void {
+    this.cameraController?.getStateMachine().setOptions(options);
   }
 
   public triggerTypingAnimation(): void {
@@ -415,9 +475,9 @@ export class WorldSceneManager {
         this.playerController.update(deltaTime, this.cameraController.getYaw());
       }
 
-      // 2. Update Camera Position and Orientation
+      // 2. Update Camera Position and Orientation (using deltaTime for frame-rate independence)
       if (this.cameraController && this.playerController) {
-        this.cameraController.update(this.playerController.getPosition());
+        this.cameraController.update(this.playerController.getPosition(), deltaTime);
       }
 
       // 3. Update Environment Markers, Pedestrians, Traffic, and Workstation Screen
