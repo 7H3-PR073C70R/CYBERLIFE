@@ -4,6 +4,8 @@ import { validateSimulationState } from './invariants';
 import { deepFreeze } from './stateUtils';
 import { AsterIncidentMissionState } from '../missions/types';
 import { createInitialAsterIncidentMissionState } from '../missions/initialMissionState';
+import { NpcSimulationState } from '../actors/types';
+import { NPC_PROFILES } from '../actors/npcProfiles';
 
 export interface InitialStateOverrides {
   readonly schemaVersion?: number;
@@ -20,6 +22,7 @@ export interface InitialStateOverrides {
   readonly inventorySlots?: ReadonlyArray<{ readonly itemId: string; readonly quantity: number }>;
   readonly flags?: Readonly<Record<string, boolean | string | number>>;
   readonly mission?: AsterIncidentMissionState;
+  readonly npcs?: Readonly<Record<string, NpcSimulationState>>;
 }
 
 /**
@@ -67,6 +70,25 @@ export function createInitialSimulationState(
     timers: [],
     nextTimerSequence: 0,
     mission: overrides?.mission ?? createInitialAsterIncidentMissionState(),
+    npcs:
+      overrides?.npcs ??
+      Object.fromEntries(
+        NPC_PROFILES.map(profile => [
+          profile.id,
+          {
+            id: profile.id,
+            relationship: profile.initialRelationship,
+            memory: {
+              met: false,
+              conversationCount: 0,
+              topicsDiscussed: [],
+              choicesMade: [],
+              sharedFacts: [],
+              commitments: [],
+            },
+          },
+        ])
+      ),
   };
 
   validateSimulationState(state);

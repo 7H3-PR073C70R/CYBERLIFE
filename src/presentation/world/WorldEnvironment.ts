@@ -8,6 +8,7 @@ import { WorkstationProps } from './entities/WorkstationProps';
 import { PedestrianSystem } from './entities/PedestrianSystem';
 import { TrafficSystem } from './entities/TrafficSystem';
 import { WORLD_CONFIG } from './worldConfig';
+import { NpcManager } from './entities/NpcManager';
 
 export class WorldEnvironment {
   private group: THREE.Group;
@@ -19,6 +20,7 @@ export class WorldEnvironment {
   private workstationProps: WorkstationProps | null = null;
   private pedestrianSystem: PedestrianSystem | null = null;
   private trafficSystem: TrafficSystem | null = null;
+  private npcManager: NpcManager;
   private isOutdoor = true;
 
   constructor(collisionWorld: CollisionWorld, interactionRegistry: InteractionRegistry) {
@@ -26,6 +28,8 @@ export class WorldEnvironment {
     this.group.name = 'WorldEnvironment';
     this.collisionWorld = collisionWorld;
     this.interactionRegistry = interactionRegistry;
+    this.npcManager = new NpcManager(this.interactionRegistry, this.collisionWorld);
+    this.group.add(this.npcManager.getMesh());
 
     this.buildOutdoorNeighborhood();
   }
@@ -81,6 +85,12 @@ export class WorldEnvironment {
 
     this.trafficSystem = new TrafficSystem();
     this.group.add(this.trafficSystem.getMesh());
+
+    // 9. Interactive NPCs with articulated models & routines
+    this.npcManager.rebuildForLocation('neighborhood');
+    if (!this.group.children.includes(this.npcManager.getMesh())) {
+      this.group.add(this.npcManager.getMesh());
+    }
   }
 
   /**
@@ -928,7 +938,7 @@ export class WorldEnvironment {
     });
 
     if (isCedarline) {
-      // NPC Lead Security Analyst Amina Okonjo Station
+      // Workstation desk for Amina
       const aminaDeskGeo = new THREE.BoxGeometry(1.6, 0.75, 0.8);
       const aminaDeskMat = new THREE.MeshStandardMaterial({
         color: 0x334155,
@@ -944,33 +954,25 @@ export class WorldEnvironment {
       const aminaLaptop = new THREE.Mesh(aminaLaptopGeo, aminaLaptopMat);
       aminaLaptop.position.set(3.2, 0.76, 0);
       this.group.add(aminaLaptop);
+      this.collisionWorld.addObstacle(2.3, 4.1, -0.5, 0.5, 'Amina Okonjo Desk');
 
-      const aminaBodyGeo = new THREE.CylinderGeometry(0.22, 0.24, 0.9, 12);
-      const aminaBodyMat = new THREE.MeshStandardMaterial({ color: 0x0284c7 });
-      const aminaBody = new THREE.Mesh(aminaBodyGeo, aminaBodyMat);
-      aminaBody.position.set(3.2, 0.9, -0.6);
-      this.group.add(aminaBody);
-
-      const aminaHeadGeo = new THREE.SphereGeometry(0.16, 16, 16);
-      const aminaHeadMat = new THREE.MeshStandardMaterial({ color: 0x5c3a21 });
-      const aminaHead = new THREE.Mesh(aminaHeadGeo, aminaHeadMat);
-      aminaHead.position.set(3.2, 1.5, -0.6);
-      this.group.add(aminaHead);
-
-      const aminaMarker = new InteractableMarker(3.2, 0.5, 0x38bdf8, 'Amina Okonjo (Lead Analyst)');
-      this.markers.push(aminaMarker);
-      this.group.add(aminaMarker.getMesh());
-      this.collisionWorld.addObstacle(2.3, 4.1, -1.0, 0.5, 'Amina Okonjo Station');
-
-      this.interactionRegistry.register({
-        id: 'interact_npc_amina',
-        name: 'Amina Okonjo (Lead Security Analyst)',
-        promptAction: 'speak with Lead Analyst Amina Okonjo [E]',
-        description:
-          'Cedarline incident response lead supervising The Aster Incident investigation.',
-        position: [3.2, 0, 0.5],
-        radius: 2.4,
+      // Server infrastructure rack for Marcus
+      const serverRackGeo = new THREE.BoxGeometry(1.2, 2.2, 0.9);
+      const serverRackMat = new THREE.MeshStandardMaterial({
+        color: 0x1e293b,
+        roughness: 0.4,
+        metalness: 0.6,
       });
+      const serverRack = new THREE.Mesh(serverRackGeo, serverRackMat);
+      serverRack.position.set(-3.5, 1.1, -0.6);
+      this.group.add(serverRack);
+      this.collisionWorld.addObstacle(-4.2, -2.8, -1.2, 0.0, 'Cedarline Server Rack');
+    }
+
+    // Rebuild interior NPCs (Amina, Marcus, Dr. Elena Chen) with articulated models & markers
+    this.npcManager.rebuildForLocation(locationId);
+    if (!this.group.children.includes(this.npcManager.getMesh())) {
+      this.group.add(this.npcManager.getMesh());
     }
 
     // Exit Doorway Marker at (0, 0, 5.0)
@@ -989,8 +991,13 @@ export class WorldEnvironment {
     });
   }
 
-  public update(deltaTime: number, simulationTimeStr = '08:00 AM'): void {
+  public update(
+    deltaTime: number,
+    simulationTimeStr = '08:00 AM',
+    playerPosition?: THREE.Vector3 | { x: number; y: number; z: number }
+  ): void {
     this.markers.forEach(m => m.update(deltaTime));
+    this.npcManager.update(deltaTime, playerPosition);
     if (this.pedestrianSystem && this.isOutdoor) {
       this.pedestrianSystem.update(deltaTime);
     }
@@ -1000,6 +1007,10 @@ export class WorldEnvironment {
     if (this.workstationProps && !this.isOutdoor) {
       this.workstationProps.update(deltaTime, simulationTimeStr);
     }
+  }
+
+  public getNpcManager(): NpcManager {
+    return this.npcManager;
   }
 
   public getWorkstationProps(): WorkstationProps | null {
@@ -1026,6 +1037,9 @@ export class WorldEnvironment {
     if (this.trafficSystem) {
       this.trafficSystem.dispose();
       this.trafficSystem = null;
+    }
+    if (this.npcManager) {
+      this.npcManager.clear();
     }
 
     this.buildings.forEach(b => b.dispose());
@@ -1062,6 +1076,9 @@ export class WorldEnvironment {
 
   public dispose(): void {
     this.clear();
+    if (this.npcManager) {
+      this.npcManager.dispose();
+    }
     if (this.group.parent) {
       this.group.parent.remove(this.group);
     }

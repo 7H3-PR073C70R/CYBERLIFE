@@ -21,7 +21,12 @@ export type SimulationEventType =
   | 'MISSION_REMEDIATION_APPLIED'
   | 'MISSION_VERIFICATION_COMPLETED'
   | 'MISSION_REPORT_SUBMITTED'
-  | 'MISSION_COMPLETED';
+  | 'MISSION_COMPLETED'
+  | 'NPC_DIALOGUE_STARTED'
+  | 'NPC_DIALOGUE_CHOICE_SELECTED'
+  | 'NPC_DIALOGUE_ENDED'
+  | 'NPC_RELATIONSHIP_CHANGED'
+  | 'NPC_MEMORY_RECORDED';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -227,6 +232,55 @@ export type MissionCompletedEvent = BaseSimulationEvent<
   }
 >;
 
+export type NpcDialogueStartedEvent = BaseSimulationEvent<
+  'NPC_DIALOGUE_STARTED',
+  {
+    readonly npcId: string;
+    readonly initialNodeId: string;
+  }
+>;
+
+export type NpcDialogueChoiceSelectedEvent = BaseSimulationEvent<
+  'NPC_DIALOGUE_CHOICE_SELECTED',
+  {
+    readonly npcId: string;
+    readonly choiceId: string;
+    readonly previousNodeId: string;
+    readonly nextNodeId: string;
+    readonly isTerminal: boolean;
+  }
+>;
+
+export type NpcDialogueEndedEvent = BaseSimulationEvent<
+  'NPC_DIALOGUE_ENDED',
+  {
+    readonly npcId: string;
+  }
+>;
+
+export type NpcRelationshipChangedEvent = BaseSimulationEvent<
+  'NPC_RELATIONSHIP_CHANGED',
+  {
+    readonly npcId: string;
+    readonly previousValue: number;
+    readonly newValue: number;
+    readonly delta: number;
+    readonly reason: string;
+    readonly band: string;
+  }
+>;
+
+export type NpcMemoryRecordedEvent = BaseSimulationEvent<
+  'NPC_MEMORY_RECORDED',
+  {
+    readonly npcId: string;
+    readonly topic?: string;
+    readonly choice?: string;
+    readonly fact?: string;
+    readonly commitment?: string;
+  }
+>;
+
 export type SimulationEvent =
   | SimulationTimeAdvancedEvent
   | PlayerAttributeChangedEvent
@@ -248,4 +302,9 @@ export type SimulationEvent =
   | MissionRemediationAppliedEvent
   | MissionVerificationCompletedEvent
   | MissionReportSubmittedEvent
-  | MissionCompletedEvent;
+  | MissionCompletedEvent
+  | NpcDialogueStartedEvent
+  | NpcDialogueChoiceSelectedEvent
+  | NpcDialogueEndedEvent
+  | NpcRelationshipChangedEvent
+  | NpcMemoryRecordedEvent;

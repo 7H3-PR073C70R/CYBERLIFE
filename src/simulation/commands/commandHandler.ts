@@ -26,6 +26,11 @@ import {
   validateIncidentReport,
   runSimulatedVerification,
 } from '../missions/asterIncidentGroundTruth';
+import { clampRelationship, getRelationshipBand, NpcSimulationState } from '../actors/types';
+import { getNpcProfile } from '../actors/npcProfiles';
+import { getDialogueGraph } from '../../content/dialogue/npcDialogueData';
+import { isDialogueConditionMet } from '../narrative/dialogueEvaluator';
+import { DialogueEvaluationContext } from '../narrative/dialogueTypes';
 
 function makeFailure(
   state: Readonly<SimulationState>,
@@ -1394,6 +1399,520 @@ export function handleCommand(
           state: deepFreeze(nextState),
           events,
           message: result.reviewerFeedback,
+        };
+      }
+
+      case 'StartNpcDialogue': {
+        const { npcId, initialNodeId } = command;
+        if (!npcId || typeof npcId !== 'string') {
+          return makeFailure(currentState, 'INVALID_ARGUMENT', 'npcId must be a non-empty string');
+        }
+
+        const graph = getDialogueGraph(npcId);
+        if (!graph) {
+          return makeFailure(
+            currentState,
+            'NPC_NOT_FOUND',
+            `No dialogue graph found for NPC "${npcId}"`
+          );
+        }
+
+        const profile = getNpcProfile(npcId);
+        const existingNpc = currentState.npcs?.[npcId] ?? {
+          id: npcId,
+          relationship: profile?.initialRelationship ?? 0,
+          memory: {
+            met: false,
+            conversationCount: 0,
+            topicsDiscussed: [],
+            choicesMade: [],
+            sharedFacts: [],
+            commitments: [],
+          },
+        };
+
+        const simTime = currentState.time.simulationTimeSeconds;
+        const evalContext: DialogueEvaluationContext = {
+          relationship: existingNpc.relationship,
+          memory: existingNpc.memory,
+          flags: currentState.flags,
+          missionPhase: currentState.mission?.phase,
+        };
+
+        const selectedNodeId =
+          initialNodeId ??
+          (graph.getInitialNodeId ? graph.getInitialNodeId(evalContext) : graph.defaultNodeId);
+
+        if (!graph.nodes[selectedNodeId]) {
+          return makeFailure(
+            currentState,
+            'DIALOGUE_NODE_NOT_FOUND',
+            `Node "${selectedNodeId}" does not exist in dialogue graph for "${npcId}"`
+          );
+        }
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const events: SimulationEvent[] = [];
+
+        const updatedMemory = {
+          ...existingNpc.memory,
+          met: true,
+          metAtSimulationTime: existingNpc.memory.metAtSimulationTime ?? simTime,
+          conversationCount: existingNpc.memory.conversationCount + 1,
+          lastInteractionTime: simTime,
+        };
+
+        const updatedNpc: NpcSimulationState = {
+          ...existingNpc,
+          memory: updatedMemory,
+        };
+
+        events.push(
+          createSimulationEvent('NPC_DIALOGUE_STARTED', simTime, nextRevision, {
+            npcId,
+            initialNodeId: selectedNodeId,
+          })
+        );
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          npcs: {
+            ...(currentState.npcs ?? {}),
+            [npcId]: updatedNpc,
+          },
+          activeDialogue: {
+            npcId,
+            currentNodeId: selectedNodeId,
+          },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events,
+          message: `Started conversation with ${profile?.name ?? npcId}`,
+        };
+      }
+
+      case 'SelectDialogueChoice': {
+        const { npcId, choiceId } = command;
+        if (!currentState.activeDialogue || currentState.activeDialogue.npcId !== npcId) {
+          return makeFailure(
+            currentState,
+            'NO_ACTIVE_DIALOGUE',
+            `No active dialogue session with NPC "${npcId}"`
+          );
+        }
+
+        const graph = getDialogueGraph(npcId);
+        if (!graph) {
+          return makeFailure(
+            currentState,
+            'NPC_NOT_FOUND',
+            `Dialogue graph not found for "${npcId}"`
+          );
+        }
+
+        const currentNode = graph.nodes[currentState.activeDialogue.currentNodeId];
+        if (!currentNode) {
+          return makeFailure(
+            currentState,
+            'DIALOGUE_NODE_NOT_FOUND',
+            `Current node "${currentState.activeDialogue.currentNodeId}" not found in graph`
+          );
+        }
+
+        const choice = currentNode.choices.find(c => c.id === choiceId);
+        if (!choice) {
+          return makeFailure(
+            currentState,
+            'DIALOGUE_CHOICE_NOT_FOUND',
+            `Choice "${choiceId}" not found on node "${currentNode.id}"`
+          );
+        }
+
+        const npcState = currentState.npcs?.[npcId];
+        if (!npcState) {
+          return makeFailure(currentState, 'NPC_NOT_FOUND', `NPC state for "${npcId}" not found`);
+        }
+
+        const simTime = currentState.time.simulationTimeSeconds;
+        const evalContext: DialogueEvaluationContext = {
+          relationship: npcState.relationship,
+          memory: npcState.memory,
+          flags: currentState.flags,
+          missionPhase: currentState.mission?.phase,
+        };
+
+        if (!isDialogueConditionMet(choice.condition, evalContext)) {
+          return makeFailure(
+            currentState,
+            'DIALOGUE_CONDITION_NOT_MET',
+            `Conditions for choice "${choiceId}" are not satisfied`
+          );
+        }
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const events: SimulationEvent[] = [];
+
+        let currentRel = npcState.relationship;
+        let lastRelDelta: { delta: number; reason: string; timestamp: number } | undefined;
+        const updatedFlags = { ...currentState.flags };
+        let updatedMission = currentState.mission ? { ...currentState.mission } : undefined;
+        const newTopics = [...npcState.memory.topicsDiscussed];
+        const newChoices = [...npcState.memory.choicesMade];
+        if (!newChoices.includes(choiceId)) {
+          newChoices.push(choiceId);
+        }
+        const newFacts = [...npcState.memory.sharedFacts];
+        const newCommitments = [...npcState.memory.commitments];
+
+        // Process choice actions
+        if (choice.actions) {
+          for (const action of choice.actions) {
+            switch (action.type) {
+              case 'CHANGE_RELATIONSHIP': {
+                const prev = currentRel;
+                currentRel = clampRelationship(currentRel + action.delta);
+                const actualDelta = currentRel - prev;
+                lastRelDelta = {
+                  delta: action.delta,
+                  reason: action.reason,
+                  timestamp: simTime,
+                };
+                events.push(
+                  createSimulationEvent('NPC_RELATIONSHIP_CHANGED', simTime, nextRevision, {
+                    npcId,
+                    previousValue: prev,
+                    newValue: currentRel,
+                    delta: actualDelta,
+                    reason: action.reason,
+                    band: getRelationshipBand(currentRel),
+                  })
+                );
+                break;
+              }
+              case 'SET_FLAG': {
+                const prevVal = updatedFlags[action.key];
+                updatedFlags[action.key] = action.value;
+                events.push(
+                  createSimulationEvent('WORLD_FLAG_CHANGED', simTime, nextRevision, {
+                    key: action.key,
+                    previousValue: prevVal,
+                    newValue: action.value,
+                  })
+                );
+                break;
+              }
+              case 'RECORD_MEMORY': {
+                if (action.topic && !newTopics.includes(action.topic)) {
+                  newTopics.push(action.topic);
+                }
+                if (action.fact && !newFacts.includes(action.fact)) {
+                  newFacts.push(action.fact);
+                }
+                events.push(
+                  createSimulationEvent('NPC_MEMORY_RECORDED', simTime, nextRevision, {
+                    npcId,
+                    topic: action.topic,
+                    fact: action.fact,
+                  })
+                );
+                break;
+              }
+              case 'ADVANCE_MISSION_PHASE': {
+                if (updatedMission && updatedMission.phase !== action.targetPhase) {
+                  const prevPhase = updatedMission.phase;
+                  updatedMission = {
+                    ...updatedMission,
+                    phase: action.targetPhase,
+                  };
+                  events.push(
+                    createSimulationEvent('MISSION_PHASE_ADVANCED', simTime, nextRevision, {
+                      missionId: updatedMission.missionId,
+                      previousPhase: prevPhase,
+                      currentPhase: action.targetPhase,
+                    })
+                  );
+                }
+                break;
+              }
+              case 'RECORD_FINDING': {
+                if (updatedMission) {
+                  events.push(
+                    createSimulationEvent('MISSION_FINDING_RECORDED', simTime, nextRevision, {
+                      missionId: updatedMission.missionId,
+                      findingType: action.findingType,
+                      targetId: action.targetId,
+                    })
+                  );
+                }
+                break;
+              }
+            }
+          }
+        }
+
+        const nextNode = graph.nodes[choice.nextNodeId];
+        const isTerminal = Boolean(
+          !nextNode || nextNode.isTerminal || nextNode.choices.length === 0
+        );
+
+        events.push(
+          createSimulationEvent('NPC_DIALOGUE_CHOICE_SELECTED', simTime, nextRevision, {
+            npcId,
+            choiceId,
+            previousNodeId: currentNode.id,
+            nextNodeId: choice.nextNodeId,
+            isTerminal,
+          })
+        );
+
+        if (isTerminal) {
+          events.push(
+            createSimulationEvent('NPC_DIALOGUE_ENDED', simTime, nextRevision, {
+              npcId,
+            })
+          );
+        }
+
+        const updatedNpc: NpcSimulationState = {
+          ...npcState,
+          relationship: currentRel,
+          memory: {
+            ...npcState.memory,
+            topicsDiscussed: newTopics,
+            choicesMade: newChoices,
+            sharedFacts: newFacts,
+            commitments: newCommitments,
+            lastInteractionTime: simTime,
+          },
+        };
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          flags: updatedFlags,
+          mission: updatedMission,
+          npcs: {
+            ...(currentState.npcs ?? {}),
+            [npcId]: updatedNpc,
+          },
+          activeDialogue: isTerminal
+            ? undefined
+            : {
+                npcId,
+                currentNodeId: choice.nextNodeId,
+                lastChoiceId: choiceId,
+                lastRelationshipDelta:
+                  lastRelDelta ?? currentState.activeDialogue.lastRelationshipDelta,
+              },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events,
+          message: isTerminal
+            ? `Conversation with ${npcId} ended.`
+            : `Advanced dialogue to "${choice.nextNodeId}".`,
+        };
+      }
+
+      case 'EndDialogue': {
+        if (!currentState.activeDialogue) {
+          return makeNoOp(currentState, 'No active dialogue to end');
+        }
+
+        const npcId = command.npcId ?? currentState.activeDialogue.npcId;
+        const nextRevision = currentState.metadata.revision + 1;
+        const simTime = currentState.time.simulationTimeSeconds;
+
+        const event = createSimulationEvent('NPC_DIALOGUE_ENDED', simTime, nextRevision, {
+          npcId,
+        });
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          activeDialogue: undefined,
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events: [event],
+          message: `Ended dialogue with ${npcId}`,
+        };
+      }
+
+      case 'ChangeNpcRelationship': {
+        const { npcId, delta, reason } = command;
+        if (!npcId || typeof npcId !== 'string') {
+          return makeFailure(currentState, 'INVALID_ARGUMENT', 'npcId must be a non-empty string');
+        }
+
+        const profile = getNpcProfile(npcId);
+        const existingNpc = currentState.npcs?.[npcId] ?? {
+          id: npcId,
+          relationship: profile?.initialRelationship ?? 0,
+          memory: {
+            met: false,
+            conversationCount: 0,
+            topicsDiscussed: [],
+            choicesMade: [],
+            sharedFacts: [],
+            commitments: [],
+          },
+        };
+
+        const prev = existingNpc.relationship;
+        const newRel = clampRelationship(prev + delta);
+
+        if (prev === newRel) {
+          return makeNoOp(
+            currentState,
+            `Relationship with ${npcId} is already at ${newRel} (no-op)`
+          );
+        }
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const simTime = currentState.time.simulationTimeSeconds;
+
+        const event = createSimulationEvent('NPC_RELATIONSHIP_CHANGED', simTime, nextRevision, {
+          npcId,
+          previousValue: prev,
+          newValue: newRel,
+          delta: newRel - prev,
+          reason,
+          band: getRelationshipBand(newRel),
+        });
+
+        const updatedNpc: NpcSimulationState = {
+          ...existingNpc,
+          relationship: newRel,
+        };
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          npcs: {
+            ...(currentState.npcs ?? {}),
+            [npcId]: updatedNpc,
+          },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events: [event],
+          message: `Changed relationship with ${npcId} by ${newRel - prev} to ${newRel} (${reason})`,
+        };
+      }
+
+      case 'RecordNpcMemory': {
+        const { npcId, topic, choice, fact, commitment } = command;
+        if (!npcId || typeof npcId !== 'string') {
+          return makeFailure(currentState, 'INVALID_ARGUMENT', 'npcId must be a non-empty string');
+        }
+
+        const profile = getNpcProfile(npcId);
+        const existingNpc = currentState.npcs?.[npcId] ?? {
+          id: npcId,
+          relationship: profile?.initialRelationship ?? 0,
+          memory: {
+            met: false,
+            conversationCount: 0,
+            topicsDiscussed: [],
+            choicesMade: [],
+            sharedFacts: [],
+            commitments: [],
+          },
+        };
+
+        const mem = existingNpc.memory;
+        const newTopics =
+          topic && !mem.topicsDiscussed.includes(topic)
+            ? [...mem.topicsDiscussed, topic]
+            : mem.topicsDiscussed;
+        const newChoices =
+          choice && !mem.choicesMade.includes(choice)
+            ? [...mem.choicesMade, choice]
+            : mem.choicesMade;
+        const newFacts =
+          fact && !mem.sharedFacts.includes(fact) ? [...mem.sharedFacts, fact] : mem.sharedFacts;
+        const newCommitments =
+          commitment && !mem.commitments.includes(commitment)
+            ? [...mem.commitments, commitment]
+            : mem.commitments;
+
+        if (
+          newTopics === mem.topicsDiscussed &&
+          newChoices === mem.choicesMade &&
+          newFacts === mem.sharedFacts &&
+          newCommitments === mem.commitments
+        ) {
+          return makeNoOp(currentState, `No new memory items to record for "${npcId}"`);
+        }
+
+        const nextRevision = currentState.metadata.revision + 1;
+        const simTime = currentState.time.simulationTimeSeconds;
+
+        const event = createSimulationEvent('NPC_MEMORY_RECORDED', simTime, nextRevision, {
+          npcId,
+          topic,
+          choice,
+          fact,
+          commitment,
+        });
+
+        const updatedNpc: NpcSimulationState = {
+          ...existingNpc,
+          memory: {
+            ...mem,
+            topicsDiscussed: newTopics,
+            choicesMade: newChoices,
+            sharedFacts: newFacts,
+            commitments: newCommitments,
+            lastInteractionTime: simTime,
+          },
+        };
+
+        const nextState: SimulationState = {
+          ...currentState,
+          metadata: {
+            ...currentState.metadata,
+            revision: nextRevision,
+          },
+          npcs: {
+            ...(currentState.npcs ?? {}),
+            [npcId]: updatedNpc,
+          },
+        };
+
+        validateSimulationState(nextState);
+        return {
+          success: true,
+          state: deepFreeze(nextState),
+          events: [event],
+          message: `Recorded memory for ${npcId}`,
         };
       }
 

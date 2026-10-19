@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { WorldSceneManager, NpcDialogueData } from './WorldSceneManager';
+import { WorldSceneManager } from './WorldSceneManager';
 import {
   CameraMode,
   LocationDefinition,
@@ -8,6 +8,7 @@ import {
 } from './worldConfig';
 import { HUDShell } from '../hud/HUDShell';
 import { DesktopShell } from '../desktop/DesktopShell';
+import { DialogueOverlay } from '../dialogue/DialogueOverlay';
 
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { Money } from '@/domain/common/Money';
@@ -42,7 +43,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   const [cameraMode, setCameraMode] = useState<CameraMode>('THIRD_PERSON');
   const [activeTarget, setActiveTarget] = useState<InteractableDefinition | null>(null);
   const [noticeMessage, setNoticeMessage] = useState<string | null>(null);
-  const [npcDialogue, setNpcDialogue] = useState<NpcDialogueData | null>(null);
+  const [activeNpcId, setActiveNpcId] = useState<string | null>(null);
 
   // M4 Virtual Desktop State
   const [isDesktopOpen, setIsDesktopOpen] = useState<boolean>(() => initialWsParam === 'open');
@@ -101,17 +102,31 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
             });
           }
         },
-        onNpcDialogue: dialogue => {
-          setNpcDialogue(dialogue);
-          if (simRef.current && simRef.current.state.mission?.phase === 'briefing') {
+        onNpcInteract: npcId => {
+          setActiveNpcId(npcId);
+          manager.setInputDisabled(true);
+          if (simRef.current) {
             simRef.current.dispatch({
-              type: 'AdvanceAsterMissionPhase',
-              targetPhase: 'initial_assessment',
+              type: 'StartNpcDialogue',
+              npcId,
             });
+            if (
+              simRef.current.state.mission?.phase === 'briefing' &&
+              npcId === 'npc_amina'
+            ) {
+              simRef.current.dispatch({
+                type: 'AdvanceAsterMissionPhase',
+                targetPhase: 'initial_assessment',
+              });
+            }
           }
         },
       });
       managerRef.current = manager;
+      if (typeof window !== 'undefined') {
+        (window as unknown as Record<string, unknown>).__CYBERLIFE_WORLD_MANAGER__ = manager;
+        (window as unknown as Record<string, unknown>).__CYBERLIFE_SIMULATION__ = sim;
+      }
       setIsLoading(false);
       onInitialized?.();
     } catch (err) {
@@ -120,7 +135,13 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
       setIsLoading(false);
       onError?.(error);
     }
-  }, [initialLocParam, onInitialized, onError]);
+  }, [initialLocParam, onInitialized, onError, sim]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as unknown as Record<string, unknown>).__CYBERLIFE_SIMULATION__ = sim;
+    }
+  }, [sim]);
 
   useEffect(() => {
     initializeScene();
@@ -129,6 +150,9 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
       if (managerRef.current) {
         managerRef.current.dispose();
         managerRef.current = null;
+        if (typeof window !== 'undefined') {
+          delete (window as unknown as Record<string, unknown>).__CYBERLIFE_WORLD_MANAGER__;
+        }
       }
     };
   }, [initializeScene]);
@@ -150,6 +174,14 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
     setIsDesktopOpen(false);
     if (managerRef.current) {
       managerRef.current.exitWorkstationSession();
+    }
+  }, []);
+
+  const handleCloseDialogue = useCallback(() => {
+    setActiveNpcId(null);
+    if (managerRef.current) {
+      managerRef.current.setInputDisabled(false);
+      managerRef.current.endNpcDialogue();
     }
   }, []);
 
@@ -242,62 +274,8 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
         </div>
       )}
 
-      {/* NPC Dialogue Modal */}
-      {npcDialogue && (
-        <div
-          role="dialog"
-          aria-label={`Conversation with ${npcDialogue.name}`}
-          className="world-error-card hud-interactive"
-          style={{
-            position: 'absolute',
-            top: '5.5rem',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            maxWidth: '540px',
-            width: '90%',
-            zIndex: 25,
-            border: '1px solid var(--color-accent-cyan)',
-            backgroundColor: 'var(--color-bg-surface-elevated)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6)',
-          }}
-          data-testid="npc-dialogue-modal"
-        >
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}
-          >
-            <span style={{ fontSize: '1.4rem' }}>👩🏾‍💼</span>
-            <div>
-              <h3 style={{ color: 'var(--color-accent-cyan)', fontSize: '1rem', margin: 0 }}>
-                {npcDialogue.name}
-              </h3>
-              <span style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)' }}>
-                {npcDialogue.role} // Cedarline Incident Response
-              </span>
-            </div>
-          </div>
-          <p
-            style={{
-              color: 'var(--color-text-primary)',
-              fontSize: '0.85rem',
-              lineHeight: 1.5,
-              marginBottom: '0.85rem',
-            }}
-          >
-            &quot;{npcDialogue.dialogue}&quot;
-          </p>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-            <button
-              type="button"
-              className="btn-primary"
-              style={{ fontSize: '0.8rem', padding: '0.35rem 0.8rem' }}
-              onClick={() => setNpcDialogue(null)}
-              data-testid="btn-close-npc-dialogue"
-            >
-              Understood, Amina
-            </button>
-          </div>
-        </div>
-      )}
+      {/* M7 Interactive Branching Dialogue Overlay */}
+      {activeNpcId && <DialogueOverlay npcId={activeNpcId} onClose={handleCloseDialogue} />}
 
       {/* 2D HUD Layer positioned above the 3D canvas */}
       {!isDesktopOpen && (

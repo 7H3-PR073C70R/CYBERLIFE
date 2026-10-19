@@ -169,4 +169,60 @@ export function validateSimulationState(state: SimulationState): void {
       throw new InvariantViolationError('Mission objectives must be an array');
     }
   }
+
+  // 8. NPC invariants (if present)
+  if (state.npcs) {
+    if (typeof state.npcs !== 'object') {
+      throw new InvariantViolationError('NPC state must be an object');
+    }
+    for (const [npcId, npc] of Object.entries(state.npcs)) {
+      if (!npc || typeof npc !== 'object') {
+        throw new InvariantViolationError(`Invalid NPC state entry for "${npcId}"`);
+      }
+      if (npc.id !== npcId) {
+        throw new InvariantViolationError(
+          `NPC key "${npcId}" does not match internal npc.id "${npc.id}"`
+        );
+      }
+      if (
+        !Number.isSafeInteger(npc.relationship) ||
+        npc.relationship < -100 ||
+        npc.relationship > 100
+      ) {
+        throw new InvariantViolationError(
+          `NPC "${npcId}" relationship out of bounds: expected [-100, 100], received ${npc.relationship}`
+        );
+      }
+      if (!npc.memory || typeof npc.memory !== 'object') {
+        throw new InvariantViolationError(`NPC "${npcId}" memory is missing or invalid`);
+      }
+      if (typeof npc.memory.met !== 'boolean') {
+        throw new InvariantViolationError(`NPC "${npcId}" memory.met must be a boolean`);
+      }
+      if (!Number.isSafeInteger(npc.memory.conversationCount) || npc.memory.conversationCount < 0) {
+        throw new InvariantViolationError(
+          `NPC "${npcId}" memory.conversationCount must be a non-negative integer`
+        );
+      }
+      if (
+        !Array.isArray(npc.memory.topicsDiscussed) ||
+        !Array.isArray(npc.memory.choicesMade) ||
+        !Array.isArray(npc.memory.sharedFacts) ||
+        !Array.isArray(npc.memory.commitments)
+      ) {
+        throw new InvariantViolationError(`NPC "${npcId}" memory list fields must be arrays`);
+      }
+    }
+  }
+
+  // 9. Active dialogue invariants (if present)
+  if (state.activeDialogue) {
+    const { activeDialogue } = state;
+    if (!activeDialogue.npcId || typeof activeDialogue.npcId !== 'string') {
+      throw new InvariantViolationError('activeDialogue.npcId must be a non-empty string');
+    }
+    if (!activeDialogue.currentNodeId || typeof activeDialogue.currentNodeId !== 'string') {
+      throw new InvariantViolationError('activeDialogue.currentNodeId must be a non-empty string');
+    }
+  }
 }

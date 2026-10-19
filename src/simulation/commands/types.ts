@@ -17,6 +17,11 @@ export type SimulationErrorCode =
   | 'INVALID_LOCATION'
   | 'TIMER_ALREADY_EXISTS'
   | 'TIMER_NOT_FOUND'
+  | 'NPC_NOT_FOUND'
+  | 'DIALOGUE_NODE_NOT_FOUND'
+  | 'DIALOGUE_CHOICE_NOT_FOUND'
+  | 'DIALOGUE_CONDITION_NOT_MET'
+  | 'NO_ACTIVE_DIALOGUE'
   | 'INVARIANT_VIOLATION';
 
 export interface AdvanceSimulationTimeCommand {
@@ -154,6 +159,39 @@ export interface SubmitIncidentReportCommand {
   readonly report: IncidentReportData;
 }
 
+export interface StartNpcDialogueCommand {
+  readonly type: 'StartNpcDialogue';
+  readonly npcId: string;
+  readonly initialNodeId?: string;
+}
+
+export interface SelectDialogueChoiceCommand {
+  readonly type: 'SelectDialogueChoice';
+  readonly npcId: string;
+  readonly choiceId: string;
+}
+
+export interface EndDialogueCommand {
+  readonly type: 'EndDialogue';
+  readonly npcId?: string;
+}
+
+export interface ChangeNpcRelationshipCommand {
+  readonly type: 'ChangeNpcRelationship';
+  readonly npcId: string;
+  readonly delta: number;
+  readonly reason: string;
+}
+
+export interface RecordNpcMemoryCommand {
+  readonly type: 'RecordNpcMemory';
+  readonly npcId: string;
+  readonly topic?: string;
+  readonly choice?: string;
+  readonly fact?: string;
+  readonly commitment?: string;
+}
+
 export type SimulationCommand =
   | AdvanceSimulationTimeCommand
   | ChangePlayerAttributeCommand
@@ -175,7 +213,12 @@ export type SimulationCommand =
   | ExecuteContainmentCommand
   | RemediatePermissionsCommand
   | VerifyRemediationCommand
-  | SubmitIncidentReportCommand;
+  | SubmitIncidentReportCommand
+  | StartNpcDialogueCommand
+  | SelectDialogueChoiceCommand
+  | EndDialogueCommand
+  | ChangeNpcRelationshipCommand
+  | RecordNpcMemoryCommand;
 
 export interface CommandResult {
   readonly success: boolean;

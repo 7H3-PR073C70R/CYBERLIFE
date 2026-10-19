@@ -1,0 +1,72 @@
+import { WorldFlagValue } from '../core/types';
+import { AsterIncidentPhase } from '../missions/types';
+import { NpcMemoryState } from '../actors/types';
+
+export interface DialogueCondition {
+  readonly minRelationship?: number;
+  readonly maxRelationship?: number;
+  readonly requiredFlags?: Readonly<Record<string, WorldFlagValue>>;
+  readonly forbiddenFlags?: readonly string[];
+  readonly requiredMissionPhase?: AsterIncidentPhase;
+  readonly minMissionPhase?: AsterIncidentPhase;
+  readonly requiredTopic?: string;
+  readonly forbiddenTopic?: string;
+  readonly requiredChoice?: string;
+  readonly requiresMetBefore?: boolean;
+}
+
+export type DialogueAction =
+  | {
+      readonly type: 'CHANGE_RELATIONSHIP';
+      readonly delta: number;
+      readonly reason: string;
+    }
+  | {
+      readonly type: 'SET_FLAG';
+      readonly key: string;
+      readonly value: WorldFlagValue;
+    }
+  | {
+      readonly type: 'RECORD_MEMORY';
+      readonly topic: string;
+      readonly fact?: string;
+    }
+  | {
+      readonly type: 'ADVANCE_MISSION_PHASE';
+      readonly targetPhase: AsterIncidentPhase;
+    }
+  | {
+      readonly type: 'RECORD_FINDING';
+      readonly findingType: 'host' | 'service' | 'log' | 'evidence';
+      readonly targetId: string;
+    };
+
+export interface DialogueChoice {
+  readonly id: string;
+  readonly text: string;
+  readonly nextNodeId: string;
+  readonly condition?: DialogueCondition;
+  readonly actions?: readonly DialogueAction[];
+}
+
+export interface DialogueNode {
+  readonly id: string;
+  readonly speakerId: string;
+  readonly text: string;
+  readonly choices: readonly DialogueChoice[];
+  readonly isTerminal?: boolean;
+}
+
+export interface DialogueEvaluationContext {
+  readonly relationship: number;
+  readonly memory: NpcMemoryState;
+  readonly flags: Readonly<Record<string, WorldFlagValue>>;
+  readonly missionPhase?: AsterIncidentPhase;
+}
+
+export interface DialogueGraph {
+  readonly npcId: string;
+  readonly defaultNodeId: string;
+  readonly nodes: Readonly<Record<string, DialogueNode>>;
+  readonly getInitialNodeId?: (context: DialogueEvaluationContext) => string;
+}

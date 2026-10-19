@@ -61,6 +61,7 @@ export interface SimulationTimerState {
 }
 
 import type { AsterIncidentMissionState } from '../missions/types';
+import type { NpcSimulationState, ActiveDialogueState } from '../actors/types';
 
 export interface SimulationState {
   readonly metadata: SimulationMetadata;
@@ -71,4 +72,6 @@ export interface SimulationState {
   readonly timers: ReadonlyArray<SimulationTimerState>;
   readonly nextTimerSequence: number;
   readonly mission?: AsterIncidentMissionState;
+  readonly npcs?: Readonly<Record<string, NpcSimulationState>>;
+  readonly activeDialogue?: ActiveDialogueState;
 }

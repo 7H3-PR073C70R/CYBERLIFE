@@ -30,6 +30,7 @@ export interface WorldSceneOptions {
   onNoticeboardRead?: (notice: string) => void;
   onWorkstationOpen?: (workstationId: string) => void;
   onNpcDialogue?: (dialogue: NpcDialogueData) => void;
+  onNpcInteract?: (npcId: string) => void;
 }
 
 export interface SceneStatistics {
@@ -72,6 +73,7 @@ export class WorldSceneManager {
   private onNoticeboardRead?: (notice: string) => void;
   private onWorkstationOpen?: (workstationId: string) => void;
   private onNpcDialogue?: (dialogue: NpcDialogueData) => void;
+  private onNpcInteract?: (npcId: string) => void;
 
   private frameCount = 0;
   private isDisposed = false;
@@ -118,6 +120,7 @@ export class WorldSceneManager {
     this.onNoticeboardRead = options.onNoticeboardRead;
     this.onWorkstationOpen = options.onWorkstationOpen;
     this.onNpcDialogue = options.onNpcDialogue;
+    this.onNpcInteract = options.onNpcInteract;
 
     // 1. Scene Setup
     const clearColor = options.clearColor ?? 0x7dd3fc; // Warm coastal Lagos sky blue
@@ -281,15 +284,27 @@ export class WorldSceneManager {
       this.onNoticeboardRead?.(
         'TINUBU SQUARE BULLETIN: Unusual system alert activity detected in Cedarline Services Marina staging cluster. Cedarline IT security staff meeting on Broad Street at 14:00.'
       );
-    } else if (target.id === 'interact_npc_amina') {
+    } else if (target.id.startsWith('interact_npc_') || target.id === 'interact_npc_amina') {
+      const npcId = target.id.replace('interact_', '');
+      const playerPos = this.playerController?.getPosition();
+      if (playerPos) {
+        this.worldEnvironment?.getNpcManager()?.setDialogueActive(npcId, playerPos);
+      }
+      this.onNpcInteract?.(npcId);
       this.onNpcDialogue?.({
-        npcId: 'npc_amina',
-        name: 'Amina Okonjo',
-        role: 'Lead Security Analyst',
+        npcId,
+        name: target.name,
+        role: '',
         dialogue:
-          'Tade, welcome to the SOC. We have an active incident: Aster AI was flagged for unauthorized SMB queries on filesrv-01. Head to your workstation, open the Terminal and Incident Portal, preserve the evidence, and investigate why Aster has excessive permissions. Good luck!',
+          target.id === 'interact_npc_amina'
+            ? 'Tade, welcome to the SOC. We have an active incident: Aster AI was flagged for unauthorized SMB queries on filesrv-01. Head to your workstation, open the Terminal and Incident Portal, preserve the evidence, and investigate why Aster has excessive permissions. Good luck!'
+            : '',
       });
     }
+  }
+
+  public endNpcDialogue(): void {
+    this.worldEnvironment?.getNpcManager()?.setDialogueActive(null);
   }
 
   /**
@@ -407,7 +422,8 @@ export class WorldSceneManager {
 
       // 3. Update Environment Markers, Pedestrians, Traffic, and Workstation Screen
       if (this.worldEnvironment) {
-        this.worldEnvironment.update(deltaTime, this.currentSimTime);
+        const playerPos = this.playerController ? this.playerController.getPosition() : undefined;
+        this.worldEnvironment.update(deltaTime, this.currentSimTime, playerPos);
       }
 
       // 4. Proximity Interaction Check

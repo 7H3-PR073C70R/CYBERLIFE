@@ -2,7 +2,8 @@
  * Cyberlife — Virtual Desktop Presentation Types
  */
 
-export type AppId = 'terminal' | 'fieldGuide' | 'systemInfo' | 'notes' | 'activity' | 'incident';
+export type AppId =
+  'terminal' | 'fieldGuide' | 'systemInfo' | 'notes' | 'activity' | 'incident' | 'contacts';
 
 export interface AppDefinition {
   id: AppId;
@@ -85,5 +86,15 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
       'Timeline of simulated workstation activities, tool executions, and security events.',
     defaultSize: { width: 660, height: 460 },
     minSize: { width: 380, height: 280 },
+  },
+  contacts: {
+    id: 'contacts',
+    title: 'Lagos Social & Professional Directory',
+    shortTitle: 'Contacts',
+    icon: '👥',
+    description:
+      'Track Lagos Island professional contacts, colleagues, community relations, and schedules.',
+    defaultSize: { width: 720, height: 500 },
+    minSize: { width: 440, height: 320 },
   },
 };
