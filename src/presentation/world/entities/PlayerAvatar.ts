@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { HumanoidCharacter } from './HumanoidCharacter';
 import { RiggedHumanoidCharacter } from './RiggedHumanoidCharacter';
 import { PlayerCharacterGender, PLAYER_CHARACTER } from '../worldConfig';
+import { PLAYER_PROTAGONIST_PALETTE } from './CharacterCustomizer';
 
 /**
  * PlayerAvatar: Represents the player's 3D human character in Cyberlife.
@@ -28,8 +29,8 @@ export class PlayerAvatar {
     this.group = new THREE.Group();
     this.group.name = 'PlayerAvatar';
 
-    // Start with RiggedHumanoidCharacter as the primary character
-    const rigged = new RiggedHumanoidCharacter(gender);
+    // Start with RiggedHumanoidCharacter configured with the unique Protagonist palette
+    const rigged = new RiggedHumanoidCharacter(gender, PLAYER_PROTAGONIST_PALETTE);
     this.riggedCharacter = rigged;
     this.activeCharacter = rigged;
     this.group.add(rigged.getMesh());

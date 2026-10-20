@@ -186,7 +186,7 @@ export class RiggedNpcCharacter {
     const isFemale = this.bodyType === 'female_1' || this.bodyType === 'female_2';
     const scale = isFemale ? 0.936 : 1.0;
     this.modelRoot.scale.set(scale, scale, scale);
-    this.modelRoot.position.set(0, 0, 0);
+    this.modelRoot.position.set(0, 0.02, 0); // Elevation matches sidewalk/road surface so shoes are 100% visible
     this.modelRoot.rotation.y = this.currentYaw;
 
     // Apply authentic Nigerian skin tone & tailored outfit customization

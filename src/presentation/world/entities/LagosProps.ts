@@ -369,45 +369,490 @@ export class LagosProps {
   }
 
   /**
-   * Builds tropical royal palm trees for Tinubu Square and Marina promenade.
+   * Builds realistic tropical royal palm trees with natural curved segmented trunks,
+   * swollen fiber base, coconut clusters, smooth green crownshaft, and cascading feathered fronds.
    */
-  public static createPalmTree(x: number, z: number, height = 5.5): THREE.Group {
+  public static createPalmTree(x: number, z: number, height = 6.2): THREE.Group {
     const group = new THREE.Group();
     group.name = 'PalmTree';
     group.position.set(x, 0, z);
 
-    // Segmented curved trunk
-    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x5a3e2b, roughness: 0.9 });
-    const segments = 6;
-    const segH = height / segments;
+    // 1. Swollen Trunk Base (Boot)
+    const baseMat = new THREE.MeshStandardMaterial({
+      color: 0x3d271d,
+      roughness: 0.9,
+    });
+    const baseGeo = new THREE.CylinderGeometry(0.38, 0.48, 0.6, 12);
+    const trunkBase = new THREE.Mesh(baseGeo, baseMat);
+    trunkBase.position.y = 0.3;
+    trunkBase.castShadow = true;
+    group.add(trunkBase);
+
+    // 2. Segmented Curved Trunk with Bark Ring Geometry
+    const trunkMat = new THREE.MeshStandardMaterial({
+      color: 0x5a3e2b,
+      roughness: 0.85,
+    });
+    const segments = 8;
+    const trunkHeight = height - 1.2;
+    const segH = trunkHeight / segments;
 
     for (let i = 0; i < segments; i++) {
-      const radius = 0.22 - i * 0.02;
-      const segGeo = new THREE.CylinderGeometry(radius * 0.85, radius, segH, 8);
+      const t = i / segments;
+      const radiusBottom = 0.36 - t * 0.12;
+      const radiusTop = 0.36 - (t + 1 / segments) * 0.12;
+      const segGeo = new THREE.CylinderGeometry(radiusTop, radiusBottom, segH, 12);
       const seg = new THREE.Mesh(segGeo, trunkMat);
-      seg.position.y = i * segH + segH / 2;
-      // Slight tropical curve
-      seg.position.x = Math.sin((i / segments) * 1.2) * 0.25;
+      seg.position.y = 0.6 + i * segH + segH / 2;
+      // Graceful organic tropical lean
+      seg.position.x = Math.sin(t * 1.4) * 0.35;
+      seg.position.z = Math.sin(t * 0.8) * 0.15;
+      seg.castShadow = true;
       group.add(seg);
+
+      // Bark Ring Collar
+      const ringGeo = new THREE.TorusGeometry(radiusBottom * 1.05, 0.02, 6, 12);
+      const ring = new THREE.Mesh(ringGeo, baseMat);
+      ring.rotation.x = Math.PI / 2;
+      ring.position.set(seg.position.x, 0.6 + i * segH, seg.position.z);
+      group.add(ring);
     }
 
-    // Spreading Fronds at crown
+    const crownX = Math.sin(1.4) * 0.35;
+    const crownZ = Math.sin(0.8) * 0.15;
+    const crownBaseY = 0.6 + trunkHeight;
+
+    // 3. Smooth Green Crownshaft (characteristic of Royal Palms)
+    const crownshaftMat = new THREE.MeshStandardMaterial({
+      color: 0x166534,
+      roughness: 0.5,
+    });
+    const crownshaft = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.2, 0.24, 0.9, 12),
+      crownshaftMat
+    );
+    crownshaft.position.set(crownX, crownBaseY + 0.45, crownZ);
+    crownshaft.castShadow = true;
+    group.add(crownshaft);
+
+    // 4. Hanging Coconut / Date Clusters
+    const nutMat = new THREE.MeshStandardMaterial({
+      color: 0x78350f,
+      roughness: 0.7,
+    });
+    const nutGeo = new THREE.SphereGeometry(0.12, 8, 8);
+    for (let n = 0; n < 8; n++) {
+      const angle = (n / 8) * Math.PI * 2;
+      const nut = new THREE.Mesh(nutGeo, nutMat);
+      nut.position.set(
+        crownX + Math.cos(angle) * 0.28,
+        crownBaseY + 0.2 + (n % 2) * 0.1,
+        crownZ + Math.sin(angle) * 0.28
+      );
+      group.add(nut);
+    }
+
+    // 5. Gracefully Arching Lush Compound Palm Fronds (3 tiers of radial fronds)
     const frondMat = new THREE.MeshStandardMaterial({
       color: 0x15803d,
-      roughness: 0.6,
+      roughness: 0.5,
       side: THREE.DoubleSide,
     });
-    const frondGeo = new THREE.ConeGeometry(0.7, 3.2, 5);
 
-    const frondCount = 8;
-    for (let f = 0; f < frondCount; f++) {
-      const angle = (f / frondCount) * Math.PI * 2;
-      const frond = new THREE.Mesh(frondGeo, frondMat);
-      frond.position.set(Math.cos(angle) * 1.2, height - 0.2, Math.sin(angle) * 1.2);
-      frond.rotation.z = Math.cos(angle) * 0.85;
-      frond.rotation.x = Math.sin(angle) * 0.85;
-      frond.rotation.y = angle;
-      group.add(frond);
+    const frondTiers = [
+      { count: 6, droop: 0.45, length: 3.4, yOffset: 0.9 }, // Top canopy
+      { count: 7, droop: 0.85, length: 3.8, yOffset: 0.7 }, // Mid canopy
+      { count: 7, droop: 1.25, length: 3.6, yOffset: 0.5 }, // Drooping lower canopy
+    ];
+
+    frondTiers.forEach((tier, tierIdx) => {
+      for (let f = 0; f < tier.count; f++) {
+        const angle = (f / tier.count) * Math.PI * 2 + tierIdx * 0.4;
+        const frondGroup = new THREE.Group();
+        frondGroup.position.set(crownX, crownBaseY + tier.yOffset, crownZ);
+        frondGroup.rotation.y = angle;
+
+        // Curved arching stem
+        const stemMat = new THREE.MeshStandardMaterial({ color: 0x166534, roughness: 0.7 });
+        const stem = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.02, 0.05, tier.length, 6),
+          stemMat
+        );
+        stem.rotation.z = tier.droop;
+        stem.position.set(Math.sin(tier.droop) * (tier.length / 2), Math.cos(tier.droop) * (tier.length / 2), 0);
+        frondGroup.add(stem);
+
+        // Feathered Leaf Blades along stem
+        const bladeCount = 6;
+        for (let b = 1; b <= bladeCount; b++) {
+          const bt = b / bladeCount;
+          const bladeW = (1 - bt * 0.6) * 0.75;
+          const bladeL = 0.55;
+          const bladeGeo = new THREE.PlaneGeometry(bladeW, bladeL);
+          const blade = new THREE.Mesh(bladeGeo, frondMat);
+          blade.rotation.x = Math.PI / 2;
+          blade.rotation.z = tier.droop;
+          blade.position.set(
+            Math.sin(tier.droop) * (tier.length * bt),
+            Math.cos(tier.droop) * (tier.length * bt),
+            0
+          );
+          blade.castShadow = true;
+          frondGroup.add(blade);
+        }
+
+        group.add(frondGroup);
+      }
+    });
+
+    return group;
+  }
+
+  /**
+   * Builds high-resolution commercial LED advertising billboard displays:
+   * Authentic Nigerian brands (MTN 5G, Flutterwave, Cyberlife OS, GTCO Private Bank)
+   * mounted on heavy structural steel truss frames with overhead gooseneck LED spotlight fixtures.
+   */
+  public static createBillboardAd(
+    x: number,
+    y: number,
+    z: number,
+    rotationY: number,
+    brand: 'MTN_5G' | 'FLUTTERWAVE' | 'CYBERLIFE_OS' | 'GTCO_BANK',
+    width = 7.0,
+    height = 3.6
+  ): THREE.Group {
+    const group = new THREE.Group();
+    group.name = `BillboardAd_${brand}`;
+    group.position.set(x, y, z);
+    group.rotation.y = rotationY;
+
+    // 1. Dynamic High-Res Advertising Texture via HTML Canvas
+    let adTexture: THREE.CanvasTexture | null = null;
+    if (typeof document !== 'undefined') {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+
+      if (ctx) {
+        if (brand === 'MTN_5G') {
+          // Vibrant MTN Yellow & Black Brand
+          ctx.fillStyle = '#facc15';
+          ctx.fillRect(0, 0, 1024, 512);
+
+          // Subtle circuit lines
+          ctx.strokeStyle = '#eab308';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.arc(880, 256, 180, 0, Math.PI * 2);
+          ctx.arc(880, 256, 260, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // MTN Oval Logo
+          ctx.fillStyle = '#0f172a';
+          ctx.beginPath();
+          ctx.ellipse(160, 110, 80, 48, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#facc15';
+          ctx.font = 'bold 36px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('MTN', 160, 122);
+
+          // 5G Headline
+          ctx.fillStyle = '#0f172a';
+          ctx.font = '900 68px sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText('5G IS HERE', 80, 240);
+
+          ctx.font = 'bold 38px sans-serif';
+          ctx.fillText('LAGOS ISLAND HIGH-SPEED GRID', 80, 300);
+
+          ctx.fillStyle = '#1e293b';
+          ctx.font = '28px sans-serif';
+          ctx.fillText('Ultra-low latency across Broad Street & Marina Boulevard', 80, 360);
+
+          // Footer pill
+          ctx.fillStyle = '#0f172a';
+          ctx.fillRect(80, 410, 380, 56);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 24px sans-serif';
+          ctx.fillText('EVERYWHERE YOU GO • 5G+', 100, 446);
+        } else if (brand === 'FLUTTERWAVE') {
+          // Modern Fintech Indigo / Midnight Blue & Cyan Wave
+          const grad = ctx.createLinearGradient(0, 0, 1024, 512);
+          grad.addColorStop(0, '#0b1329');
+          grad.addColorStop(1, '#1e1b4b');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, 1024, 512);
+
+          // Glowing wave ribbon
+          ctx.strokeStyle = '#00f0ff';
+          ctx.lineWidth = 12;
+          ctx.beginPath();
+          ctx.moveTo(0, 400);
+          ctx.bezierCurveTo(300, 250, 700, 450, 1024, 180);
+          ctx.stroke();
+
+          // Logo & Headline
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '900 64px sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText('flutterwave', 80, 150);
+
+          ctx.fillStyle = '#38bdf8';
+          ctx.font = 'bold 44px sans-serif';
+          ctx.fillText('Endless Possibilities for Global Commerce', 80, 240);
+
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '30px sans-serif';
+          ctx.fillText('Powering millions of transactions across African tech ecosystems', 80, 310);
+
+          // Button pill
+          ctx.fillStyle = '#0284c7';
+          ctx.fillRect(80, 380, 320, 60);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 26px sans-serif';
+          ctx.fillText('ACCEPT PAYMENTS →', 105, 420);
+        } else if (brand === 'CYBERLIFE_OS') {
+          // Cyberlife Neural Defense Grid
+          ctx.fillStyle = '#09090b';
+          ctx.fillRect(0, 0, 1024, 512);
+
+          // Neon Grid overlay
+          ctx.strokeStyle = '#1e293b';
+          ctx.lineWidth = 2;
+          for (let gx = 0; gx < 1024; gx += 64) {
+            ctx.beginPath();
+            ctx.moveTo(gx, 0);
+            ctx.lineTo(gx, 512);
+            ctx.stroke();
+          }
+          for (let gy = 0; gy < 512; gy += 64) {
+            ctx.beginPath();
+            ctx.moveTo(0, gy);
+            ctx.lineTo(1024, gy);
+            ctx.stroke();
+          }
+
+          // Glowing Header
+          ctx.fillStyle = '#00f0ff';
+          ctx.font = '900 60px monospace';
+          ctx.textAlign = 'left';
+          ctx.fillText('CYBERLIFE OS 4.0', 80, 140);
+
+          ctx.fillStyle = '#ef4444';
+          ctx.font = 'bold 36px monospace';
+          ctx.fillText('[!] NEURAL SECURITY GRID ONLINE', 80, 220);
+
+          ctx.fillStyle = '#e2e8f0';
+          ctx.font = '28px sans-serif';
+          ctx.fillText('Real-time biometric surveillance & endpoint intrusion monitoring', 80, 290);
+          ctx.fillText('Broad Street Security Subnet 07: SECURE', 80, 340);
+
+          ctx.fillStyle = '#10b981';
+          ctx.fillRect(80, 390, 400, 50);
+          ctx.fillStyle = '#09090b';
+          ctx.font = 'bold 26px monospace';
+          ctx.fillText('PROTECT YOUR SYSTEM', 105, 425);
+        } else {
+          // GTCO Private Banking
+          ctx.fillStyle = '#111827';
+          ctx.fillRect(0, 0, 1024, 512);
+
+          // Gold Accent Bar
+          ctx.fillStyle = '#d97706';
+          ctx.fillRect(0, 0, 1024, 24);
+
+          ctx.fillStyle = '#f8fafc';
+          ctx.font = '900 56px sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText('GTCO PRIVATE BANKING', 80, 160);
+
+          ctx.fillStyle = '#facc15';
+          ctx.font = 'bold 38px sans-serif';
+          ctx.fillText('Marina Waterfront Financial Center', 80, 240);
+
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '28px sans-serif';
+          ctx.fillText('Dedicated private wealth management for corporate leaders', 80, 320);
+
+          ctx.strokeStyle = '#d97706';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(80, 380, 340, 56);
+          ctx.fillStyle = '#facc15';
+          ctx.font = 'bold 24px sans-serif';
+          ctx.fillText('SCHEDULE A CONSULTATION', 100, 416);
+        }
+
+        adTexture = new THREE.CanvasTexture(canvas);
+        adTexture.colorSpace = THREE.SRGBColorSpace;
+      }
+    }
+
+    // 2. Front Billboard Panel
+    const boardMat = new THREE.MeshStandardMaterial({
+      map: adTexture,
+      emissiveMap: adTexture,
+      emissive: new THREE.Color(0xffffff),
+      emissiveIntensity: 0.35,
+      roughness: 0.25,
+      metalness: 0.1,
+    });
+    const boardGeo = new THREE.BoxGeometry(width, height, 0.12);
+    const boardMesh = new THREE.Mesh(boardGeo, boardMat);
+    boardMesh.castShadow = true;
+    boardMesh.receiveShadow = true;
+    group.add(boardMesh);
+
+    // 3. Heavy Steel Outer Bezel
+    const frameMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      metalness: 0.85,
+      roughness: 0.3,
+    });
+    const frameGeo = new THREE.BoxGeometry(width + 0.3, height + 0.3, 0.16);
+    const frameMesh = new THREE.Mesh(frameGeo, frameMat);
+    frameMesh.position.z = -0.04;
+    group.add(frameMesh);
+
+    // 4. Rear Steel Lattice Truss Support
+    const trussMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.8 });
+    const rearTruss = new THREE.Mesh(new THREE.BoxGeometry(width * 0.9, height * 0.8, 0.4), trussMat);
+    rearTruss.position.z = -0.3;
+    group.add(rearTruss);
+
+    // 5. Dual Overhead Gooseneck LED Spotlight Fixtures
+    const spotLampMat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.8 });
+    const lensMat = new THREE.MeshBasicMaterial({ color: 0xfef08a }); // warm spotlight glow
+
+    [-width * 0.3, width * 0.3].forEach(lx => {
+      const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.9, 8), spotLampMat);
+      arm.rotation.x = -Math.PI / 3;
+      arm.position.set(lx, height / 2 + 0.35, 0.35);
+      group.add(arm);
+
+      const lampHead = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.18, 0.25), spotLampMat);
+      lampHead.position.set(lx, height / 2 + 0.65, 0.65);
+      lampHead.rotation.x = Math.PI / 4;
+      group.add(lampHead);
+
+      const lens = new THREE.Mesh(new THREE.PlaneGeometry(0.3, 0.15), lensMat);
+      lens.position.set(lx, height / 2 + 0.6, 0.72);
+      lens.rotation.x = Math.PI / 4;
+      group.add(lens);
+    });
+
+    return group;
+  }
+
+  /**
+   * Builds the iconic Broad Street Overhead Portal Arch / District Gateway Gantry:
+   * Spanning across the 10m roadway from sidewalk to sidewalk at z = -36.
+   * Clear roadway clearance under the arch allows buses and cars to drive freely underneath.
+   */
+  public static createWelcomePortalArch(z = -36): THREE.Group {
+    const group = new THREE.Group();
+    group.name = 'BroadStreetWelcomePortal';
+    group.position.set(0, 0, z);
+
+    const pillarMat = new THREE.MeshStandardMaterial({
+      color: 0x334155, // Concrete & reinforced steel
+      roughness: 0.8,
+      metalness: 0.3,
+    });
+    const trussMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      roughness: 0.4,
+      metalness: 0.85,
+    });
+
+    // 1. Twin Side Support Pillars (placed safely on sidewalks at x = -5.8 and x = 5.8)
+    const pillarHeight = 6.4;
+    const pillarGeo = new THREE.BoxGeometry(0.8, pillarHeight, 0.8);
+
+    [-5.8, 5.8].forEach(px => {
+      const pillar = new THREE.Mesh(pillarGeo, pillarMat);
+      pillar.position.set(px, pillarHeight / 2, 0);
+      pillar.castShadow = true;
+      group.add(pillar);
+
+      // Flashing Caution Beacon Light at top
+      const beaconMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+      const beacon = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 8), beaconMat);
+      beacon.position.set(px, pillarHeight + 0.15, 0);
+      group.add(beacon);
+    });
+
+    // 2. Overhead Structural Box Truss Beam (clearance height: 5.6m)
+    const trussW = 12.4;
+    const trussH = 0.9;
+    const trussGeo = new THREE.BoxGeometry(trussW, trussH, 0.7);
+    const trussMesh = new THREE.Mesh(trussGeo, trussMat);
+    trussMesh.position.set(0, pillarHeight - trussH / 2, 0);
+    trussMesh.castShadow = true;
+    group.add(trussMesh);
+
+    // 3. Highway Sign Panel (Official Lagos State Green & White)
+    const signMat = new THREE.MeshStandardMaterial({
+      color: 0x15803d, // Lagos State highway green
+      roughness: 0.4,
+    });
+    const signGeo = new THREE.BoxGeometry(10.2, 1.4, 0.12);
+    const signBoard = new THREE.Mesh(signGeo, signMat);
+    signBoard.position.set(0, pillarHeight - 0.1, 0.42);
+    group.add(signBoard);
+
+    // White reflective border trim
+    const borderMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const borderGeo = new THREE.BoxGeometry(10.3, 1.5, 0.08);
+    const border = new THREE.Mesh(borderGeo, borderMat);
+    border.position.set(0, pillarHeight - 0.1, 0.38);
+    group.add(border);
+
+    // Dynamic sign text via canvas
+    if (typeof document !== 'undefined') {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 256;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#15803d';
+        ctx.fillRect(0, 0, 1024, 256);
+
+        // White border
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 10;
+        ctx.strokeRect(10, 10, 1004, 236);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 44px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('LAGOS STATE CENTRAL BUSINESS DISTRICT', 512, 75);
+
+        ctx.fillStyle = '#fef08a';
+        ctx.font = '900 52px sans-serif';
+        ctx.fillText('BROAD STREET  •  TINUBU SQUARE', 512, 145);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 34px sans-serif';
+        ctx.fillText('↓ MARINA WATERFRONT | BALOGUN MARKET →', 512, 210);
+
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        const textMesh = new THREE.Mesh(
+          new THREE.PlaneGeometry(10.0, 1.3),
+          new THREE.MeshStandardMaterial({
+            map: tex,
+            roughness: 0.3,
+            emissiveMap: tex,
+            emissive: new THREE.Color(0xffffff),
+            emissiveIntensity: 0.3,
+          })
+        );
+        textMesh.position.set(0, pillarHeight - 0.1, 0.49);
+        group.add(textMesh);
+      }
     }
 
     return group;

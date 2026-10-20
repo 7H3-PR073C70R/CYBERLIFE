@@ -42,6 +42,7 @@ export class RiggedHumanoidCharacter {
   private isFirstPerson = false;
   private headBone: THREE.Bone | null = null;
   private neckBone: THREE.Bone | null = null;
+  private leftWristBone: THREE.Bone | null = null;
   private hiddenFirstPersonMeshes: THREE.Mesh[] = [];
 
   // Configuration
@@ -55,11 +56,11 @@ export class RiggedHumanoidCharacter {
   ) {
     this.gender = gender;
     this.palette = palette ?? {
-      skin: 0x5c3826, // Warm cocoa Nigerian melanin
-      jacket: 0x0284c7, // Royal Blue
-      pants: 0x1e293b, // Dark denim
-      shoes: 0xffffff, // White sneakers
-      hair: 0x111111,
+      skin: 0x523220, // Warm cocoa Nigerian melanin
+      jacket: 0x0f172a, // Obsidian Cyber Operative Jacket
+      pants: 0x1e293b, // Tactical Charcoal Denim
+      shoes: 0x06b6d4, // Cyber Cyan Tech Runners
+      hair: 0x09090b,
     };
     this.group = new THREE.Group();
     this.group.name = `RiggedHumanoidCharacter_${gender}`;
@@ -93,7 +94,7 @@ export class RiggedHumanoidCharacter {
     // 2. Proportions & scale (female ~1.65m, male ~1.76m)
     const scale = this.gender === 'female' ? 0.936 : 1.0;
     this.modelRoot.scale.set(scale, scale, scale);
-    this.modelRoot.position.set(0, 0, 0);
+    this.modelRoot.position.set(0, 0.02, 0); // Elevation matches sidewalk/road surface so shoes are 100% visible
     this.modelRoot.rotation.y = this.currentYaw;
 
     // 3. Materials, shadow casting, and first-person bone tracking
@@ -147,12 +148,52 @@ export class RiggedHumanoidCharacter {
           this.headBone = child as THREE.Bone;
         } else if (boneName === 'mixamorigNeck' || boneName === 'mixamorig:Neck') {
           this.neckBone = child as THREE.Bone;
+        } else if (
+          boneName === 'mixamorigLeftHand' ||
+          boneName === 'mixamorig:LeftHand' ||
+          boneName === 'mixamorigLeftForeArm' ||
+          boneName === 'mixamorig:LeftForeArm'
+        ) {
+          if (!this.leftWristBone || boneName.includes('Hand')) {
+            this.leftWristBone = child as THREE.Bone;
+          }
         }
       }
     });
 
     // Apply authentic Nigerian skin tone & clothing customization
     applyCharacterCustomization(this.modelRoot, this.palette);
+
+    // If Protagonist, attach custom holographic cyber comm-link to left wrist
+    if (this.palette.accent && this.leftWristBone) {
+      const commGroup = new THREE.Group();
+      commGroup.name = 'ProtagonistCyberCommLink';
+
+      // Titanium wristband
+      const bandGeo = new THREE.CylinderGeometry(0.045, 0.048, 0.04, 16);
+      const bandMat = new THREE.MeshStandardMaterial({
+        color: 0x0f172a,
+        roughness: 0.3,
+        metalness: 0.85,
+      });
+      const band = new THREE.Mesh(bandGeo, bandMat);
+      band.rotation.x = Math.PI / 2;
+      commGroup.add(band);
+
+      // Emissive holographic screen ring
+      const screenGeo = new THREE.CylinderGeometry(0.049, 0.049, 0.015, 16);
+      const screenMat = new THREE.MeshStandardMaterial({
+        color: 0x00f0ff,
+        emissive: 0x00f0ff,
+        emissiveIntensity: 0.9,
+        roughness: 0.1,
+      });
+      const screen = new THREE.Mesh(screenGeo, screenMat);
+      screen.rotation.x = Math.PI / 2;
+      commGroup.add(screen);
+
+      this.leftWristBone.add(commGroup);
+    }
 
     // 4. Set up AnimationMixer and animation actions
     this.mixer = new THREE.AnimationMixer(this.modelRoot);

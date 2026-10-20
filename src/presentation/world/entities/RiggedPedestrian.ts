@@ -66,7 +66,7 @@ export class RiggedPedestrian {
     const baseScale = isFemale ? 0.936 : 1.0;
     const finalScale = baseScale * this.randomScale;
     this.modelRoot.scale.set(finalScale, finalScale, finalScale);
-    this.modelRoot.position.set(0, 0, 0);
+    this.modelRoot.position.set(0, 0.02, 0); // Elevation matches sidewalk/road surface so shoes are 100% visible
 
     // Shadows and material settings
     this.modelRoot.traverse(child => {

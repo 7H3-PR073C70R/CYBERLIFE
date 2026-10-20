@@ -86,6 +86,9 @@ export class WorldEnvironment {
     // 6. Street Furniture, Utility Poles, Cables & Official Street Signs
     this.buildStreetDetails();
 
+    // 6b. Commercial Advertising Billboards (MTN 5G, Flutterwave, Cyberlife OS, GTCO)
+    this.buildCommercialBillboards();
+
     // 7. Perimeter Boundary Barriers
     this.buildPerimeterBoundaries();
 
@@ -157,23 +160,24 @@ export class WorldEnvironment {
     });
 
     // Broad Street West Sidewalk (X: -12 to -5, Z: -36 to 20)
-    const swWestGeo = new THREE.BoxGeometry(7, 0.14, 56);
+    // Low-profile curb elevation (top at y = 0.02) ensures shoes and soles are 100% visible
+    const swWestGeo = new THREE.BoxGeometry(7, 0.02, 56);
     const swWest = new THREE.Mesh(swWestGeo, sidewalkMat);
-    swWest.position.set(-8.5, 0.07, -8);
+    swWest.position.set(-8.5, 0.01, -8);
     swWest.receiveShadow = true;
     this.group.add(swWest);
 
     // Broad Street East Sidewalk (X: 5 to 12, Z: -10 to 20)
-    const swEastGeo = new THREE.BoxGeometry(7, 0.14, 30);
+    const swEastGeo = new THREE.BoxGeometry(7, 0.02, 30);
     const swEast = new THREE.Mesh(swEastGeo, sidewalkMat);
-    swEast.position.set(8.5, 0.07, 5);
+    swEast.position.set(8.5, 0.01, 5);
     swEast.receiveShadow = true;
     this.group.add(swEast);
 
     // Marina Waterfront Promenade (Running along the water, Z: 15 to 20, X: -36 to 36)
-    const marinaPromGeo = new THREE.BoxGeometry(74, 0.14, 6);
+    const marinaPromGeo = new THREE.BoxGeometry(74, 0.02, 6);
     const marinaProm = new THREE.Mesh(marinaPromGeo, sidewalkMat);
-    marinaProm.position.set(0, 0.07, 17);
+    marinaProm.position.set(0, 0.01, 17);
     marinaProm.receiveShadow = true;
     this.group.add(marinaProm);
 
@@ -455,18 +459,18 @@ export class WorldEnvironment {
       'Building: Lagos Maritime House'
     );
 
-    // 7. North Street Enclosure ("Idumota Wholesale Depot")
+    // 7. Relocated Idumota Wholesale Depot (Strategically placed on East Lot, clear of road)
     const depot = new Building({
       name: 'Idumota Wholesale Depot',
-      x: 0,
-      z: -34,
-      width: 14,
+      x: 22,
+      z: -36,
+      width: 12,
       height: 9,
-      depth: 8,
+      depth: 10,
       style: 'MODERN_OFFICE',
       color: 0x475569,
       trimColor: 0x1e293b,
-      entranceSide: 'SOUTH',
+      entranceSide: 'WEST',
     });
     this.buildings.push(depot);
     this.group.add(depot.getMesh());
@@ -477,6 +481,13 @@ export class WorldEnvironment {
       depot.getBoundingBox().maxZ,
       'Building: Idumota Wholesale Depot'
     );
+
+    // 8. Broad Street Northern Gateway / Welcome Portal Arch (Spanning x = -5.8 to 5.8 at z = -36)
+    // Roadway between x = -5.4 and 5.4 is completely clear for vehicle traffic
+    const welcomePortal = LagosProps.createWelcomePortalArch(-36);
+    this.group.add(welcomePortal);
+    this.collisionWorld.addObstacle(-6.3, -5.3, -36.5, -35.5, 'Gateway Pillar West');
+    this.collisionWorld.addObstacle(5.3, 6.3, -36.5, -35.5, 'Gateway Pillar East');
   }
 
   /**
@@ -804,18 +815,47 @@ export class WorldEnvironment {
   }
 
   /**
-   * Builds perimeter safety barriers to contain the explorable slice.
+   * Adds prominent commercial advertising billboards with authentic Nigerian brands
+   * (MTN 5G, Flutterwave, Cyberlife OS, GTCO Private Banking) mounted on building rooftops
+   * and waterfront roadsides.
+   */
+  private buildCommercialBillboards(): void {
+    // 1. MTN 5G Rooftop Billboard on Player Apartment (facing East over Broad Street)
+    const mtnAd = LagosProps.createBillboardAd(-18, 14.2, -14, Math.PI / 2, 'MTN_5G', 8.2, 4.0);
+    this.group.add(mtnAd);
+
+    // 2. Flutterwave Rooftop Billboard on Eko Merchant Bank Tower (facing North towards Marina/Broad Street)
+    const flwAd = LagosProps.createBillboardAd(20, 20.4, 24, 0, 'FLUTTERWAVE', 8.4, 4.2);
+    this.group.add(flwAd);
+
+    // 3. Cyberlife OS Gantry Billboard along Marina Waterfront (facing traffic)
+    const cyberAd = LagosProps.createBillboardAd(-14, 4.5, 17, 0, 'CYBERLIFE_OS', 7.5, 3.8);
+    this.group.add(cyberAd);
+
+    // 4. GTCO Private Banking Billboard on Cedarline Services HQ (facing West over Broad Street)
+    const gtcoAd = LagosProps.createBillboardAd(18, 24.5, 6, -Math.PI / 2, 'GTCO_BANK', 8.0, 4.0);
+    this.group.add(gtcoAd);
+  }
+
+  /**
+   * Builds perimeter safety barriers to contain the explorable slice,
+   * leaving the Broad Street roadway open at x = -5.5 to 5.5 for vehicle and pedestrian passage.
    */
   private buildPerimeterBoundaries(): void {
     const barrierMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.8 });
     const barrierGeoH = new THREE.BoxGeometry(76, 1.4, 0.5);
     const barrierGeoV = new THREE.BoxGeometry(0.5, 1.4, 76);
 
-    // North Boundary Wall
-    const northBarrier = new THREE.Mesh(barrierGeoH, barrierMat);
-    northBarrier.position.set(0, 0.7, -37.5);
-    this.group.add(northBarrier);
-    this.collisionWorld.addObstacle(-38, 38, -38, -37, 'North Boundary Wall');
+    // North Boundary Walls (split to leave Broad Street roadway open at x = -5.5 to 5.5)
+    const nWallWest = new THREE.Mesh(new THREE.BoxGeometry(32.5, 1.4, 0.5), barrierMat);
+    nWallWest.position.set(-21.75, 0.7, -37.5);
+    this.group.add(nWallWest);
+    this.collisionWorld.addObstacle(-38, -5.5, -38, -37, 'North Boundary Wall West');
+
+    const nWallEast = new THREE.Mesh(new THREE.BoxGeometry(32.5, 1.4, 0.5), barrierMat);
+    nWallEast.position.set(21.75, 0.7, -37.5);
+    this.group.add(nWallEast);
+    this.collisionWorld.addObstacle(5.5, 38, -38, -37, 'North Boundary Wall East');
 
     // South Boundary Wall (at the seawall edge)
     const southBarrier = new THREE.Mesh(barrierGeoH, barrierMat);
@@ -1441,7 +1481,12 @@ export class WorldEnvironment {
       this.pedestrianSystem.update(deltaTime);
     }
     if (this.trafficSystem && this.isOutdoor) {
-      this.trafficSystem.update(deltaTime);
+      const pedPositions = this.pedestrianSystem
+        ? this.pedestrianSystem.getPedestrianPositions()
+        : [];
+      const npcPositions = this.npcManager ? this.npcManager.getNpcPositions() : [];
+      const obstacles = [...pedPositions, ...npcPositions];
+      this.trafficSystem.update(deltaTime, obstacles, playerPosition);
     }
     if (this.workstationProps && !this.isOutdoor) {
       this.workstationProps.update(deltaTime, simulationTimeStr);
@@ -1468,6 +1513,10 @@ export class WorldEnvironment {
 
   public getTrafficSystem(): TrafficSystem | null {
     return this.trafficSystem;
+  }
+
+  public getBuildings(): readonly Building[] {
+    return this.buildings;
   }
 
   public clear(): void {

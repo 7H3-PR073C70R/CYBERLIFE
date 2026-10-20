@@ -4,9 +4,11 @@ export type CharacterOutfitStyle =
   | 'ELITE_SUIT'
   | 'SMART_CASUAL'
   | 'VIBRANT_ANKARA'
-  | 'STREETWEAR';
+  | 'STREETWEAR'
+  | 'CYBER_PROTAGONIST';
 
 export interface CharacterPalette {
+  name?: string;
   skin: number;
   jacket?: number; // shirt / blazer / top
   jacketTrim?: number;
@@ -16,6 +18,23 @@ export interface CharacterPalette {
   accent?: number;
   style?: CharacterOutfitStyle;
 }
+
+/**
+ * Bespoke protagonist appearance for the player character:
+ * Sleek obsidian cyber-tactical jacket with neon cyan piping, fitted charcoal tactical slacks,
+ * and custom cyber-cyan high-top tech runners with white soles.
+ */
+export const PLAYER_PROTAGONIST_PALETTE: CharacterPalette = {
+  name: 'Cyberlife Operative Protagonist',
+  skin: 0x523220, // Warm rich Nigerian bronze
+  jacket: 0x0f172a, // High-tech Obsidian Cyber Operative Jacket
+  jacketTrim: 0x00f0ff, // Cyber Cyan edge piping
+  pants: 0x1e293b, // Fitted Charcoal Tactical Slacks
+  shoes: 0x06b6d4, // Cyber Cyan Tech Runners with White Soles
+  hair: 0x09090b, // Clean fade
+  accent: 0x00f0ff, // Cyber Cyan biometric comm-link
+  style: 'CYBER_PROTAGONIST',
+};
 
 /**
  * Authentic Nigerian skin tone spectrum:
@@ -323,17 +342,21 @@ export function applyCharacterCustomization(
   palette: CharacterPalette
 ): void {
   const isEliteSuit = palette.style === 'ELITE_SUIT';
-  const shirtColor = palette.jacket ?? (isEliteSuit ? 0x0b1329 : 0x0284c7);
-  const pantsColor = palette.pants ?? (isEliteSuit ? shirtColor : 0x1e293b);
-  const shoesColor = palette.shoes ?? (isEliteSuit ? 0x050505 : 0xffffff);
+  const isProtagonist = palette.style === 'CYBER_PROTAGONIST';
+  const shirtColor =
+    palette.jacket ?? (isEliteSuit ? 0x0b1329 : isProtagonist ? 0x0f172a : 0x0284c7);
+  const pantsColor =
+    palette.pants ?? (isEliteSuit ? shirtColor : isProtagonist ? 0x1e293b : 0x1e293b);
+  const shoesColor =
+    palette.shoes ?? (isEliteSuit ? 0x050505 : isProtagonist ? 0x06b6d4 : 0xffffff);
   const skinColor = palette.skin;
   const hairColor = palette.hair ?? 0x111111;
 
   // Material surface properties based on style
-  const clothingRoughness = isEliteSuit ? 0.62 : 0.88; // Tailored wool/silk suit vs casual cotton
-  const clothingMetalness = isEliteSuit ? 0.02 : 0.0;
-  const shoesRoughness = isEliteSuit ? 0.28 : 0.75; // Polished high-gloss dress shoes / heels vs sneakers
-  const shoesMetalness = isEliteSuit ? 0.12 : 0.0; // Subtle specular reflection on patent leather
+  const clothingRoughness = isEliteSuit ? 0.62 : isProtagonist ? 0.55 : 0.88; // Tailored wool/silk suit vs tech cybercoat vs casual cotton
+  const clothingMetalness = isEliteSuit ? 0.02 : isProtagonist ? 0.15 : 0.0;
+  const shoesRoughness = isEliteSuit ? 0.28 : isProtagonist ? 0.45 : 0.75; // Polished high-gloss dress shoes / heels vs cyber tech runners vs sneakers
+  const shoesMetalness = isEliteSuit ? 0.12 : isProtagonist ? 0.2 : 0.0;
 
   modelRoot.traverse(child => {
     if (child instanceof THREE.Mesh) {

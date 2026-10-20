@@ -1076,6 +1076,10 @@ export class PedestrianSystem {
     }
   }
 
+  public getPedestrianPositions(): THREE.Vector3[] {
+    return this.agents.map(a => a.position);
+  }
+
   public setVisible(visible: boolean): void {
     this.group.visible = visible;
   }

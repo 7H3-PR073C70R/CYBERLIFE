@@ -199,6 +199,14 @@ export class NpcManager {
     return this.npcs.get(npcId);
   }
 
+  public getNpcPositions(): Array<{ x: number; z: number }> {
+    const list: Array<{ x: number; z: number }> = [];
+    this.npcs.forEach(instance => {
+      list.push({ x: instance.schedule.position[0], z: instance.schedule.position[2] });
+    });
+    return list;
+  }
+
   public clear(): void {
     this.npcs.forEach(instance => {
       if (instance.riggedCharacter) instance.riggedCharacter.dispose();
