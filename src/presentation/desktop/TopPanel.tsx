@@ -60,6 +60,12 @@ const HERON_SECURITY_CATEGORIES: SecuritySubCategory[] = [
         icon: 'packetLens',
         desc: 'Network protocol decoder',
       },
+      {
+        id: 'securityNews',
+        name: 'ParrotSec Threat Dispatch',
+        icon: 'securityNews',
+        desc: 'Real-time threat advisories & CVE bulletins',
+      },
     ],
   },
   {
@@ -523,6 +529,12 @@ export const TopPanel: React.FC<TopPanelProps> = ({
 
             {/* Standard Desktop Applications */}
             {[
+              {
+                id: 'securityNews',
+                title: 'ParrotSec Threat Dispatch',
+                icon: 'securityNews',
+                cat: 'Intelligence',
+              },
               { id: 'torBrowser', title: 'Tor Browser (.onion)', icon: 'tor', cat: 'Internet' },
               { id: 'onionChat', title: 'OnionChat & VoIP', icon: 'chat', cat: 'Internet' },
               { id: 'files', title: `${OS_NAME} File Manager`, icon: 'files', cat: 'System' },
@@ -805,6 +817,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
       <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
         {[
           { id: 'terminal', title: 'Terminal', icon: 'terminal', color: '#00ff66' },
+          { id: 'securityNews', title: 'Security News', icon: 'securityNews', color: '#f59e0b' },
           { id: 'torBrowser', title: 'Tor Browser', icon: 'tor', color: '#c084fc' },
           { id: 'onionChat', title: 'OnionChat', icon: 'chat', color: '#00e5ff' },
           { id: 'files', title: 'File Manager', icon: 'files', color: '#38bdf8' },

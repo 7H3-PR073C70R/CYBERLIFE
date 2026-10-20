@@ -38,7 +38,8 @@ export type OsIconName =
   | 'osLogo'
   | 'tor'
   | 'chat'
-  | 'call';
+  | 'call'
+  | 'securityNews';
 
 export interface OsIconProps extends React.SVGProps<SVGSVGElement> {
   name: OsIconName;
@@ -452,6 +453,21 @@ export const OsIcon: React.FC<OsIconProps> = ({
             strokeWidth="1.75"
             strokeLinejoin="round"
           />
+        </svg>
+      );
+
+    case 'securityNews':
+      return (
+        <svg {...commonProps}>
+          <path
+            d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"
+            stroke={color}
+            strokeWidth="1.75"
+            strokeLinejoin="round"
+          />
+          <path d="M18 14h-8" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M15 18h-5" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M10 6h8v4h-8V6Z" stroke={color} strokeWidth="1.5" strokeLinejoin="round" />
         </svg>
       );
 

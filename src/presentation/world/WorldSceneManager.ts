@@ -38,6 +38,7 @@ export interface WorldSceneOptions {
   onWorkstationStateChanged?: (state: WorkstationCameraState) => void;
   onNpcDialogue?: (dialogue: NpcDialogueData) => void;
   onNpcInteract?: (npcId: string) => void;
+  onBedSleep?: () => void;
 }
 
 export interface SceneStatistics {
@@ -85,6 +86,7 @@ export class WorldSceneManager {
   private onWorkstationStateChanged?: (state: WorkstationCameraState) => void;
   private onNpcDialogue?: (dialogue: NpcDialogueData) => void;
   private onNpcInteract?: (npcId: string) => void;
+  private onBedSleep?: () => void;
 
   private frameCount = 0;
   private isDisposed = false;
@@ -133,6 +135,7 @@ export class WorldSceneManager {
     this.onWorkstationStateChanged = options.onWorkstationStateChanged;
     this.onNpcDialogue = options.onNpcDialogue;
     this.onNpcInteract = options.onNpcInteract;
+    this.onBedSleep = options.onBedSleep;
 
     // 1. Scene Setup
     this.scene = new THREE.Scene();
@@ -161,7 +164,7 @@ export class WorldSceneManager {
       this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       this.renderer.outputColorSpace = THREE.SRGBColorSpace;
       this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      this.renderer.toneMappingExposure = 1.0;
+      this.renderer.toneMappingExposure = 0.7;
 
       const canvas = this.renderer.domElement;
       canvas.className = 'world-viewport-canvas';
@@ -212,6 +215,8 @@ export class WorldSceneManager {
       onModeChanged: mode => this.onCameraModeChanged?.(mode),
       onWorkstationStateChanged: state => {
         this.onWorkstationStateChanged?.(state);
+        const isSeated = state !== 'WALKING';
+        this.worldEnvironment?.setInteractionDiamondsVisible(!isSeated);
         if (state === 'WALKING') {
           this.setInputDisabled(false);
         }
@@ -263,6 +268,7 @@ export class WorldSceneManager {
     }
     if (this.worldEnvironment) {
       this.worldEnvironment.getWorkstationProps()?.setFirstPersonMode(mode === 'FIRST_PERSON');
+      this.worldEnvironment.setInteractionDiamondsVisible(false);
     }
     this.setInputDisabled(true);
     this.onWorkstationOpen?.(workstationId);
@@ -296,12 +302,19 @@ export class WorldSceneManager {
       }
       if (this.worldEnvironment) {
         this.worldEnvironment.getWorkstationProps()?.setFirstPersonMode(mode === 'FIRST_PERSON');
+        this.worldEnvironment.setInteractionDiamondsVisible(false);
       }
       this.setInputDisabled(true);
       this.onWorkstationOpen?.(target.id);
     } else if (target.id === 'interact_noticeboard') {
       this.onNoticeboardRead?.(
         'TINUBU SQUARE BULLETIN: Unusual system alert activity detected in Cedarline Services Marina staging cluster. Cedarline IT security staff meeting on Broad Street at 14:00.'
+      );
+    } else if (target.id === 'interact_apartment_bed') {
+      this.onBedSleep?.();
+    } else if (target.id === 'interact_apartment_bookshelf') {
+      this.onNoticeboardRead?.(
+        'CYBERSECURITY LIBRARY: You review Practical Malware Analysis and The Web Application Hacker’s Handbook. Key takeaways: Always verify SMB delegation scopes, sanitize input, and monitor anomalous lateral RPC sweeps across corporate staging nodes.'
       );
     } else if (target.id.startsWith('interact_npc_') || target.id === 'interact_npc_amina') {
       const npcId = target.id.replace('interact_', '');
@@ -330,12 +343,18 @@ export class WorldSceneManager {
    * Exits the workstation session, restoring exploration camera mode and standing pose.
    */
   public exitWorkstationSession(): void {
+    if (this.playerController) {
+      // Move player into clear walkable room in front of chair facing into the room
+      this.playerController.setPosition(0, 0, -2.05);
+      this.playerController.setYaw(Math.PI);
+    }
     if (this.cameraController) {
       const restoredMode = this.cameraController.exitWorkstation();
       this.onCameraModeChanged?.(restoredMode);
     }
     if (this.worldEnvironment) {
       this.worldEnvironment.getWorkstationProps()?.setFirstPersonMode(false);
+      this.worldEnvironment.setInteractionDiamondsVisible(true);
     }
   }
 
@@ -385,8 +404,10 @@ export class WorldSceneManager {
     this.currentSimTime = timeStr;
     const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
     let hour = 12;
-    if (match && match[1] && match[3]) {
+    let minute = 0;
+    if (match && match[1] && match[2] && match[3]) {
       hour = parseInt(match[1], 10);
+      minute = parseInt(match[2], 10);
       const meridiem = match[3].toUpperCase();
       if (meridiem === 'PM' && hour < 12) hour += 12;
       if (meridiem === 'AM' && hour === 12) hour = 0;
@@ -399,6 +420,7 @@ export class WorldSceneManager {
         this.scene.fog.color.setHex(skyColor);
       }
     }
+    this.skyEnvironment?.updateTimeOfDay(hour, minute);
     if (this.worldEnvironment) {
       this.worldEnvironment.update(
         0.016,
@@ -584,8 +606,15 @@ export class WorldSceneManager {
     if (name) {
       this.setInputDisabled(true);
       this.applyBookmarkCamera(name);
+      if (name === 'desk_seated_third_person' || name === 'desk_screen_closeup') {
+        this.worldEnvironment?.setInteractionDiamondsVisible(false);
+      } else {
+        this.worldEnvironment?.setInteractionDiamondsVisible(true);
+      }
     } else {
       this.setInputDisabled(false);
+      const isSeated = this.getWorkstationCameraState() !== 'WALKING';
+      this.worldEnvironment?.setInteractionDiamondsVisible(!isSeated);
     }
   }
 

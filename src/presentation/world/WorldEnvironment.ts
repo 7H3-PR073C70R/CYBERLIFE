@@ -865,7 +865,7 @@ export class WorldEnvironment {
     // Interior Dedicated Lighting
     // 1. Warm Key Light (Directional entrance light providing warm, rich illumination across the room)
     const keyLightColor = isCedarline ? 0xffecd1 : 0xfffaed;
-    this.interiorSunLight = new THREE.DirectionalLight(keyLightColor, isCedarline ? 2.2 : 1.3);
+    this.interiorSunLight = new THREE.DirectionalLight(keyLightColor, isCedarline ? 1.5 : 0.95);
     this.interiorSunLight.position.set(-3.5, 4.2, 5.0);
     this.interiorSunLight.target.position.set(0.5, 0.8, -1.5);
     this.interiorSunLight.castShadow = true;
@@ -877,14 +877,14 @@ export class WorldEnvironment {
 
     // 2. Soft Fill Light (Gentle cool-slate fill preventing flat/black shadows without washing out contrast)
     const fillLightColor = isCedarline ? 0x94a3b8 : 0xbae6fd;
-    const interiorFillLight = new THREE.DirectionalLight(fillLightColor, isCedarline ? 0.9 : 0.5);
+    const interiorFillLight = new THREE.DirectionalLight(fillLightColor, isCedarline ? 0.6 : 0.35);
     interiorFillLight.position.set(4.5, 3.8, 2.0);
     interiorFillLight.target.position.set(-1.0, 0.5, -2.0);
     this.group.add(interiorFillLight);
     this.group.add(interiorFillLight.target);
 
     // 3. Warm Desk Lamp point light located directly over workstation
-    this.interiorDeskLamp = new THREE.PointLight(0xffb347, 2.2, 6.0);
+    this.interiorDeskLamp = new THREE.PointLight(0xffb347, 1.2, 5.5);
     this.interiorDeskLamp.position.set(-0.65, 1.25, -3.54);
     this.interiorDeskLamp.castShadow = true;
     this.group.add(this.interiorDeskLamp);
@@ -892,8 +892,8 @@ export class WorldEnvironment {
     // 4. Central Ceiling Light & Accent Downlights
     this.interiorLight = new THREE.PointLight(
       isCedarline ? 0xfff7ed : 0xffffff,
-      isCedarline ? 1.6 : 1.8,
-      25
+      isCedarline ? 1.2 : 1.1,
+      20
     );
     this.interiorLight.position.set(0, 4.2, 0);
     this.interiorLight.castShadow = true;
@@ -901,18 +901,18 @@ export class WorldEnvironment {
 
     if (isCedarline) {
       // Warm downlight over Amina's desk and reception
-      const aminaDownlight = new THREE.PointLight(0xffedd5, 2.0, 8.0);
+      const aminaDownlight = new THREE.PointLight(0xffedd5, 1.4, 7.0);
       aminaDownlight.position.set(3.2, 3.8, 0);
       this.group.add(aminaDownlight);
 
       // Server rack accent light
-      const serverDownlight = new THREE.PointLight(0x38bdf8, 1.6, 6.0);
+      const serverDownlight = new THREE.PointLight(0x38bdf8, 1.2, 5.0);
       serverDownlight.position.set(-3.5, 3.2, -0.6);
       this.group.add(serverDownlight);
     }
 
     // 5. Subtle Ambient Fill
-    this.interiorAmbient = new THREE.AmbientLight(0xfff8f0, isCedarline ? 0.45 : 0.6);
+    this.interiorAmbient = new THREE.AmbientLight(0xfff8f0, isCedarline ? 0.28 : 0.32);
     this.group.add(this.interiorAmbient);
 
     // Floor with PBR Ceramic Tile Textures
@@ -1103,6 +1103,38 @@ export class WorldEnvironment {
       radius: 3.0,
       targetLocationId: 'neighborhood',
     });
+
+    if (!isCedarline) {
+      // Bed Interactable & Marker for sleep and energy restoration
+      const bedMarker = new InteractableMarker(4.0, -3.8, accentColor, 'Bed');
+      this.markers.push(bedMarker);
+      this.group.add(bedMarker.getMesh());
+
+      this.interactionRegistry.register({
+        id: 'interact_apartment_bed',
+        name: 'Bed',
+        promptAction: 'sleep and rest [E]',
+        description:
+          'Rest and recover your energy after long hours of investigation and terminal work.',
+        position: [4.0, 0, -3.8],
+        radius: 2.4,
+      });
+
+      // Bookshelf Interactable & Marker
+      const bookMarker = new InteractableMarker(-6.0, -3.5, accentColor, 'Bookshelf');
+      this.markers.push(bookMarker);
+      this.group.add(bookMarker.getMesh());
+
+      this.interactionRegistry.register({
+        id: 'interact_apartment_bookshelf',
+        name: 'Cybersecurity Library',
+        promptAction: 'read security textbooks [E]',
+        description:
+          'Classical textbooks: Practical Malware Analysis, TCP/IP Illustrated, The Web Application Hacker’s Handbook, and Reverse Engineering for Beginners.',
+        position: [-6.0, 0, -3.5],
+        radius: 2.4,
+      });
+    }
   }
 
   private buildApartmentProceduralFallback(): void {
@@ -1153,10 +1185,156 @@ export class WorldEnvironment {
     this.group.add(invMesh);
     this.interiorProceduralProps.push(invMesh);
     this.collisionWorld.addObstacle(-5.2, -3.8, -6.4, -5.2, 'Inverter & Battery System');
+
+    // Add Bookshelf Books and Industrial Wall Conduits
+    this.buildBookshelfBooks(this.group);
+    this.buildIndustrialConduitSystem(this.group);
+  }
+
+  private buildBookshelfBooks(parent: THREE.Group, shelfX = -6.8, shelfZ = -3.5): void {
+    const bookColors = [
+      0x1e3a8a, // Navy
+      0x991b1b, // Crimson
+      0x065f46, // Forest green
+      0xb45309, // Amber
+      0x1f2937, // Charcoal
+      0x0f766e, // Teal
+      0x581c87, // Deep violet
+      0x334155, // Slate
+      0xd97706, // Bronze
+      0x2563eb, // Cobalt
+    ];
+
+    const bookMaterials = bookColors.map(
+      c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.55, metalness: 0.1 })
+    );
+
+    const shelfHeights = [0.38, 0.82, 1.25, 1.68];
+    const group = new THREE.Group();
+    group.name = 'BookshelfBooks';
+
+    shelfHeights.forEach((baseY, shelfIdx) => {
+      let curZ = shelfZ - 0.62;
+      const maxZ = shelfZ + 0.62;
+      let bookIdx = shelfIdx * 7;
+
+      while (curZ < maxZ) {
+        const thickness = 0.03 + ((bookIdx * 7) % 5) * 0.008; // 3cm to 6.2cm
+        const height = 0.22 + ((bookIdx * 11) % 6) * 0.015; // 22cm to 30cm
+        const depth = 0.24;
+        const mat = bookMaterials[bookIdx % bookMaterials.length]!;
+
+        const isTilted = shelfIdx === 1 && (bookIdx % 7 === 2 || bookIdx % 7 === 3);
+        const bookMesh = new THREE.Mesh(new THREE.BoxGeometry(depth, height, thickness), mat);
+        bookMesh.castShadow = true;
+        bookMesh.receiveShadow = true;
+
+        if (isTilted) {
+          bookMesh.rotation.x = 0.22;
+          bookMesh.position.set(shelfX, baseY + height / 2, curZ + thickness / 2 + 0.03);
+          curZ += thickness + 0.055;
+        } else {
+          bookMesh.position.set(shelfX, baseY + height / 2, curZ + thickness / 2);
+          curZ += thickness + 0.005;
+        }
+
+        group.add(bookMesh);
+        bookIdx++;
+      }
+    });
+
+    parent.add(group);
+    this.interiorProps.push(group);
+  }
+
+  private buildIndustrialConduitSystem(parent: THREE.Group): void {
+    const conduitGroup = new THREE.Group();
+    conduitGroup.name = 'IndustrialConduits';
+
+    const metalMat = new THREE.MeshStandardMaterial({
+      color: 0x94a3b8, // Galvanized metal conduit
+      roughness: 0.35,
+      metalness: 0.85,
+    });
+    const boxMat = new THREE.MeshStandardMaterial({
+      color: 0xd1d5db, // Industrial grey enamel breaker box
+      roughness: 0.45,
+      metalness: 0.3,
+    });
+    const darkBoxMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      roughness: 0.6,
+      metalness: 0.2,
+    });
+
+    // 1. Electrical Distribution Breaker Box on North Wall
+    const breakerBox = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.68, 0.14), boxMat);
+    breakerBox.position.set(-5.5, 2.2, -6.85);
+    conduitGroup.add(breakerBox);
+
+    // Breaker Panel Door Accent & Handle
+    const doorTrim = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.62, 0.02), darkBoxMat);
+    doorTrim.position.set(-5.5, 2.2, -6.77);
+    conduitGroup.add(doorTrim);
+
+    const handle = new THREE.Mesh(
+      new THREE.BoxGeometry(0.02, 0.12, 0.04),
+      new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.9, roughness: 0.2 })
+    );
+    handle.position.set(-5.32, 2.2, -6.74);
+    conduitGroup.add(handle);
+
+    // Power Indicator LED
+    const ledMat = new THREE.MeshBasicMaterial({ color: 0x10b981 });
+    const led = new THREE.Mesh(new THREE.SphereGeometry(0.015, 8, 8), ledMat);
+    led.position.set(-5.62, 2.45, -6.75);
+    conduitGroup.add(led);
+
+    // 2. Junction Box below breaker box
+    const jBox = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.18, 0.09), darkBoxMat);
+    jBox.position.set(-5.5, 1.25, -6.85);
+    conduitGroup.add(jBox);
+
+    // 3. Vertical Metal Conduit Pipe connecting breaker box to junction box
+    const vertConduitGeo = new THREE.CylinderGeometry(0.018, 0.018, 0.62, 16);
+    const vertConduit = new THREE.Mesh(vertConduitGeo, metalMat);
+    vertConduit.position.set(-5.5, 1.69, -6.85);
+    conduitGroup.add(vertConduit);
+
+    // 4. Vertical Conduit Drop from junction box down to baseboard
+    const dropConduitGeo = new THREE.CylinderGeometry(0.018, 0.018, 1.05, 16);
+    const dropConduit = new THREE.Mesh(dropConduitGeo, metalMat);
+    dropConduit.position.set(-5.5, 0.63, -6.85);
+    conduitGroup.add(dropConduit);
+
+    // 5. Baseboard Horizontal Conduit running along the wall toward inverter
+    const horizConduitGeo = new THREE.CylinderGeometry(0.018, 0.018, 1.6, 16);
+    const horizConduit = new THREE.Mesh(horizConduitGeo, metalMat);
+    horizConduit.rotation.z = Math.PI / 2;
+    horizConduit.position.set(-4.7, 0.12, -6.85);
+    conduitGroup.add(horizConduit);
+
+    // 6. Wall Mounting Clamps (Saddles)
+    const clampMat = new THREE.MeshStandardMaterial({
+      color: 0x64748b,
+      metalness: 0.7,
+      roughness: 0.4,
+    });
+    [-5.5].forEach(cx => {
+      [1.85, 1.5, 0.85, 0.35].forEach(cy => {
+        const clamp = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.03, 0.04), clampMat);
+        clamp.position.set(cx, cy, -6.85);
+        conduitGroup.add(clamp);
+      });
+    });
+
+    parent.add(conduitGroup);
+    this.interiorProps.push(conduitGroup);
   }
 
   private async loadApartmentProps(): Promise<void> {
     const loader = AssetLoader.getInstance();
+    // Note: room_cables.glb removed in favor of authentic industrial wall conduits and breaker box
     const assets: Array<{
       path: string;
       pos: [number, number, number];
@@ -1170,7 +1348,6 @@ export class WorldEnvironment {
       { path: '/assets/props/room_fan.glb', pos: [0, 3.8, -1.0], rotY: 0, isFan: true },
       { path: '/assets/props/room_ac.glb', pos: [2.5, 3.6, -6.75], rotY: 0 },
       { path: '/assets/props/room_art.glb', pos: [-2.5, 2.4, -6.8], rotY: 0 },
-      { path: '/assets/props/room_cables.glb', pos: [-2.0, 0.02, -4.5], rotY: 0 },
     ];
 
     try {
@@ -1181,6 +1358,17 @@ export class WorldEnvironment {
           if (item.rotY) model.rotation.y = item.rotY;
           if (item.isFan) {
             this.ceilingFanMesh = model;
+          }
+          // Filter AC unit: Ensure only 1 clean AC unit is displayed inside the apartment
+          if (item.path.includes('room_ac.glb')) {
+            model.traverse(child => {
+              if (
+                child.name.toLowerCase().includes('rusted') ||
+                child.name === 'exterior_aircon_unit_rusted'
+              ) {
+                child.visible = false;
+              }
+            });
           }
           return model;
         })
@@ -1196,6 +1384,10 @@ export class WorldEnvironment {
         this.group.add(model);
         this.interiorProps.push(model);
       }
+
+      // Ensure bookshelf books and industrial wall conduits are present with GLBs
+      this.buildBookshelfBooks(this.group);
+      this.buildIndustrialConduitSystem(this.group);
     } catch {
       // Safe fallback if offline or in unit tests
     }
@@ -1218,20 +1410,24 @@ export class WorldEnvironment {
     const isDay = hour >= 6 && hour < 18;
     if (isDay) {
       // Natural daylight pouring into the room
-      this.interiorSunLight.intensity = 1.4;
+      this.interiorSunLight.intensity = 0.95;
       this.interiorSunLight.color.setHex(0xfffaed);
-      this.interiorDeskLamp.intensity = 1.0;
-      this.interiorAmbient.intensity = 0.75;
-      if (this.interiorLight) this.interiorLight.intensity = 1.2;
+      this.interiorDeskLamp.intensity = 0.85;
+      this.interiorAmbient.intensity = 0.32;
+      if (this.interiorLight) this.interiorLight.intensity = 0.95;
     } else {
       // Atmospheric nighttime with warm desk lamp halogen glow and moonlight fill
-      this.interiorSunLight.intensity = 0.1;
+      this.interiorSunLight.intensity = 0.08;
       this.interiorSunLight.color.setHex(0x38bdf8);
-      this.interiorDeskLamp.intensity = 2.8;
+      this.interiorDeskLamp.intensity = 1.8;
       this.interiorDeskLamp.color.setHex(0xffaa44);
-      this.interiorAmbient.intensity = 0.3;
-      if (this.interiorLight) this.interiorLight.intensity = 0.4;
+      this.interiorAmbient.intensity = 0.18;
+      if (this.interiorLight) this.interiorLight.intensity = 0.3;
     }
+  }
+
+  public setInteractionDiamondsVisible(visible: boolean): void {
+    this.markers.forEach(m => m.setBeaconVisible(visible));
   }
 
   public update(

@@ -45,11 +45,20 @@ export const HUDShell: React.FC<HUDShellProps> = ({
 
   // M10 First-launch intro modal: Opens by default if onboarding intro is not yet completed or skipped
   const isIntroPending = Boolean(
-    onboarding && !onboarding.introCompleted && !onboarding.introSkipped
+    onboarding &&
+    !onboarding.introCompleted &&
+    !onboarding.introSkipped &&
+    (typeof window === 'undefined' || !localStorage.getItem('cyberlife_intro_skipped'))
   );
   const [isIntroModalOpen, setIsIntroModalOpen] = useState<boolean>(isIntroPending);
   const [isControlsModalOpen, setIsControlsModalOpen] = useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (onboarding && (onboarding.introCompleted || onboarding.introSkipped)) {
+      setIsIntroModalOpen(false);
+    }
+  }, [onboarding]);
 
   // Listen for 'H' / 'h' keyboard shortcut to toggle Controls Reference
   useEffect(() => {

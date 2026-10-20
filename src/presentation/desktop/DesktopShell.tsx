@@ -34,6 +34,7 @@ import { RevLensApp } from './apps/RevLensApp';
 import { RuleTunerApp } from './apps/RuleTunerApp';
 import { TorBrowserApp } from './apps/TorBrowserApp';
 import { OnionChatApp } from './apps/OnionChatApp';
+import { SecurityNewsApp } from './apps/SecurityNewsApp';
 import { BottomPanel } from './BottomPanel';
 import { HackerCallOverlay } from './HackerCallOverlay';
 import { HackerCallState, ChatThread, audioSfx } from '@/simulation/cyber/chat';
@@ -908,6 +909,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 {appId === 'ruleTuner' && <RuleTunerApp />}
                 {appId === 'torBrowser' && <TorBrowserApp />}
                 {appId === 'onionChat' && <OnionChatApp onStartCall={handleStartOutgoingCall} />}
+                {appId === 'securityNews' && <SecurityNewsApp />}
               </WindowFrame>
             );
           })}

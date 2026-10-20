@@ -21,7 +21,8 @@ export type AppId =
   | 'revLens'
   | 'ruleTuner'
   | 'torBrowser'
-  | 'onionChat';
+  | 'onionChat'
+  | 'securityNews';
 
 export interface AppDefinition {
   id: AppId;
@@ -214,6 +215,16 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
     description:
       'Simulated decentralized encrypted messenger and VoIP communicator for handling incoming hacker contracts, handler briefs, and audio calls.',
     defaultSize: { width: 840, height: 560 },
+    minSize: { width: 480, height: 360 },
+  },
+  securityNews: {
+    id: 'securityNews',
+    title: 'ParrotSec Threat Dispatch & Security News',
+    shortTitle: 'Security News',
+    icon: 'securityNews',
+    description:
+      'Real-time threat intelligence bulletins, CVE advisories, and Lagos Island cyber incident updates.',
+    defaultSize: { width: 840, height: 580 },
     minSize: { width: 480, height: 360 },
   },
 };

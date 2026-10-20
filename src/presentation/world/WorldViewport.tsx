@@ -27,6 +27,10 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   const sim = useOptionalSimulation();
   const simRef = useRef(sim);
   simRef.current = sim;
+  const onInitializedRef = useRef(onInitialized);
+  onInitializedRef.current = onInitialized;
+  const onErrorRef = useRef(onError);
+  onErrorRef.current = onError;
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -135,6 +139,25 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
             }
           }
         },
+        onBedSleep: () => {
+          if (simRef.current) {
+            simRef.current.dispatch({
+              type: 'AdvanceSimulationTime',
+              deltaSeconds: 8 * 3600,
+            });
+            simRef.current.dispatch({
+              type: 'SetPlayerAttribute',
+              attribute: 'energy',
+              value: 100,
+            });
+            const newTime = simRef.current.state.time.calendar.timeString;
+            setNoticeMessage(
+              `🛏️ You slept soundly for 8 hours. You wake up at ${newTime} feeling refreshed and energized. Energy restored to 100%.`
+            );
+          } else {
+            setNoticeMessage('🛏️ You rested for 8 hours and feel refreshed.');
+          }
+        },
       });
 
       // Apply initial workstation camera settings
@@ -156,19 +179,42 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
         (window as unknown as Record<string, unknown>).__CYBERLIFE_SIMULATION__ = sim;
       }
       setIsLoading(false);
-      onInitialized?.();
+      onInitializedRef.current?.();
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
       setErrorMessage(error.message);
       setIsLoading(false);
-      onError?.(error);
+      onErrorRef.current?.(error);
     }
-  }, [initialLocParam, initialWsParam, onInitialized, onError, sim, workstationSettings]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialLocParam, initialWsParam]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as unknown as Record<string, unknown>).__CYBERLIFE_SIMULATION__ = sim;
     }
+  }, [sim]);
+
+  // Synchronize 3D world lighting and sky with simulation calendar time
+  useEffect(() => {
+    if (sim?.state.time.calendar.timeString && managerRef.current) {
+      managerRef.current.setSimulationTime(sim.state.time.calendar.timeString);
+    }
+  }, [sim?.state.time.calendar.timeString]);
+
+  // Game clock ticker: advances in-game time smoothly during active gameplay
+  useEffect(() => {
+    if (!sim) return;
+
+    const interval = setInterval(() => {
+      // 1 real-world second = 15 simulation seconds (1 game minute every 4 seconds)
+      sim.dispatch({
+        type: 'AdvanceSimulationTime',
+        deltaSeconds: 15,
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [sim]);
 
   useEffect(() => {
@@ -333,6 +379,39 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
 
       {/* M7 Interactive Branching Dialogue Overlay */}
       {activeNpcId && <DialogueOverlay npcId={activeNpcId} onClose={handleCloseDialogue} />}
+
+      {/* Fatigue Sleep Prompt (when player worked long hours or energy is low) */}
+      {!isDesktopOpen && sim && sim.state.player.energy <= 35 && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fatigue-prompt-banner hud-interactive"
+          style={{
+            position: 'absolute',
+            bottom: '5.5rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 22,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.65rem',
+            backgroundColor: 'rgba(15, 23, 42, 0.94)',
+            border: '1px solid #f59e0b',
+            borderRadius: '8px',
+            padding: '0.5rem 1rem',
+            color: '#fef3c7',
+            fontSize: '0.82rem',
+            backdropFilter: 'blur(8px)',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
+          }}
+        >
+          <span style={{ fontSize: '1.1rem' }}>💤</span>
+          <span>
+            <strong>Fatigued from long hours:</strong> Energy is low ({sim.state.player.energy}%).
+            Head to the bed in your apartment to sleep and recharge.
+          </span>
+        </div>
+      )}
 
       {/* 2D HUD Layer positioned above the 3D canvas */}
       {!isDesktopOpen && (

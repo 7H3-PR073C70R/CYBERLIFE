@@ -77,6 +77,11 @@ export const FirstLaunchIntroModal: React.FC<FirstLaunchIntroModalProps> = ({
   }, [currentStepIndex]);
 
   const handleSkip = useCallback(() => {
+    try {
+      localStorage.setItem('cyberlife_intro_skipped', 'true');
+    } catch {
+      // Ignore in private browsing
+    }
     sim?.dispatch({
       type: 'SkipOnboarding',
     });

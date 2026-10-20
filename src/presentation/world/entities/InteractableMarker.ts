@@ -39,6 +39,10 @@ export class InteractableMarker {
     return this.group;
   }
 
+  public setBeaconVisible(visible: boolean): void {
+    this.beaconMesh.visible = visible;
+  }
+
   public update(deltaTime: number): void {
     this.elapsed += deltaTime;
     this.beaconMesh.rotation.y += deltaTime * 1.5;

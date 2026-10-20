@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { ObjectiveTrackerHUD } from '@/presentation/hud/ObjectiveTrackerHUD';
 
 describe('ObjectiveTrackerHUD Component', () => {
@@ -29,5 +29,20 @@ describe('ObjectiveTrackerHUD Component', () => {
 
     expect(screen.getByTestId('objective-status-badge')).toHaveTextContent('Active');
     expect(screen.getByRole('heading', { level: 2, name: /Test Mission/i })).toBeInTheDocument();
+  });
+
+  it('allows collapsing and expanding the objective tracker panel', () => {
+    render(<ObjectiveTrackerHUD />);
+    const toggleButton = screen.getByTestId('btn-toggle-collapse-objective');
+    expect(toggleButton).toHaveTextContent('−');
+    expect(screen.getByTestId('objective-stage-title')).toBeInTheDocument();
+
+    fireEvent.click(toggleButton);
+    expect(toggleButton).toHaveTextContent('⊞');
+    expect(screen.queryByTestId('objective-stage-title')).not.toBeInTheDocument();
+
+    fireEvent.click(toggleButton);
+    expect(toggleButton).toHaveTextContent('−');
+    expect(screen.getByTestId('objective-stage-title')).toBeInTheDocument();
   });
 });

@@ -36,8 +36,8 @@ export class SkyEnvironment {
   private sunDirection: THREE.Vector3 = new THREE.Vector3();
   private isInterior = false;
 
-  // Horizon haze color for outdoor fog
-  private horizonColor = new THREE.Color(0xd4e2ed);
+  // Horizon haze color for outdoor fog - slightly darker for richer street contrast and depth
+  private horizonColor = new THREE.Color(0x768fa8);
 
   constructor(
     scene: THREE.Scene,
@@ -47,8 +47,8 @@ export class SkyEnvironment {
     this.scene = scene;
     this.renderer = renderer;
 
-    const elevation = options.sunElevation ?? 32;
-    const azimuth = options.sunAzimuth ?? 155; // Warm morning/afternoon Lagos sun
+    const elevation = options.sunElevation ?? 28; // Warmer afternoon Lagos sun
+    const azimuth = options.sunAzimuth ?? 155;
 
     const phi = THREE.MathUtils.degToRad(90 - elevation);
     const theta = THREE.MathUtils.degToRad(azimuth);
@@ -66,8 +66,9 @@ export class SkyEnvironment {
       this.sky.scale.setScalar(450000);
 
       const uniforms = this.sky.material.uniforms;
-      if (uniforms['turbidity']) uniforms['turbidity'].value = options.turbidity ?? 6.0;
-      if (uniforms['rayleigh']) uniforms['rayleigh'].value = options.rayleigh ?? 1.4;
+      // Increased turbidity for warm golden horizon and increased rayleigh for deep blue zenith
+      if (uniforms['turbidity']) uniforms['turbidity'].value = options.turbidity ?? 8.5;
+      if (uniforms['rayleigh']) uniforms['rayleigh'].value = options.rayleigh ?? 2.8;
       if (uniforms['mieCoefficient'])
         uniforms['mieCoefficient'].value = options.mieCoefficient ?? 0.005;
       if (uniforms['mieDirectionalG'])
@@ -84,12 +85,12 @@ export class SkyEnvironment {
 
   private setupLights(): void {
     // 1. Directional Sun Light matching the sky angle
-    // Warm sun tint (2800K-3500K equivalent warm sunlight)
+    // Warm sun tint with reduced intensity (1.35) so white surfaces are not clipped
     const sunColor = 0xfff4e0;
-    this.sunLight = new THREE.DirectionalLight(sunColor, 2.2);
+    this.sunLight = new THREE.DirectionalLight(sunColor, 1.35);
     this.sunLight.castShadow = true;
 
-    // Shadow map tuning: 2048x2048 with soft PCF filtering
+    // Shadow map tuning: 2048x2048 with soft PCF filtering (Step 1 shadows preserved)
     this.sunLight.shadow.mapSize.set(2048, 2048);
     this.sunLight.shadow.camera.near = 1.0;
     this.sunLight.shadow.camera.far = 130;
@@ -114,8 +115,7 @@ export class SkyEnvironment {
     this.scene.add(this.sunLight.target);
 
     // 2. Subtle Hemisphere Fill (coastal sky to ground bounce)
-    // Kept low because PMREM IBL provides natural diffuse and specular ambient
-    this.hemiLight = new THREE.HemisphereLight(0xdbeafe, 0x78716c, 0.35);
+    this.hemiLight = new THREE.HemisphereLight(0xb0cce8, 0x5c5753, 0.22);
     this.scene.add(this.hemiLight);
   }
 
@@ -159,19 +159,21 @@ export class SkyEnvironment {
     if (this.sky) {
       this.sky.visible = true;
     }
-    // Atmospheric soft haze fog in horizon color
-    this.scene.fog = new THREE.FogExp2(this.horizonColor.getHex(), 0.0045);
+    // Atmospheric soft haze fog slightly darker to regain contrast and depth
+    this.scene.fog = new THREE.FogExp2(this.horizonColor.getHex(), 0.0035);
     this.scene.background = null;
 
     if (this.outdoorEnvMap) {
       this.scene.environment = this.outdoorEnvMap;
     }
+    // Reduced outdoor environment intensity so sky and vehicles do not wash out
+    this.scene.environmentIntensity = 0.55;
 
     if (this.sunLight) {
       this.sunLight.visible = true;
     }
     if (this.hemiLight) {
-      this.hemiLight.intensity = 0.35;
+      this.hemiLight.intensity = 0.22;
     }
   }
 
@@ -186,13 +188,15 @@ export class SkyEnvironment {
     if (this.interiorEnvMap) {
       this.scene.environment = this.interiorEnvMap;
     }
+    // Lower environment intensity for interiors than for outdoors (0.18 vs 0.55)
+    this.scene.environmentIntensity = 0.18;
 
     // Disable outdoor sun when inside dedicated interior rooms
     if (this.sunLight) {
       this.sunLight.visible = false;
     }
     if (this.hemiLight) {
-      this.hemiLight.intensity = 0.1;
+      this.hemiLight.intensity = 0.05;
     }
   }
 
@@ -218,6 +222,98 @@ export class SkyEnvironment {
 
   public getHorizonColor(): THREE.Color {
     return this.horizonColor.clone();
+  }
+
+  /**
+   * Dynamically adjusts sun position, sunlight intensity, sky uniforms, and horizon haze
+   * based on the simulation time of day.
+   */
+  public updateTimeOfDay(hour: number, minute = 0): void {
+    const timeFrac = hour + minute / 60; // 0.0 to 24.0
+
+    let elevation = 0;
+    let azimuth = 180;
+    let sunIntensity = 1.35;
+    let sunColor = 0xfff4e0;
+    let turbidity = 8.5;
+    let rayleigh = 2.8;
+    let fogColor = 0x768fa8;
+    let hemiSky = 0xb0cce8;
+    let hemiGround = 0x5c5753;
+    let hemiIntensity = 0.22;
+
+    if (timeFrac >= 5.5 && timeFrac < 18.5) {
+      // Daytime: 05:30 to 18:30
+      const dayProgress = (timeFrac - 5.5) / 13.0; // 0 (dawn) to 1 (dusk)
+      elevation = Math.sin(dayProgress * Math.PI) * 62 + 4;
+      azimuth = 95 + dayProgress * 170;
+
+      if (dayProgress < 0.2) {
+        // Morning Golden Hour (05:30 - 08:00)
+        const t = dayProgress / 0.2;
+        sunColor = 0xffd29d;
+        turbidity = 11.0 - t * 2.5;
+        rayleigh = 3.8 - t * 1.0;
+        fogColor = 0x967c76;
+        sunIntensity = 0.8 + t * 0.55;
+      } else if (dayProgress > 0.8) {
+        // Evening Sunset / Dusk (16:00 - 18:30)
+        const t = (dayProgress - 0.8) / 0.2;
+        sunColor = 0xff8c42;
+        turbidity = 8.5 + t * 3.5;
+        rayleigh = 2.8 + t * 1.4;
+        fogColor = 0x8a554a;
+        sunIntensity = 1.35 - t * 0.7;
+      } else {
+        // Midday (08:00 - 16:00)
+        sunColor = 0xfffaed;
+        turbidity = 7.5;
+        rayleigh = 2.6;
+        fogColor = 0x768fa8;
+        sunIntensity = 1.35;
+      }
+    } else {
+      // Nighttime (18:30 - 05:30)
+      elevation = -12;
+      azimuth = 45;
+      sunColor = 0x38bdf8;
+      sunIntensity = 0.12;
+      turbidity = 15.0;
+      rayleigh = 0.5;
+      fogColor = 0x060c18;
+      hemiSky = 0x0f172a;
+      hemiGround = 0x030712;
+      hemiIntensity = 0.08;
+    }
+
+    const phi = THREE.MathUtils.degToRad(90 - Math.max(elevation, 1));
+    const theta = THREE.MathUtils.degToRad(azimuth);
+    this.sunDirection.setFromSphericalCoords(1, phi, theta).normalize();
+
+    this.horizonColor.setHex(fogColor);
+
+    if (this.sky && this.sky.material && 'uniforms' in this.sky.material) {
+      const uniforms = (this.sky.material as THREE.ShaderMaterial).uniforms;
+      if (uniforms['turbidity']) uniforms['turbidity'].value = turbidity;
+      if (uniforms['rayleigh']) uniforms['rayleigh'].value = rayleigh;
+      if (uniforms['sunPosition'])
+        (uniforms['sunPosition'].value as THREE.Vector3).copy(this.sunDirection);
+    }
+
+    if (this.sunLight) {
+      this.sunLight.color.setHex(sunColor);
+      this.sunLight.intensity = this.isInterior ? 0 : sunIntensity;
+    }
+
+    if (this.hemiLight) {
+      this.hemiLight.color.setHex(hemiSky);
+      this.hemiLight.groundColor.setHex(hemiGround);
+      this.hemiLight.intensity = this.isInterior ? 0.05 : hemiIntensity;
+    }
+
+    if (!this.isInterior && this.scene.fog instanceof THREE.FogExp2) {
+      this.scene.fog.color.setHex(fogColor);
+    }
   }
 
   public dispose(): void {

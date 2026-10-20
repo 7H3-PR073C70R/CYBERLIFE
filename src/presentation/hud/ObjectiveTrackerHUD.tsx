@@ -28,6 +28,12 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
   const mission = sim?.state.mission;
 
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [isPanelCollapsed, setIsPanelCollapsed] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 640;
+    }
+    return false;
+  });
 
   const handleRepeat = () => {
     setIsExpanded(prev => !prev);
@@ -63,7 +69,7 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
 
   return (
     <aside
-      className="objective-panel hud-interactive"
+      className={`objective-panel hud-interactive ${isPanelCollapsed ? 'objective-panel-collapsed' : ''}`}
       role="complementary"
       aria-label="Objective Tracker"
       data-testid="objective-tracker-panel"
@@ -73,145 +79,183 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
           <span aria-hidden="true">🎯</span>
           <span>{activeMissionTitle}</span>
         </h2>
-        <span
-          className="hud-badge-prototype"
-          data-testid="objective-status-badge"
-          aria-label={
-            hasLiveMission
-              ? mission!.isCompleted
-                ? 'Mission completed'
-                : 'Mission active'
-              : isActive
-                ? 'Mission active'
-                : 'Simulation not yet active'
-          }
-          style={
-            mission?.isCompleted
-              ? {
-                  background: 'rgba(16, 185, 129, 0.2)',
-                  color: 'var(--color-accent-emerald)',
-                  borderColor: 'rgba(16, 185, 129, 0.4)',
-                }
-              : undefined
-          }
-        >
-          {statusBadgeText}
-        </span>
-      </div>
-
-      <div className="objective-panel-body">
-        <div className="objective-stage-badge" data-testid="objective-stage-title">
-          {activePhase}
-        </div>
-
-        {hasLiveMission ? (
-          <>
-            <p
-              className="objective-step-desc"
-              style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}
-            >
-              {displayGoal}
-            </p>
-            <p
-              style={{
-                fontSize: '0.8rem',
-                color: 'var(--color-text-secondary)',
-                lineHeight: 1.45,
-                margin: '0 0 0.5rem',
-              }}
-            >
-              {displayDesc}
-            </p>
-          </>
-        ) : (
-          <p className="objective-step-desc">
-            The mission state machine and authoritative gameplay engine will be introduced in
-            subsequent milestones (M3 &amp; M4).
-          </p>
-        )}
-
-        <div className="objective-guidance-box">
-          <div className="guidance-field-label">
-            {hasLiveMission ? '💡 Analyst Guidance' : 'Guided Guidance Standard'}
-          </div>
-          <p style={{ margin: 0, lineHeight: 1.45, fontSize: '0.8rem' }}>
-            {hasLiveMission
-              ? displayHint
-              : 'Future missions will provide structured step-by-step goals, plain-English explanations, and exact copy/paste commands so that anyone can play and learn cybersecurity defense.'}
-          </p>
-
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+          <span
+            className="hud-badge-prototype"
+            data-testid="objective-status-badge"
+            aria-label={
+              hasLiveMission
+                ? mission!.isCompleted
+                  ? 'Mission completed'
+                  : 'Mission active'
+                : isActive
+                  ? 'Mission active'
+                  : 'Simulation not yet active'
+            }
+            style={
+              mission?.isCompleted
+                ? {
+                    background: 'rgba(16, 185, 129, 0.2)',
+                    color: 'var(--color-accent-emerald)',
+                    borderColor: 'rgba(16, 185, 129, 0.4)',
+                  }
+                : undefined
+            }
+          >
+            {statusBadgeText}
+          </span>
           <button
             type="button"
-            className="btn-repeat-instructions"
-            onClick={handleRepeat}
-            aria-expanded={isExpanded}
-            aria-label={
-              hasLiveMission ? 'Toggle mission checklist' : 'Repeat or toggle instructions'
-            }
-            data-testid="btn-repeat-instructions"
+            className="btn-objective-collapse"
+            onClick={() => setIsPanelCollapsed(prev => !prev)}
+            aria-label={isPanelCollapsed ? 'Expand objective panel' : 'Collapse objective panel'}
+            data-testid="btn-toggle-collapse-objective"
+            title={isPanelCollapsed ? 'Expand objective tracker' : 'Minimize objective tracker'}
           >
-            {hasLiveMission
-              ? `📋 ${isExpanded ? 'Hide Mission Checklist' : 'Show Mission Checklist'}`
-              : '🔄 [Repeat Instructions]'}
+            {isPanelCollapsed ? '⊞' : '−'}
           </button>
-
-          {isExpanded && hasLiveMission && (
-            <div
-              className="objective-expanded-guidance"
-              data-testid="objective-expanded-guidance"
-              style={{ marginTop: '0.5rem' }}
-            >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                {mission!.objectives.map((obj, i) => (
-                  <div
-                    key={obj.id}
-                    style={{
-                      fontSize: '0.74rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.4rem',
-                      color: obj.isCompleted
-                        ? 'var(--color-accent-emerald)'
-                        : 'var(--color-accent-cyan)',
-                    }}
-                  >
-                    <span>{obj.isCompleted ? '✓' : '○'}</span>
-                    <span>
-                      {i + 1}. {obj.title}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {isExpanded && !hasLiveMission && (
-            <div className="objective-expanded-guidance" data-testid="objective-expanded-guidance">
-              <div className="guidance-subfield">
-                <strong>Step {stepNumber} Goal:</strong> {goal}
-              </div>
-              <div className="guidance-subfield">
-                <strong>Why It Matters:</strong> {whyItMatters}
-              </div>
-              <div className="guidance-subfield">
-                <strong>Where To Go:</strong> {whereToGo}
-              </div>
-              <div className="guidance-subfield">
-                <strong>What To Do:</strong> {whatToDo}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="objective-status-tag">
-          <span aria-hidden="true">ℹ️</span>
-          <span>
-            {hasLiveMission
-              ? 'Cedarline SOC // Authoritative Simulation'
-              : 'Simulation Engine: Headless architecture reserved'}
-          </span>
         </div>
       </div>
+
+      {isPanelCollapsed ? (
+        <div
+          className="objective-collapsed-strip"
+          onClick={() => setIsPanelCollapsed(false)}
+          data-testid="objective-collapsed-strip"
+          style={{
+            padding: '0.45rem 0.85rem',
+            fontSize: '0.78rem',
+            color: 'var(--color-text-secondary)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            cursor: 'pointer',
+            background: 'rgba(15, 23, 42, 0.5)',
+          }}
+        >
+          <span style={{ fontWeight: 600, color: 'var(--color-accent-amber)' }}>{activePhase}</span>
+          <span style={{ fontSize: '0.72rem', color: 'var(--color-accent-cyan)' }}>
+            Tap to expand ▾
+          </span>
+        </div>
+      ) : (
+        <div className="objective-panel-body">
+          <div className="objective-stage-badge" data-testid="objective-stage-title">
+            {activePhase}
+          </div>
+
+          {hasLiveMission ? (
+            <>
+              <p
+                className="objective-step-desc"
+                style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}
+              >
+                {displayGoal}
+              </p>
+              <p
+                style={{
+                  fontSize: '0.8rem',
+                  color: 'var(--color-text-secondary)',
+                  lineHeight: 1.45,
+                  margin: '0 0 0.5rem',
+                }}
+              >
+                {displayDesc}
+              </p>
+            </>
+          ) : (
+            <p className="objective-step-desc">
+              The mission state machine and authoritative gameplay engine will be introduced in
+              subsequent milestones (M3 &amp; M4).
+            </p>
+          )}
+
+          <div className="objective-guidance-box">
+            <div className="guidance-field-label">
+              {hasLiveMission ? '💡 Analyst Guidance' : 'Guided Guidance Standard'}
+            </div>
+            <p style={{ margin: 0, lineHeight: 1.45, fontSize: '0.8rem' }}>
+              {hasLiveMission
+                ? displayHint
+                : 'Future missions will provide structured step-by-step goals, plain-English explanations, and exact copy/paste commands so that anyone can play and learn cybersecurity defense.'}
+            </p>
+
+            <button
+              type="button"
+              className="btn-repeat-instructions"
+              onClick={handleRepeat}
+              aria-expanded={isExpanded}
+              aria-label={
+                hasLiveMission ? 'Toggle mission checklist' : 'Repeat or toggle instructions'
+              }
+              data-testid="btn-repeat-instructions"
+            >
+              {hasLiveMission
+                ? `📋 ${isExpanded ? 'Hide Mission Checklist' : 'Show Mission Checklist'}`
+                : '🔄 [Repeat Instructions]'}
+            </button>
+
+            {isExpanded && hasLiveMission && (
+              <div
+                className="objective-expanded-guidance"
+                data-testid="objective-expanded-guidance"
+                style={{ marginTop: '0.5rem' }}
+              >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                  {mission!.objectives.map((obj, i) => (
+                    <div
+                      key={obj.id}
+                      style={{
+                        fontSize: '0.74rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        color: obj.isCompleted
+                          ? 'var(--color-accent-emerald)'
+                          : 'var(--color-accent-cyan)',
+                      }}
+                    >
+                      <span>{obj.isCompleted ? '✓' : '○'}</span>
+                      <span>
+                        {i + 1}. {obj.title}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {isExpanded && !hasLiveMission && (
+              <div
+                className="objective-expanded-guidance"
+                data-testid="objective-expanded-guidance"
+              >
+                <div className="guidance-subfield">
+                  <strong>Step {stepNumber} Goal:</strong> {goal}
+                </div>
+                <div className="guidance-subfield">
+                  <strong>Why It Matters:</strong> {whyItMatters}
+                </div>
+                <div className="guidance-subfield">
+                  <strong>Where To Go:</strong> {whereToGo}
+                </div>
+                <div className="guidance-subfield">
+                  <strong>What To Do:</strong> {whatToDo}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="objective-status-tag">
+            <span aria-hidden="true">ℹ️</span>
+            <span>
+              {hasLiveMission
+                ? 'Cedarline SOC // Authoritative Simulation'
+                : 'Simulation Engine: Headless architecture reserved'}
+            </span>
+          </div>
+        </div>
+      )}
     </aside>
   );
 };
