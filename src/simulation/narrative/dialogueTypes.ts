@@ -61,6 +61,15 @@ export type DialogueAction =
       readonly conclusionId: string;
     }
   | {
+      readonly type: 'RECORD_INVESTIGATIVE_EVIDENCE';
+      readonly evidenceId: string;
+      readonly source?: string;
+      readonly title?: string;
+      readonly description?: string;
+      readonly hash?: string;
+      readonly tags?: readonly string[];
+    }
+  | {
       readonly type: 'ADVANCE_STORY_CHAPTER';
       readonly chapterId: string;
     };

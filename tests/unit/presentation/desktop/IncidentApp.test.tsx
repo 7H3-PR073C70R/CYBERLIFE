@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { IncidentApp } from '@/presentation/desktop/apps/IncidentApp';
 import { SimulationProvider } from '@/application/simulation/SimulationContext';
@@ -212,5 +212,41 @@ describe('IncidentApp Component', () => {
     expect(screen.getByTestId('mission-debrief-card')).toBeInTheDocument();
     expect(screen.getByText(/MISSION ACCOMPLISHED/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Principle of Least Privilege/i).length).toBeGreaterThan(0);
+  });
+
+  it('renders command copy chips in overview and allows copying incident report to clipboard', async () => {
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, {
+      clipboard: {
+        writeText: writeTextMock,
+      },
+    });
+
+    const engine = createSimulationEngine();
+
+    render(
+      <SimulationProvider engine={engine}>
+        <IncidentApp />
+      </SimulationProvider>
+    );
+
+    // Overview tab should render command copy chips for objectives
+    expect(screen.getByTestId('command-chip-netmap_hosts')).toBeInTheDocument();
+    expect(screen.getByTestId('command-chip-svcscan_inspect_app_portal_01')).toBeInTheDocument();
+
+    // Switch to Report tab
+    fireEvent.click(screen.getByTestId('incident-tab-report'));
+
+    const copyReportBtn = screen.getByTestId('btn-copy-report-draft');
+    expect(copyReportBtn).toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.click(copyReportBtn);
+    });
+
+    expect(writeTextMock).toHaveBeenCalled();
+    const copiedText = writeTextMock.mock.calls[0]![0];
+    expect(copiedText).toContain('Case ID: IR Case #2026-AST-01');
+    expect(screen.getByText(/Copied Report Draft/i)).toBeInTheDocument();
   });
 });

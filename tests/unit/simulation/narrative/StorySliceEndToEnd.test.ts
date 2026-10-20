@@ -97,9 +97,9 @@ describe('Milestone 14 — Playable Narrative Story Slice: The Aster Anomaly', (
     // Money credited: ₦1,000.00 (100,000 kobo)
     expect(state.player.moneyKobo).toBe(initialMoney + 100_000);
 
-    // Cedarline standing increases from 10 to 15 -> Band shifts to FAVORED!
+    // Cedarline standing increases from 10 + 5 (Amina dialog) + 5 (Triage mission) = 20 -> Band shifts to FAVORED!
     const cedarlineFaction = state.narrative!.factions['faction_cedarline']!;
-    expect(cedarlineFaction.standing).toBe(15);
+    expect(cedarlineFaction.standing).toBe(20);
     expect(cedarlineFaction.band).toBe('FAVORED');
 
     // ------------------------------------------------------------------------
@@ -173,7 +173,7 @@ describe('Milestone 14 — Playable Narrative Story Slice: The Aster Anomaly', (
     state = engine.getState();
     // Money credited: ₦2,500.00 (250,000 kobo)
     expect(state.player.moneyKobo).toBe(initialMoney + 100_000 + 250_000);
-    expect(state.narrative!.factions['faction_cedarline']!.standing).toBe(30); // 15 + 15
+    expect(state.narrative!.factions['faction_cedarline']!.standing).toBe(35); // 20 + 15
 
     // ------------------------------------------------------------------------
     // Step 7: Formulate Investigative Conclusion (Theory A: Executive Cover-Up)

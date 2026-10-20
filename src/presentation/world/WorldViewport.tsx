@@ -39,7 +39,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   const initialParams =
     typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const initialLocParam = initialParams?.get('location');
-  const initialWsParam = initialParams?.get('workstation');
+  const initialWsParam = initialParams?.get('workstation') || initialParams?.get('desktop');
   const initialAppParam = initialParams?.get('app') as AppId | null;
   const initialNpcParam = initialParams?.get('npc');
 

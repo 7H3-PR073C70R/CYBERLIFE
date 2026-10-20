@@ -57,6 +57,7 @@ export const HUDShell: React.FC<HUDShellProps> = ({
   const [isIntroModalOpen, setIsIntroModalOpen] = useState<boolean>(isIntroPending);
   const [isControlsModalOpen, setIsControlsModalOpen] = useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [isObjectiveExpanded, setIsObjectiveExpanded] = useState<boolean>(false);
 
   useEffect(() => {
     if (onboarding && (onboarding.introCompleted || onboarding.introSkipped)) {
@@ -82,12 +83,16 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         setIsSaveModalOpen(false);
         setIsDevDrawerOpen(false);
         setIsIntroModalOpen(false);
+        setIsObjectiveExpanded(false);
       } else if (e.key === 'h' || e.key === 'H') {
         e.preventDefault();
         setIsControlsModalOpen(prev => !prev);
       } else if (e.key === 'm' || e.key === 'M') {
         e.preventDefault();
         setIsMovementHelpOpen(prev => !prev);
+      } else if (e.key === 'o' || e.key === 'O') {
+        e.preventDefault();
+        setIsObjectiveExpanded(prev => !prev);
       }
     };
 
@@ -112,6 +117,7 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         onToggleTour={() => setIsIntroModalOpen(true)}
         onToggleControls={() => setIsControlsModalOpen(true)}
         onToggleSettings={() => setIsSettingsOpen(prev => !prev)}
+        onToggleIncidentChecklist={() => setIsObjectiveExpanded(prev => !prev)}
         isHelpOpen={isMovementHelpOpen}
         isDevDrawerOpen={isDevDrawerOpen}
         isControlsOpen={isControlsModalOpen}
@@ -123,14 +129,18 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         className="hud-top-objective-wrapper"
         style={{
           position: 'absolute',
-          top: '3.75rem',
+          top: '4.25rem',
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 35,
           pointerEvents: 'auto',
+          maxWidth: 'calc(100vw - 1rem)',
         }}
       >
-        <ObjectiveTrackerHUD />
+        <ObjectiveTrackerHUD
+          forceExpanded={isObjectiveExpanded}
+          onToggleExpanded={setIsObjectiveExpanded}
+        />
       </div>
 
       {/* Middle Layout: Side Panels & Nearby Interaction Prompt */}

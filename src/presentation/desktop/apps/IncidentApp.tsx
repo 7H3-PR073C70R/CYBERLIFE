@@ -22,15 +22,35 @@ import {
   validateRootCauseAssessment,
   validateIncidentReport,
 } from '@/simulation/missions/asterIncidentGroundTruth';
+import { CommandCopyChip } from '../components/CommandCopyChip';
 
 export type IncidentAppTab =
   'overview' | 'briefing' | 'rootcause' | 'containment' | 'verification' | 'report';
+
+export const OBJECTIVE_COMMANDS: Record<string, string[]> = {
+  'obj-assess-01': ['netmap hosts'],
+  'obj-investigate-01': ['svcscan inspect app-portal-01', 'svcscan inspect filesrv-01'],
+  'obj-investigate-02': ['logview recent', 'logview filter --severity=WARN'],
+  'obj-evidence-01': ['evidence inspect EVD-2026-004', 'evidence list'],
+  'obj-containment-01': ['aster-admin contain'],
+  'obj-remediation-01': ['aster-admin remediate --role=kb-assistant'],
+  'obj-verification-01': ['aster-admin verify'],
+  // Backwards compatibility aliases
+  'obj-02-network': ['netmap hosts'],
+  'obj-03-enumerate': ['svcscan inspect app-portal-01', 'svcscan inspect filesrv-01'],
+  'obj-04-siem': ['logview recent', 'logview filter --severity=WARN'],
+  'obj-05-evidence': ['evidence inspect EVD-2026-004', 'evidence list'],
+  'obj-06-rootcause': ['aster-admin contain'],
+  'obj-07-remediate': ['aster-admin remediate --role=kb-assistant'],
+  'obj-08-verify': ['aster-admin verify'],
+};
 
 export const IncidentApp: React.FC = () => {
   const sim = useOptionalSimulation();
   const mission = sim?.state.mission;
 
   const [activeTab, setActiveTab] = useState<IncidentAppTab>('overview');
+  const [reportCopied, setReportCopied] = useState<boolean>(false);
 
   // Root-cause assessment form state
   const [suspectedCause, setSuspectedCause] = useState<string>('overprivileged_iam_role');
@@ -220,6 +240,49 @@ export const IncidentApp: React.FC = () => {
     });
   };
 
+  // Copy entire formatted report draft to clipboard
+  const handleCopyReportDraft = async () => {
+    const reportText = `# CEDARLINE SERVICES // OFFICIAL INCIDENT REPORT
+Case ID: IR Case #2026-AST-01
+Subject: The Aster Incident // Unauthorized AI Assistant Data Access
+Date: Oct 12, 2026 // Subnet: 10.0.4.0/24
+
+## 1. Executive Summary
+${reportForm.executiveSummary}
+
+## 2. Incident Timeline
+${reportForm.timeline}
+
+## 3. Affected Systems & Resources
+${reportForm.affectedSystems.join(', ')}
+
+## 4. Root Cause Analysis
+${reportForm.rootCause}
+
+## 5. Containment Actions
+${reportForm.containmentActions}
+
+## 6. Remediation Actions
+${reportForm.remediationActions}
+
+## 7. Verification Results
+${reportForm.verificationResults}
+
+## 8. Preventative Recommendations
+${reportForm.recommendations}
+`;
+
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        await navigator.clipboard.writeText(reportText);
+      }
+    } catch {
+      // Fallback
+    }
+    setReportCopied(true);
+    setTimeout(() => setReportCopied(false), 2000);
+  };
+
   const phasesList: { key: AsterIncidentPhase; label: string; icon: string }[] = [
     { key: 'briefing', label: '1. Briefing', icon: '📋' },
     { key: 'initial_assessment', label: '2. Assessment', icon: '🔍' },
@@ -395,6 +458,26 @@ export const IncidentApp: React.FC = () => {
                         <span className="hint-text">{obj.hint}</span>
                       </div>
                     )}
+
+                    {OBJECTIVE_COMMANDS[obj.id] && (
+                      <div
+                        className="obj-commands-container"
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '6px',
+                          marginTop: '8px',
+                        }}
+                      >
+                        {OBJECTIVE_COMMANDS[obj.id]!.map(cmd => (
+                          <CommandCopyChip
+                            key={cmd}
+                            command={cmd}
+                            label="Recommended Terminal Command"
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -447,6 +530,13 @@ export const IncidentApp: React.FC = () => {
                   </li>
                   <li>Verify system recovery and submit the final incident report.</li>
                 </ul>
+
+                <div style={{ marginTop: '0.85rem', marginBottom: '0.85rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <CommandCopyChip command="netmap hosts" label="Authorized Reconnaissance" description="Discover all active nodes on 10.0.4.0/24 subnet" />
+                  <CommandCopyChip command="svcscan inspect app-portal-01" label="Authorized Service Audit" description="Enumerate running processes on Aster host" />
+                  <CommandCopyChip command="logview recent" label="Authorized SIEM Log Inspection" description="Review live access log streams" />
+                </div>
+
                 <h4>Ground Rules</h4>
                 <p>
                   <strong>Preserve Evidence First:</strong> Do not rush to restart or remediate
@@ -747,8 +837,8 @@ export const IncidentApp: React.FC = () => {
                     🛑 Sever Unauthorized Pathways &amp; Contain Aster
                   </button>
                 )}
-                <div className="cli-hint">
-                  Alternative: Type <code>aster-admin contain</code> in the CyberOS Terminal.
+                <div style={{ marginTop: '0.65rem' }}>
+                  <CommandCopyChip command="aster-admin contain" label="Terminal Containment Command" />
                 </div>
               </div>
             </div>
@@ -806,9 +896,8 @@ export const IncidentApp: React.FC = () => {
                   </button>
                 )}
 
-                <div className="cli-hint">
-                  Alternative: Type <code>aster-admin remediate --role=kb-assistant</code> in
-                  Terminal.
+                <div style={{ marginTop: '0.65rem' }}>
+                  <CommandCopyChip command="aster-admin remediate --role=kb-assistant" label="Terminal Remediation Command" />
                 </div>
               </div>
             </div>
@@ -841,6 +930,10 @@ export const IncidentApp: React.FC = () => {
                 >
                   ▶ Run Verification Test Suite
                 </button>
+              </div>
+
+              <div style={{ marginTop: '0.75rem', padding: '0 4px' }}>
+                <CommandCopyChip command="aster-admin verify" label="Terminal Verification Command" />
               </div>
 
               {mission.verificationResult && (
@@ -896,14 +989,28 @@ export const IncidentApp: React.FC = () => {
                     reviewed by Lead Analyst Temitope Blessing and Cedarline management.
                   </p>
                 </div>
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  onClick={handleAutoPopulateReport}
-                  data-testid="btn-autopopulate-report"
-                >
-                  📋 Populate Discovered Findings
-                </button>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={handleAutoPopulateReport}
+                    data-testid="btn-autopopulate-report"
+                  >
+                    📋 Populate Discovered Findings
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={handleCopyReportDraft}
+                    data-testid="btn-copy-report-draft"
+                    style={{
+                      borderColor: reportCopied ? '#10b981' : undefined,
+                      color: reportCopied ? '#34d399' : undefined,
+                    }}
+                  >
+                    {reportCopied ? '✓ Copied Report Draft!' : '📄 Copy Report to Clipboard'}
+                  </button>
+                </div>
               </div>
             </div>
 

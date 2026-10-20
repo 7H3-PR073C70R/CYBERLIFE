@@ -17,6 +17,7 @@ export interface StatusOverlayProps {
   onToggleTour?: () => void;
   onToggleControls?: () => void;
   onToggleSettings?: () => void;
+  onToggleIncidentChecklist?: () => void;
   isHelpOpen?: boolean;
   isDevDrawerOpen?: boolean;
   isControlsOpen?: boolean;
@@ -37,6 +38,7 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
   onToggleTour,
   onToggleControls,
   onToggleSettings,
+  onToggleIncidentChecklist,
   isHelpOpen = false,
   isDevDrawerOpen = false,
   isControlsOpen = false,
@@ -116,7 +118,7 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
           }}
         >
           <span aria-hidden="true">🗺️</span>
-          <span>Map</span>
+          <span className="hud-btn-label-responsive">Map</span>
         </button>
 
         {/* Current Location Badge kept accessible for screen readers and unit tests */}
@@ -157,7 +159,7 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
           }}
         >
           <span aria-hidden="true">☰</span>
-          <span>Menu</span>
+          <span className="hud-btn-label-responsive">Menu</span>
         </button>
 
         {/* Clean Dropdown Menu Drawer */}
@@ -265,6 +267,36 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
               <span>🗺️</span>
               <span>Tactical Geolocation Map</span>
             </button>
+
+            {/* Active Incident Case & Checklist */}
+            {onToggleIncidentChecklist && (
+              <button
+                type="button"
+                className="hud-drawer-item-btn"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  onToggleIncidentChecklist();
+                }}
+                data-testid="hud-menu-incident-btn"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.45rem 0.6rem',
+                  background: 'rgba(245, 158, 11, 0.12)',
+                  border: '1px solid rgba(245, 158, 11, 0.35)',
+                  borderRadius: '6px',
+                  color: 'var(--color-accent-amber)',
+                  cursor: 'pointer',
+                  fontSize: '0.8rem',
+                  textAlign: 'left',
+                  fontWeight: 600,
+                }}
+              >
+                <span>🎯</span>
+                <span>Active Incident Checklist</span>
+              </button>
+            )}
 
             {onToggleSaveModal && (
               <button

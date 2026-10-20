@@ -264,6 +264,21 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
     };
   }, [onExitDesktop, onPeekOut, contextMenu, bootMomentActive, openApp]);
 
+  // Listen for open-app events dispatched from CommandCopyChip or Desktop Incident Banner
+  useEffect(() => {
+    const handleOpenAppEvent = (e: Event) => {
+      const customEvent = e as CustomEvent<{ appId: AppId }>;
+      const targetAppId = customEvent.detail?.appId;
+      if (targetAppId && targetAppId in APP_REGISTRY) {
+        openApp(targetAppId);
+        focusWindow(targetAppId);
+      }
+    };
+
+    window.addEventListener('cyberlife:desktop:open-app', handleOpenAppEvent);
+    return () => window.removeEventListener('cyberlife:desktop:open-app', handleOpenAppEvent);
+  }, [openApp, focusWindow]);
+
   // Read authoritative in-game simulation time
   const simulationTime = sim?.state.time.calendar.timeString ?? '08:00 AM';
 
@@ -380,6 +395,51 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
               100% IN-GAME VFS // M3 CLOCK: {simulationTime} // ISOLATED SANDBOX
             </div>
           </div>
+
+          {/* Active Mission Incident Banner (Prominently alerts player of active case) */}
+          {sim?.state.mission && (
+            <div
+              className="desktop-incident-banner"
+              data-testid="desktop-incident-banner"
+              style={{
+                position: 'absolute',
+                top: '12px',
+                left: '96px',
+                right: '16px',
+                zIndex: 12,
+              }}
+            >
+              <div className="incident-banner-left">
+                <span className="incident-pulse-icon" aria-hidden="true">
+                  🚨
+                </span>
+                <div className="incident-banner-meta">
+                  <span className="incident-banner-case">
+                    ACTIVE SOC DISPATCH // {sim.state.mission.title}
+                  </span>
+                  <span className="incident-banner-objective">
+                    Current Objective:{' '}
+                    {sim.state.mission.objectives.find(o => !o.isCompleted)?.title ??
+                      'Finalize & submit incident report'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="incident-banner-actions">
+                <button
+                  type="button"
+                  className="btn-incident-banner-primary"
+                  onClick={() => {
+                    openApp('incident');
+                    focusWindow('incident');
+                  }}
+                  data-testid="btn-banner-open-incident"
+                >
+                  📋 Open Incident Report &amp; Checklist
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Desktop Shortcut Icons (Left vertical grid) */}
           <div
@@ -519,7 +579,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 <button
                   key={appId}
                   type="button"
-                  className={`desktop-shortcut-btn ${isSelected ? 'shortcut-selected' : ''} ${isRunning ? 'shortcut-running' : ''}`}
+                  className={`desktop-shortcut-btn ${isSelected ? 'shortcut-selected' : ''} ${isRunning ? 'shortcut-running' : ''} ${appId === 'incident' && sim?.state.mission ? 'shortcut-active-incident' : ''}`}
                   onClick={e => {
                     e.stopPropagation();
                     setSelectedIcon(appId);
@@ -759,7 +819,27 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 Double-click an icon on the left, use the Applications menu above, or right-click to
                 launch tools.
               </p>
-              <div style={{ display: 'flex', gap: '8px', marginTop: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '8px', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                {sim?.state.mission && (
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={() => {
+                      openApp('incident');
+                      focusWindow('incident');
+                      onMouseUse?.();
+                    }}
+                    style={{
+                      fontSize: '0.85rem',
+                      backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                      borderColor: '#38bdf8',
+                      color: '#38bdf8',
+                    }}
+                    data-testid="btn-empty-open-incident"
+                  >
+                    <OsIcon name="incident" size={14} color="currentColor" /> Open Incident Report
+                  </button>
+                )}
                 <button
                   type="button"
                   className="btn-primary"
@@ -821,6 +901,27 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                   machine.
                 </p>
                 <div className="welcome-checklist">
+                  {sim?.state.mission && (
+                    <div
+                      className="check-item"
+                      style={{
+                        borderLeft: '3px solid var(--color-accent-amber)',
+                        background: 'rgba(245, 158, 11, 0.08)',
+                      }}
+                    >
+                      <span
+                        className="check-bullet"
+                        style={{ background: 'var(--color-accent-amber)', color: '#020617' }}
+                      >
+                        !
+                      </span>
+                      <span>
+                        <strong>Active SOC Case:</strong> Launch the{' '}
+                        <strong>Incident Portal</strong> to review Case #2026-AST-01 and follow the
+                        9-step investigation checklist from top to bottom.
+                      </span>
+                    </div>
+                  )}
                   <div className="check-item">
                     <span className="check-bullet">1</span>
                     <span>
@@ -845,12 +946,32 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 </div>
               </div>
 
-              <div className="welcome-banner-footer">
+              <div className="welcome-banner-footer" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {sim?.state.mission && (
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={() => {
+                      setShowWelcomeBanner(false);
+                      openApp('incident');
+                      focusWindow('incident');
+                    }}
+                    data-testid="btn-welcome-open-incident"
+                    style={{
+                      backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                      borderColor: 'var(--color-accent-cyan)',
+                      color: 'var(--color-accent-cyan)',
+                    }}
+                  >
+                    📋 Open Incident Report &amp; Checklist
+                  </button>
+                )}
                 <button
                   type="button"
                   className="btn-primary"
                   onClick={() => setShowWelcomeBanner(false)}
                   data-testid="btn-welcome-dismiss"
+                  style={{ backgroundColor: '#1e293b' }}
                 >
                   Got It — Use Security Station
                 </button>

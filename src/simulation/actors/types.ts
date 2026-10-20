@@ -118,4 +118,10 @@ export interface ActiveDialogueState {
     readonly reason: string;
     readonly timestamp: number;
   };
+  readonly lastFactionDelta?: {
+    readonly factionId: string;
+    readonly delta: number;
+    readonly reason: string;
+    readonly timestamp: number;
+  };
 }

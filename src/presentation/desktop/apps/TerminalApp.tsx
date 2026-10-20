@@ -296,6 +296,25 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         guidedStdout.push('');
         guidedStdout.push('  [✓] OBJECTIVE COMPLETED: Inspect & Preserve Forensic Artifacts');
         guidedStdout.push("  [→] NEXT STEP: Open Incident Portal on desktop to submit Root Cause & Contain Aster Service");
+        if (sim) {
+          const tokens = trimmed.split(/\s+/);
+          const subAction = tokens[1]?.toLowerCase();
+          const targetId = (tokens[2] || (subAction?.startsWith('evd-') ? subAction : 'EVD-2026-001')).toUpperCase();
+          sim.dispatch({
+            type: 'RecordInvestigativeEvidence',
+            evidenceId: targetId,
+            source: 'terminal_evidence_tool',
+            title:
+              targetId === 'EVD-2026-004'
+                ? 'Aster IAM Policy Manifest (role:corporate-admin)'
+                : targetId === 'EVD-2026-002'
+                ? 'Payroll File Share Access Audit'
+                : 'Aster Core Configuration Snapshot',
+            description: 'Preserved digital evidence from SOC terminal investigation',
+            hash: 'sha256-evd-vault-sealed',
+            tags: ['terminal_forensics', 'preserved'],
+          });
+        }
       }
     }
 
@@ -353,6 +372,31 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
       });
     }
   };
+
+  // Listen for paste command events dispatched from Incident Report / Guidance chips
+  useEffect(() => {
+    const handlePasteEvent = (e: Event) => {
+      const customEvent = e as CustomEvent<{ command: string; execute?: boolean }>;
+      const cmd = customEvent.detail?.command;
+      if (!cmd) return;
+
+      setTabs(prev =>
+        prev.map(t => (t.id === activeTab.id ? { ...t, inputVal: cmd } : t))
+      );
+
+      // Focus input field smoothly
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 50);
+
+      if (customEvent.detail?.execute) {
+        handleExecute(cmd);
+      }
+    };
+
+    window.addEventListener('cyberlife:terminal:paste', handlePasteEvent);
+    return () => window.removeEventListener('cyberlife:terminal:paste', handlePasteEvent);
+  }, [activeTab.id, handleExecute]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // Stop propagation so 3D world player controller never receives terminal keys

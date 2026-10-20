@@ -58,8 +58,33 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
       },
       flags: sim?.state.flags ?? {},
       missionPhase: sim?.state.mission?.phase,
+      careerLevel: sim?.state.career?.currentLevel,
+      completedJobs: sim?.state.jobs?.completedJobHistory.map(j => j.jobId),
+      skills: sim?.state.skills
+        ? Object.fromEntries(Object.entries(sim.state.skills).map(([k, v]) => [k, v.level]))
+        : undefined,
+      factionStandings: sim?.state.narrative?.factions
+        ? Object.fromEntries(
+            Object.entries(sim.state.narrative.factions).map(([k, v]) => [k, v.standing])
+          )
+        : undefined,
+      preservedEvidenceIds: sim?.state.narrative?.evidenceVault
+        ? Object.keys(sim.state.narrative.evidenceVault)
+        : undefined,
+      currentChapterId: sim?.state.narrative?.activeChapterId ?? undefined,
     }),
-    [relationshipScore, npcState?.memory, sim?.state.flags, sim?.state.mission?.phase]
+    [
+      relationshipScore,
+      npcState?.memory,
+      sim?.state.flags,
+      sim?.state.mission?.phase,
+      sim?.state.career?.currentLevel,
+      sim?.state.jobs?.completedJobHistory,
+      sim?.state.skills,
+      sim?.state.narrative?.factions,
+      sim?.state.narrative?.evidenceVault,
+      sim?.state.narrative?.activeChapterId,
+    ]
   );
 
   const availableChoices: readonly DialogueChoice[] = useMemo(() => {
@@ -179,6 +204,7 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
     !currentNode || currentNode.isTerminal || availableChoices.length === 0
   );
   const lastDelta = activeDialogue?.lastRelationshipDelta;
+  const lastFactionDelta = activeDialogue?.lastFactionDelta;
 
   return (
     <div
@@ -430,6 +456,34 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
                 {lastDelta.delta >= 0 ? `+${lastDelta.delta}` : lastDelta.delta} Trust
               </strong>{' '}
               with {profile.name}: {lastDelta.reason}
+            </span>
+          </div>
+        )}
+
+        {/* Faction Standing Delta Toast / Notification */}
+        {lastFactionDelta && (
+          <div
+            data-testid="dialogue-faction-delta"
+            style={{
+              padding: '0.45rem 0.75rem',
+              borderRadius: '6px',
+              backgroundColor:
+                lastFactionDelta.delta >= 0 ? 'rgba(56, 189, 248, 0.12)' : 'rgba(239, 68, 68, 0.12)',
+              border: `1px solid ${lastFactionDelta.delta >= 0 ? '#38bdf8' : '#ef4444'}`,
+              color: lastFactionDelta.delta >= 0 ? '#38bdf8' : '#f87171',
+              fontSize: '0.78rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              animation: 'fadeIn 0.2s ease',
+            }}
+          >
+            <span aria-hidden="true">{lastFactionDelta.delta >= 0 ? '▲' : '▼'}</span>
+            <span>
+              <strong>
+                {lastFactionDelta.delta >= 0 ? `+${lastFactionDelta.delta}` : lastFactionDelta.delta} Standing
+              </strong>{' '}
+              with {lastFactionDelta.factionId.replace('faction_', '').replace(/_/g, ' ').toUpperCase()}: {lastFactionDelta.reason}
             </span>
           </div>
         )}

@@ -41,4 +41,25 @@ describe('StatusOverlay Component', () => {
     expect(statusElement).toBeInTheDocument();
     expect(statusElement).toHaveTextContent(/WebGL Active/i);
   });
+
+  it('renders responsive button labels and triggers onToggleIncidentChecklist from menu', () => {
+    const handleToggleChecklist = vi.fn();
+
+    render(<StatusOverlay onToggleIncidentChecklist={handleToggleChecklist} />);
+
+    // Verify responsive label wrappers exist
+    const labels = document.querySelectorAll('.hud-btn-label-responsive');
+    expect(labels.length).toBeGreaterThanOrEqual(2);
+
+    // Open Menu
+    const menuBtn = screen.getByTestId('hud-menu-toggle-btn');
+    fireEvent.click(menuBtn);
+
+    // Click Active Incident Checklist
+    const checklistItem = screen.getByTestId('hud-menu-incident-btn');
+    expect(checklistItem).toBeInTheDocument();
+    fireEvent.click(checklistItem);
+
+    expect(handleToggleChecklist).toHaveBeenCalledTimes(1);
+  });
 });

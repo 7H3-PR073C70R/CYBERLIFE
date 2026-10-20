@@ -1143,6 +1143,22 @@ export function handleCommand(
           hashSha256,
         });
 
+        const updatedVault = currentState.narrative
+          ? {
+              ...currentState.narrative.evidenceVault,
+              [cleanId]: currentState.narrative.evidenceVault[cleanId] ?? {
+                evidenceId: cleanId,
+                source: 'forensic_capture',
+                title: `Preserved Evidence ${cleanId}`,
+                description: `Forensic evidence artifact preserved during incident triage.`,
+                hash: hashSha256,
+                collectedAtSimTime: simTime,
+                integrityVerified: true,
+                tags: ['forensics', 'incident_evidence'],
+              },
+            }
+          : undefined;
+
         const nextState: SimulationState = {
           ...currentState,
           metadata: {
@@ -1158,6 +1174,12 @@ export function handleCommand(
             preservedEvidenceIds,
             objectives: updatedObjectives,
           },
+          narrative: currentState.narrative
+            ? {
+                ...currentState.narrative,
+                evidenceVault: updatedVault!,
+              }
+            : undefined,
         };
 
         validateSimulationState(nextState);
@@ -1691,6 +1713,9 @@ export function handleCommand(
 
         let currentRel = npcState.relationship;
         let lastRelDelta: { delta: number; reason: string; timestamp: number } | undefined;
+        let lastFacDelta:
+          | { factionId: string; delta: number; reason: string; timestamp: number }
+          | undefined;
         const updatedFlags = { ...currentState.flags };
         let updatedMission = currentState.mission ? { ...currentState.mission } : undefined;
         let updatedJobs = currentState.jobs ? { ...currentState.jobs } : undefined;
@@ -1847,6 +1872,12 @@ export function handleCommand(
                       },
                     },
                   };
+                  lastFacDelta = {
+                    factionId: action.factionId,
+                    delta: action.delta,
+                    reason: action.reason,
+                    timestamp: simTime,
+                  };
                   events.push(
                     createSimulationEvent('FACTION_STANDING_CHANGED', simTime, nextRevision, {
                       factionId: action.factionId,
@@ -1884,6 +1915,37 @@ export function handleCommand(
                       }
                     )
                   );
+                }
+                break;
+              }
+              case 'RECORD_INVESTIGATIVE_EVIDENCE': {
+                if (updatedNarrative && action.evidenceId) {
+                  const evId = action.evidenceId;
+                  if (!updatedNarrative.evidenceVault[evId]) {
+                    updatedNarrative = {
+                      ...updatedNarrative,
+                      evidenceVault: {
+                        ...updatedNarrative.evidenceVault,
+                        [evId]: {
+                          evidenceId: evId,
+                          source: action.source ?? 'dialogue_disclosure',
+                          title: action.title ?? 'Forensic Evidence',
+                          description: action.description ?? 'Evidence acquired from testimony',
+                          collectedAtSimTime: simTime,
+                          hash: action.hash ?? 'sha256-evidence-hash',
+                          integrityVerified: true,
+                          tags: action.tags ?? ['whistleblower'],
+                        },
+                      },
+                    };
+                    events.push(
+                      createSimulationEvent('MISSION_EVIDENCE_PRESERVED', simTime, nextRevision, {
+                        missionId: currentState.mission?.missionId ?? 'aster-incident-01',
+                        evidenceId: evId,
+                        hashSha256: action.hash ?? '3a5f9c12e82b4a11c3ab8bf7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa',
+                      })
+                    );
+                  }
                 }
                 break;
               }
@@ -1971,6 +2033,8 @@ export function handleCommand(
                 lastChoiceId: choiceId,
                 lastRelationshipDelta:
                   lastRelDelta ?? currentState.activeDialogue.lastRelationshipDelta,
+                lastFactionDelta:
+                  lastFacDelta ?? currentState.activeDialogue.lastFactionDelta,
               },
         };
 

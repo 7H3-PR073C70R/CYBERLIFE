@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 
 export interface ObjectiveTrackerHUDProps {
@@ -10,6 +10,8 @@ export interface ObjectiveTrackerHUDProps {
   whyItMatters?: string;
   whereToGo?: string;
   whatToDo?: string;
+  forceExpanded?: boolean;
+  onToggleExpanded?: (expanded: boolean) => void;
   onRepeatInstructions?: () => void;
 }
 
@@ -22,6 +24,8 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
   whyItMatters = 'In incident response, accessing a secure terminal is required before inspecting logs or containing threats.',
   whereToGo = 'Cedarline Services Corporate HQ -> Marina Tower Lobby -> Workstation Desk',
   whatToDo = 'Walk to the desk, press [E], open the Terminal app, and type status.',
+  forceExpanded,
+  onToggleExpanded,
   onRepeatInstructions,
 }) => {
   const sim = useOptionalSimulation();
@@ -34,6 +38,15 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
     }
     return false;
   });
+
+  useEffect(() => {
+    if (forceExpanded !== undefined) {
+      setIsPanelCollapsed(!forceExpanded);
+      if (forceExpanded) {
+        setIsExpanded(true);
+      }
+    }
+  }, [forceExpanded]);
 
   const handleRepeat = () => {
     setIsExpanded(prev => !prev);
@@ -75,11 +88,24 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
       data-testid="objective-tracker-panel"
     >
       <div className="objective-panel-header">
-        <h2 className="objective-panel-title">
+        <h2
+          className="objective-panel-title"
+          style={{
+            fontSize: isPanelCollapsed ? '0.78rem' : '0.86rem',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            maxWidth: isPanelCollapsed ? '250px' : '320px',
+          }}
+        >
           <span aria-hidden="true">🎯</span>
-          <span>{activeMissionTitle}</span>
+          <span>
+            {isPanelCollapsed && hasLiveMission
+              ? `Step ${completedCount + 1}/${totalCount}: ${displayGoal}`
+              : activeMissionTitle}
+          </span>
         </h2>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexShrink: 0 }}>
           <span
             className="hud-badge-prototype"
             data-testid="objective-status-badge"
@@ -107,7 +133,11 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
           <button
             type="button"
             className="btn-objective-collapse"
-            onClick={() => setIsPanelCollapsed(prev => !prev)}
+            onClick={() => {
+              const nextVal = !isPanelCollapsed;
+              setIsPanelCollapsed(nextVal);
+              onToggleExpanded?.(!nextVal);
+            }}
             aria-label={isPanelCollapsed ? 'Expand objective panel' : 'Collapse objective panel'}
             data-testid="btn-toggle-collapse-objective"
             title={isPanelCollapsed ? 'Expand objective tracker' : 'Minimize objective tracker'}
@@ -117,28 +147,7 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
         </div>
       </div>
 
-      {isPanelCollapsed ? (
-        <div
-          className="objective-collapsed-strip"
-          onClick={() => setIsPanelCollapsed(false)}
-          data-testid="objective-collapsed-strip"
-          style={{
-            padding: '0.45rem 0.85rem',
-            fontSize: '0.78rem',
-            color: 'var(--color-text-secondary)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            cursor: 'pointer',
-            background: 'rgba(15, 23, 42, 0.5)',
-          }}
-        >
-          <span style={{ fontWeight: 600, color: 'var(--color-accent-amber)' }}>{activePhase}</span>
-          <span style={{ fontSize: '0.72rem', color: 'var(--color-accent-cyan)' }}>
-            Tap to expand ▾
-          </span>
-        </div>
-      ) : (
+      {!isPanelCollapsed && (
         <div className="objective-panel-body">
           <div className="objective-stage-badge" data-testid="objective-stage-title">
             {activePhase}

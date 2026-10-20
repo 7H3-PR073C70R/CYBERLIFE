@@ -32,6 +32,12 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
               reason: 'Amina approves of your focus on formal protocol.',
             },
             {
+              type: 'CHANGE_FACTION_STANDING',
+              factionId: 'faction_cedarline',
+              delta: 5,
+              reason: 'Adhered strictly to Cedarline incident response protocols',
+            },
+            {
               type: 'RECORD_MEMORY',
               topic: 'incident_priorities',
               fact: 'Amina stressed following the formal lifecycle: triage, evidence preservation, containment, remediation, and verification.',
@@ -62,6 +68,14 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
       speakerId: 'npc_amina',
       text: 'Good to see you back, Tade. How is the investigation progressing on app-portal-01?',
       choices: [
+        {
+          id: 'amina_return_evidence_branch',
+          text: 'Amina, I preserved forensic evidence EVD-2026-001 proving svc-aster was assigned wildcard permissions.',
+          nextNodeId: 'amina_evidence_dilemma',
+          condition: {
+            requiredEvidenceIds: ['EVD-2026-001'],
+          },
+        },
         {
           id: 'amina_return_advice',
           text: 'Could you refresh me on the key investigation tools available on my terminal?',
@@ -94,6 +108,107 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
           condition: {
             requiredCompletedJobId: 'job_cedarline_triage',
           },
+        },
+      ],
+    },
+    amina_evidence_dilemma: {
+      id: 'amina_evidence_dilemma',
+      speakerId: 'npc_amina',
+      text: 'Let me review the SHA-256 hash... Incredible forensic work, Tade. This configuration snapshot is irrefutable: svc-aster was given corporate-admin with wildcard scopes ["*"]. This wasn\'t a bug; someone intentionally bypassed policy. We have two ways to handle this. We can contain it quietly to protect Cedarline\'s commercial standing, or escalate it formally to CRCII regulators.',
+      choices: [
+        {
+          id: 'amina_choice_quiet_containment',
+          text: 'I recommend quiet internal containment. Restrict svc-aster to kb-assistant and protect Cedarline from reputational fallout.',
+          nextNodeId: 'amina_quiet_containment_ack',
+          actions: [
+            {
+              type: 'CHANGE_RELATIONSHIP',
+              delta: 10,
+              reason: 'Amina appreciates your loyalty to Cedarline corporate stability.',
+            },
+            {
+              type: 'CHANGE_FACTION_STANDING',
+              factionId: 'faction_cedarline',
+              delta: 15,
+              reason: 'Recommended protective internal remediation preserving Cedarline market valuation',
+            },
+            {
+              type: 'ADVANCE_STORY_CHAPTER',
+              chapterId: 'ch_infrastructure_dilemma',
+            },
+            {
+              type: 'SET_FLAG',
+              key: 'flag_aster_quiet_remediation',
+              value: true,
+            },
+            {
+              type: 'RECORD_MEMORY',
+              topic: 'remediation_strategy',
+              fact: 'Chose quiet internal corporate remediation to protect Cedarline stability.',
+            },
+          ],
+        },
+        {
+          id: 'amina_choice_regulatory_disclosure',
+          text: 'Balogun market traders and banking partners are exposed. We have an ethical duty to report this finding to CRCII regulators.',
+          nextNodeId: 'amina_regulatory_disclosure_ack',
+          actions: [
+            {
+              type: 'CHANGE_RELATIONSHIP',
+              delta: 5,
+              reason: 'Amina respects your unyielding ethical principles despite executive pushback.',
+            },
+            {
+              type: 'CHANGE_FACTION_STANDING',
+              factionId: 'faction_crcii',
+              delta: 20,
+              reason: 'Provided substantiated evidence disclosure supporting consumer protection standards',
+            },
+            {
+              type: 'CHANGE_FACTION_STANDING',
+              factionId: 'faction_cedarline',
+              delta: -10,
+              reason: 'Threatened executive leadership with external regulatory disclosure',
+            },
+            {
+              type: 'ADVANCE_STORY_CHAPTER',
+              chapterId: 'ch_infrastructure_dilemma',
+            },
+            {
+              type: 'SET_FLAG',
+              key: 'flag_regulatory_disclosure_chosen',
+              value: true,
+            },
+            {
+              type: 'RECORD_MEMORY',
+              topic: 'remediation_strategy',
+              fact: 'Chose regulatory transparency and consumer protection over corporate secrecy.',
+            },
+          ],
+        },
+      ],
+    },
+    amina_quiet_containment_ack: {
+      id: 'amina_quiet_containment_ack',
+      speakerId: 'npc_amina',
+      text: 'Agreed. Head back to your workstation terminal. Execute service containment and reassign the policy to role:kb-assistant. I will brief the CISO that our SOC handled this before any data leaked.',
+      choices: [
+        {
+          id: 'amina_quiet_exit',
+          text: 'On it, Amina. Returning to workstation.',
+          nextNodeId: 'amina_exit_workstation',
+        },
+      ],
+    },
+    amina_regulatory_disclosure_ack: {
+      id: 'amina_regulatory_disclosure_ack',
+      speakerId: 'npc_amina',
+      text: 'You have courage, Tade. Broad Street executives won\'t like it, but CRCII and the traders union will back us up with this cryptographic proof in hand. Prepare your findings report; we will submit it through official channels.',
+      choices: [
+        {
+          id: 'amina_regulatory_exit',
+          text: 'Integrity comes first. Returning to workstation to compile report.',
+          nextNodeId: 'amina_exit_workstation',
         },
       ],
     },
@@ -300,6 +415,17 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
               reason: 'Marcus feels immense relief that you are not blaming him.',
             },
             {
+              type: 'CHANGE_FACTION_STANDING',
+              factionId: 'faction_cedarline',
+              delta: 10,
+              reason: 'De-escalated infrastructure tension and secured engineer cooperation',
+            },
+            {
+              type: 'SET_FLAG',
+              key: 'flag_marcus_protected',
+              value: true,
+            },
+            {
               type: 'RECORD_MEMORY',
               topic: 'marcus_confession',
               fact: 'Marcus confessed he assigned corporate-admin wildcard permissions under extreme launch deadline pressure.',
@@ -315,6 +441,17 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
               type: 'CHANGE_RELATIONSHIP',
               delta: -20,
               reason: 'Marcus feels attacked and retreats into defensive secrecy.',
+            },
+            {
+              type: 'CHANGE_FACTION_STANDING',
+              factionId: 'faction_cedarline',
+              delta: -5,
+              reason: 'Created hostility and defensiveness in infrastructure team',
+            },
+            {
+              type: 'SET_FLAG',
+              key: 'flag_marcus_exposed',
+              value: true,
             },
             {
               type: 'RECORD_MEMORY',
@@ -335,6 +472,38 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
       speakerId: 'npc_marcus',
       text: 'God... thank you, Tade. You don’t know what kind of pressure executive management put on us. Aster kept throwing 403 permission errors on search indexes three nights before launch. I... I gave svc-aster the corporate-admin role just so the demo would work. I swear I meant to revoke it the next Monday, but then the Lagos fiber outage happened and I forgot!',
       choices: [
+        {
+          id: 'marcus_request_memo',
+          text: 'Marcus, do you have any documentation of VP Martins ordering this bypass? I need proof so you aren\'t scapegoated.',
+          nextNodeId: 'marcus_memo_revealed',
+          actions: [
+            {
+              type: 'CHANGE_RELATIONSHIP',
+              delta: 10,
+              reason: 'Marcus trusts you enough to share confidential internal records.',
+            },
+            {
+              type: 'CHANGE_FACTION_STANDING',
+              factionId: 'faction_0xlagos',
+              delta: 10,
+              reason: 'Preserved whistleblower evidence documenting corporate executive bypass',
+            },
+            {
+              type: 'SET_FLAG',
+              key: 'flag_has_marcus_memo',
+              value: true,
+            },
+            {
+              type: 'RECORD_INVESTIGATIVE_EVIDENCE',
+              evidenceId: 'EVD-2026-004',
+              source: 'marcus_private_notes',
+              title: 'Executive Emergency Deployment Memo',
+              description: 'Chat log proving VP Femi Martins ordered bypass of security testing',
+              hash: 'sha256-evd004-9a8b7c6d5e4f',
+              tags: ['whistleblower', 'executive_memo'],
+            },
+          ],
+        },
         {
           id: 'marcus_help_log',
           text: 'Where should I look in the logs to confirm the scope of access?',
@@ -358,6 +527,18 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
               reason: 'Marcus deeply respects your integrity and support.',
             },
           ],
+        },
+      ],
+    },
+    marcus_memo_revealed: {
+      id: 'marcus_memo_revealed',
+      speakerId: 'npc_marcus',
+      text: 'Yes! I archived the internal emergency order chat export into my private notes under artifact EVD-2026-004. VP Femi Martins explicitly said: "Grant Aster whatever permissions it needs to complete the investor demo by 09:00, or clean out your desk." Take this hash—use it when you submit your investigation so truth prevails.',
+      choices: [
+        {
+          id: 'marcus_memo_ack',
+          text: 'Thank you, Marcus. I have this documented. You are protected.',
+          nextNodeId: 'marcus_exit_friendly',
         },
       ],
     },
@@ -829,6 +1010,12 @@ export const NKECHI_DIALOGUE_GRAPH: DialogueGraph = {
                 'Mama Nkechi is deeply grateful for your life-saving cyber advice for market traders.',
             },
             {
+              type: 'CHANGE_FACTION_STANDING',
+              factionId: 'faction_balogun_traders',
+              delta: 25,
+              reason: 'Educated market association leadership on SMS banking fraud',
+            },
+            {
               type: 'RECORD_MEMORY',
               topic: 'phishing_advice_given',
               fact: 'Warned Mama Nkechi and Balogun market traders about SMS phishing attacks targeting commercial bank accounts.',
@@ -844,6 +1031,12 @@ export const NKECHI_DIALOGUE_GRAPH: DialogueGraph = {
               type: 'CHANGE_RELATIONSHIP',
               delta: -10,
               reason: 'Mama Nkechi felt you looked down on local market traders.',
+            },
+            {
+              type: 'CHANGE_FACTION_STANDING',
+              factionId: 'faction_balogun_traders',
+              delta: -15,
+              reason: 'Dismissed community market trader fraud concerns',
             },
           ],
         },
