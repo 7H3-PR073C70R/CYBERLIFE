@@ -21,61 +21,173 @@ export interface PedestrianJourney {
 }
 
 export const PEDESTRIAN_ARCHETYPES: PedestrianArchetype[] = [
-  // 1. Lagos Tech Entrepreneur / Modern Urban
+  // 1. Babajide - Managing Director, Marina Capital Holdings (Elite Executive)
+  {
+    id: 'marina_managing_director',
+    name: 'Babajide Adeleke',
+    role: 'Managing Director, Marina Capital',
+    bodyType: 'male_1',
+  },
+  // 2. Ngozi - Senior Commercial Legal Counsel (Elite Executive)
+  {
+    id: 'broad_street_legal_counsel',
+    name: 'Ngozi Okonjo',
+    role: 'Senior Commercial Legal Counsel',
+    bodyType: 'female_1',
+  },
+  // 3. Chidi - Executive Chairman, Eko Maritime (Elite Executive)
+  {
+    id: 'marina_executive_chairman',
+    name: 'Chidi Obi',
+    role: 'Executive Chairman, Eko Maritime',
+    bodyType: 'male_2',
+  },
+  // 4. Zainab - Chief Investment Officer, Sovereign Wealth (Elite Executive)
+  {
+    id: 'chief_investment_officer',
+    name: 'Zainab Mohammed',
+    role: 'Chief Investment Officer',
+    bodyType: 'female_2',
+  },
+  // 5. Olumide - VP of Digital Infrastructure (Elite Executive)
+  {
+    id: 'fintech_vp_infrastructure',
+    name: 'Olumide Martins',
+    role: 'VP of Digital Infrastructure',
+    bodyType: 'male_1',
+  },
+  // 6. Folashade - Senior Partner, Maritime Arbitration (Elite Executive)
+  {
+    id: 'commercial_arbitration_partner',
+    name: 'Folashade Bello',
+    role: 'Senior Partner, Maritime Law',
+    bodyType: 'female_1',
+  },
+  // 7. Femi - Chief Risk Officer, Broad Street Interbank (Elite Executive)
+  {
+    id: 'interbank_risk_director',
+    name: 'Femi Bankole',
+    role: 'Chief Risk Officer, Interbank',
+    bodyType: 'male_2',
+  },
+  // 8. Ronke - Managing Partner, Eko Private Equity (Elite Executive)
+  {
+    id: 'private_equity_partner',
+    name: 'Ronke Adeleke',
+    role: 'Managing Partner, Private Equity',
+    bodyType: 'female_2',
+  },
+  // 9. Tunde - Lagos Tech Entrepreneur (Smart Casual)
   {
     id: 'lagos_tech_entrepreneur',
     name: 'Tunde Bakare',
     role: 'Lagos Tech Entrepreneur',
     bodyType: 'male_1',
   },
-  // 2. Marina Corporate Professional
-  {
-    id: 'marina_corporate_professional',
-    name: 'Ngozi Okonjo',
-    role: 'Marina Corporate Professional',
-    bodyType: 'female_1',
-  },
-  // 3. Balogun Market Merchant
+  // 10. Emeka - Balogun Market Merchant (Vibrant Ankara)
   {
     id: 'balogun_market_merchant',
     name: 'Emeka Eze',
     role: 'Balogun Market Merchant',
     bodyType: 'male_2',
   },
-  // 4. Broad Street Cyber Researcher
+  // 11. Amina - Broad Street Cyber Researcher (Smart Casual)
   {
     id: 'broad_street_cyber_researcher',
     name: 'Amina Yusuf',
     role: 'Broad Street Cyber Researcher',
     bodyType: 'female_2',
   },
-  // 5. Marina Waterfront Commuter
+  // 12. Halima - Lagos Urban Systems Planner (Smart Casual)
   {
-    id: 'marina_waterfront_commuter',
-    name: 'Babajide Adeleke',
-    role: 'Marina Waterfront Commuter',
+    id: 'urban_planner_consultant',
+    name: 'Halima Danjuma',
+    role: 'Lagos Urban Systems Planner',
+    bodyType: 'female_1',
+  },
+  // 13. Kunle - Broad Street Creative Director (Smart Casual)
+  {
+    id: 'creative_agency_director',
+    name: 'Kunle Solanke',
+    role: 'Broad Street Creative Director',
     bodyType: 'male_1',
   },
-  // 6. Tinubu Square Tech Specialist
+  // 14. Blessing - Idumota Logistics Coordinator (Smart Casual)
   {
-    id: 'tinubu_square_specialist',
-    name: 'Folashade Bello',
-    role: 'Tinubu Square Tech Specialist',
+    id: 'logistics_operations_lead',
+    name: 'Blessing Okoli',
+    role: 'Idumota Logistics Coordinator',
     bodyType: 'female_2',
   },
-  // 7. Balogun Electronics Trader
+  // 15. Dayo - Marina Ferry Operations Officer (Maritime Casual)
   {
-    id: 'balogun_electronics_trader',
-    name: 'Chidi Obi',
-    role: 'Balogun Electronics Trader',
+    id: 'marina_ferry_captain',
+    name: 'Dayo Oladipo',
+    role: 'Marina Ferry Transit Officer',
+    bodyType: 'male_1',
+  },
+  // 16. Funke - Fintech Systems Architect (Smart Casual)
+  {
+    id: 'fintech_systems_architect',
+    name: 'Funke Alabi',
+    role: 'Fintech Systems Architect',
+    bodyType: 'female_1',
+  },
+  // 17. Femi - Balogun Textile Designer (Vibrant Ankara)
+  {
+    id: 'balogun_textile_designer',
+    name: 'Femi Alade',
+    role: 'Balogun Textile Designer',
     bodyType: 'male_2',
   },
-  // 8. Marina Financial Analyst
+  // 18. Yetunde - 5G Infrastructure Engineer (Streetwear)
   {
-    id: 'marina_financial_analyst',
-    name: 'Zainab Mohammed',
-    role: 'Marina Financial Analyst',
+    id: 'telecoms_rf_engineer',
+    name: 'Yetunde Braimoh',
+    role: '5G Infrastructure Engineer',
+    bodyType: 'female_2',
+  },
+  // 19. Seyi - Green Energy Grid Consultant (Smart Casual)
+  {
+    id: 'clean_energy_consultant',
+    name: 'Seyi Johnson',
+    role: 'Green Energy Consultant',
+    bodyType: 'male_1',
+  },
+  // 20. Aisha - Cyber Threat Intelligence Analyst (Smart Casual)
+  {
+    id: 'digital_forensics_analyst',
+    name: 'Aisha Belgore',
+    role: 'Cyber Forensics Analyst',
     bodyType: 'female_1',
+  },
+  // 21. Kayode - Eko Port Logistics Agent (Smart Casual)
+  {
+    id: 'maritime_shipping_agent',
+    name: 'Kayode Williams',
+    role: 'Eko Maritime Logistics Agent',
+    bodyType: 'male_2',
+  },
+  // 22. Uche - Balogun Premium Ankara Wholesaler (Vibrant Ankara)
+  {
+    id: 'balogun_fashion_wholesaler',
+    name: 'Uche Nnamdi',
+    role: 'Balogun Ankara Wholesaler',
+    bodyType: 'male_1',
+  },
+  // 23. Hadiza - Tinubu Cultural Heritage Curator (Vibrant Ankara)
+  {
+    id: 'tinubu_cultural_curator',
+    name: 'Hadiza Sanusi',
+    role: 'Tinubu Cultural Curator',
+    bodyType: 'female_2',
+  },
+  // 24. Segun - Solar Micro-Grid Engineer (Streetwear)
+  {
+    id: 'solar_infrastructure_lead',
+    name: 'Segun Arinze',
+    role: 'Solar Grid Engineer',
+    bodyType: 'male_2',
   },
 ];
 
@@ -102,54 +214,222 @@ export interface PedestrianAgent {
 import { CharacterPalette } from './CharacterCustomizer';
 
 const NPC_PALETTES: CharacterPalette[] = [
-  // 0. Tunde - Lagos Tech Entrepreneur (Warm Cocoa + Cyan/Royal Blue)
-  { skin: 0x5c3826, jacket: 0x0284c7, pants: 0x1e293b, shoes: 0xf8fafc, hair: 0x111111 },
-  // 1. Ngozi - Marina Corporate Professional (Deep Bronze + Emerald Green)
-  { skin: 0x6e4732, jacket: 0x065f46, pants: 0x0f172a, shoes: 0x78350f, hair: 0x1c1917 },
-  // 2. Emeka - Balogun Market Merchant (Warm Mahogany + Ankara Indigo)
-  { skin: 0x543220, jacket: 0x4338ca, pants: 0x312e81, shoes: 0x451a03, hair: 0x0f0f0f },
-  // 3. Amina - Broad Street Cyber Researcher (Deep Ebony + Sunset Terracotta)
-  { skin: 0x3a2012, jacket: 0xd97706, pants: 0x18181b, shoes: 0xf8fafc, hair: 0x18181b },
-  // 4. Babajide - Marina Waterfront Commuter (Dark Espresso + Slate Grey)
-  { skin: 0x442616, jacket: 0x334155, pants: 0x1e293b, shoes: 0x09090b, hair: 0x09090b },
-  // 5. Folashade - Tinubu Square Tech Specialist (Golden Bronze + Regal Purple)
-  { skin: 0x7a4d33, jacket: 0x7c3aed, pants: 0x1e1b4b, shoes: 0xf8fafc, hair: 0x141414 },
-  // 6. Chidi - Balogun Electronics Trader (Rich Dark Chocolate + Crisp White)
-  { skin: 0x4d2d1d, jacket: 0xf8fafc, pants: 0x1e293b, shoes: 0x451a03, hair: 0x111111 },
-  // 7. Zainab - Marina Financial Analyst (Warm Caramel + Deep Ocean Teal)
-  { skin: 0x88563a, jacket: 0x0f766e, pants: 0x0f172a, shoes: 0x09090b, hair: 0x1c1917 },
-  // 8. Olumide - Cedarline Security Systems Lead (Deep Umber + Corporate Navy)
-  { skin: 0x4a2a1a, jacket: 0x0369a1, pants: 0x18181b, shoes: 0x18181b, hair: 0x111111 },
-  // 9. Halima - Lagos State Urban Planner (Warm Pecan + Danfo Saffron Yellow)
-  { skin: 0xaa704c, jacket: 0xfacc15, pants: 0x1e293b, shoes: 0x78350f, hair: 0x18181b },
-  // 10. Kunle - Broad Street Creative Director (Warm Chestnut + Deep Crimson)
-  { skin: 0x663c28, jacket: 0x991b1b, pants: 0x334155, shoes: 0x451a03, hair: 0x09090b },
-  // 11. Blessing - Idumota Logistics Coordinator (Rich Amber Honey + Mint Emerald)
-  { skin: 0x9c6140, jacket: 0x10b981, pants: 0x1e1b4b, shoes: 0xf8fafc, hair: 0x17120e },
-  // 12. Dayo - Marina Ferry Transit Officer (Deep Ebony + Crisp Light Ecru)
-  { skin: 0x3a2012, jacket: 0xf1f5f9, pants: 0x1e293b, shoes: 0x09090b, hair: 0x111111 },
-  // 13. Funke - Fintech Systems Architect (Golden Sand + Royal Violet)
-  { skin: 0xb87d58, jacket: 0x6d28d9, pants: 0x0f172a, shoes: 0x78350f, hair: 0x1c1917 },
-  // 14. Femi - Balogun Hardware Specialist (Warm Cocoa + Ochre Gold)
-  { skin: 0x5c3826, jacket: 0xb45309, pants: 0x18181b, shoes: 0x451a03, hair: 0x111111 },
-  // 15. Yetunde - Telecoms Network Engineer (Warm Mahogany + Coral Rose)
-  { skin: 0x543220, jacket: 0xe11d48, pants: 0x334155, shoes: 0xf8fafc, hair: 0x18181b },
-  // 16. Seyi - Green Energy Infrastructure Consultant (Dark Espresso + Lagos Green)
-  { skin: 0x442616, jacket: 0x15803d, pants: 0x1e293b, shoes: 0x92400e, hair: 0x0a0a0a },
-  // 17. Aisha - Cyber Forensics Investigator (Light Honey Caramel + Obsidian Slate)
-  { skin: 0xc48b66, jacket: 0x1e293b, pants: 0x1e1b4b, shoes: 0x09090b, hair: 0x1c1917 },
-  // 18. Kayode - Eko Maritime Logistics Manager (Golden Bronze + Ruby Wine)
-  { skin: 0x7a4d33, jacket: 0xbe123c, pants: 0x18181b, shoes: 0x451a03, hair: 0x111111 },
-  // 19. Ronke - Broad Street Commercial Attorney (Warm Caramel + Cedarline Royal Blue)
-  { skin: 0x88563a, jacket: 0x0284c7, pants: 0x0f172a, shoes: 0x78350f, hair: 0x141414 },
-  // 20. Uche - Balogun Textile Wholesaler (Rich Dark Chocolate + Vibrant Terracotta)
-  { skin: 0x4d2d1d, jacket: 0xd97706, pants: 0x334155, shoes: 0x92400e, hair: 0x111111 },
-  // 21. Hadiza - Tinubu Cultural Heritage Curator (Warm Pecan + Ankara Indigo)
-  { skin: 0xaa704c, jacket: 0x4338ca, pants: 0x1e1b4b, shoes: 0xf8fafc, hair: 0x18181b },
-  // 22. Segun - Solar Grid Installation Supervisor (Deep Dark Ebony + Danfo Yellow)
-  { skin: 0x3a2012, jacket: 0xfacc15, pants: 0x1e293b, shoes: 0x451a03, hair: 0x111111 },
-  // 23. Bisi - Digital Identity Compliance Officer (Deep Bronze + Deep Ocean Teal)
-  { skin: 0x6e4732, jacket: 0x0f766e, pants: 0x18181b, shoes: 0x09090b, hair: 0x141414 },
+  // 0. Babajide Adeleke - Managing Director (Elite: Presidential Midnight Navy Suit + High-Gloss Oxfords)
+  {
+    style: 'ELITE_SUIT',
+    skin: 0x321a0e, // Deep Midnight Ebony
+    jacket: 0x0b1329, // Presidential Midnight Navy
+    pants: 0x0b1329, // Matching tailored suit trousers
+    shoes: 0x050505, // High-gloss polished black patent leather oxfords
+    hair: 0x111111,
+  },
+  // 1. Ngozi Okonjo - Senior Commercial Legal Counsel (Elite: Italian Charcoal Wool Suit + Mahogany Pumps)
+  {
+    style: 'ELITE_SUIT',
+    skin: 0x643c28, // Warm Mahogany
+    jacket: 0x1a1e24, // Italian Tailored Charcoal
+    pants: 0x1a1e24, // Matching charcoal trousers
+    shoes: 0x451a03, // Polished dark mahogany leather
+    hair: 0x1c1917,
+  },
+  // 2. Chidi Obi - Executive Chairman (Elite: Executive Obsidian Black Suit + Black Monk-Straps)
+  {
+    style: 'ELITE_SUIT',
+    skin: 0x482818, // Deep Espresso
+    jacket: 0x0a0a0c, // Executive Obsidian Black
+    pants: 0x0a0a0c, // Matching obsidian trousers
+    shoes: 0x050505, // Black patent leather
+    hair: 0x111111,
+  },
+  // 3. Zainab Mohammed - Chief Investment Officer (Elite: Marina Corporate Emerald Suit + Chestnut Monk-Strap Heels)
+  {
+    style: 'ELITE_SUIT',
+    skin: 0x8d5c3f, // Warm Caramel
+    jacket: 0x064e3b, // Marina Corporate Emerald Suit
+    pants: 0x064e3b, // Matching emerald trousers
+    shoes: 0x5c2b14, // Burnished chestnut monk-straps
+    hair: 0x1c1917,
+  },
+  // 4. Olumide Martins - VP Digital Infrastructure (Elite: Bespoke Champagne Camel Suit + Cognac Loafers)
+  {
+    style: 'ELITE_SUIT',
+    skin: 0x4d2d1d, // Rich Dark Chocolate
+    jacket: 0xb49a78, // Bespoke Champagne Camel Suit
+    pants: 0xb49a78, // Matching champagne camel trousers
+    shoes: 0x451a03, // Rich cognac leather loafers
+    hair: 0x09090b,
+  },
+  // 5. Folashade Bello - Senior Partner Maritime Law (Elite: Silk Ivory/Cream Executive Suit + Cordovan Heels)
+  {
+    style: 'ELITE_SUIT',
+    skin: 0x7b5036, // Radiant Bronze
+    jacket: 0xf1ece1, // Silk Ivory / Cream Executive Suit
+    pants: 0xf1ece1, // Matching silk ivory slacks
+    shoes: 0x3b0713, // Italian cordovan burgundy leather
+    hair: 0x141414,
+  },
+  // 6. Femi Bankole - Chief Risk Officer (Elite: Sapphire Banker Navy Suit + Cordovan Loafers)
+  {
+    style: 'ELITE_SUIT',
+    skin: 0x523220, // Deep Warm Umber
+    jacket: 0x172554, // Sapphire Banker Navy Suit
+    pants: 0x172554, // Matching banker navy trousers
+    shoes: 0x3b0713, // Cordovan burgundy dress loafers
+    hair: 0x111111,
+  },
+  // 7. Ronke Adeleke - Managing Partner PE (Elite: Imperial Royal Burgundy Suit + Crimson Sole Heels)
+  {
+    style: 'ELITE_SUIT',
+    skin: 0xa87250, // Golden Honey
+    jacket: 0x4c0519, // Imperial Royal Burgundy Suit
+    pants: 0x4c0519, // Matching royal burgundy slacks
+    shoes: 0x7f1d1d, // Designer crimson sole heels
+    hair: 0x141414,
+  },
+  // 8. Tunde Bakare - Tech Entrepreneur (Warm Cocoa + Royal Blue + White Runners)
+  {
+    style: 'SMART_CASUAL',
+    skin: 0x5c3826,
+    jacket: 0x0284c7, // Cedarline Royal Blue
+    pants: 0x1e293b, // Dark denim indigo
+    shoes: 0xffffff, // Crisp white street runners
+    hair: 0x111111,
+  },
+  // 9. Emeka Eze - Balogun Market Merchant (Warm Mahogany + Ankara Indigo + Cognac Loafers)
+  {
+    style: 'VIBRANT_ANKARA',
+    skin: 0x543220,
+    jacket: 0x4338ca, // Vibrant Ankara indigo
+    pants: 0x312e81,
+    shoes: 0x451a03, // Rich cognac dress loafers
+    hair: 0x0f0f0f,
+  },
+  // 10. Amina Yusuf - Cyber Researcher (Deep Dark Ebony + Sunset Terracotta + Modern Tech Runners)
+  {
+    style: 'SMART_CASUAL',
+    skin: 0x3a2012,
+    jacket: 0xd97706, // Warm terracotta amber
+    pants: 0x18181b,
+    shoes: 0xf8fafc, // Modern white tech runners
+    hair: 0x18181b,
+  },
+  // 11. Halima Danjuma - Urban Planner (Warm Pecan + Danfo Yellow + Sand Suede Loafers)
+  {
+    style: 'SMART_CASUAL',
+    skin: 0xb17a56,
+    jacket: 0xfacc15, // Danfo saffron yellow
+    pants: 0x1e293b,
+    shoes: 0xca8a04, // Sand suede loafers
+    hair: 0x18181b,
+  },
+  // 12. Kunle Solanke - Creative Director (Warm Chestnut + Deep Crimson + Walnut Brogues)
+  {
+    style: 'SMART_CASUAL',
+    skin: 0x6c442c,
+    jacket: 0x991b1b, // Deep crimson
+    pants: 0x334155, // Slate chinos
+    shoes: 0x27150a, // Dark walnut leather brogues
+    hair: 0x09090b,
+  },
+  // 13. Blessing Okoli - Logistics Coordinator (Rich Amber Honey + Mint Emerald + Pristine Runners)
+  {
+    style: 'SMART_CASUAL',
+    skin: 0x9f6a4a,
+    jacket: 0x10b981, // Mint emerald
+    pants: 0x1e1b4b,
+    shoes: 0xffffff, // Crisp white runners
+    hair: 0x17120e,
+  },
+  // 14. Dayo Oladipo - Ferry Operations Officer (Deep Dark Ebony + Ecru + Suede Navy Loafers)
+  {
+    style: 'SMART_CASUAL',
+    skin: 0x3a2012,
+    jacket: 0xf1f5f9, // Crisp ecru sailor jacket
+    pants: 0x1e293b, // Navy chinos
+    shoes: 0x172554, // Suede navy loafers
+    hair: 0x111111,
+  },
+  // 15. Funke Alabi - Systems Architect (Golden Sand + Royal Violet + Violet Patent Heels)
+  {
+    style: 'SMART_CASUAL',
+    skin: 0xb9825d,
+    jacket: 0x6d28d9, // Royal violet
+    pants: 0x0f172a,
+    shoes: 0x581c87, // Royal violet patent heels
+    hair: 0x1c1917,
+  },
+  // 16. Femi Alade - Textile Designer (Warm Cocoa + Ochre Gold Ankara + Chestnut Monk-Straps)
+  {
+    style: 'VIBRANT_ANKARA',
+    skin: 0x5c3826,
+    jacket: 0xb45309, // Ochre gold Ankara
+    pants: 0x5c3826, // Tobacco brown
+    shoes: 0x5c2b14, // Burnished chestnut monk-straps
+    hair: 0x111111,
+  },
+  // 17. Yetunde Braimoh - 5G Engineer (Warm Mahogany + Electric Coral + Gold Accent Shoes)
+  {
+    style: 'STREETWEAR',
+    skin: 0x543220,
+    jacket: 0xf43f5e, // Electric Lagos coral
+    pants: 0x334155,
+    shoes: 0xd4af37, // Metallic gold accent shoes
+    hair: 0x18181b,
+  },
+  // 18. Seyi Johnson - Green Energy Consultant (Dark Roast Cocoa + Lagos Green + Suede Desert Boots)
+  {
+    style: 'SMART_CASUAL',
+    skin: 0x422416,
+    jacket: 0x15803d, // Lagos green
+    pants: 0x78716c, // Khaki chinos
+    shoes: 0x92400e, // Suede desert boots
+    hair: 0x0a0a0a,
+  },
+  // 19. Aisha Belgore - Cyber Forensics Analyst (Light Honey + Turquoise + Midnight Blue Heels)
+  {
+    style: 'SMART_CASUAL',
+    skin: 0xc9936c,
+    jacket: 0x06b6d4, // Tropical turquoise
+    pants: 0x1e1b4b,
+    shoes: 0x0c1e3d, // Midnight blue patent leather heels
+    hair: 0x1c1917,
+  },
+  // 20. Kayode Williams - Port Logistics Agent (Deep Bronze + Ruby Wine + Oxblood Derby Shoes)
+  {
+    style: 'SMART_CASUAL',
+    skin: 0x734a32,
+    jacket: 0xbe123c, // Ruby wine
+    pants: 0x18181b,
+    shoes: 0x581825, // Oxblood derby shoes
+    hair: 0x111111,
+  },
+  // 21. Uche Nnamdi - Ankara Wholesaler (Deep Espresso + Sunset Tangerine + Tan Chelsea Boots)
+  {
+    style: 'VIBRANT_ANKARA',
+    skin: 0x482818,
+    jacket: 0xf97316, // Vibrant sunset tangerine
+    pants: 0x334155,
+    shoes: 0xa16207, // Tan suede Chelsea boots
+    hair: 0x111111,
+  },
+  // 22. Hadiza Sanusi - Cultural Curator (Golden Bronze + Traditional Indigo + Rose Gold Heels)
+  {
+    style: 'VIBRANT_ANKARA',
+    skin: 0x84563a,
+    jacket: 0x4338ca, // Traditional indigo
+    pants: 0x1e1b4b,
+    shoes: 0xb76e79, // Rose gold metallic heels
+    hair: 0x18181b,
+  },
+  // 23. Segun Arinze - Solar Grid Engineer (Deep Midnight Ebony + Danfo Yellow + Black High-Tops)
+  {
+    style: 'STREETWEAR',
+    skin: 0x321a0e,
+    jacket: 0xfacc15, // Danfo yellow
+    pants: 0x18181b,
+    shoes: 0x18181b, // Obsidian black high-tops
+    hair: 0x111111,
+  },
 ];
 
 export class PedestrianSystem {

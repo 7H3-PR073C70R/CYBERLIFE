@@ -1,13 +1,20 @@
 import * as THREE from 'three';
 
+export type CharacterOutfitStyle =
+  | 'ELITE_SUIT'
+  | 'SMART_CASUAL'
+  | 'VIBRANT_ANKARA'
+  | 'STREETWEAR';
+
 export interface CharacterPalette {
   skin: number;
-  jacket?: number; // shirt / top
+  jacket?: number; // shirt / blazer / top
   jacketTrim?: number;
-  pants?: number;
-  shoes?: number;
+  pants?: number; // trousers / slacks / jeans
+  shoes?: number; // dress shoes / sneakers / heels / boots
   hair?: number;
   accent?: number;
+  style?: CharacterOutfitStyle;
 }
 
 /**
@@ -17,26 +24,93 @@ export interface CharacterPalette {
  */
 export const NIGERIAN_SKIN_TONES = [
   // Deep Rich Melanin
+  0x321a0e, // Deep Midnight Ebony
   0x3a2012, // Deep Dark Ebony
-  0x442616, // Dark Espresso
-  0x4a2a1a, // Deep Umber
+  0x422416, // Dark Roast Cocoa
+  0x482818, // Deep Espresso
   0x4d2d1d, // Rich Dark Chocolate
+  0x523220, // Deep Warm Umber
 
   // Warm Cocoa & Mahogany
-  0x543220, // Warm Mahogany
+  0x583624, // Rich Cocoa
   0x5c3826, // Warm Cocoa
-  0x663c28, // Warm Chestnut
-  0x6e4732, // Deep Bronze
+  0x643c28, // Warm Mahogany
+  0x6c442c, // Warm Chestnut
+  0x734a32, // Deep Bronze
 
   // Golden Bronze & Caramel
-  0x7a4d33, // Golden Bronze
-  0x88563a, // Warm Caramel
-  0x9c6140, // Rich Amber Honey
+  0x7b5036, // Radiant Bronze
+  0x84563a, // Golden Bronze
+  0x8d5c3f, // Warm Caramel
+  0x966344, // Amber Caramel
+  0x9f6a4a, // Rich Amber Honey
 
   // Light Melanin & Warm Honey
-  0xaa704c, // Warm Pecan
-  0xb87d58, // Golden Sand
-  0xc48b66, // Light Honey Caramel
+  0xa87250, // Golden Honey
+  0xb17a56, // Warm Pecan
+  0xb9825d, // Golden Sand
+  0xc18b64, // Light Caramel
+  0xc9936c, // Light Honey
+] as const;
+
+/**
+ * Elite executive business suits for corporate leaders, bankers, and high-level attorneys in Marina and Broad Street.
+ */
+export const ELITE_SUIT_PALETTES = [
+  {
+    name: 'Presidential Midnight Navy',
+    fabric: 0x0b1329,
+    pants: 0x0b1329,
+    shoes: 0x050505, // High-gloss polished black leather oxfords
+  },
+  {
+    name: 'Italian Tailored Charcoal',
+    fabric: 0x1a1e24,
+    pants: 0x1a1e24,
+    shoes: 0x451a03, // Polished dark mahogany leather
+  },
+  {
+    name: 'Executive Obsidian Black',
+    fabric: 0x0a0a0c,
+    pants: 0x0a0a0c,
+    shoes: 0x050505, // Black patent leather
+  },
+  {
+    name: 'Marina Corporate Emerald Suit',
+    fabric: 0x064e3b,
+    pants: 0x064e3b,
+    shoes: 0x451a03, // Cognac leather dress shoes
+  },
+  {
+    name: 'Imperial Royal Burgundy Suit',
+    fabric: 0x4c0519,
+    pants: 0x4c0519,
+    shoes: 0x3b0713, // Cordovan burgundy leather
+  },
+  {
+    name: 'Deep Executive Graphite',
+    fabric: 0x23272f,
+    pants: 0x23272f,
+    shoes: 0x050505, // Polished black leather
+  },
+  {
+    name: 'Bespoke Champagne Camel Suit',
+    fabric: 0xb49a78,
+    pants: 0xb49a78,
+    shoes: 0x451a03, // Chocolate leather shoes / heels
+  },
+  {
+    name: 'Silk Ivory / Cream Executive Suit',
+    fabric: 0xf1ece1,
+    pants: 0xf1ece1,
+    shoes: 0x5c2b14, // Burnished chestnut monk-straps
+  },
+  {
+    name: 'Sapphire Banker Navy Suit',
+    fabric: 0x172554,
+    pants: 0x172554,
+    shoes: 0x3b0713, // Cordovan dress loafers
+  },
 ] as const;
 
 /**
@@ -64,27 +138,72 @@ export const LAGOS_SHIRT_PALETTES = [
   0xf1f5f9, // Light Ecru
   0x334155, // Slate Charcoal
   0x1e293b, // Obsidian Slate
+  0xf43f5e, // Electric Lagos Coral
+  0xf97316, // Vibrant Sunset Tangerine
+  0x06b6d4, // Tropical Turquoise
+  0x166534, // Forest Green
+  0xa855f7, // Lavender Violet
+  0xc2410c, // Terracotta Rust
+  0xfef3c7, // Warm Champagne Cream
+  0x38bdf8, // Sky Cyan
+  0xe11d48, // Hot Coral
+  0x84cc16, // Lime Leaf
+  0xec4899, // Fuchsia Blossom
+  0x14b8a6, // Bright Aquamarine
+  0xeab308, // Marigold Gold
+  0x78716c, // Warm Pebble
 ] as const;
 
+/**
+ * Diverse trousers, slacks, chinos, and jeans.
+ */
 export const LAGOS_PANTS_PALETTES = [
   0x1e293b, // Dark Denim Indigo
-  0x0f172a, // Obsidian Black
-  0x18181b, // Charcoal Black
-  0x334155, // Slate Grey
-  0x475569, // Light Slate
-  0x78716c, // Khaki Chino
-  0xa8a29e, // Sand Beige
-  0x3f3f46, // Deep Olive Grey
-  0x1e1b4b, // Deep Midnight Navy
+  0x0b1329, // Executive Midnight Navy
+  0x1a1e24, // Charcoal Wool Slacks
+  0x0a0a0c, // Obsidian Black Trousers
+  0x334155, // Slate Grey Chinos
+  0x475569, // Light Slate Chinos
+  0x78716c, // Khaki Chinos
+  0xa8a29e, // Sand Beige Slacks
+  0x365314, // Deep Olive Chinos
+  0x57534e, // Stone Grey Trousers
+  0x1e1b4b, // Deep Midnight Navy Jeans
+  0x5c3826, // Tobacco Brown Trousers
+  0xf1f5f9, // Crisp Off-White Chinos
+  0xfef3c7, // Cream Wool Slacks
+  0x4c0519, // Deep Burgundy Trousers
+  0x064e3b, // Forest Emerald Trousers
+  0x292524, // Warm Charcoal Slacks
+  0x44403c, // Dark Taupe Trousers
 ] as const;
 
+/**
+ * Extended footwear: High-gloss dress shoes, polished heels, monk-straps, sneakers, and boots.
+ */
 export const LAGOS_SHOES_PALETTES = [
-  0xf8fafc, // White Sneakers
-  0x451a03, // Dark Leather Oxfords
+  0x050505, // High-Gloss Polished Black Patent Leather (Oxfords / Heels)
+  0x3b0713, // Italian Cordovan Burgundy Leather
+  0x451a03, // Rich Mahogany / Cognac Dress Loafers
+  0x5c2b14, // Burnished Chestnut Monk-Straps
+  0xa16207, // Tan Suede Chelsea Boots
+  0x27150a, // Dark Walnut Leather Shoes / Brogues
+  0xffffff, // Pristine Crisp White Street Sneakers
+  0xf8fafc, // Modern White Tech Runners
+  0x18181b, // Obsidian Black High-Top Sneakers
+  0x7f1d1d, // Designer Crimson Sole Heels
+  0xd4af37, // Metallic Gold Accent Heels
+  0x581c87, // Royal Violet Patent Heels
+  0x172554, // Suede Navy Loafers
+  0xca8a04, // Sand Suede Loafers
   0x78350f, // Tan Brown Loafers
-  0x09090b, // Black Dress Shoes / Heels
-  0x18181b, // Black Boots
   0x92400e, // Suede Desert Boots
+  0x064e3b, // Emerald Green Leather Loafers
+  0x581825, // Oxblood Derby Shoes
+  0x334155, // Charcoal Suede Dress Shoes
+  0xf1ece1, // Off-White Cream Casual Canvas Shoes
+  0x0c1e3d, // Midnight Blue Patent Leather Heels
+  0xb76e79, // Rose Gold Metallic Party Heels
 ] as const;
 
 /**
@@ -196,18 +315,25 @@ export function reindexCh12Mesh(mesh: THREE.Mesh): void {
 }
 
 /**
- * Applies a custom Nigerian skin tone, shirt color, pants color, and footwear
+ * Applies a custom Nigerian skin tone, tailored suit or casual clothing, and footwear finish
  * to a rigged character model instance without affecting other instances.
  */
 export function applyCharacterCustomization(
   modelRoot: THREE.Object3D,
   palette: CharacterPalette
 ): void {
-  const shirtColor = palette.jacket ?? 0x0284c7;
-  const pantsColor = palette.pants ?? 0x1e293b;
-  const shoesColor = palette.shoes ?? 0xffffff;
+  const isEliteSuit = palette.style === 'ELITE_SUIT';
+  const shirtColor = palette.jacket ?? (isEliteSuit ? 0x0b1329 : 0x0284c7);
+  const pantsColor = palette.pants ?? (isEliteSuit ? shirtColor : 0x1e293b);
+  const shoesColor = palette.shoes ?? (isEliteSuit ? 0x050505 : 0xffffff);
   const skinColor = palette.skin;
   const hairColor = palette.hair ?? 0x111111;
+
+  // Material surface properties based on style
+  const clothingRoughness = isEliteSuit ? 0.62 : 0.88; // Tailored wool/silk suit vs casual cotton
+  const clothingMetalness = isEliteSuit ? 0.02 : 0.0;
+  const shoesRoughness = isEliteSuit ? 0.28 : 0.75; // Polished high-gloss dress shoes / heels vs sneakers
+  const shoesMetalness = isEliteSuit ? 0.12 : 0.0; // Subtle specular reflection on patent leather
 
   modelRoot.traverse(child => {
     if (child instanceof THREE.Mesh) {
@@ -223,18 +349,18 @@ export function applyCharacterCustomization(
 
           const shirtMat = base.clone();
           shirtMat.color.setHex(shirtColor);
-          shirtMat.roughness = 0.88;
-          shirtMat.metalness = 0.0;
+          shirtMat.roughness = clothingRoughness;
+          shirtMat.metalness = clothingMetalness;
 
           const pantsMat = base.clone();
           pantsMat.color.setHex(pantsColor);
-          pantsMat.roughness = 0.90;
-          pantsMat.metalness = 0.0;
+          pantsMat.roughness = clothingRoughness;
+          pantsMat.metalness = clothingMetalness;
 
           const shoesMat = base.clone();
           shoesMat.color.setHex(shoesColor);
-          shoesMat.roughness = 0.75;
-          shoesMat.metalness = 0.0;
+          shoesMat.roughness = shoesRoughness;
+          shoesMat.metalness = shoesMetalness;
 
           child.material = [skinMat, shirtMat, pantsMat, shoesMat];
         }
@@ -254,24 +380,26 @@ export function applyCharacterCustomization(
         mat.roughness = 0.65;
         mat.metalness = 0.05;
       } else if (meshName.includes('shirt') || meshName.includes('cloth')) {
-        // Shirt / blouse / top
+        // Shirt / blazer / blouse
         mat.color.setHex(shirtColor);
-        mat.roughness = 0.88;
-        mat.metalness = 0.0;
+        mat.roughness = clothingRoughness;
+        mat.metalness = clothingMetalness;
       } else if (meshName.includes('pants')) {
-        // Trousers / jeans
+        // Trousers / slacks / suit pants
         mat.color.setHex(pantsColor);
-        mat.roughness = 0.90;
-        mat.metalness = 0.0;
+        mat.roughness = clothingRoughness;
+        mat.metalness = clothingMetalness;
       } else if (
         meshName.includes('sneaker') ||
         meshName.includes('heel') ||
-        meshName.includes('sock')
+        meshName.includes('sock') ||
+        meshName.includes('shoe') ||
+        meshName.includes('boot')
       ) {
-        // Footwear
+        // Footwear (Dress shoes / high heels / sneakers)
         mat.color.setHex(shoesColor);
-        mat.roughness = 0.75;
-        mat.metalness = 0.0;
+        mat.roughness = shoesRoughness;
+        mat.metalness = shoesMetalness;
       } else if (meshName.includes('hair') || meshName.includes('eyelash')) {
         // Hair
         mat.color.setHex(hairColor);
