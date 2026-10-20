@@ -33,7 +33,7 @@ describe('ScreenRenderer', () => {
     const initialVersion = texture.version;
 
     renderer.setTerminalLines([
-      'tade@parrot:~$ nmap -sV 10.0.4.15',
+      'tade@heron-ws04:~$ nmap -sV 10.0.4.15',
       'PORT 445/tcp open microsoft-ds',
       'Aster AI service running with admin token',
     ]);

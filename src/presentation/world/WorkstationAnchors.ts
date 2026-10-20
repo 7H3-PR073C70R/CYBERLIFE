@@ -62,8 +62,8 @@ export function deriveCameraScreen(
 }
 
 // ---------------------------------------------------------------------------
-// Verified Baseline Anchors (Matching physical placeholder workstation geometry)
-// Laptop at (0, 0.7425, -3.32), Lid tilted back at -1.25 rad
+// Verified Baseline Anchors (Calibrated for PBR Workstation GLB assets)
+// Metal Desk tabletop at Y = 0.7875, Chair seat at Y = 0.48, Laptop screen at Y = 1.1175
 // ---------------------------------------------------------------------------
 
 const DEFAULT_SEAT: SeatAnchor = {
@@ -72,18 +72,18 @@ const DEFAULT_SEAT: SeatAnchor = {
 };
 
 const DEFAULT_SCREEN_QUAD: ScreenQuad = {
-  center: new THREE.Vector3(0.0, 0.7945, -3.5511),
-  normal: new THREE.Vector3(0.0, 0.9492, 0.3146).normalize(),
-  width: 0.32,
-  height: 0.2,
+  center: new THREE.Vector3(0.0, 1.1175, -3.527),
+  normal: new THREE.Vector3(0.0, 0.0, 1.0).normalize(),
+  width: 0.448,
+  height: 0.366,
 };
 
 const DEFAULT_KEYBOARD: PointAnchor = {
-  position: new THREE.Vector3(0.0, 0.755, -3.355),
+  position: new THREE.Vector3(-0.06, 0.8035, -3.2),
 };
 
 const DEFAULT_MOUSE: PointAnchor = {
-  position: new THREE.Vector3(0.28, 0.755, -3.32),
+  position: new THREE.Vector3(0.26, 0.8035, -3.2),
 };
 
 const DEFAULT_CAM_SEATED_TP: CameraFraming = {

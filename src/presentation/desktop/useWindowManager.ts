@@ -178,6 +178,61 @@ export function useWindowManager(options: UseWindowManagerOptions = {}) {
         [appId]: {
           ...target,
           isMaximized: !target.isMaximized,
+          snapState: null,
+        },
+      };
+    });
+  }, []);
+
+  const snapWindow = useCallback((appId: AppId, snap: 'left' | 'right' | 'top' | 'none') => {
+    setWindows(prev => {
+      const target = prev[appId];
+      if (!target) return prev;
+      if (snap === 'top') {
+        return {
+          ...prev,
+          [appId]: {
+            ...target,
+            isMaximized: true,
+            snapState: null,
+          },
+        };
+      }
+      if (snap === 'left' || snap === 'right') {
+        return {
+          ...prev,
+          [appId]: {
+            ...target,
+            isMaximized: false,
+            snapState: snap,
+          },
+        };
+      }
+      return {
+        ...prev,
+        [appId]: {
+          ...target,
+          snapState: null,
+        },
+      };
+    });
+  }, []);
+
+  const resizeWindow = useCallback((appId: AppId, width: number, height: number) => {
+    setWindows(prev => {
+      const target = prev[appId];
+      if (!target) return prev;
+      const minW = APP_REGISTRY[appId]?.minSize.width ?? 300;
+      const minH = APP_REGISTRY[appId]?.minSize.height ?? 200;
+      return {
+        ...prev,
+        [appId]: {
+          ...target,
+          snapState: null,
+          size: {
+            width: Math.max(minW, width),
+            height: Math.max(minH, height),
+          },
         },
       };
     });
@@ -215,7 +270,7 @@ export function useWindowManager(options: UseWindowManagerOptions = {}) {
 
         if (containerBounds) {
           const minVisibleWidth = 100;
-          const taskbarOffset = 52; // taskbar height
+          const taskbarOffset = 52; // bottom taskbar/panel boundary margin
           clampedX = Math.max(0, Math.min(x, containerBounds.width - minVisibleWidth));
           clampedY = Math.max(0, Math.min(y, containerBounds.height - taskbarOffset - 40));
         }
@@ -224,6 +279,7 @@ export function useWindowManager(options: UseWindowManagerOptions = {}) {
           ...prev,
           [appId]: {
             ...target,
+            snapState: null,
             position: { x: clampedX, y: clampedY },
           },
         };
@@ -241,6 +297,7 @@ export function useWindowManager(options: UseWindowManagerOptions = {}) {
           isOpen: false,
           isMinimized: false,
           isMaximized: false,
+          snapState: null,
         };
       });
       return next;
@@ -270,6 +327,8 @@ export function useWindowManager(options: UseWindowManagerOptions = {}) {
     restoreWindow,
     toggleMinimize,
     maximizeWindow,
+    snapWindow,
+    resizeWindow,
     focusWindow,
     moveWindow,
     closeAll,

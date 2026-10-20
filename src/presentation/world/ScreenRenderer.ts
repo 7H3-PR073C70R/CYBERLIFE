@@ -1,12 +1,24 @@
 import * as THREE from 'three';
+import { OS_NAME, OS_VERSION, OS_BRANDING, HOSTNAMES, KERNEL_STRING } from '../desktop/osBranding';
+import { OS_TOKENS } from '../desktop/osTokens';
 
 export interface ScreenDesktopState {
   wallpaperTheme?: 'slate' | 'marina' | 'obsidian';
   workstationName?: string;
   simulationTime?: string;
   simulationDate?: string;
+  activeWindowId?: string | null;
   activeAppTitle?: string;
-  openWindows?: Array<{ id: string; title: string; isActive: boolean }>;
+  openWindows?: Array<{
+    id: string;
+    title: string;
+    icon?: string;
+    isActive?: boolean;
+    isMinimized?: boolean;
+    isMaximized?: boolean;
+    position?: { x: number; y: number };
+    size?: { width: number; height: number };
+  }>;
   terminalLines?: string[];
   cpuPercent?: number;
   ramUsage?: string;
@@ -22,11 +34,18 @@ export interface ScreenRendererOptions {
 }
 
 /**
- * ScreenRenderer renders a high-fidelity 1280x800 representation of the EkoSec OS
- * desktop onto a dynamic Three.js canvas texture with SRGBColorSpace, mipmaps,
+ * ScreenRenderer renders a high-fidelity 1280x800 representation of Heron OS
+ * onto a dynamic Three.js canvas texture with SRGBColorSpace, mipmaps,
  * 8x anisotropy, and emissive lighting.
  *
- * Throttles redraws to 10-15 fps and pauses when off-screen.
+ * Visually identical to the DOM DesktopShell:
+ * - Top panel with Applications, Places, System menus, launchers, running windows strip, tray clock
+ * - Left vertical desktop icons (Home, Trash, Terminal, Tools)
+ * - Restyled dark GTK window frame with centered title and controls
+ * - Signature two-line colored terminal prompt:
+ *   ┌─[tade@heron-ws04]─[~]
+ *   └──╼ $
+ * - Procedural circuit & node background
  */
 export class ScreenRenderer {
   private canvas: HTMLCanvasElement;
@@ -47,15 +66,15 @@ export class ScreenRenderer {
     wallpaperTheme: 'slate',
     workstationName: 'Cedarline Marina Tower // SOC Staging',
     simulationTime: '08:00 AM',
-    openWindows: [{ id: 'terminal', title: 'bash - sandboxed', isActive: true }],
+    openWindows: [{ id: 'terminal', title: `${OS_NAME} Terminal`, icon: 'terminal' }],
     terminalLines: [
-      'tade@ekosec-ws04:~$ uname -a',
-      'Linux cyberlife 6.8.0-parrot-enterprise x86_64',
-      'tade@ekosec-ws04:~$ status',
-      '[OK] 10.0.4.15/24 SYNTHETIC NODE READY',
-      'tade@ekosec-ws04:~$ _',
+      `${OS_BRANDING.bannerHeader}`,
+      `Kernel: Linux ${KERNEL_STRING} // Node: 10.0.4.15`,
+      'Safety Boundary: 100% simulated sandbox. Zero host execution.',
+      '',
+      "Type 'help' to view available simulated commands.",
     ],
-    cpuPercent: 14,
+    cpuPercent: 12,
     ramUsage: '2.4 / 16 GB',
     ipAddress: '10.0.4.15',
   };
@@ -89,6 +108,7 @@ export class ScreenRenderer {
       roughness: 0.25,
       metalness: 0.1,
       toneMapped: false,
+      side: THREE.DoubleSide,
     });
 
     this.render();
@@ -137,7 +157,7 @@ export class ScreenRenderer {
     this.timeSinceLastDraw += deltaTime;
     this.blinkTimer += deltaTime;
 
-    // Only redraw if visible and frame interval has elapsed
+    // Redraw if visible and interval elapsed or state is dirty
     if (this.isVisible && (this.timeSinceLastDraw >= this.frameInterval || this.isDirty)) {
       this.timeSinceLastDraw = 0;
       this.isDirty = false;
@@ -151,48 +171,37 @@ export class ScreenRenderer {
       const w = this.width;
       const h = this.height;
 
-      // 1. Wallpaper background
+      // 1. Procedural wallpaper (obsidian to teal gradient with circuit traces)
       this.drawWallpaper(ctx, w, h);
 
-      // 2. Top System Status Bar
-      this.drawTopBar(ctx, w);
-
-      // 3. Desktop Shortcuts on Left
+      // 2. Left vertical desktop icons
       this.drawDesktopIcons(ctx);
 
-      // 4. Central Terminal Window with last ~15 lines
+      // 3. Central Terminal Window with Heron OS chrome & two-line prompt
       this.drawTerminalWindow(ctx, w, h);
 
-      // 5. Bottom Taskbar
-      this.drawTaskbar(ctx, w, h);
+      // 4. Heron OS Top Panel (Applications / Places / System / Launchers / Windows / Tray Clock)
+      this.drawTopPanel(ctx, w);
+
+      // 5. Thin bottom workspace pager strip
+      this.drawBottomStrip(ctx, w, h);
     }
 
     this.texture.needsUpdate = true;
   }
 
   private drawWallpaper(ctx: CanvasRenderingContext2D, w: number, h: number): void {
-    const theme = this.state.wallpaperTheme ?? 'slate';
-    const grad = ctx.createRadialGradient(w * 0.5, h * 0.4, 80, w * 0.5, h * 0.5, w * 0.8);
-
-    if (theme === 'marina') {
-      grad.addColorStop(0, '#0c2236');
-      grad.addColorStop(0.6, '#061320');
-      grad.addColorStop(1, '#02060b');
-    } else if (theme === 'obsidian') {
-      grad.addColorStop(0, '#1a1f26');
-      grad.addColorStop(0.6, '#0d1117');
-      grad.addColorStop(1, '#05070a');
-    } else {
-      // Slate default
-      grad.addColorStop(0, '#1c2838');
-      grad.addColorStop(0.6, '#0f1724');
-      grad.addColorStop(1, '#060a10');
-    }
+    // Radial glow background
+    const grad = ctx.createRadialGradient(w * 0.5, h * 0.45, 100, w * 0.5, h * 0.5, w * 0.75);
+    grad.addColorStop(0, '#122b3b');
+    grad.addColorStop(0.45, '#0a1824');
+    grad.addColorStop(0.85, '#040810');
+    grad.addColorStop(1, '#020408');
 
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    // Subtle technical grid
+    // Fine grid
     ctx.strokeStyle = 'rgba(0, 229, 255, 0.035)';
     ctx.lineWidth = 1;
     for (let x = 0; x < w; x += 64) {
@@ -208,203 +217,339 @@ export class ScreenRenderer {
       ctx.stroke();
     }
 
-    // Watermark branding
+    // Stylized geometric circuit traces
+    ctx.strokeStyle = 'rgba(0, 229, 255, 0.18)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(80, 140);
+    ctx.lineTo(200, 140);
+    ctx.lineTo(260, 200);
+    ctx.lineTo(380, 200);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(w - 100, h - 160);
+    ctx.lineTo(w - 220, h - 160);
+    ctx.lineTo(w - 280, h - 220);
+    ctx.lineTo(w - 400, h - 220);
+    ctx.stroke();
+
+    // Central watermark emblem
     ctx.save();
     ctx.fillStyle = 'rgba(0, 229, 255, 0.06)';
-    ctx.font = 'bold 44px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+    ctx.font = 'bold 36px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('EKOSEC LINUX 2026', w * 0.5, h * 0.52);
-    ctx.font = '16px monospace';
+    ctx.fillText(`${OS_NAME.toUpperCase()} ${OS_VERSION}`, w * 0.5, h * 0.52);
+    ctx.font = '13px monospace';
     ctx.fillStyle = 'rgba(148, 163, 184, 0.08)';
-    ctx.fillText('ISOLATED SANDBOX // LIVE PHYSICAL SCREEN', w * 0.5, h * 0.57);
+    ctx.fillText(`${KERNEL_STRING} // SYNTHETIC CYBER WORKSTATION`, w * 0.5, h * 0.56);
     ctx.restore();
   }
 
-  private drawTopBar(ctx: CanvasRenderingContext2D, w: number): void {
-    const barHeight = 40;
-    ctx.fillStyle = 'rgba(4, 7, 12, 0.94)';
-    ctx.fillRect(0, 0, w, barHeight);
+  private drawTopPanel(ctx: CanvasRenderingContext2D, w: number): void {
+    const panelH = OS_TOKENS.panel.height;
 
-    ctx.strokeStyle = 'rgba(0, 229, 255, 0.25)';
+    // Panel background
+    ctx.fillStyle = 'rgba(12, 19, 31, 0.96)';
+    ctx.fillRect(0, 0, w, panelH);
+
+    // 1px bottom border
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(0, barHeight);
-    ctx.lineTo(w, barHeight);
+    ctx.moveTo(0, panelH);
+    ctx.lineTo(w, panelH);
     ctx.stroke();
 
-    // OS Badge
+    // OS Logo Icon
     ctx.fillStyle = '#00e5ff';
-    ctx.font = 'bold 15px monospace';
-    ctx.fillText('🦅 EKOSEC OS 2026', 16, 25);
+    ctx.beginPath();
+    ctx.arc(16, panelH / 2, 5, 0, Math.PI * 2);
+    ctx.fill();
 
-    // Workstation Tag
-    ctx.fillStyle = '#64748b';
-    ctx.font = '13px monospace';
-    ctx.fillText(this.state.workstationName ?? 'Workstation', 210, 25);
+    // Menus: Applications, Places, System
+    ctx.font = '600 12px sans-serif';
+    ctx.fillStyle = '#00e5ff';
+    ctx.fillText('Applications', 28, 19);
 
-    // Middle stats
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '13px monospace';
-    const cpu = this.state.cpuPercent ?? 14;
-    const ram = this.state.ramUsage ?? '2.4 / 16 GB';
-    const ip = this.state.ipAddress ?? '10.0.4.15';
-    ctx.fillText(`CPU: ${cpu}%   RAM: ${ram}   NET: ${ip}`, 540, 25);
+    ctx.font = '500 12px sans-serif';
+    ctx.fillStyle = '#cbd5e1';
+    ctx.fillText('Places', 116, 19);
+    ctx.fillText('System', 166, 19);
 
-    // Time Clock
-    ctx.fillStyle = '#00e676';
-    ctx.font = 'bold 14px monospace';
+    // Separator
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+    ctx.beginPath();
+    ctx.moveTo(222, 6);
+    ctx.lineTo(222, 24);
+    ctx.stroke();
+
+    // Quick Launchers
+    const launchers = [
+      { label: '>_', col: '#00e5ff' },
+      { label: '📝', col: '#cbd5e1' },
+      { label: '📖', col: '#00e676' },
+      { label: '⚙️', col: '#f59e0b' },
+    ];
+    launchers.forEach((l, idx) => {
+      ctx.fillStyle = l.col;
+      ctx.font = '11px monospace';
+      ctx.fillText(l.label, 234 + idx * 26, 19);
+    });
+
+    // Separator
+    ctx.beginPath();
+    ctx.moveTo(344, 6);
+    ctx.lineTo(344, 24);
+    ctx.stroke();
+
+    // Running Window Tab in panel
+    ctx.fillStyle = 'rgba(0, 229, 255, 0.18)';
+    ctx.strokeStyle = 'rgba(0, 229, 255, 0.45)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(352, 4, 180, 22, 3);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#00e5ff';
+    ctx.font = '11px monospace';
+    ctx.fillText(`>_ ${OS_NAME} Terminal`, 362, 18);
+
+    // Right Tray
+    const timeStr = this.state.simulationTime ?? '08:00 AM';
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = 'bold 12px monospace';
     ctx.textAlign = 'right';
-    ctx.fillText(this.state.simulationTime ?? '08:00 AM', w - 24, 25);
+    ctx.fillText(timeStr, w - 85, 19);
+
+    // Network & Battery indicators
+    ctx.fillStyle = '#00e676';
+    ctx.font = '10px monospace';
+    ctx.fillText('● 10.0.4.15', w - 160, 19);
+
+    // Exit Button
+    ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
+    ctx.strokeStyle = 'rgba(239, 68, 68, 0.45)';
+    ctx.beginPath();
+    ctx.roundRect(w - 74, 4, 68, 22, 3);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#fca5a5';
+    ctx.font = '600 11px sans-serif';
+    ctx.fillText('Exit [Esc]', w - 14, 18);
     ctx.textAlign = 'left';
   }
 
   private drawDesktopIcons(ctx: CanvasRenderingContext2D): void {
     const icons = [
+      { label: 'Home', color: '#00e5ff' },
+      { label: 'Trash', color: '#94a3b8' },
       { label: 'Terminal', color: '#00e5ff' },
       { label: 'Packet Lens', color: '#38bdf8' },
       { label: 'Rev Lens', color: '#a855f7' },
       { label: 'Rule Tuner', color: '#f59e0b' },
       { label: 'Incident Desk', color: '#ef4444' },
-      { label: 'Field Guide', color: '#10b981' },
+      { label: 'Field Guide', color: '#00e676' },
     ];
 
-    let startY = 64;
+    let startY = 44;
     icons.forEach(icon => {
-      // Icon square
+      // Rounded icon container
       ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
       ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.roundRect(24, startY, 44, 44, 8);
+      ctx.roundRect(16, startY, 40, 40, 6);
       ctx.fill();
       ctx.stroke();
 
-      // Dot accent
+      // Stylized icon mark
       ctx.fillStyle = icon.color;
       ctx.beginPath();
-      ctx.arc(46, startY + 22, 7, 0, Math.PI * 2);
+      ctx.arc(36, startY + 20, 6, 0, Math.PI * 2);
       ctx.fill();
 
-      // Label
-      ctx.fillStyle = '#cbd5e1';
-      ctx.font = '11px sans-serif';
-      ctx.fillText(icon.label, 80, startY + 26);
+      // Text label with dark shadow
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
+      ctx.shadowBlur = 4;
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = '500 11px sans-serif';
+      ctx.fillText(icon.label, 64, startY + 24);
+      ctx.restore();
 
-      startY += 62;
+      startY += 52;
     });
   }
 
   private drawTerminalWindow(ctx: CanvasRenderingContext2D, w: number, h: number): void {
     // Window bounds
-    const winX = 220;
-    const winY = 60;
-    const winW = w - 260;
-    const winH = h - 130;
+    const winX = 180;
+    const winY = 46;
+    const winW = w - 200;
+    const winH = h - 76;
 
-    // Window shadow & body
-    ctx.fillStyle = 'rgba(5, 9, 15, 0.96)';
-    ctx.strokeStyle = 'rgba(0, 229, 255, 0.45)';
-    ctx.lineWidth = 1.5;
+    // Window shadow & main body
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
+    ctx.shadowBlur = 24;
+    ctx.shadowOffsetY = 12;
+    ctx.fillStyle = '#05090f';
     ctx.beginPath();
-    ctx.roundRect(winX, winY, winW, winH, 10);
+    ctx.roundRect(winX, winY, winW, winH, 6);
     ctx.fill();
+    ctx.restore();
+
+    // 1px Window border
+    ctx.strokeStyle = 'rgba(0, 229, 255, 0.45)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(winX, winY, winW, winH, 6);
     ctx.stroke();
 
     // Title bar
-    const titleH = 34;
-    ctx.fillStyle = '#0f172a';
+    const titleH = 32;
+    const titleGrad = ctx.createLinearGradient(winX, winY, winX, winY + titleH);
+    titleGrad.addColorStop(0, '#131d2e');
+    titleGrad.addColorStop(1, '#0d1522');
+    ctx.fillStyle = titleGrad;
     ctx.beginPath();
-    ctx.roundRect(winX, winY, winW, titleH, [10, 10, 0, 0]);
+    ctx.roundRect(winX, winY, winW, titleH, [6, 6, 0, 0]);
     ctx.fill();
 
-    // Window control buttons (red, yellow, green)
-    const dotY = winY + titleH / 2;
-    const colors = ['#ef4444', '#f59e0b', '#10b981'];
-    colors.forEach((col, idx) => {
-      ctx.fillStyle = col;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.beginPath();
+    ctx.moveTo(winX, winY + titleH);
+    ctx.lineTo(winX + winW, winY + titleH);
+    ctx.stroke();
+
+    // Left titlebar icon
+    ctx.fillStyle = '#00e5ff';
+    ctx.font = 'bold 12px monospace';
+    ctx.fillText('>_', winX + 12, winY + 20);
+
+    // Centered Title Text
+    ctx.save();
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = '600 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${OS_NAME} Terminal`, winX + winW / 2, winY + 20);
+    ctx.restore();
+
+    // Window Controls (right side GTK buttons: _, □, ✕)
+    const ctrlX = winX + winW - 68;
+    const ctrlY = winY + 7;
+    ['_', '□', '✕'].forEach((symbol, idx) => {
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
       ctx.beginPath();
-      ctx.arc(winX + 18 + idx * 16, dotY, 5, 0, Math.PI * 2);
+      ctx.roundRect(ctrlX + idx * 20, ctrlY, 18, 18, 3);
       ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = symbol === '✕' ? '#f87171' : '#cbd5e1';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(symbol, ctrlX + idx * 20 + 9, ctrlY + 13);
+      ctx.textAlign = 'left';
     });
 
-    // Window title
-    ctx.fillStyle = '#38bdf8';
+    // Sub-tab header strip
+    const subTabY = winY + titleH;
+    ctx.fillStyle = '#0c131f';
+    ctx.fillRect(winX + 1, subTabY, winW - 2, 24);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+    ctx.beginPath();
+    ctx.moveTo(winX + 1, subTabY + 24);
+    ctx.lineTo(winX + winW - 1, subTabY + 24);
+    ctx.stroke();
+
+    // Active tab
+    ctx.fillStyle = '#05090f';
+    ctx.fillRect(winX + 6, subTabY + 2, 120, 22);
+    ctx.fillStyle = '#00e5ff';
+    ctx.font = '11px monospace';
+    ctx.fillText('bash: ~', winX + 16, subTabY + 16);
+
+    // Terminal Buffer Content
+    let lineY = subTabY + 44;
+    const lineHeight = 22;
     ctx.font = '13px monospace';
-    ctx.fillText('bash - cyberlife@parrot-sec-ws04: ~ (sandboxed)', winX + 75, dotY + 4);
 
-    // Terminal Lines (last ~15 lines)
     const lines = this.state.terminalLines ?? [];
-    const displayLines = lines.slice(-15);
-    const lineHeight = 28;
-    let lineY = winY + titleH + 28;
-
-    ctx.font = '16px "Fira Code", monospace';
-
-    displayLines.forEach(line => {
-      if (line.startsWith('tade@') || line.includes('~$')) {
+    lines.slice(-10).forEach(line => {
+      if (line.startsWith(OS_NAME.toUpperCase()) || line.includes('HERON OS')) {
         ctx.fillStyle = '#00e5ff';
       } else if (line.startsWith('[OK]') || line.startsWith('[SUCCESS]')) {
         ctx.fillStyle = '#00e676';
       } else if (line.startsWith('[WARN]') || line.startsWith('[ERROR]')) {
-        ctx.fillStyle = '#f87171';
+        ctx.fillStyle = '#ef4444';
       } else {
-        ctx.fillStyle = '#94a3b8';
+        ctx.fillStyle = '#cbd5e1';
       }
-      ctx.fillText(line, winX + 20, lineY);
+      ctx.fillText(line, winX + 16, lineY);
       lineY += lineHeight;
     });
 
-    // Blinking cursor if last line didn't end with cursor
+    // Signature Two-Line Terminal Prompt
+    const host = HOSTNAMES.office;
+    // Line 1: ┌─[tade@heron-ws04]─[~]
+    ctx.fillStyle = '#64748b';
+    ctx.fillText('┌─[', winX + 16, lineY);
+    ctx.fillStyle = '#00e676';
+    ctx.fillText('tade', winX + 40, lineY);
+    ctx.fillStyle = '#00e5ff';
+    ctx.fillText(`@${host}`, winX + 70, lineY);
+    ctx.fillStyle = '#64748b';
+    const hostOffset = 70 + host.length * 8;
+    ctx.fillText(']─[', winX + hostOffset, lineY);
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText('~', winX + hostOffset + 24, lineY);
+    ctx.fillStyle = '#64748b';
+    ctx.fillText(']', winX + hostOffset + 32, lineY);
+    lineY += lineHeight;
+
+    // Line 2: └──╼ $
+    ctx.fillStyle = '#64748b';
+    ctx.fillText('└──╼ ', winX + 16, lineY);
+    ctx.fillStyle = '#00e5ff';
+    ctx.fillText('$ ', winX + 54, lineY);
+
+    // Blinking Block Cursor
     const isBlinkOn = Math.floor(this.blinkTimer * 2) % 2 === 0;
-    if (isBlinkOn && lineY < winY + winH - 10) {
-      ctx.fillStyle = '#00e676';
-      ctx.fillRect(winX + 20, lineY - 14, 10, 18);
+    if (isBlinkOn) {
+      ctx.fillStyle = '#00e5ff';
+      ctx.fillRect(winX + 70, lineY - 11, 8, 14);
     }
   }
 
-  private drawTaskbar(ctx: CanvasRenderingContext2D, w: number, h: number): void {
-    const taskbarH = 44;
-    const taskbarY = h - taskbarH;
+  private drawBottomStrip(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+    const stripH = 22;
+    const stripY = h - stripH;
 
-    ctx.fillStyle = 'rgba(6, 10, 16, 0.96)';
-    ctx.fillRect(0, taskbarY, w, taskbarH);
+    ctx.fillStyle = 'rgba(8, 12, 20, 0.94)';
+    ctx.fillRect(0, stripY, w, stripH);
 
-    ctx.strokeStyle = 'rgba(0, 229, 255, 0.2)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(0, taskbarY);
-    ctx.lineTo(w, taskbarY);
+    ctx.moveTo(0, stripY);
+    ctx.lineTo(w, stripY);
     ctx.stroke();
 
-    // Start Button
-    ctx.fillStyle = 'rgba(0, 229, 255, 0.15)';
-    ctx.strokeStyle = 'rgba(0, 229, 255, 0.4)';
-    ctx.beginPath();
-    ctx.roundRect(12, taskbarY + 6, 110, 32, 6);
-    ctx.fill();
-    ctx.stroke();
-
+    // Workspace indicators
+    ctx.font = '10px monospace';
     ctx.fillStyle = '#00e5ff';
-    ctx.font = 'bold 13px sans-serif';
-    ctx.fillText('⚡ EkoSec', 26, taskbarY + 26);
+    ctx.fillText('[1]', 12, stripY + 15);
+    ctx.fillStyle = '#64748b';
+    ctx.fillText(' 2   3   4', 32, stripY + 15);
 
-    // Active Tab Item
-    ctx.fillStyle = 'rgba(30, 41, 59, 0.8)';
-    ctx.strokeStyle = 'rgba(0, 229, 255, 0.6)';
-    ctx.beginPath();
-    ctx.roundRect(132, taskbarY + 6, 170, 32, 6);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.fillStyle = '#f8fafc';
-    ctx.font = '12px monospace';
-    ctx.fillText('💻 Terminal (Active)', 146, taskbarY + 26);
-
-    // Tray Clock
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '12px monospace';
+    // Right status
+    ctx.fillStyle = '#64748b';
     ctx.textAlign = 'right';
-    ctx.fillText(this.state.simulationTime ?? '08:00 AM', w - 16, taskbarY + 26);
+    ctx.fillText('Heron OS Sandbox // Lagos Station 04', w - 12, stripY + 15);
     ctx.textAlign = 'left';
   }
 

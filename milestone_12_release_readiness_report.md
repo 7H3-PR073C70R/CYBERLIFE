@@ -41,7 +41,7 @@ graph TD
 | **M8** | Aster Incident Mission | 8-stage investigation (Briefing to Completed), evidence preservation, containment, remediation, report | **Verified** (End-to-end lifecycle verified in Vitest) |
 | **M9** | NPCs & Relationship System | Amina, Marcus, Femi, Chidi; relationship tracking, dialogue trees, scheduled routines | **Verified** (Dialogue integration tests) |
 | **M10** | Career & Economy | Integer-kobo ledger, 14 job listings, shop catalogue, atomic debits/credits, XP progression | **Verified** (Idempotency and balance bounds tested) |
-| **M11** | EkoSec OS Desktop Arsenal | Parrot-inspired desktop, App Launcher, PacketLens, RevLens, RuleTuner, CyberCatalogue | **Verified** (Browser screenshots across all apps) |
+| **M11** | EkoSec OS Desktop Arsenal | Heron OS desktop, App Launcher, PacketLens, RevLens, RuleTuner, CyberCatalogue | **Verified** (Browser screenshots across all apps) |
 
 ---
 

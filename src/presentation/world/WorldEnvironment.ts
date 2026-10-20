@@ -9,6 +9,7 @@ import { PedestrianSystem } from './entities/PedestrianSystem';
 import { TrafficSystem } from './entities/TrafficSystem';
 import { WORLD_CONFIG } from './worldConfig';
 import { NpcManager } from './entities/NpcManager';
+import { AssetLoader } from './AssetLoader';
 
 export class WorldEnvironment {
   private group: THREE.Group;
@@ -22,6 +23,15 @@ export class WorldEnvironment {
   private trafficSystem: TrafficSystem | null = null;
   private npcManager: NpcManager;
   private isOutdoor = true;
+
+  // Interior PBR props and dynamic day/night lighting
+  private interiorProps: THREE.Object3D[] = [];
+  private interiorProceduralProps: THREE.Object3D[] = [];
+  private ceilingFanMesh: THREE.Object3D | null = null;
+  private interiorLight: THREE.PointLight | null = null;
+  private interiorSunLight: THREE.DirectionalLight | null = null;
+  private interiorDeskLamp: THREE.PointLight | null = null;
+  private interiorAmbient: THREE.AmbientLight | null = null;
 
   constructor(collisionWorld: CollisionWorld, interactionRegistry: InteractionRegistry) {
     this.group = new THREE.Group();
@@ -853,36 +863,124 @@ export class WorldEnvironment {
     const accentColor = isCedarline ? 0x10b981 : 0x38bdf8;
 
     // Interior Dedicated Lighting
-    const interiorLight = new THREE.PointLight(0xffffff, 2.8, 30);
-    interiorLight.position.set(0, 4.2, 0);
-    interiorLight.castShadow = true;
-    this.group.add(interiorLight);
+    // 1. Warm Key Light (Directional entrance light providing warm, rich illumination across the room)
+    const keyLightColor = isCedarline ? 0xffecd1 : 0xfffaed;
+    this.interiorSunLight = new THREE.DirectionalLight(keyLightColor, isCedarline ? 2.2 : 1.3);
+    this.interiorSunLight.position.set(-3.5, 4.2, 5.0);
+    this.interiorSunLight.target.position.set(0.5, 0.8, -1.5);
+    this.interiorSunLight.castShadow = true;
+    this.interiorSunLight.shadow.bias = -0.0003;
+    this.interiorSunLight.shadow.normalBias = 0.025;
+    this.interiorSunLight.shadow.mapSize.set(1024, 1024);
+    this.group.add(this.interiorSunLight);
+    this.group.add(this.interiorSunLight.target);
 
-    const interiorAccentLight = new THREE.PointLight(accentColor, 2.0, 15);
-    interiorAccentLight.position.set(0, 2.0, -3.5);
-    this.group.add(interiorAccentLight);
+    // 2. Soft Fill Light (Gentle cool-slate fill preventing flat/black shadows without washing out contrast)
+    const fillLightColor = isCedarline ? 0x94a3b8 : 0xbae6fd;
+    const interiorFillLight = new THREE.DirectionalLight(fillLightColor, isCedarline ? 0.9 : 0.5);
+    interiorFillLight.position.set(4.5, 3.8, 2.0);
+    interiorFillLight.target.position.set(-1.0, 0.5, -2.0);
+    this.group.add(interiorFillLight);
+    this.group.add(interiorFillLight.target);
 
-    const interiorAmbient = new THREE.AmbientLight(0xffffff, 0.7);
-    this.group.add(interiorAmbient);
+    // 3. Warm Desk Lamp point light located directly over workstation
+    this.interiorDeskLamp = new THREE.PointLight(0xffb347, 2.2, 6.0);
+    this.interiorDeskLamp.position.set(-0.65, 1.25, -3.54);
+    this.interiorDeskLamp.castShadow = true;
+    this.group.add(this.interiorDeskLamp);
 
-    // Floor
+    // 4. Central Ceiling Light & Accent Downlights
+    this.interiorLight = new THREE.PointLight(
+      isCedarline ? 0xfff7ed : 0xffffff,
+      isCedarline ? 1.6 : 1.8,
+      25
+    );
+    this.interiorLight.position.set(0, 4.2, 0);
+    this.interiorLight.castShadow = true;
+    this.group.add(this.interiorLight);
+
+    if (isCedarline) {
+      // Warm downlight over Amina's desk and reception
+      const aminaDownlight = new THREE.PointLight(0xffedd5, 2.0, 8.0);
+      aminaDownlight.position.set(3.2, 3.8, 0);
+      this.group.add(aminaDownlight);
+
+      // Server rack accent light
+      const serverDownlight = new THREE.PointLight(0x38bdf8, 1.6, 6.0);
+      serverDownlight.position.set(-3.5, 3.2, -0.6);
+      this.group.add(serverDownlight);
+    }
+
+    // 5. Subtle Ambient Fill
+    this.interiorAmbient = new THREE.AmbientLight(0xfff8f0, isCedarline ? 0.45 : 0.6);
+    this.group.add(this.interiorAmbient);
+
+    // Floor with PBR Ceramic Tile Textures
     const floorGeo = new THREE.PlaneGeometry(roomW, roomD);
     const floorMat = new THREE.MeshStandardMaterial({
       color: floorColor,
-      roughness: 0.3,
-      metalness: 0.2,
+      roughness: 0.35,
+      metalness: 0.1,
     });
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     this.group.add(floor);
 
-    // Walls
+    AssetLoader.getInstance()
+      .loadTexture('/assets/environment/textures/floor_tiles_06/floor_tiles_06_diffuse_1k.jpg')
+      .then(tex => {
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
+        tex.repeat.set(8, 7);
+        floorMat.map = tex;
+        floorMat.needsUpdate = true;
+      })
+      .catch(() => {});
+
+    AssetLoader.getInstance()
+      .loadTexture('/assets/environment/textures/floor_tiles_06/floor_tiles_06_normal_1k.jpg')
+      .then(tex => {
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
+        tex.repeat.set(8, 7);
+        floorMat.normalMap = tex;
+        floorMat.needsUpdate = true;
+      })
+      .catch(() => {});
+
+    // Walls with PBR Painted Plaster Textures
     const wallMat = new THREE.MeshStandardMaterial({
       color: wallColor,
-      roughness: 0.6,
-      metalness: 0.1,
+      roughness: 0.75,
+      metalness: 0.05,
     });
+
+    AssetLoader.getInstance()
+      .loadTexture(
+        '/assets/environment/textures/painted_plaster_wall/painted_plaster_wall_diffuse_1k.jpg'
+      )
+      .then(tex => {
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
+        tex.repeat.set(6, 2);
+        wallMat.map = tex;
+        wallMat.needsUpdate = true;
+      })
+      .catch(() => {});
+
+    AssetLoader.getInstance()
+      .loadTexture(
+        '/assets/environment/textures/painted_plaster_wall/painted_plaster_wall_normal_1k.jpg'
+      )
+      .then(tex => {
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
+        tex.repeat.set(6, 2);
+        wallMat.normalMap = tex;
+        wallMat.needsUpdate = true;
+      })
+      .catch(() => {});
 
     // North Wall (Behind Workstation)
     const nWallGeo = new THREE.BoxGeometry(roomW, roomH, 0.4);
@@ -914,10 +1012,22 @@ export class WorldEnvironment {
     sWallR.position.set(halfW / 2 + 1.0, roomH / 2, halfD);
     this.group.add(sWallR);
 
+    // Enclosed Ceiling (Encloses the interior room so camera does not view sky above walls)
+    const ceilingGeo = new THREE.PlaneGeometry(roomW, roomD);
+    const ceilingMat = new THREE.MeshStandardMaterial({
+      color: isCedarline ? 0x1e293b : 0x273549,
+      roughness: 0.85,
+      metalness: 0.05,
+    });
+    const ceiling = new THREE.Mesh(ceilingGeo, ceilingMat);
+    ceiling.rotation.x = Math.PI / 2;
+    ceiling.position.set(0, roomH, 0);
+    this.group.add(ceiling);
+
     // Interior Furniture: Detailed Physical Workstation (Desk, Laptop, Chair, Mouse)
     this.workstationProps = new WorkstationProps({ isCedarline, accentColor });
     this.group.add(this.workstationProps.getMesh());
-    this.collisionWorld.addObstacle(-2.5, 2.5, -4.8, -2.8, 'Workstation Desk');
+    this.collisionWorld.addObstacle(-1.2, 1.2, -4.0, -2.9, 'Workstation Desk');
 
     // Workstation Interaction Trigger & Marker in front of desk
     const wsMarker = new InteractableMarker(0, -2.4, accentColor, 'Workstation Terminal');
@@ -967,6 +1077,10 @@ export class WorldEnvironment {
       serverRack.position.set(-3.5, 1.1, -0.6);
       this.group.add(serverRack);
       this.collisionWorld.addObstacle(-4.2, -2.8, -1.2, 0.0, 'Cedarline Server Rack');
+    } else {
+      // Player Apartment interior furniture
+      this.buildApartmentProceduralFallback();
+      this.loadApartmentProps();
     }
 
     // Rebuild interior NPCs (Amina, Marcus, Dr. Elena Chen) with articulated models & markers
@@ -991,6 +1105,135 @@ export class WorldEnvironment {
     });
   }
 
+  private buildApartmentProceduralFallback(): void {
+    const furnitureMat = new THREE.MeshStandardMaterial({
+      color: 0x334155,
+      roughness: 0.6,
+      metalness: 0.1,
+    });
+    const bedMat = new THREE.MeshStandardMaterial({
+      color: 0x1e3a5f,
+      roughness: 0.7,
+      metalness: 0.05,
+    });
+    const inverterMat = new THREE.MeshStandardMaterial({
+      color: 0x0f172a,
+      roughness: 0.4,
+      metalness: 0.7,
+    });
+
+    // Bed
+    const bedGeo = new THREE.BoxGeometry(2.0, 0.6, 2.2);
+    const bedMesh = new THREE.Mesh(bedGeo, bedMat);
+    bedMesh.position.set(5.0, 0.3, -3.8);
+    this.group.add(bedMesh);
+    this.interiorProceduralProps.push(bedMesh);
+    this.collisionWorld.addObstacle(3.8, 6.2, -5.2, -2.4, 'Bed');
+
+    // Wardrobe Cabinet
+    const cabGeo = new THREE.BoxGeometry(0.8, 2.2, 1.4);
+    const cabMesh = new THREE.Mesh(cabGeo, furnitureMat);
+    cabMesh.position.set(6.8, 1.1, 1.5);
+    this.group.add(cabMesh);
+    this.interiorProceduralProps.push(cabMesh);
+    this.collisionWorld.addObstacle(6.2, 7.4, 0.5, 2.5, 'Wardrobe Cabinet');
+
+    // Bookshelf
+    const shelfGeo = new THREE.BoxGeometry(0.8, 2.0, 1.6);
+    const shelfMesh = new THREE.Mesh(shelfGeo, furnitureMat);
+    shelfMesh.position.set(-6.8, 1.0, -3.5);
+    this.group.add(shelfMesh);
+    this.interiorProceduralProps.push(shelfMesh);
+    this.collisionWorld.addObstacle(-7.4, -6.2, -4.5, -2.5, 'Bookshelf');
+
+    // Inverter Rack
+    const invGeo = new THREE.BoxGeometry(0.8, 0.9, 0.6);
+    const invMesh = new THREE.Mesh(invGeo, inverterMat);
+    invMesh.position.set(-4.5, 0.45, -5.8);
+    this.group.add(invMesh);
+    this.interiorProceduralProps.push(invMesh);
+    this.collisionWorld.addObstacle(-5.2, -3.8, -6.4, -5.2, 'Inverter & Battery System');
+  }
+
+  private async loadApartmentProps(): Promise<void> {
+    const loader = AssetLoader.getInstance();
+    const assets: Array<{
+      path: string;
+      pos: [number, number, number];
+      rotY?: number;
+      isFan?: boolean;
+    }> = [
+      { path: '/assets/props/room_bed.glb', pos: [5.0, 0, -3.8], rotY: 0 },
+      { path: '/assets/props/room_cabinet.glb', pos: [6.8, 0, 1.5], rotY: -Math.PI / 2 },
+      { path: '/assets/props/room_bookshelf.glb', pos: [-6.8, 0, -3.5], rotY: Math.PI / 2 },
+      { path: '/assets/props/room_inverter.glb', pos: [-4.5, 0, -5.8], rotY: 0 },
+      { path: '/assets/props/room_fan.glb', pos: [0, 3.8, -1.0], rotY: 0, isFan: true },
+      { path: '/assets/props/room_ac.glb', pos: [2.5, 3.6, -6.75], rotY: 0 },
+      { path: '/assets/props/room_art.glb', pos: [-2.5, 2.4, -6.8], rotY: 0 },
+      { path: '/assets/props/room_cables.glb', pos: [-2.0, 0.02, -4.5], rotY: 0 },
+    ];
+
+    try {
+      const loadedModels = await Promise.all(
+        assets.map(async item => {
+          const model = await loader.loadGLTF(item.path);
+          model.position.set(item.pos[0], item.pos[1], item.pos[2]);
+          if (item.rotY) model.rotation.y = item.rotY;
+          if (item.isFan) {
+            this.ceilingFanMesh = model;
+          }
+          return model;
+        })
+      );
+
+      // Remove procedural fallbacks if GLBs loaded successfully
+      this.interiorProceduralProps.forEach(p => {
+        if (p.parent) p.parent.remove(p);
+      });
+      this.interiorProceduralProps = [];
+
+      for (const model of loadedModels) {
+        this.group.add(model);
+        this.interiorProps.push(model);
+      }
+    } catch {
+      // Safe fallback if offline or in unit tests
+    }
+  }
+
+  private updateInteriorLighting(timeStr: string): void {
+    if (this.isOutdoor || !this.interiorSunLight || !this.interiorDeskLamp || !this.interiorAmbient)
+      return;
+
+    // Parse 'HH:MM AM/PM'
+    const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    let hour = 12;
+    if (match && match[1] && match[3]) {
+      hour = parseInt(match[1], 10);
+      const meridiem = match[3].toUpperCase();
+      if (meridiem === 'PM' && hour < 12) hour += 12;
+      if (meridiem === 'AM' && hour === 12) hour = 0;
+    }
+
+    const isDay = hour >= 6 && hour < 18;
+    if (isDay) {
+      // Natural daylight pouring into the room
+      this.interiorSunLight.intensity = 1.4;
+      this.interiorSunLight.color.setHex(0xfffaed);
+      this.interiorDeskLamp.intensity = 1.0;
+      this.interiorAmbient.intensity = 0.75;
+      if (this.interiorLight) this.interiorLight.intensity = 1.2;
+    } else {
+      // Atmospheric nighttime with warm desk lamp halogen glow and moonlight fill
+      this.interiorSunLight.intensity = 0.1;
+      this.interiorSunLight.color.setHex(0x38bdf8);
+      this.interiorDeskLamp.intensity = 2.8;
+      this.interiorDeskLamp.color.setHex(0xffaa44);
+      this.interiorAmbient.intensity = 0.3;
+      if (this.interiorLight) this.interiorLight.intensity = 0.4;
+    }
+  }
+
   public update(
     deltaTime: number,
     simulationTimeStr = '08:00 AM',
@@ -1006,6 +1249,12 @@ export class WorldEnvironment {
     }
     if (this.workstationProps && !this.isOutdoor) {
       this.workstationProps.update(deltaTime, simulationTimeStr);
+    }
+    if (this.ceilingFanMesh) {
+      this.ceilingFanMesh.rotation.y += deltaTime * 3.5;
+    }
+    if (!this.isOutdoor) {
+      this.updateInteriorLighting(simulationTimeStr);
     }
   }
 
@@ -1041,6 +1290,21 @@ export class WorldEnvironment {
     if (this.npcManager) {
       this.npcManager.clear();
     }
+
+    this.interiorProceduralProps.forEach(p => {
+      if (p.parent) p.parent.remove(p);
+    });
+    this.interiorProceduralProps = [];
+
+    this.interiorProps.forEach(p => {
+      if (p.parent) p.parent.remove(p);
+    });
+    this.interiorProps = [];
+    this.ceilingFanMesh = null;
+    this.interiorLight = null;
+    this.interiorSunLight = null;
+    this.interiorDeskLamp = null;
+    this.interiorAmbient = null;
 
     this.buildings.forEach(b => b.dispose());
     this.buildings = [];

@@ -10,10 +10,7 @@ import { SaveManagerModal } from './SaveManagerModal';
 import { FirstLaunchIntroModal } from '../onboarding/FirstLaunchIntroModal';
 import { ControlsReferenceModal } from '../onboarding/ControlsReferenceModal';
 import { ContextualGuidanceHUD } from '../onboarding/ContextualGuidanceHUD';
-import {
-  WorkstationSettingsModal,
-  WorkstationSettings,
-} from './WorkstationSettingsModal';
+import { WorkstationSettingsModal, WorkstationSettings } from './WorkstationSettingsModal';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 
 export interface HUDShellProps {

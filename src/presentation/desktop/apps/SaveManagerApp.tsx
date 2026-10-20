@@ -1,5 +1,5 @@
 /**
- * Cyberlife — Milestone 9: Virtual Workstation Save Manager App (Parrot OS Style)
+ * Cyberlife — Milestone 9: Virtual Workstation Save Manager App (Heron OS Style)
  *
  * Provides a dedicated desktop application for managing persistent save slots,
  * auditing checksum integrity, restoring shadow backups, and reviewing save data.

@@ -11,10 +11,7 @@ import { DesktopShell } from '../desktop/DesktopShell';
 import { DialogueOverlay } from '../dialogue/DialogueOverlay';
 import { AppId } from '../desktop/types';
 import { WorkstationCameraState } from './camera/WorkstationCameraStates';
-import {
-  getStoredWorkstationSettings,
-  WorkstationSettings,
-} from '../hud/WorkstationSettingsModal';
+import { getStoredWorkstationSettings, WorkstationSettings } from '../hud/WorkstationSettingsModal';
 
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { Money } from '@/domain/common/Money';
@@ -400,9 +397,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
             onTyping={() => managerRef.current?.triggerTypingAnimation()}
             onMouseUse={() => managerRef.current?.triggerMouseAnimation()}
             onTerminalOutput={lines => managerRef.current?.updateWorkstationTerminal(lines)}
-            onDesktopStateChange={state =>
-              managerRef.current?.updateWorkstationDesktopState(state)
-            }
+            onDesktopStateChange={state => managerRef.current?.updateWorkstationDesktopState(state)}
           />
         </div>
       )}

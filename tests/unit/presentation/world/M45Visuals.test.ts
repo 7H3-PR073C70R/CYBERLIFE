@@ -55,7 +55,7 @@ describe('M4.5 Visual Systems & Realism Components', () => {
 
       // Verify canvas screen texture update
       props.updateTerminalOutput([
-        'tade@parrot-sec-ws04:~$ help',
+        'tade@heron-ws04:~$ help',
         'Command help - simulated terminal operational',
       ]);
 

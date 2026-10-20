@@ -1,4 +1,5 @@
 /* Cyberlife Design System & Global Styles */
+@import './os-tokens.css';
 
 :root {
   /* Color Palette - Modern Dark Theme */
@@ -769,7 +770,7 @@ body,
    ========================================================================== */
 
 /* ==========================================================================
-   MILESTONE 4.5: CAMERA-AWARE IMMERSIVE WORKSTATION & PARROT OS DESKTOP
+   MILESTONE 4.5: CAMERA-AWARE IMMERSIVE WORKSTATION & HERON OS DESKTOP
    ========================================================================== */
 
 /* Workstation Overlay Backdrop (Rendered over the 3D scene) */
@@ -782,9 +783,9 @@ body,
   pointer-events: auto;
   display: flex;
   box-sizing: border-box;
-  background: radial-gradient(circle at 70% 50%, rgba(5, 12, 22, 0.52) 0%, rgba(2, 4, 8, 0.3) 100%);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background: rgba(2, 4, 8, 0.12);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   transition: all 300ms ease;
 }
 
@@ -941,7 +942,9 @@ body,
   border: 1px solid rgba(0, 229, 255, 0.35);
   border-radius: 28px;
   backdrop-filter: blur(12px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 229, 255, 0.15);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(0, 229, 255, 0.15);
   z-index: 25;
   animation: peekControlsSlideUp 200ms ease-out;
 }
@@ -1009,16 +1012,16 @@ body,
   border-radius: 4px;
 }
 
-/* Parrot Security OS Top Bar */
+/* Heron OS Top System Panel */
 .workstation-top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 36px;
-  min-height: 36px;
+  height: 30px;
+  min-height: 30px;
   padding: 0 0.85rem;
-  background: #060a12;
-  border-bottom: 1px solid rgba(0, 229, 255, 0.22);
+  background: var(--os-bg-panel, #0c131f);
+  border-bottom: 1px solid var(--os-border-subtle, rgba(30, 41, 59, 0.8));
   font-size: 0.78rem;
   z-index: 10;
 }
@@ -1029,7 +1032,7 @@ body,
   gap: 0.6rem;
 }
 
-.parrot-os-badge {
+.os-badge {
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: 0.72rem;
@@ -1095,10 +1098,10 @@ body,
   color: #ffffff;
 }
 
-/* Parrot Theme Polish */
-.parrot-theme {
-  --color-accent-parrot-cyan: #00e5ff;
-  --color-accent-parrot-green: #00e676;
+/* Heron OS Theme Polish */
+.os-theme {
+  --color-accent-os-cyan: #00e5ff;
+  --color-accent-os-green: #00e676;
 }
 
 .terminal-chip-btn.chip-active {
@@ -1382,13 +1385,10 @@ body,
 .desktop-window-frame {
   display: flex;
   flex-direction: column;
-  background: rgba(13, 20, 33, 0.94);
-  backdrop-filter: blur(16px);
-  border-radius: var(--radius-lg);
-  box-shadow:
-    0 16px 36px rgba(0, 0, 0, 0.6),
-    0 4px 10px rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--os-bg-window, #05090f);
+  border-radius: var(--os-window-radius, 6px);
+  box-shadow: var(--os-shadow-unfocused);
+  border: 1px solid var(--os-border-default, #1e293b);
   overflow: hidden;
   transition:
     border-color var(--transition-fast),
@@ -1396,25 +1396,26 @@ body,
 }
 
 .window-active {
-  border-color: rgba(56, 189, 248, 0.4);
-  box-shadow:
-    0 20px 45px rgba(0, 0, 0, 0.7),
-    0 0 15px rgba(56, 189, 248, 0.15);
+  border-color: var(--os-border-focused);
+  box-shadow: var(--os-shadow-focused);
 }
 
 .window-inactive {
+  border-color: var(--os-border-subtle);
+  box-shadow: var(--os-shadow-unfocused);
   opacity: 0.94;
 }
 
 /* Title Bar */
 .window-titlebar {
-  height: 38px;
+  height: 32px;
+  min-height: 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0.85rem;
-  background: rgba(18, 27, 44, 0.9);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0 0.6rem;
+  background: linear-gradient(180deg, #131d2e 0%, #0d1522 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   cursor: grab;
   user-select: none;
 }
@@ -1423,48 +1424,94 @@ body,
   cursor: grabbing;
 }
 
-.window-title-group {
+.window-title-left {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
+  min-width: 60px;
 }
 
 .window-title-icon {
-  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.window-title-center {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--os-text-primary, #f8fafc);
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 0.5rem;
 }
 
 .window-controls {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 4px;
+  min-width: 60px;
+  justify-content: flex-end;
 }
 
 .window-control-btn {
-  width: 26px;
-  height: 24px;
+  width: 22px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: none;
-  color: var(--color-text-secondary);
-  font-size: 0.85rem;
-  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--os-text-secondary, #cbd5e1);
+  border-radius: 3px;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .window-control-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .btn-close:hover {
-  background: var(--color-status-error);
-  color: #fff;
+  background: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+/* Resize Handles */
+.window-resize-handle {
+  position: absolute;
+  z-index: 40;
+}
+
+.handle-e {
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+.handle-s {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.handle-se {
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
 }
 
 /* Window Content Body */
@@ -1474,6 +1521,7 @@ body,
   flex-direction: column;
   overflow: auto;
   position: relative;
+  background: var(--os-bg-surface, #0f172a);
 }
 
 /* ==========================================================================

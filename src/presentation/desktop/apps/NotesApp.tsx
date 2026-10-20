@@ -9,6 +9,7 @@
  */
 
 import React, { useState } from 'react';
+import { OsIcon } from '../icons/OsIcons';
 
 export interface NotesAppProps {
   workstationId?: string;
@@ -69,8 +70,13 @@ export const NotesApp: React.FC<NotesAppProps> = ({
       <div className="notes-scratchpad-area">
         <div className="scratchpad-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <label htmlFor="player-scratchpad-input" className="scratchpad-title">
-              📝 Investigation Findings Scratchpad
+            <label
+              htmlFor="player-scratchpad-input"
+              className="scratchpad-title"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              <OsIcon name="notes" size={14} color="#00e5ff" />
+              <span>Investigation Findings Scratchpad</span>
             </label>
             <span className="scratchpad-note">(In-game memory only)</span>
           </div>

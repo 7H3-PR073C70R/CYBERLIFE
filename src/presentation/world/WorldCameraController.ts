@@ -7,10 +7,7 @@ import {
   WorkstationCameraStateOptions,
   WorkstationCameraEvents,
 } from './camera/WorkstationCameraStates';
-import {
-  WorkstationAnchorSet,
-  DEFAULT_WORKSTATION_ANCHORS,
-} from './WorkstationAnchors';
+import { WorkstationAnchorSet, DEFAULT_WORKSTATION_ANCHORS } from './WorkstationAnchors';
 
 export interface CameraControllerOptions {
   camera: THREE.PerspectiveCamera;
@@ -63,10 +60,7 @@ export class WorldCameraController {
       },
     };
 
-    this.stateMachine = new WorkstationCameraStateMachine(
-      options.stateOptions,
-      mergedEvents
-    );
+    this.stateMachine = new WorkstationCameraStateMachine(options.stateOptions, mergedEvents);
 
     if (options.anchors) {
       this.stateMachine.setAnchors(options.anchors);
@@ -273,12 +267,7 @@ export class WorldCameraController {
       this.avatar.setSitting(true);
     }
 
-    this.stateMachine.enterWorkstation(
-      explorationMode,
-      startCamPos,
-      startLook,
-      this.camera.fov
-    );
+    this.stateMachine.enterWorkstation(explorationMode, startCamPos, startLook, this.camera.fov);
   }
 
   /**

@@ -48,7 +48,9 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
   onClose,
   onSettingsChanged,
 }) => {
-  const [settings, setSettings] = useState<WorkstationSettings>(() => getStoredWorkstationSettings());
+  const [settings, setSettings] = useState<WorkstationSettings>(() =>
+    getStoredWorkstationSettings()
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -56,7 +58,10 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
     }
   }, [isOpen]);
 
-  const updateSetting = <K extends keyof WorkstationSettings>(key: K, value: WorkstationSettings[K]) => {
+  const updateSetting = <K extends keyof WorkstationSettings>(
+    key: K,
+    value: WorkstationSettings[K]
+  ) => {
     const updated = { ...settings, [key]: value };
     setSettings(updated);
     saveStoredWorkstationSettings(updated);
@@ -86,7 +91,13 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
               <h2 id="settings-modal-title" style={{ margin: 0, fontSize: '1.15rem' }}>
                 Workstation & Camera Settings
               </h2>
-              <p style={{ margin: '0.2rem 0 0', fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
+              <p
+                style={{
+                  margin: '0.2rem 0 0',
+                  fontSize: '0.8rem',
+                  color: 'var(--color-text-secondary)',
+                }}
+              >
                 Customize cinematic camera transitions and interaction preferences.
               </p>
             </div>
@@ -102,7 +113,9 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
           </button>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', padding: '1.25rem 0' }}>
+        <div
+          style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', padding: '1.25rem 0' }}
+        >
           {/* Reduce camera motion */}
           <label
             style={{
@@ -129,7 +142,12 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
               type="checkbox"
               checked={settings.reduceMotion}
               onChange={e => updateSetting('reduceMotion', e.target.checked)}
-              style={{ width: '1.2rem', height: '1.2rem', accentColor: '#00e5ff', cursor: 'pointer' }}
+              style={{
+                width: '1.2rem',
+                height: '1.2rem',
+                accentColor: '#00e5ff',
+                cursor: 'pointer',
+              }}
               data-testid="setting-reduce-motion"
             />
           </label>
@@ -153,14 +171,20 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
                 Skip sit-down animation after first time
               </div>
               <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '0.2rem' }}>
-                Subsequent computer interactions skip the sit-down transition and jump directly to monitor focus.
+                Subsequent computer interactions skip the sit-down transition and jump directly to
+                monitor focus.
               </div>
             </div>
             <input
               type="checkbox"
               checked={settings.skipSitAfterFirst}
               onChange={e => updateSetting('skipSitAfterFirst', e.target.checked)}
-              style={{ width: '1.2rem', height: '1.2rem', accentColor: '#00e5ff', cursor: 'pointer' }}
+              style={{
+                width: '1.2rem',
+                height: '1.2rem',
+                accentColor: '#00e5ff',
+                cursor: 'pointer',
+              }}
               data-testid="setting-skip-sit"
             />
           </label>
@@ -191,7 +215,12 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
               type="checkbox"
               checked={settings.showKeyHints}
               onChange={e => updateSetting('showKeyHints', e.target.checked)}
-              style={{ width: '1.2rem', height: '1.2rem', accentColor: '#00e5ff', cursor: 'pointer' }}
+              style={{
+                width: '1.2rem',
+                height: '1.2rem',
+                accentColor: '#00e5ff',
+                cursor: 'pointer',
+              }}
               data-testid="setting-show-key-hints"
             />
           </label>

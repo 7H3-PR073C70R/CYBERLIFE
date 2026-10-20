@@ -64,7 +64,9 @@ describe('WorkstationAnchors', () => {
       expect(dist).toBeLessThan(0.6);
 
       // Vector from target to camera must be parallel to quad normal
-      const camDir = new THREE.Vector3().subVectors(framing.position, framing.lookTarget).normalize();
+      const camDir = new THREE.Vector3()
+        .subVectors(framing.position, framing.lookTarget)
+        .normalize();
       expect(camDir.dot(quad.normal)).toBeCloseTo(1.0, 3);
     });
   });

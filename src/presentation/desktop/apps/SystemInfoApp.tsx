@@ -1,5 +1,5 @@
 /**
- * Cyberlife — System Information Application Component
+ * Cyberlife — System Information Application Component (Heron OS)
  *
  * Displays read-only fictional workstation specifications, kernel details,
  * and virtual network node status.
@@ -10,6 +10,8 @@
 
 import React from 'react';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
+import { OS_NAME, OS_VERSION, OS_BRANDING, KERNEL_STRING, HOSTNAMES } from '../osBranding';
+import { OsIcon } from '../icons/OsIcons';
 
 export interface SystemInfoAppProps {
   workstationId?: string;
@@ -27,7 +29,7 @@ export const SystemInfoApp: React.FC<SystemInfoAppProps> = ({
     dayOfWeek: 'Monday',
   };
 
-  const hostname = isCedarline ? 'cedarline-sec-ws04.corp.local' : 'lagos-rig-dev01.local';
+  const hostname = isCedarline ? `${HOSTNAMES.office}.corp.local` : `${HOSTNAMES.home}.local`;
 
   const user = isCedarline
     ? 'tade_adebayo (Security Analyst Intern — Cedarline Services)'
@@ -37,9 +39,7 @@ export const SystemInfoApp: React.FC<SystemInfoAppProps> = ({
     ? '10.0.4.15 / 24 (Marina Tower Corporate Subnet)'
     : '192.168.1.104 / 24 (Apartment Local Network)';
 
-  const osLabel = isCedarline
-    ? 'CyberOS Enterprise v4.2 (Lagos Edition)'
-    : 'CyberOS Workstation Edition v4.2';
+  const osLabel = `${OS_NAME} ${OS_VERSION} (${OS_BRANDING.edition} Edition)`;
 
   return (
     <div
@@ -51,7 +51,7 @@ export const SystemInfoApp: React.FC<SystemInfoAppProps> = ({
       {/* Header Banner */}
       <div className="system-info-header">
         <div className="sys-badge-icon" aria-hidden="true">
-          💻
+          <OsIcon name="systemInfo" size={24} color="#00e5ff" />
         </div>
         <div>
           <h2 className="sys-main-title">{hostname}</h2>
@@ -61,7 +61,9 @@ export const SystemInfoApp: React.FC<SystemInfoAppProps> = ({
 
       {/* Safety Notice Card */}
       <div className="sys-safety-notice">
-        <span aria-hidden="true">🛡️</span>
+        <span aria-hidden="true" style={{ display: 'flex', alignItems: 'center' }}>
+          <OsIcon name="lock" size={16} color="#00e676" />
+        </span>
         <span>
           <strong>In-Game Simulated Node:</strong> All hardware specs, IP addresses, and kernel
           parameters are fictional constructs managed by Cyberlife&apos;s authoritative simulation.
@@ -76,7 +78,7 @@ export const SystemInfoApp: React.FC<SystemInfoAppProps> = ({
         </div>
         <div className="sys-row">
           <span className="sys-key">Kernel Architecture</span>
-          <span className="sys-val">Synthetic Microkernel v1.0.4 (M3 Headless Sync)</span>
+          <span className="sys-val">Linux {KERNEL_STRING}</span>
         </div>
         <div className="sys-row">
           <span className="sys-key">Authenticated User</span>
@@ -111,7 +113,7 @@ export const SystemInfoApp: React.FC<SystemInfoAppProps> = ({
         </div>
         <div className="sys-row">
           <span className="sys-key">Host Machine Isolation</span>
-          <span className="sys-val status-safe">ACTIVE // No Physical Access</span>
+          <span className="sys-val status-safe">ACTIVE // 100% Synthetic Sandbox</span>
         </div>
       </div>
     </div>

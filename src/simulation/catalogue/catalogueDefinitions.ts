@@ -584,7 +584,7 @@ export const CATALOGUE_ENTRIES: readonly CatalogueEntry[] = [
     whyItMatters:
       'Intruders exploit weaknesses in OS configurations to escalate privileges from standard users to administrator or root.',
     fictionalScenario:
-      'Examine the Parrot Security OS workstation environment using whoami to verify current user persona and system privileges.',
+      'Examine the Heron OS workstation environment using whoami to verify current user persona and system privileges.',
     difficulty: 'beginner',
     learningObjectives: [
       'Understand process execution context and user IDs (UID/GID)',

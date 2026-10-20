@@ -585,7 +585,7 @@ export const nmapCommand: TerminalCommandHandler = {
     return {
       ...subResult,
       stdout: [
-        "💡 [EkoSec Educational Alias] 'nmap' maps to Cyberlife simulated tool 'netmap' (Parrot/Linux Nmap equivalent).",
+        "💡 [EkoSec Educational Alias] 'nmap' maps to Cyberlife simulated tool 'netmap' (Heron OS / Linux Nmap equivalent).",
         ...subResult.stdout,
       ],
     };

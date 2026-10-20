@@ -12,7 +12,7 @@ describe('TerminalApp Component', () => {
     );
 
     expect(screen.getByTestId('terminal-app-container')).toBeInTheDocument();
-    expect(screen.getByText(/Parrot Security OS/i)).toBeInTheDocument();
+    expect(screen.getByText(/Heron OS/i)).toBeInTheDocument();
     expect(screen.getByTestId('terminal-command-input')).toBeInTheDocument();
     expect(screen.getByTestId('terminal-chip-help')).toBeInTheDocument();
     expect(screen.getByTestId('terminal-chip-netmap')).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe('TerminalApp Component', () => {
     fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
     expect(screen.getByText(/cedarline-sec-ws04.corp.local/i)).toBeInTheDocument();
-    expect(screen.getByText(/Parrot Security OS v4.5/i)).toBeInTheDocument();
+    expect(screen.getByText(/Heron OS v4.5/i)).toBeInTheDocument();
     expect(screen.getByText(/100% synthetic in-game sandbox/i)).toBeInTheDocument();
   });
 
@@ -131,13 +131,13 @@ describe('TerminalApp Component', () => {
     );
 
     // Initial greeting is present
-    expect(screen.getByText(/Parrot Security OS/i)).toBeInTheDocument();
+    expect(screen.getByText(/Heron OS/i)).toBeInTheDocument();
 
     const clearBtn = screen.getByTestId('btn-terminal-clear');
     fireEvent.click(clearBtn);
 
     // Screen should now be cleared
-    expect(screen.queryByText(/Parrot Security OS/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Heron OS/i)).not.toBeInTheDocument();
   });
 
   it('isolates keyboard events by stopping propagation', () => {

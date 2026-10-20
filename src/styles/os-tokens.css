@@ -1,0 +1,46 @@
+/**
+ * Heron OS Design System Tokens
+ * Classical GTK/MATE inspired security desktop theme
+ */
+:root {
+  --os-panel-height: 30px;
+  --os-window-radius: 6px;
+  --os-window-border: 1px solid var(--color-border-subtle, #1e293b);
+
+  --os-bg-desktop: #060a10;
+  --os-bg-panel: rgba(12, 19, 31, 0.95);
+  --os-bg-surface: #0f172a;
+  --os-bg-surface-elevated: #162234;
+  --os-bg-window: #05090f;
+
+  --os-border-default: #1e293b;
+  --os-border-focused: rgba(0, 229, 255, 0.45);
+  --os-border-subtle: rgba(148, 163, 184, 0.15);
+
+  --color-accent-os-teal: #00e5ff;
+  --color-accent-os-green: #00e676;
+  --color-accent-os-cyan: #38bdf8;
+  --color-accent-os-amber: #f59e0b;
+  --color-accent-os-red: #ef4444;
+  --color-accent-os-purple: #a855f7;
+
+  --os-text-primary: #f8fafc;
+  --os-text-secondary: #cbd5e1;
+  --os-text-muted: #64748b;
+
+  --os-prompt-user: #00e676;
+  --os-prompt-host: #00e5ff;
+  --os-prompt-path: #38bdf8;
+  --os-prompt-char: #00e5ff;
+
+  --os-shadow-focused: 0 18px 40px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(0, 229, 255, 0.25);
+  --os-shadow-unfocused: 0 8px 24px rgba(0, 0, 0, 0.55);
+}
+
+.os-theme {
+  --color-accent-os-cyan: #00e5ff;
+  --color-accent-os-green: #00e676;
+  background-color: var(--os-bg-desktop);
+  color: var(--os-text-primary);
+  font-family: var(--font-sans);
+}

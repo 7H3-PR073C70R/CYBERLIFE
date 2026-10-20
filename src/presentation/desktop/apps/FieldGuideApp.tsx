@@ -13,6 +13,7 @@
  */
 
 import React, { useState } from 'react';
+import { OsIcon } from '../icons/OsIcons';
 
 type GuideTab = 'basics' | 'commands' | 'tools' | 'concepts' | 'career' | 'safety';
 
@@ -41,8 +42,8 @@ export const FieldGuideApp: React.FC = () => {
           gap: '0.5rem',
         }}
       >
-        <span aria-hidden="true" style={{ fontSize: '0.9rem' }}>
-          🔍
+        <span aria-hidden="true" style={{ display: 'flex', alignItems: 'center' }}>
+          <OsIcon name="search" size={14} color="#64748b" />
         </span>
         <input
           type="search"
@@ -88,7 +89,7 @@ export const FieldGuideApp: React.FC = () => {
           onClick={() => setActiveTab('basics')}
           data-testid="guide-tab-basics"
         >
-          🖥️ Terminal Basics
+          Terminal Basics
         </button>
         <button
           type="button"
@@ -98,7 +99,7 @@ export const FieldGuideApp: React.FC = () => {
           onClick={() => setActiveTab('commands')}
           data-testid="guide-tab-commands"
         >
-          📋 Command Reference
+          Command Reference
         </button>
         <button
           type="button"
@@ -108,7 +109,7 @@ export const FieldGuideApp: React.FC = () => {
           onClick={() => setActiveTab('tools')}
           data-testid="guide-tab-tools"
         >
-          🛠️ Security Tools
+          Security Tools
         </button>
         <button
           type="button"
@@ -118,7 +119,7 @@ export const FieldGuideApp: React.FC = () => {
           onClick={() => setActiveTab('concepts')}
           data-testid="guide-tab-concepts"
         >
-          🔐 Security Concepts
+          Security Concepts
         </button>
         <button
           type="button"
@@ -128,7 +129,7 @@ export const FieldGuideApp: React.FC = () => {
           onClick={() => setActiveTab('career')}
           data-testid="guide-tab-career"
         >
-          💼 Career Skills
+          Career Skills
         </button>
         <button
           type="button"
@@ -138,7 +139,7 @@ export const FieldGuideApp: React.FC = () => {
           onClick={() => setActiveTab('safety')}
           data-testid="guide-tab-safety"
         >
-          🛡️ Safety Guarantee
+          Safety Guarantee
         </button>
       </div>
 

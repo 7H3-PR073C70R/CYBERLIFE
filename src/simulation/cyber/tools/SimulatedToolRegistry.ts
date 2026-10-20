@@ -1,7 +1,7 @@
 /**
  * Cyberlife — Simulated Security Tool Arsenal Registry
  *
- * Categorized cybersecurity tools inspired by ParrotOS and modern Linux security workstations.
+ * Categorized cybersecurity tools inspired by Heron OS and modern Linux security workstations.
  * Features honest status tracking: 'playable', 'partial', 'reference_only', 'planned'.
  * Strictly internal to Cyberlife's synthetic in-game data model.
  */
@@ -115,8 +115,8 @@ export const SIMULATED_TOOL_REGISTRY: readonly SimulatedToolDefinition[] = [
     appType: 'both',
     canonicalCommand: 'packetview',
     aliases: ['wireshark', 'tcpdump', 'tshark'],
-    status: 'playable',
-    statusBadge: 'PLAYABLE',
+    status: 'partial',
+    statusBadge: 'PARTIAL',
     permissionsRequired: 'PCAP read permissions (/mnt/evidence)',
     datasetsUsed: ['EVD-2026-001.pcap (Synthetic SMB session packet trace)'],
     prerequisites: ['cat_shared_networking'],
@@ -241,8 +241,8 @@ export const SIMULATED_TOOL_REGISTRY: readonly SimulatedToolDefinition[] = [
     appType: 'both',
     canonicalCommand: 'catalogue',
     aliases: ['rule-editor', 'sigma-sim', 'yara-sim'],
-    status: 'playable',
-    statusBadge: 'PLAYABLE',
+    status: 'partial',
+    statusBadge: 'PARTIAL',
     permissionsRequired: 'Detection Engineer write permissions',
     datasetsUsed: ['DEFAULT_DETECTION_RULES', 'PURPLE_SMB_LATERAL_SCENARIO'],
     prerequisites: ['cat_purple_detection_validation'],
@@ -269,8 +269,8 @@ export const SIMULATED_TOOL_REGISTRY: readonly SimulatedToolDefinition[] = [
     appType: 'both',
     canonicalCommand: 'revview',
     aliases: ['ghidra', 'radare2', 'strings', 'objdump'],
-    status: 'playable',
-    statusBadge: 'PLAYABLE',
+    status: 'partial',
+    statusBadge: 'PARTIAL',
     permissionsRequired: 'Binary analysis sandbox access',
     datasetsUsed: ['aster_agent_daemon.bin (Synthetic ELF binary sample)'],
     prerequisites: ['cat_shared_os_internals'],

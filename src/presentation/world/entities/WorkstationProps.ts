@@ -1,132 +1,228 @@
 import * as THREE from 'three';
 import { ScreenRenderer, ScreenDesktopState } from '../ScreenRenderer';
+import { AssetLoader } from '../AssetLoader';
+import {
+  loadWorkstationAnchorsFromObject,
+  WorkstationAnchorSet,
+  DEFAULT_WORKSTATION_ANCHORS,
+} from '../WorkstationAnchors';
 
 export interface WorkstationOptions {
   isCedarline?: boolean;
   accentColor?: number;
+  onLoaded?: (anchors: WorkstationAnchorSet) => void;
 }
 
 export class WorkstationProps {
   private group: THREE.Group;
+  private proceduralChildren: THREE.Object3D[] = [];
+  private glbChildren: THREE.Object3D[] = [];
   private screenRenderer: ScreenRenderer;
-  private screenMesh: THREE.Mesh;
-  private screenGlowLight: THREE.PointLight;
+  private screenMesh: THREE.Mesh | null = null;
+  private screenGlowLight: THREE.PointLight | null = null;
 
   // First-person hands rig (visible during first-person workstation mode)
   private fpHandsGroup: THREE.Group;
-  private fpLeftArm: THREE.Group;
-  private fpRightArm: THREE.Group;
-  private fpLeftHand: THREE.Mesh;
-  private fpRightHand: THREE.Mesh;
+  private fpLeftArm!: THREE.Group;
+  private fpRightArm!: THREE.Group;
+  private fpLeftHand!: THREE.Mesh;
+  private fpRightHand!: THREE.Mesh;
 
   private typingTimer = 0;
   private mouseTimer = 0;
   private timePhase = 0;
 
+  private isLoaded = false;
+  private isUsingGLB = false;
+  private options: WorkstationOptions;
+  private loadPromise: Promise<boolean>;
+
   constructor(options: WorkstationOptions = {}) {
+    this.options = options;
     const isCedarline = options.isCedarline ?? true;
     const accentColor = options.accentColor ?? (isCedarline ? 0x00e5ff : 0x00e676);
 
     this.group = new THREE.Group();
     this.group.name = 'PhysicalWorkstation';
 
-    // Materials
+    // 1. Initialize ScreenRenderer
+    this.screenRenderer = new ScreenRenderer({ accentColor });
+
+    // 2. Build procedural fallback geometry (immediate, synchronous)
+    this.buildProceduralFallback(isCedarline, accentColor);
+
+    // 3. Build First-Person Hands Rig
+    this.fpHandsGroup = this.buildFirstPersonHands();
+    this.group.add(this.fpHandsGroup);
+
+    // 4. Asynchronously load the optimized PBR GLBs
+    this.loadPromise = this.loadGLBAssets(accentColor);
+  }
+
+  private async loadGLBAssets(accentColor: number): Promise<boolean> {
+    try {
+      const loader = AssetLoader.getInstance();
+      const [desk, chair, computer, propsDesk] = await Promise.all([
+        loader.loadGLTF('/assets/props/desk.glb'),
+        loader.loadGLTF('/assets/props/chair.glb'),
+        loader.loadGLTF('/assets/props/computer.glb'),
+        loader.loadGLTF('/assets/props/props_desk.glb'),
+      ]);
+
+      desk.name = 'Desk_Asset';
+      desk.position.set(0, 0, -3.4);
+
+      chair.name = 'Chair_Asset';
+      chair.position.set(0, 0, -2.85);
+
+      computer.name = 'Computer_Asset';
+      computer.position.set(0, 0.7875, -3.32);
+
+      propsDesk.name = 'PropsDesk_Asset';
+      propsDesk.position.set(0, 0.7875, -3.32);
+
+      // Wire ScreenRenderer material to SCREEN_QUAD in loaded computer GLB
+      let loadedScreenMesh: THREE.Mesh | null = null;
+      computer.traverse(child => {
+        if (child instanceof THREE.Mesh) {
+          if (Array.isArray(child.material)) {
+            const screenIdx = child.material.findIndex(
+              m =>
+                m &&
+                'name' in m &&
+                (m.name === 'classic_laptop_screen' || m.name.toLowerCase().includes('screen'))
+            );
+            if (screenIdx !== -1) {
+              child.material[screenIdx] = this.screenRenderer.getMaterial();
+              child.material = [...child.material];
+              loadedScreenMesh = child;
+              child.name = 'SCREEN_QUAD';
+              child.userData = { width: 0.448, height: 0.366 };
+            }
+          } else if (
+            child.name === 'SCREEN_QUAD' ||
+            child.name.toLowerCase().includes('screen') ||
+            (child.material &&
+              'name' in child.material &&
+              child.material.name === 'classic_laptop_screen')
+          ) {
+            loadedScreenMesh = child;
+            child.name = 'SCREEN_QUAD';
+            child.material = this.screenRenderer.getMaterial();
+            child.userData = { width: 0.448, height: 0.366 };
+          }
+        }
+      });
+
+      let screenMesh: THREE.Mesh;
+      if (loadedScreenMesh !== null) {
+        const found = loadedScreenMesh as THREE.Mesh;
+        found.geometry.dispose();
+        // The laptop screen mesh local space has width 2.0 and height 1.635
+        found.geometry = new THREE.PlaneGeometry(2.0, 1.635);
+        found.material = this.screenRenderer.getMaterial();
+        found.position.z += 0.002;
+        found.userData = { width: 0.448, height: 0.366 };
+        screenMesh = found;
+      } else {
+        const screenGeo = new THREE.PlaneGeometry(0.38, 0.24);
+        screenMesh = new THREE.Mesh(screenGeo, this.screenRenderer.getMaterial());
+        screenMesh.name = 'SCREEN_QUAD';
+        screenMesh.userData = { width: 0.38, height: 0.24 };
+        screenMesh.position.set(0, 0.7875 + 0.33, -3.32 - 0.207);
+        this.group.add(screenMesh);
+        this.glbChildren.push(screenMesh);
+      }
+
+      this.screenMesh = screenMesh;
+      this.screenGlowLight = new THREE.PointLight(accentColor, 1.0, 1.8);
+      this.screenGlowLight.position.set(0, 0.7875 + 0.33, -3.32 - 0.207 + 0.28);
+      this.group.add(this.screenGlowLight);
+      this.glbChildren.push(this.screenGlowLight);
+
+      // Force initial render of the desktop texture
+      this.screenRenderer.update(0.016);
+
+      // Remove procedural fallback and attach loaded GLBs
+      this.proceduralChildren.forEach(child => this.group.remove(child));
+      this.proceduralChildren = [];
+
+      this.group.add(desk);
+      this.group.add(chair);
+      this.group.add(computer);
+      this.group.add(propsDesk);
+      this.glbChildren = [desk, chair, computer, propsDesk];
+
+      this.isUsingGLB = true;
+      this.isLoaded = true;
+
+      // Extract anchors from loaded object
+      const anchors = loadWorkstationAnchorsFromObject(this.group);
+      this.options.onLoaded?.(anchors);
+
+      return true;
+    } catch (err) {
+      console.warn(
+        '[WorkstationProps] GLB loading failed or offline, using procedural fallback:',
+        err
+      );
+      this.isLoaded = true;
+      this.isUsingGLB = false;
+      this.options.onLoaded?.(DEFAULT_WORKSTATION_ANCHORS);
+      return false;
+    }
+  }
+
+  private buildProceduralFallback(_isCedarline: boolean, accentColor: number): void {
     const deskTopMat = new THREE.MeshStandardMaterial({
-      color: 0x1b2430, // Technical graphite walnut
+      color: 0x1b2430,
       roughness: 0.45,
       metalness: 0.15,
     });
     const deskSteelMat = new THREE.MeshStandardMaterial({
-      color: 0x0f172a, // Powder-coated steel
+      color: 0x0f172a,
       roughness: 0.6,
       metalness: 0.8,
     });
     const laptopChassisMat = new THREE.MeshStandardMaterial({
-      color: 0x334155, // Anodized dark aluminum
+      color: 0x334155,
       roughness: 0.35,
       metalness: 0.85,
     });
-    const keycapMat = new THREE.MeshStandardMaterial({
-      color: 0x090d16, // Low-profile mechanical keycaps
-      roughness: 0.5,
-      metalness: 0.2,
-    });
     const chairFabricMat = new THREE.MeshStandardMaterial({
-      color: 0x111827, // Dark technical mesh
+      color: 0x111827,
       roughness: 0.85,
       metalness: 0.1,
     });
     const chairChromeMat = new THREE.MeshStandardMaterial({
-      color: 0x94a3b8, // Polished chrome base
+      color: 0x94a3b8,
       roughness: 0.2,
       metalness: 0.9,
     });
 
-    // -------------------------------------------------------------
-    // 1. Detailed Executive Technical Desk
-    // Tabletop at height 0.74m, Center at Z = -3.4m, Width: 2.2m, Depth: 1.0m
-    // -------------------------------------------------------------
+    // Desk
     const deskGroup = new THREE.Group();
     deskGroup.position.set(0, 0, -3.4);
     this.group.add(deskGroup);
+    this.proceduralChildren.push(deskGroup);
 
-    // Desk Top Slab (bevelled)
-    const topGeo = new THREE.BoxGeometry(2.2, 0.045, 1.0);
-    const topMesh = new THREE.Mesh(topGeo, deskTopMat);
-    topMesh.position.y = 0.72;
+    const topMesh = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.045, 0.95), deskTopMat);
+    topMesh.position.y = 0.765;
     topMesh.castShadow = true;
     topMesh.receiveShadow = true;
     deskGroup.add(topMesh);
 
-    // Cable Management Grommet
-    const grommetGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.05, 16);
-    const grommet = new THREE.Mesh(grommetGeo, deskSteelMat);
-    grommet.position.set(0.65, 0.725, -0.32);
-    deskGroup.add(grommet);
-
-    // Steel Frame Under-Desk Rails
-    const railGeo = new THREE.BoxGeometry(2.0, 0.04, 0.04);
-    const railF = new THREE.Mesh(railGeo, deskSteelMat);
-    railF.position.set(0, 0.68, 0.38);
-    railF.castShadow = true;
-    deskGroup.add(railF);
-
-    const railB = new THREE.Mesh(railGeo, deskSteelMat);
-    railB.position.set(0, 0.68, -0.38);
-    railB.castShadow = true;
-    deskGroup.add(railB);
-
-    // 4 Steel T-Legs with Floor Levelers
-    const legPositions: [number, number][] = [
-      [-0.98, -0.38],
-      [-0.98, 0.38],
-      [0.98, -0.38],
-      [0.98, 0.38],
-    ];
-    legPositions.forEach(([lx, lz]) => {
-      const legGeo = new THREE.BoxGeometry(0.05, 0.7, 0.05);
-      const legMesh = new THREE.Mesh(legGeo, deskSteelMat);
-      legMesh.position.set(lx, 0.35, lz);
-      legMesh.castShadow = true;
-      deskGroup.add(legMesh);
-
-      // Foot glide
-      const glideGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.015, 12);
-      const glide = new THREE.Mesh(glideGeo, deskSteelMat);
-      glide.position.set(lx, 0.01, lz);
-      deskGroup.add(glide);
-    });
-
-    // -------------------------------------------------------------
-    // 2. Ergonomic Office Mesh Chair
-    // Positioned in front of the desk at Z = -2.85m, facing -Z
-    // -------------------------------------------------------------
+    // Chair
     const chairGroup = new THREE.Group();
     chairGroup.name = 'SEAT_ANCHOR';
     chairGroup.position.set(0, 0, -2.85);
     this.group.add(chairGroup);
+    this.proceduralChildren.push(chairGroup);
 
-    // 5-Star Arched Base
+    const seatMesh = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.07, 0.48), chairFabricMat);
+    seatMesh.position.set(0, 0.48, 0);
+    chairGroup.add(seatMesh);
+
     const baseCenter = new THREE.Mesh(
       new THREE.CylinderGeometry(0.08, 0.08, 0.06, 12),
       chairChromeMat
@@ -134,233 +230,49 @@ export class WorkstationProps {
     baseCenter.position.y = 0.12;
     chairGroup.add(baseCenter);
 
-    for (let i = 0; i < 5; i++) {
-      const angle = (i * 2 * Math.PI) / 5;
-      const legSpoke = new THREE.Group();
-      legSpoke.rotation.y = angle;
-
-      const spokeMesh = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.03, 0.28), chairChromeMat);
-      spokeMesh.position.set(0, 0.08, 0.14);
-      spokeMesh.rotation.x = -0.15;
-      spokeMesh.castShadow = true;
-      legSpoke.add(spokeMesh);
-
-      // Caster wheel
-      const wheel = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.025, 0.025, 0.02, 12),
-        deskSteelMat
-      );
-      wheel.rotation.z = Math.PI / 2;
-      wheel.position.set(0, 0.025, 0.28);
-      legSpoke.add(wheel);
-
-      chairGroup.add(legSpoke);
-    }
-
-    // Gas Lift Cylinder Column
-    const cylinderMesh = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.035, 0.035, 0.34, 12),
-      chairChromeMat
-    );
-    cylinderMesh.position.y = 0.28;
-    chairGroup.add(cylinderMesh);
-
-    // Contoured Padded Seat Cushion (Height = 0.48m)
-    const seatGeo = new THREE.BoxGeometry(0.48, 0.07, 0.46);
-    const seatMesh = new THREE.Mesh(seatGeo, chairFabricMat);
-    seatMesh.position.set(0, 0.48, 0);
-    seatMesh.castShadow = true;
-    chairGroup.add(seatMesh);
-
-    // Ergonomic Curved Mesh Backrest
-    const backrestGroup = new THREE.Group();
-    backrestGroup.position.set(0, 0.52, 0.22);
-    chairGroup.add(backrestGroup);
-
-    const backSpine = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.52, 0.03), chairChromeMat);
-    backSpine.position.set(0, 0.26, 0.03);
-    backrestGroup.add(backSpine);
-
-    const backrestMesh = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.48, 0.04), chairFabricMat);
-    backrestMesh.position.set(0, 0.26, 0);
-    backrestMesh.rotation.x = -0.08;
-    backrestMesh.castShadow = true;
-    backrestGroup.add(backrestMesh);
-
-    // Headrest
-    const headrest = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.12, 0.05), chairFabricMat);
-    headrest.position.set(0, 0.56, -0.02);
-    backrestGroup.add(headrest);
-
-    // Adjustable Armrests
-    [-0.24, 0.24].forEach(ax => {
-      const armStrut = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.2, 0.04), chairChromeMat);
-      armStrut.position.set(ax, 0.56, 0.02);
-      chairGroup.add(armStrut);
-
-      const armPad = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.025, 0.22), chairFabricMat);
-      armPad.position.set(ax, 0.66, -0.02);
-      armPad.castShadow = true;
-      chairGroup.add(armPad);
-    });
-
-    // -------------------------------------------------------------
-    // 3. Detailed Physical Laptop Computer
-    // Positioned on the desk at Z = -3.32m, Y = 0.7425m, facing +Z
-    // -------------------------------------------------------------
+    // Laptop & Fallback Screen
     const laptopGroup = new THREE.Group();
-    laptopGroup.position.set(0, 0.7425, -3.32);
+    laptopGroup.position.set(0, 0.7875, -3.32);
     this.group.add(laptopGroup);
+    this.proceduralChildren.push(laptopGroup);
 
-    // Laptop Base Chassis (W: 0.36m, D: 0.25m, H: 0.012m)
-    const baseGeo = new THREE.BoxGeometry(0.36, 0.012, 0.25);
-    const baseMesh = new THREE.Mesh(baseGeo, laptopChassisMat);
-    baseMesh.position.set(0, 0.006, 0);
-    baseMesh.castShadow = true;
+    const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.015, 0.26), laptopChassisMat);
+    baseMesh.position.set(0, 0.0075, 0);
     laptopGroup.add(baseMesh);
 
-    // Keyboard Well Recess
-    const wellGeo = new THREE.BoxGeometry(0.32, 0.003, 0.13);
-    const wellMat = new THREE.MeshStandardMaterial({ color: 0x161b22, roughness: 0.8 });
-    const wellMesh = new THREE.Mesh(wellGeo, wellMat);
+    const wellMesh = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.004, 0.13), deskSteelMat);
     wellMesh.name = 'KEYBOARD_ANCHOR';
-    wellMesh.position.set(0, 0.0125, -0.035);
+    wellMesh.position.set(0, 0.015, -0.035);
     laptopGroup.add(wellMesh);
 
-    // Individual Key Rows (5 realistic rows)
-    const rowZ = [-0.08, -0.06, -0.04, -0.02, 0.0];
-    rowZ.forEach((rz, rowIdx) => {
-      const keyCols = rowIdx === 4 ? 6 : 10;
-      const kw = (0.3 - (keyCols - 1) * 0.004) / keyCols;
-      for (let c = 0; c < keyCols; c++) {
-        const kx = -0.15 + kw / 2 + c * (kw + 0.004);
-        const keyGeo = new THREE.BoxGeometry(kw, 0.004, 0.014);
-        const keyMesh = new THREE.Mesh(keyGeo, keycapMat);
-        keyMesh.position.set(kx, 0.014, rz);
-        laptopGroup.add(keyMesh);
-      }
-    });
-
-    // Spacebar Accent
-    const spaceGeo = new THREE.BoxGeometry(0.12, 0.004, 0.014);
-    const spaceMesh = new THREE.Mesh(spaceGeo, keycapMat);
-    spaceMesh.position.set(0, 0.014, 0.02);
-    laptopGroup.add(spaceMesh);
-
-    // Trackpad
-    const padGeo = new THREE.BoxGeometry(0.12, 0.001, 0.07);
-    const padMat = new THREE.MeshStandardMaterial({
-      color: 0x21262d,
-      roughness: 0.3,
-      metalness: 0.5,
-    });
-    const padMesh = new THREE.Mesh(padGeo, padMat);
-    padMesh.position.set(0, 0.0126, 0.075);
-    laptopGroup.add(padMesh);
-
-    // Screen Hinge Cylinder
-    const hingeGeo = new THREE.CylinderGeometry(0.007, 0.007, 0.32, 16);
-    const hinge = new THREE.Mesh(hingeGeo, laptopChassisMat);
-    hinge.rotation.z = Math.PI / 2;
-    hinge.position.set(0, 0.012, -0.12);
-    laptopGroup.add(hinge);
-
-    // Laptop Lid & Screen Display (Angled back at 108 degrees)
-    const lidGroup = new THREE.Group();
-    lidGroup.position.set(0, 0.012, -0.12);
-    lidGroup.rotation.x = -Math.PI / 2 + 0.32; // Open angled screen
-    laptopGroup.add(lidGroup);
-
-    // Outer Back Lid
-    const lidGeo = new THREE.BoxGeometry(0.36, 0.24, 0.008);
-    const lidMesh = new THREE.Mesh(lidGeo, laptopChassisMat);
-    lidMesh.position.set(0, 0.12, -0.004);
-    lidMesh.castShadow = true;
-    lidGroup.add(lidMesh);
-
-    // Subtle Glowing Cyber Logo on Lid Back
-    const logoGeo = new THREE.PlaneGeometry(0.05, 0.05);
-    const logoMat = new THREE.MeshBasicMaterial({ color: accentColor, side: THREE.DoubleSide });
-    const logoMesh = new THREE.Mesh(logoGeo, logoMat);
-    logoMesh.position.set(0, 0.12, -0.009);
-    logoMesh.rotation.y = Math.PI;
-    lidGroup.add(logoMesh);
-
-    // Screen Bezel Inner Border
-    const bezelMat = new THREE.MeshStandardMaterial({ color: 0x0d1117, roughness: 0.7 });
-    const bezelMesh = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.23, 0.002), bezelMat);
-    bezelMesh.position.set(0, 0.12, 0.001);
-    lidGroup.add(bezelMesh);
-
-    // Webcam Dot
-    const camGeo = new THREE.CircleGeometry(0.0025, 8);
-    const camMat = new THREE.MeshBasicMaterial({ color: 0x1e293b });
-    const camMesh = new THREE.Mesh(camGeo, camMat);
-    camMesh.position.set(0, 0.228, 0.0025);
-    lidGroup.add(camMesh);
-
-    // -------------------------------------------------------------
-    // Dynamic Active Screen Display (1280x800 ScreenRenderer)
-    // -------------------------------------------------------------
-    this.screenRenderer = new ScreenRenderer({ accentColor });
-
-    const screenGeo = new THREE.PlaneGeometry(0.32, 0.2);
+    const screenGeo = new THREE.PlaneGeometry(0.36, 0.23);
     this.screenMesh = new THREE.Mesh(screenGeo, this.screenRenderer.getMaterial());
     this.screenMesh.name = 'SCREEN_QUAD';
-    this.screenMesh.userData = { width: 0.32, height: 0.2 };
-    this.screenMesh.position.set(0, 0.118, 0.003);
-    lidGroup.add(this.screenMesh);
+    this.screenMesh.userData = { width: 0.36, height: 0.23 };
+    this.screenMesh.position.set(0, 0.18, -0.12);
+    laptopGroup.add(this.screenMesh);
 
-    // Subtle Screen Glow Light casting on keyboard and hands
     this.screenGlowLight = new THREE.PointLight(accentColor, 1.4, 1.4);
-    this.screenGlowLight.position.set(0, 0.15, 0.1);
-    lidGroup.add(this.screenGlowLight);
+    this.screenGlowLight.position.set(0, 0.18, 0.05);
+    laptopGroup.add(this.screenGlowLight);
 
-    // -------------------------------------------------------------
-    // 4. Mouse & Stitched Mousepad
-    // -------------------------------------------------------------
+    // Mouse
     const mouseGroup = new THREE.Group();
     mouseGroup.name = 'MOUSE_ANCHOR';
-    mouseGroup.position.set(0.28, 0.7425, -3.32);
+    mouseGroup.position.set(0.28, 0.7875, -3.32);
     this.group.add(mouseGroup);
+    this.proceduralChildren.push(mouseGroup);
 
-    // Mousepad
-    const padMatGeo = new THREE.BoxGeometry(0.18, 0.003, 0.22);
-    const padMatSurface = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.9 });
-    const padMeshMat = new THREE.Mesh(padMatGeo, padMatSurface);
-    padMeshMat.position.set(0, 0.0015, 0);
-    mouseGroup.add(padMeshMat);
-
-    // Optical Mouse
-    const mouseBodyGeo = new THREE.BoxGeometry(0.06, 0.024, 0.1);
-    const mouseBodyMat = new THREE.MeshStandardMaterial({
-      color: 0x1e293b,
-      roughness: 0.4,
-      metalness: 0.3,
-    });
-    const mouseBody = new THREE.Mesh(mouseBodyGeo, mouseBodyMat);
-    mouseBody.position.set(0, 0.015, 0);
-    mouseBody.castShadow = true;
+    const mouseBody = new THREE.Mesh(new THREE.BoxGeometry(0.065, 0.025, 0.11), laptopChassisMat);
+    mouseBody.position.y = 0.0125;
     mouseGroup.add(mouseBody);
+  }
 
-    // Scroll Wheel
-    const wheelGeo = new THREE.CylinderGeometry(0.005, 0.005, 0.006, 10);
-    const wheelMat = new THREE.MeshBasicMaterial({ color: accentColor });
-    const wheelMesh = new THREE.Mesh(wheelGeo, wheelMat);
-    wheelMesh.rotation.z = Math.PI / 2;
-    wheelMesh.position.set(0, 0.027, -0.02);
-    mouseGroup.add(wheelMesh);
-
-    // -------------------------------------------------------------
-    // 5. First-Person Forearms / Hands Rig
-    // Positioned right in front of first-person camera facing the desk
-    // Visible only during First-Person Workstation mode!
-    // -------------------------------------------------------------
-    this.fpHandsGroup = new THREE.Group();
-    this.fpHandsGroup.name = 'FirstPersonHands';
-    this.fpHandsGroup.position.set(0, 0.74, -2.85);
-    this.fpHandsGroup.visible = false;
-    this.group.add(this.fpHandsGroup);
+  private buildFirstPersonHands(): THREE.Group {
+    const handsGroup = new THREE.Group();
+    handsGroup.name = 'FirstPersonHands';
+    handsGroup.position.set(0, 0.7875, -2.85);
+    handsGroup.visible = false;
 
     const skinMat = new THREE.MeshStandardMaterial({
       color: 0x5c3826,
@@ -374,7 +286,7 @@ export class WorkstationProps {
     // Left Forearm & Hand
     this.fpLeftArm = new THREE.Group();
     this.fpLeftArm.position.set(-0.14, 0.18, 0.22);
-    this.fpHandsGroup.add(this.fpLeftArm);
+    handsGroup.add(this.fpLeftArm);
 
     const lSleeveMesh = new THREE.Mesh(
       new THREE.CylinderGeometry(0.042, 0.038, 0.28, 10),
@@ -391,7 +303,7 @@ export class WorkstationProps {
     // Right Forearm & Hand
     this.fpRightArm = new THREE.Group();
     this.fpRightArm.position.set(0.24, 0.18, 0.22);
-    this.fpHandsGroup.add(this.fpRightArm);
+    handsGroup.add(this.fpRightArm);
 
     const rSleeveMesh = new THREE.Mesh(
       new THREE.CylinderGeometry(0.042, 0.038, 0.28, 10),
@@ -404,10 +316,24 @@ export class WorkstationProps {
     this.fpRightHand = new THREE.Mesh(new THREE.BoxGeometry(0.065, 0.02, 0.08), skinMat);
     this.fpRightHand.position.set(0, 0.01, -0.32);
     this.fpRightArm.add(this.fpRightHand);
+
+    return handsGroup;
   }
 
   public getMesh(): THREE.Group {
     return this.group;
+  }
+
+  public isGlbLoaded(): boolean {
+    return this.isUsingGLB;
+  }
+
+  public isAssetLoaded(): boolean {
+    return this.isLoaded;
+  }
+
+  public async whenLoaded(): Promise<boolean> {
+    return this.loadPromise;
   }
 
   public setFirstPersonMode(isFP: boolean): void {
@@ -465,10 +391,23 @@ export class WorkstationProps {
     }
   }
 
+  public getGlbChildren(): THREE.Object3D[] {
+    return this.glbChildren;
+  }
+
   public dispose(): void {
     if (this.screenRenderer) {
       this.screenRenderer.dispose();
     }
+    this.glbChildren.forEach(child => {
+      this.group.remove(child);
+    });
+    this.glbChildren = [];
+    this.proceduralChildren.forEach(child => {
+      this.group.remove(child);
+    });
+    this.proceduralChildren = [];
+
     this.group.traverse(obj => {
       if (obj instanceof THREE.Mesh) {
         if (obj.geometry) obj.geometry.dispose();

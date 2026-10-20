@@ -1,7 +1,7 @@
 /**
- * Cyberlife — EkoSec Security Desktop Taskbar & Application Launcher
+ * Cyberlife — Heron OS Security Desktop Taskbar & Application Launcher
  *
- * Inspired by ParrotOS and modern Linux cybersecurity workstation conventions.
+ * Inspired by Heron OS and modern Linux cybersecurity workstation conventions.
  * Features:
  * - Categorized applications menu with live search and team-track filters.
  * - Pinned favorites bar for quick access.

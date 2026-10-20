@@ -136,8 +136,7 @@ export class WorkstationCameraStateMachine {
     if (options.screenFov !== undefined) this.screenFov = options.screenFov;
     if (options.baseFov !== undefined) this.baseFov = options.baseFov;
     if (options.reduceMotion !== undefined) this.reduceMotion = options.reduceMotion;
-    if (options.skipSitAfterFirst !== undefined)
-      this.skipSitAfterFirst = options.skipSitAfterFirst;
+    if (options.skipSitAfterFirst !== undefined) this.skipSitAfterFirst = options.skipSitAfterFirst;
   }
 
   public getState(): WorkstationCameraState {
@@ -423,7 +422,11 @@ export class WorkstationCameraStateMachine {
     const easedT = easeInOutCubic(rawProgress);
 
     // Interpolate camera position, look target, and FOV
-    this.currentPosition.lerpVectors(this.startSnapshot.position, this.targetSnapshot.position, easedT);
+    this.currentPosition.lerpVectors(
+      this.startSnapshot.position,
+      this.targetSnapshot.position,
+      easedT
+    );
     this.currentLookTarget.lerpVectors(
       this.startSnapshot.lookTarget,
       this.targetSnapshot.lookTarget,

@@ -12,6 +12,7 @@ import { PlayerController } from './PlayerController';
 import { WorldCameraController } from './WorldCameraController';
 import { WorldEnvironment } from './WorldEnvironment';
 import { LocationTransitionController } from './LocationTransitionController';
+import { SkyEnvironment } from './render/SkyEnvironment';
 import {
   WorkstationCameraState,
   WorkstationCameraStateOptions,
@@ -68,9 +69,12 @@ export class WorldSceneManager {
   private cameraController: WorldCameraController | null = null;
   private worldEnvironment: WorldEnvironment | null = null;
   private transitionController: LocationTransitionController | null = null;
+  private skyEnvironment: SkyEnvironment | null = null;
 
   // Active interaction target tracking
   private currentTargetId: string | null = null;
+  private activeBookmark:
+    'apartment_wide' | 'desk_seated_third_person' | 'desk_screen_closeup' | null = null;
 
   // Callbacks
   private onInteractionTargetChanged?: (target: InteractableDefinition | null) => void;
@@ -131,10 +135,7 @@ export class WorldSceneManager {
     this.onNpcInteract = options.onNpcInteract;
 
     // 1. Scene Setup
-    const clearColor = options.clearColor ?? 0x7dd3fc; // Warm coastal Lagos sky blue
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(clearColor);
-    this.scene.fog = new THREE.FogExp2(clearColor, 0.012);
 
     // 2. Camera Setup
     const width = container.clientWidth || 800;
@@ -146,17 +147,21 @@ export class WorldSceneManager {
       WORLD_CONFIG.camera.far
     );
 
-    // 3. Renderer Setup
+    // 3. Renderer Setup (ACESFilmicToneMapping, SRGBColorSpace, PCFSoftShadowMap)
     try {
       this.renderer = new THREE.WebGLRenderer({
         antialias: options.antialias ?? true,
         alpha: false,
         powerPreference: 'high-performance',
+        preserveDrawingBuffer: true,
       });
       this.renderer.setSize(width, height);
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       this.renderer.shadowMap.enabled = true;
       this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+      this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      this.renderer.toneMappingExposure = 1.0;
 
       const canvas = this.renderer.domElement;
       canvas.className = 'world-viewport-canvas';
@@ -178,8 +183,12 @@ export class WorldSceneManager {
     this.worldEnvironment = new WorldEnvironment(this.collisionWorld, this.interactionRegistry);
     this.scene.add(this.worldEnvironment.getMesh());
 
-    // 6. Lighting (Bright Tropical Sunlight & Coastal Sky)
-    this.setupLighting();
+    // 6. Lighting & Atmosphere (Procedural Sky, PMREM IBL, PCF soft shadows, horizon haze)
+    this.skyEnvironment = new SkyEnvironment(this.scene, this.renderer);
+    const initialLoc = options.initialLocationId ?? 'neighborhood';
+    const isInitialInterior =
+      initialLoc === 'cedarline_interior' || initialLoc === 'apartment_interior';
+    this.skyEnvironment.setLocationMode(isInitialInterior);
 
     // 7. Player Avatar and Controller Setup
     this.playerAvatar = new PlayerAvatar();
@@ -215,7 +224,10 @@ export class WorldSceneManager {
       playerController: this.playerController,
       cameraController: this.cameraController,
       initialLocationId: options.initialLocationId ?? 'neighborhood',
-      onLocationChanged: loc => this.onLocationChanged?.(loc),
+      onLocationChanged: loc => {
+        this.skyEnvironment?.setLocationMode(loc.type === 'INTERIOR');
+        this.onLocationChanged?.(loc);
+      },
     });
 
     // 10. Resize Handling
@@ -223,32 +235,6 @@ export class WorldSceneManager {
 
     // 11. Start Animation Loop
     this.startAnimationLoop();
-  }
-
-  private setupLighting(): void {
-    if (!this.scene) return;
-
-    // Ambient Tropical Fill Light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
-    this.scene.add(ambientLight);
-
-    // Directional Tropical Sunlight (Bright sun with warm gold tint)
-    const sunLight = new THREE.DirectionalLight(0xfffaed, 1.35);
-    sunLight.position.set(20, 45, 25);
-    sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 2048;
-    sunLight.shadow.mapSize.height = 2048;
-    sunLight.shadow.camera.near = 0.5;
-    sunLight.shadow.camera.far = 100;
-    sunLight.shadow.camera.left = -40;
-    sunLight.shadow.camera.right = 40;
-    sunLight.shadow.camera.top = 40;
-    sunLight.shadow.camera.bottom = -40;
-    this.scene.add(sunLight);
-
-    // Hemisphere Coastal Sky & Ground Bounce
-    const hemiLight = new THREE.HemisphereLight(0xbae6fd, 0xfde68a, 0.65);
-    this.scene.add(hemiLight);
   }
 
   /**
@@ -397,6 +383,29 @@ export class WorldSceneManager {
 
   public setSimulationTime(timeStr: string): void {
     this.currentSimTime = timeStr;
+    const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    let hour = 12;
+    if (match && match[1] && match[3]) {
+      hour = parseInt(match[1], 10);
+      const meridiem = match[3].toUpperCase();
+      if (meridiem === 'PM' && hour < 12) hour += 12;
+      if (meridiem === 'AM' && hour === 12) hour = 0;
+    }
+    const isDay = hour >= 6 && hour < 18;
+    if (this.scene) {
+      const skyColor = isDay ? 0x7dd3fc : 0x050a14;
+      this.scene.background = new THREE.Color(skyColor);
+      if (this.scene.fog instanceof THREE.FogExp2) {
+        this.scene.fog.color.setHex(skyColor);
+      }
+    }
+    if (this.worldEnvironment) {
+      this.worldEnvironment.update(
+        0.016,
+        timeStr,
+        this.playerController ? this.playerController.getPosition() : undefined
+      );
+    }
   }
 
   public setCallbacks(options: {
@@ -476,14 +485,21 @@ export class WorldSceneManager {
       }
 
       // 2. Update Camera Position and Orientation (using deltaTime for frame-rate independence)
-      if (this.cameraController && this.playerController) {
+      if (this.activeBookmark) {
+        this.applyBookmarkCamera(this.activeBookmark);
+      } else if (this.cameraController && this.playerController) {
         this.cameraController.update(this.playerController.getPosition(), deltaTime);
       }
 
       // 3. Update Environment Markers, Pedestrians, Traffic, and Workstation Screen
+      const playerPos = this.playerController ? this.playerController.getPosition() : undefined;
       if (this.worldEnvironment) {
-        const playerPos = this.playerController ? this.playerController.getPosition() : undefined;
         this.worldEnvironment.update(deltaTime, this.currentSimTime, playerPos);
+      }
+
+      // Update sun shadow frustum to follow player tightly
+      if (this.skyEnvironment && playerPos) {
+        this.skyEnvironment.update(playerPos);
       }
 
       // 4. Proximity Interaction Check
@@ -507,6 +523,82 @@ export class WorldSceneManager {
     };
 
     this.animationFrameId = requestAnimationFrame(animate);
+  }
+
+  public getRenderer(): THREE.WebGLRenderer | null {
+    return this.renderer;
+  }
+
+  public getCamera(): THREE.PerspectiveCamera | null {
+    return this.camera;
+  }
+
+  public getScene(): THREE.Scene | null {
+    return this.scene;
+  }
+
+  public getWorldEnvironment(): WorldEnvironment | null {
+    return this.worldEnvironment;
+  }
+
+  private applyBookmarkCamera(
+    name: 'apartment_wide' | 'desk_seated_third_person' | 'desk_screen_closeup'
+  ): void {
+    if (!this.camera) return;
+    if (name === 'apartment_wide') {
+      this.camera.position.set(-4.5, 2.5, 3.8);
+      this.camera.lookAt(0.2, 1.1, -2.4);
+      this.camera.fov = 55;
+      this.camera.updateProjectionMatrix();
+      if (this.playerAvatar) {
+        this.playerAvatar.setSitting(false);
+        this.playerAvatar.setPosition(0, 0, -1.8);
+        this.playerAvatar.setRotation(0);
+      }
+    } else if (name === 'desk_seated_third_person') {
+      this.camera.position.set(0.48, 1.34, -2.05);
+      this.camera.lookAt(-0.02, 0.94, -3.32);
+      this.camera.fov = WORLD_CONFIG.camera.fov;
+      this.camera.updateProjectionMatrix();
+      if (this.playerAvatar) {
+        this.playerAvatar.setVisible(true);
+        this.playerAvatar.setSitting(true);
+        this.playerAvatar.setPosition(0, 0, -2.85);
+        this.playerAvatar.setRotation(0);
+      }
+    } else if (name === 'desk_screen_closeup') {
+      this.camera.position.set(0.12, 1.22, -2.8);
+      this.camera.lookAt(-0.02, 1.02, -3.45);
+      this.camera.fov = 42;
+      this.camera.updateProjectionMatrix();
+      if (this.playerAvatar) {
+        this.playerAvatar.setVisible(false);
+      }
+    }
+  }
+
+  public setCameraBookmark(
+    name: 'apartment_wide' | 'desk_seated_third_person' | 'desk_screen_closeup' | null
+  ): void {
+    this.activeBookmark = name;
+    if (name) {
+      this.setInputDisabled(true);
+      this.applyBookmarkCamera(name);
+    } else {
+      this.setInputDisabled(false);
+    }
+  }
+
+  public async captureBookmarkScreenshot(filename: string): Promise<boolean> {
+    if (!this.renderer || !this.scene || !this.camera) return false;
+    this.renderer.render(this.scene, this.camera);
+    const dataUrl = this.renderer.domElement.toDataURL('image/png');
+    const resp = await fetch('/api/save-screenshot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename, dataUrl }),
+    });
+    return resp.ok;
   }
 
   public getStatistics(): SceneStatistics {
@@ -547,6 +639,11 @@ export class WorldSceneManager {
     if (this.worldEnvironment) {
       this.worldEnvironment.dispose();
       this.worldEnvironment = null;
+    }
+
+    if (this.skyEnvironment) {
+      this.skyEnvironment.dispose();
+      this.skyEnvironment = null;
     }
 
     if (this.playerAvatar) {

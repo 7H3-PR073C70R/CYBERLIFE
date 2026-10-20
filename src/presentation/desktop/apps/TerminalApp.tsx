@@ -1,20 +1,29 @@
 /**
- * Cyberlife — Terminal Application Component (Parrot / EkoSec OS Inspired)
+ * Cyberlife — Terminal Application Component (Heron OS Security Edition)
  *
- * Provides a beginner-friendly simulated command line prompt with multi-tab support,
- * directory tracking, synthetic virtual filesystem navigation, and honest command guidance.
- * Strictly sandboxed; executes via TerminalCommandParser with 100% in-game safety.
- * Enforces manual typing: command chips display educational syntax & hints,
- * but do not auto-fill or bypass manual input.
+ * Provides a classical two-line signature prompt:
+ * ┌─[user@host]─[dir]
+ * └──╼ $ command
+ *
+ * Features:
+ * - Direct inline input at the prompt line with terminal typography
+ * - Tab completion for simulated commands
+ * - Command history navigation (Up/Down)
+ * - Ctrl+L clear screen, Ctrl+C interrupt
+ * - Sandboxed execution via TerminalCommandParser with zero host escape
+ * - Colorized tokens for user, host, path, status, and error output
  */
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { createDefaultTerminalParser, TerminalExecutionContext } from '@/simulation/cyber/terminal';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
+import { OS_NAME, OS_VERSION, OS_BRANDING, HOSTNAMES, KERNEL_STRING } from '../osBranding';
+import { OsIcon } from '../icons/OsIcons';
 
 export interface TerminalEntry {
   id: string;
   command: string;
+  directory?: string;
   stdout: string[];
   stderr?: string[];
   isError?: boolean;
@@ -44,6 +53,26 @@ interface CommandHint {
   example: string;
   expectedOutput: string;
 }
+
+const KNOWN_COMMANDS = [
+  'help',
+  'whoami',
+  'date',
+  'status',
+  'pwd',
+  'ls',
+  'cd',
+  'cat',
+  'grep',
+  'file',
+  'nmap',
+  'packetview',
+  'revview',
+  'netmap',
+  'svcscan',
+  'logview',
+  'evidence',
+];
 
 const COMMAND_HINTS: Record<string, CommandHint> = {
   help: {
@@ -174,8 +203,8 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         id: 'init-1',
         command: '',
         stdout: [
-          'PARROT SECURITY OS // EKOSEC LINUX 2026 EDITION [v4.5-sandboxed]',
-          'Kernel: Linux 6.8.0-ekosec-enterprise x86_64 // Cluster: Lagos Marina Subnet',
+          `${OS_BRANDING.bannerHeader}`,
+          `Kernel: Linux ${KERNEL_STRING} // Cluster: Lagos Marina Subnet`,
           'Safety Boundary: 100% simulated sandbox. Zero host OS execution.',
           '',
           "Type 'help' to view available simulated commands.",
@@ -214,17 +243,19 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
     if (terminalScrollAreaRef.current) {
       terminalScrollAreaRef.current.scrollTop = terminalScrollAreaRef.current.scrollHeight;
     }
-  }, [activeTab.entries]);
+  }, [activeTab.entries, activeTab.inputVal]);
 
   // Refocus input whenever tab changes
   useEffect(() => {
     inputRef.current?.focus({ preventScroll: true });
   }, [activeTabId]);
 
+  const isCedarline = workstationId.includes('cedarline');
+  const activeUser = isCedarline ? 'tade' : 'player';
+  const activeHost = isCedarline ? HOSTNAMES.office : HOSTNAMES.home;
+
   const buildContext = useCallback(
     (dir: string, history: string[]): TerminalExecutionContext => {
-      const isCedarline = workstationId.includes('cedarline');
-
       const calendar = sim?.state.time.calendar ?? {
         timeString: '08:00 AM',
         dateString: 'Monday, Oct 12, 2026',
@@ -258,7 +289,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
           ? {
               id: workstationId,
               hostname: 'cedarline-sec-ws04.corp.local',
-              osVersion: 'EkoSec Linux 2026 / Parrot Security OS v4.5 [Simulated Sandboxed Kernel]',
+              osVersion: `${OS_NAME} v${OS_VERSION} [Simulated Sandboxed Kernel]`,
               ipAddress: '10.0.4.15',
               subnet: '255.255.255.0',
               status: 'Operational (Synthetic Enterprise Subnet)',
@@ -267,7 +298,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
           : {
               id: workstationId,
               hostname: 'lagos-rig-dev01.local',
-              osVersion: 'EkoSec Linux 2026 / Parrot Security OS v4.5 [Home Rig]',
+              osVersion: `${OS_NAME} v${OS_VERSION} [Home Rig]`,
               ipAddress: '192.168.1.104',
               subnet: '255.255.255.0',
               status: 'Operational (Simulated Local Rig)',
@@ -276,7 +307,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         history,
       };
     },
-    [sim, workstationId]
+    [sim, workstationId, isCedarline]
   );
 
   const handleNewTab = () => {
@@ -292,7 +323,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
           id: `tab-init-${Date.now()}`,
           command: '',
           stdout: [
-            `EkoSec Terminal Tab ${newTabNumber} initialized.`,
+            `${OS_NAME} Terminal Tab ${newTabNumber} initialized.`,
             `Working directory: /home/analyst`,
             "Type 'help' for commands.",
           ],
@@ -350,6 +381,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
     const newEntry: TerminalEntry = {
       id: `entry-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       command: trimmed,
+      directory: formatDirForPrompt(activeTab.currentDirectory),
       stdout: result.stdout,
       stderr: result.stderr,
       isError: result.isError,
@@ -412,6 +444,14 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
     if (e.key === 'Enter') {
       e.preventDefault();
       handleExecute(activeTab.inputVal);
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const current = activeTab.inputVal.trim();
+      if (!current) return;
+      const match = KNOWN_COMMANDS.find(c => c.startsWith(current));
+      if (match) {
+        setTabs(prev => prev.map(t => (t.id === activeTab.id ? { ...t, inputVal: match } : t)));
+      }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (activeTab.history.length === 0) return;
@@ -477,15 +517,12 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
     onTyping?.();
   };
 
-  const userHost = workstationId.includes('cedarline') ? 'tade@ekosec-ws04' : 'player@ekosec-rig';
-  const promptDirectory = formatDirForPrompt(activeTab.currentDirectory);
-  const promptPrefix = `${userHost}:${promptDirectory}$ `;
-
+  const promptDir = formatDirForPrompt(activeTab.currentDirectory);
   const activeHint = selectedHintCmd ? COMMAND_HINTS[selectedHintCmd] : null;
 
   return (
     <div
-      className="terminal-app-container parrot-theme"
+      className="terminal-app-container os-theme"
       role="region"
       aria-label="Simulated Terminal Session"
       onClick={() => inputRef.current?.focus({ preventScroll: true })}
@@ -494,9 +531,9 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        backgroundColor: '#090d13',
-        color: '#c9d1d9',
-        fontFamily: 'Inter, system-ui, sans-serif',
+        backgroundColor: '#05090f',
+        color: '#f8fafc',
+        fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
       }}
     >
       {/* Multi-Tab Bar */}
@@ -505,8 +542,8 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         style={{
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: '#161b22',
-          borderBottom: '1px solid #30363d',
+          backgroundColor: '#0c131f',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           padding: '2px 4px 0 4px',
           gap: '2px',
           userSelect: 'none',
@@ -523,22 +560,25 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
                 alignItems: 'center',
                 gap: '6px',
                 padding: '4px 10px',
-                backgroundColor: isActive ? '#090d13' : '#21262d',
-                color: isActive ? '#58a6ff' : '#8b949e',
+                backgroundColor: isActive ? '#05090f' : '#111a28',
+                color: isActive ? '#00e5ff' : '#94a3b8',
                 borderTopLeftRadius: '4px',
                 borderTopRightRadius: '4px',
-                border: '1px solid #30363d',
-                borderBottom: isActive ? '1px solid #090d13' : '1px solid #30363d',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderBottom: isActive
+                  ? '1px solid #05090f'
+                  : '1px solid rgba(255, 255, 255, 0.08)',
                 cursor: 'pointer',
-                fontSize: '0.75rem',
-                fontFamily: 'monospace',
+                fontSize: '0.73rem',
+                fontFamily: "'JetBrains Mono', monospace",
                 maxWidth: '180px',
               }}
               title={tab.title}
               data-testid={`terminal-tab-${idx}`}
             >
+              <OsIcon name="terminal" size={13} color={isActive ? '#00e5ff' : '#64748b'} />
               <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                💻 {tab.title}
+                {tab.title}
               </span>
               {tabs.length > 1 && (
                 <button
@@ -547,14 +587,16 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#8b949e',
+                    color: '#64748b',
                     cursor: 'pointer',
                     fontSize: '0.7rem',
                     padding: '0 2px',
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                   title="Close Tab"
                 >
-                  ✕
+                  <OsIcon name="close" size={10} color="currentColor" />
                 </button>
               )}
             </div>
@@ -569,9 +611,9 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
               padding: '2px 8px',
               backgroundColor: 'transparent',
               border: 'none',
-              color: '#8b949e',
+              color: '#64748b',
               cursor: 'pointer',
-              fontSize: '0.9rem',
+              fontSize: '0.85rem',
               fontWeight: 700,
             }}
             title="Open New Tab (Ctrl+Shift+T)"
@@ -582,7 +624,13 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         )}
 
         <div
-          style={{ marginLeft: 'auto', paddingRight: '8px', fontSize: '0.7rem', color: '#8b949e' }}
+          style={{
+            marginLeft: 'auto',
+            paddingRight: '8px',
+            fontSize: '0.68rem',
+            color: '#64748b',
+            fontFamily: "'JetBrains Mono', monospace",
+          }}
         >
           <span>VFS: {activeTab.currentDirectory}</span>
         </div>
@@ -591,26 +639,8 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
       {/* Educational Command Learning Toolbar */}
       <div className="terminal-toolbar">
         <div className="terminal-chips-group">
-          <span className="chips-label">Command Guide:</span>
-          {[
-            'help',
-            'whoami',
-            'date',
-            'status',
-            'pwd',
-            'ls',
-            'cd',
-            'cat',
-            'grep',
-            'file',
-            'nmap',
-            'packetview',
-            'revview',
-            'netmap',
-            'svcscan',
-            'logview',
-            'evidence',
-          ].map(cmd => (
+          <span className="chips-label">Commands:</span>
+          {KNOWN_COMMANDS.map(cmd => (
             <button
               key={cmd}
               type="button"
@@ -654,15 +684,15 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         >
           <div className="hint-content">
             <span className="hint-icon" aria-hidden="true">
-              📖
+              <OsIcon name="fieldGuide" size={16} color="#00e5ff" />
             </span>
             <div>
-              <div style={{ color: 'var(--color-accent-cyan, #00e5ff)', fontWeight: 600 }}>
+              <div style={{ color: '#00e5ff', fontWeight: 600 }}>
                 Command Guide: <code>{activeHint.command}</code>
               </div>
               <div
                 style={{
-                  color: 'var(--color-text-secondary, #94a3b8)',
+                  color: '#94a3b8',
                   fontSize: '0.8rem',
                   marginTop: '2px',
                 }}
@@ -673,10 +703,10 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
                 style={{
                   fontSize: '0.78rem',
                   marginTop: '4px',
-                  color: 'var(--color-accent-emerald, #00e676)',
+                  color: '#00e676',
                 }}
               >
-                ✍️ <strong>Manual Typing:</strong> Type <code>{activeHint.example}</code> into the
+                <strong>Manual Typing:</strong> Type <code>{activeHint.example}</code> into the
                 prompt below and press <kbd>Enter</kbd>.
               </div>
             </div>
@@ -695,21 +725,44 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         </div>
       )}
 
-      {/* Terminal Log Output */}
+      {/* Terminal Log Output Buffer */}
       <div
         ref={terminalScrollAreaRef}
         className="terminal-scroll-area"
         role="log"
         aria-live="polite"
         data-testid="terminal-scroll-area"
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '8px 12px',
+          fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+          fontSize: '13px',
+          lineHeight: '1.45',
+        }}
       >
         {activeTab.entries.map(entry => (
           <div key={entry.id} className="terminal-entry" data-testid="terminal-entry">
             {entry.command && (
-              <div className="terminal-command-line">
-                <span className="terminal-prompt-text">{promptPrefix}</span>
-                <span className="terminal-command-text">{entry.command}</span>
-                <span className="terminal-timestamp">{entry.timestamp}</span>
+              <div className="terminal-command-block" style={{ marginBottom: '4px' }}>
+                {/* Line 1: ┌─[user@host]─[dir] */}
+                <div style={{ color: '#64748b', fontSize: '12px' }}>
+                  <span>┌─[</span>
+                  <span style={{ color: '#00e676', fontWeight: 600 }}>{activeUser}</span>
+                  <span style={{ color: '#00e5ff' }}>@{activeHost}</span>
+                  <span>]─[</span>
+                  <span style={{ color: '#38bdf8' }}>{entry.directory ?? promptDir}</span>
+                  <span>]</span>
+                </div>
+                {/* Line 2: └──╼ $ command */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ color: '#64748b' }}>└──╼ </span>
+                  <span style={{ color: '#00e5ff', fontWeight: 700 }}>$ </span>
+                  <span style={{ color: '#f8fafc', fontWeight: 600 }}>{entry.command}</span>
+                  <span style={{ marginLeft: 'auto', color: '#475569', fontSize: '11px' }}>
+                    {entry.timestamp}
+                  </span>
+                </div>
               </div>
             )}
 
@@ -717,46 +770,87 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
               <div
                 key={i}
                 className={`terminal-output-line ${entry.isError ? 'output-error' : 'output-normal'}`}
+                style={{
+                  color: entry.isError ? '#ef4444' : '#cbd5e1',
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-all',
+                }}
               >
                 {line}
               </div>
             ))}
           </div>
         ))}
-      </div>
 
-      {/* Active Input Line */}
-      <div className="terminal-input-row" data-testid="terminal-input-row">
-        <label htmlFor="terminal-command-input" className="terminal-prompt-label">
-          {promptPrefix}
-        </label>
-        <input
-          ref={inputRef}
-          id="terminal-command-input"
-          type="text"
-          className="terminal-text-input"
-          value={activeTab.inputVal}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck="false"
-          aria-label="Terminal command input"
-          placeholder="Type manually: help, pwd, ls -l, cd, cat, nmap, packetview..."
-          data-testid="terminal-command-input"
-        />
-        <button
-          type="button"
-          className="btn-terminal-submit"
-          onClick={e => {
-            e.stopPropagation();
-            handleExecute(activeTab.inputVal);
-          }}
-          aria-label="Submit command"
-        >
-          Run
-        </button>
+        {/* Live Active Prompt Inline with Buffer */}
+        <div className="terminal-live-prompt" style={{ marginTop: '8px' }}>
+          {/* Prompt Line 1 */}
+          <div style={{ color: '#64748b', fontSize: '12px' }}>
+            <span>┌─[</span>
+            <span style={{ color: '#00e676', fontWeight: 600 }}>{activeUser}</span>
+            <span style={{ color: '#00e5ff' }}>@{activeHost}</span>
+            <span>]─[</span>
+            <span style={{ color: '#38bdf8' }}>{promptDir}</span>
+            <span>]</span>
+          </div>
+
+          {/* Prompt Line 2 & Inline Input */}
+          <div
+            className="terminal-input-row"
+            data-testid="terminal-input-row"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              backgroundColor: 'transparent',
+              padding: 0,
+              border: 'none',
+              marginTop: '1px',
+            }}
+          >
+            <label
+              htmlFor="terminal-command-input"
+              className="terminal-prompt-label"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                marginRight: '6px',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: '13px',
+                userSelect: 'none',
+              }}
+            >
+              <span style={{ color: '#64748b' }}>└──╼ </span>
+              <span style={{ color: '#00e5ff', fontWeight: 700, marginLeft: '2px' }}>$ </span>
+            </label>
+            <input
+              ref={inputRef}
+              id="terminal-command-input"
+              type="text"
+              className="terminal-text-input"
+              value={activeTab.inputVal}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
+              aria-label="Terminal command input"
+              placeholder="Type command (Tab to complete)..."
+              data-testid="terminal-command-input"
+              style={{
+                flex: 1,
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                color: '#f8fafc',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: '13px',
+                caretColor: '#00e5ff',
+                padding: '2px 0',
+              }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
