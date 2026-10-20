@@ -44,6 +44,12 @@ async function run() {
 
   // 3. Desktop view with Incident App open directly
   await capture('http://localhost:5173/?desktop=open&app=incident&skipIntro=true', 'desktop_incident_app.png', 1440, 900);
+
+  // 4. Desktop view with Tor Browser open directly
+  await capture('http://localhost:5173/?desktop=open&app=torBrowser&skipIntro=true', 'tor_browser_official_color.png', 1440, 900);
+
+  // 5. Desktop world view with expanded objective tracker
+  await capture('http://localhost:5173/?skipIntro=true', 'hud_objective_guidance.png', 1440, 900);
 }
 
 run().catch(console.error);

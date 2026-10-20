@@ -2516,24 +2516,24 @@ body,
 
 /* Dedicated Tor Browser Window Frame Overrides */
 .desktop-window-frame[data-testid='window-frame-torBrowser'] {
-  background: #090510;
-  border-color: rgba(168, 85, 247, 0.35);
+  background: #180b26;
+  border-color: rgba(125, 70, 152, 0.45);
 }
 
 .desktop-window-frame[data-testid='window-frame-torBrowser'].window-active {
-  border-color: rgba(168, 85, 247, 0.7);
+  border-color: #7D4698;
   box-shadow:
     0 18px 40px rgba(0, 0, 0, 0.85),
-    0 0 14px rgba(168, 85, 247, 0.25);
+    0 0 16px rgba(125, 70, 152, 0.35);
 }
 
 .desktop-window-frame[data-testid='window-frame-torBrowser'] .window-titlebar {
-  background: linear-gradient(180deg, #1f0f35 0%, #0d0617 100%);
-  border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+  background: linear-gradient(180deg, #3d1b5a 0%, #25103b 100%);
+  border-bottom: 1px solid rgba(125, 70, 152, 0.35);
 }
 
 .desktop-window-frame[data-testid='window-frame-torBrowser'] .window-title-text {
-  color: #e9d5ff;
+  color: #f3e8ff;
 }
 
 /* Dedicated OnionChat Window Frame Overrides */

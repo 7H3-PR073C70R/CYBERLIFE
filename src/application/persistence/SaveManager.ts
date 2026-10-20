@@ -287,9 +287,25 @@ export class SaveManager {
       return true;
     });
 
+    let reconciledMission = state.mission;
+    if (reconciledMission && (reconciledMission.isCompleted || state.flags?.mission_aster_completed)) {
+      const allCompletedObjectives = reconciledMission.objectives.map(obj => ({
+        ...obj,
+        isCompleted: true,
+        completedAt: obj.completedAt ?? currentSimTime,
+      }));
+      reconciledMission = {
+        ...reconciledMission,
+        isCompleted: true,
+        phase: 'completed',
+        objectives: allCompletedObjectives,
+      };
+    }
+
     return {
       ...state,
       timers: reconciledTimers,
+      mission: reconciledMission,
       activeDialogue: undefined, // Ensure clean start with no frozen dialogue
       onboarding: state.onboarding ?? {
         introCompleted: false,

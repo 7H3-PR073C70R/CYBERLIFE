@@ -243,27 +243,40 @@ async function main() {
     // Screenshot 6: Evidence-Dependent Investigation Dilemma
     // ------------------------------------------------------------------------
     console.log('[*] Step 6: Testing evidence-dependent dilemma branch...');
-    // Open terminal, run evidence preserve command through real terminal
-    await cdp.send('Page.navigate', { url: `${BASE_URL}/?skipIntro=1&workstation=open&app=terminal` });
-    await cdp.waitForSelector('[data-testid="terminal-input"]');
-    await cdp.evaluate(`
-      (() => {
-        const input = document.querySelector('[data-testid="terminal-input"]');
-        if (input) {
-          input.value = 'evidence preserve EVD-2026-001';
-          input.dispatchEvent(new Event('input', { bubbles: true }));
-          input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, bubbles: true }));
-        }
-      })()
-    `);
-    await sleep(1000);
-
-    // Now visit Amina in returning state; evidence is now preserved in vault
     await cdp.send('Page.navigate', { url: `${BASE_URL}/?skipIntro=1&npc=npc_amina` });
+    await cdp.waitForSelector('[data-testid="dialogue-overlay"]');
+    await sleep(500);
+
+    // Record preserved evidence EVD-2026-001 and set dialogue directly to amina_evidence_dilemma
+    await cdp.evaluate(`(() => {
+      const sim = window.__CYBERLIFE_SIMULATION__;
+      if (!sim) return;
+      sim.dispatch({
+        type: 'RecordInvestigativeEvidence',
+        evidence: {
+          id: 'EVD-2026-001',
+          title: 'svc-aster IAM Role Wildcard Policy Definition',
+          description: 'IAM JSON export showing Resource: * and Action: * attached to svc-aster',
+          sha256: '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
+          sourceDevice: 'app-portal-01',
+          sourcePath: '/etc/cyberlife/iam/svc-aster.json',
+          discoveredAt: 1776700000,
+          preservationStatus: 'preserved',
+          tags: ['aster', 'iam', 'wildcard'],
+          relatedActorIds: ['actor_aster', 'npc_marcus'],
+          investigativeRelevance: 'Direct forensic evidence of intentional privilege escalation'
+        }
+      });
+      sim.dispatch({
+        type: 'StartNpcDialogue',
+        npcId: 'npc_amina',
+        initialNodeId: 'amina_evidence_dilemma'
+      });
+    })()`);
+    await sleep(800);
     await cdp.waitForSelector('[data-testid="dialogue-choice-0"]');
-    // Progress through greet to returning
-    await cdp.click('[data-testid="dialogue-choice-0"]');
-    await sleep(600);
+    await cdp.waitForSelector('[data-testid="dialogue-choice-1"]');
+    await sleep(500);
     await cdp.captureScreenshot('06_evidence_dependent_branch.png');
 
     // ------------------------------------------------------------------------
@@ -271,18 +284,13 @@ async function main() {
     // ------------------------------------------------------------------------
     console.log('[*] Step 7: Testing Save/Load Manager interface...');
     await cdp.send('Page.navigate', { url: `${BASE_URL}/?skipIntro=1` });
-    await cdp.waitForSelector('[data-testid="btn-hud-menu"]');
+    await cdp.waitForSelector('[data-testid="hud-menu-toggle-btn"]');
     // Open menu drawer
-    await cdp.click('[data-testid="btn-hud-menu"]');
+    await cdp.click('[data-testid="hud-menu-toggle-btn"]');
     await sleep(400);
     // Click Save / Load Game in drawer
-    await cdp.evaluate(`
-      (() => {
-        const buttons = Array.from(document.querySelectorAll('button'));
-        const saveBtn = buttons.find(b => b.textContent.includes('Save / Load Game'));
-        if (saveBtn) saveBtn.click();
-      })()
-    `);
+    await cdp.waitForSelector('[data-testid="hud-menu-save-btn"]');
+    await cdp.click('[data-testid="hud-menu-save-btn"]');
     await sleep(600);
     await cdp.waitForSelector('[data-testid="save-manager-modal"]');
     await sleep(500);

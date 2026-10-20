@@ -1479,6 +1479,9 @@ export function handleCommand(
         }
 
         const updatedObjectives = mission.objectives.map(obj => {
+          if (result.isApproved) {
+            return { ...obj, isCompleted: true, completedAt: obj.completedAt ?? simTime };
+          }
           if (obj.id === 'obj-reporting-01' && result.isApproved && !obj.isCompleted) {
             return { ...obj, isCompleted: true, completedAt: simTime };
           }

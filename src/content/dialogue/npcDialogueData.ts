@@ -363,6 +363,16 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
       text: 'Outstanding work on the Aster Incident, Tade! Your formal report was approved by executive leadership, and the bounty payout was credited to your account. You handled both the technical investigation and team communication with distinction.',
       choices: [
         {
+          id: 'amina_comp_what_next',
+          text: 'Amina, what should I focus on next now that Case AST-01 is officially resolved?',
+          nextNodeId: 'amina_next_steps_briefing',
+        },
+        {
+          id: 'amina_comp_career_tickets',
+          text: 'Can I take on additional SOC triage tickets or certifications?',
+          nextNodeId: 'amina_career_guidance',
+        },
+        {
           id: 'amina_comp_ack',
           text: 'Thank you for your guidance throughout the incident, Amina.',
           nextNodeId: 'amina_exit_workstation',
@@ -373,6 +383,30 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
               reason: 'Shared mutual respect for a successfully resolved critical incident.',
             },
           ],
+        },
+      ],
+    },
+    amina_next_steps_briefing: {
+      id: 'amina_next_steps_briefing',
+      speakerId: 'npc_amina',
+      text: 'You have proven yourself under real enterprise pressure, Tade. Here is what I recommend for your next play:\n\n1. 🌊 Marina Seawall: Tunde Bakare from the 0xLagos syndicate is out by the railings. He researches emerging attack vectors and has independent bug bounties.\n2. 🛒 Balogun Market: Mama Nkechi runs the electronics union stall. She is a vital source of street-level intelligence and hardware adapters.\n3. ☕ Broad Street: Folake Davies from Eko Tech Partners scouts senior talent at the sidewalk cafe. She has lucrative fintech consulting referrals.\n4. 💼 Workstation Desktop: Launch the Career & Market app to claim newly unlocked junior SOC tickets and certifications.\n\nTake time to explore Lagos Island and build your network.',
+      choices: [
+        {
+          id: 'amina_next_steps_thanks',
+          text: 'Understood. I will head out and explore these opportunities.',
+          nextNodeId: 'amina_exit_workstation',
+          actions: [
+            {
+              type: 'RECORD_MEMORY',
+              topic: 'lagos_island_roadmap',
+              fact: 'Amina advised Tade to visit Tunde Bakare at Marina Seawall, Mama Nkechi at Balogun Market, Folake Davies on Broad Street, and check Career & Market on the workstation.',
+            },
+          ],
+        },
+        {
+          id: 'amina_next_steps_career',
+          text: 'Tell me more about Cedarline career advancement expectations.',
+          nextNodeId: 'amina_career_guidance',
         },
       ],
     },
@@ -1203,7 +1237,37 @@ export const SEGUN_DIALOGUE_GRAPH: DialogueGraph = {
 export const FOLAKE_DIALOGUE_GRAPH: DialogueGraph = {
   npcId: 'npc_folake',
   defaultNodeId: 'folake_greeting',
+  getInitialNodeId: context => {
+    if (context.missionPhase === 'completed') {
+      return 'folake_post_incident';
+    }
+    return 'folake_greeting';
+  },
   nodes: {
+    folake_post_incident: {
+      id: 'folake_post_incident',
+      speakerId: 'npc_folake',
+      text: 'Tade! Broad Street is buzzing. Word is you just contained and resolved the Aster incident at Cedarline without a single data leak or PR fallout! That kind of incident response composure is exactly what high-growth fintechs pay top dollar for.',
+      choices: [
+        {
+          id: 'folake_post_contracts',
+          text: 'What kind of opportunities are open for me now?',
+          nextNodeId: 'folake_market_info',
+          actions: [
+            {
+              type: 'CHANGE_RELATIONSHIP',
+              delta: 15,
+              reason: 'Folake is thrilled by your proven forensic track record.',
+            },
+          ],
+        },
+        {
+          id: 'folake_post_thanks',
+          text: 'Thank you, Folake. I will keep in touch as I explore further assignments.',
+          nextNodeId: 'folake_exit',
+        },
+      ],
+    },
     folake_greeting: {
       id: 'folake_greeting',
       speakerId: 'npc_folake',

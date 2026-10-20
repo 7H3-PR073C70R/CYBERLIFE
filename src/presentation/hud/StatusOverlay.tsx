@@ -302,6 +302,7 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
               <button
                 type="button"
                 className="hud-drawer-item-btn"
+                data-testid="hud-menu-save-btn"
                 onClick={() => {
                   setIsMenuOpen(false);
                   onToggleSaveModal();

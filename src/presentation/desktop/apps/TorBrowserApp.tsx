@@ -230,8 +230,8 @@ ${leak.rawSnippet}`;
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        backgroundColor: '#0c0a14',
-        color: '#e2e8f0',
+        backgroundColor: '#180b26',
+        color: '#f8fafc',
         fontFamily: "'Inter', system-ui, sans-serif",
         fontSize: '13px',
       }}
@@ -242,8 +242,8 @@ ${leak.rawSnippet}`;
         style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#160d26',
-          borderBottom: '1px solid #2e1a4f',
+          backgroundColor: '#28143a',
+          borderBottom: '1px solid #4f2473',
           padding: '6px 8px 4px',
           gap: '6px',
         }}
@@ -256,10 +256,10 @@ ${leak.rawSnippet}`;
             disabled={historyIndex <= 0}
             style={{
               padding: '4px 8px',
-              backgroundColor: historyIndex > 0 ? '#261444' : '#1b122c',
-              border: '1px solid #3d206d',
+              backgroundColor: historyIndex > 0 ? '#381952' : '#1e0d2c',
+              border: '1px solid #592C82',
               borderRadius: '4px',
-              color: historyIndex > 0 ? '#e2e8f0' : '#64748b',
+              color: historyIndex > 0 ? '#f1f5f9' : '#64748b',
               cursor: historyIndex > 0 ? 'pointer' : 'default',
             }}
             title="Back"
@@ -272,10 +272,10 @@ ${leak.rawSnippet}`;
             disabled={historyIndex >= history.length - 1}
             style={{
               padding: '4px 8px',
-              backgroundColor: historyIndex < history.length - 1 ? '#261444' : '#1b122c',
-              border: '1px solid #3d206d',
+              backgroundColor: historyIndex < history.length - 1 ? '#381952' : '#1e0d2c',
+              border: '1px solid #592C82',
               borderRadius: '4px',
-              color: historyIndex < history.length - 1 ? '#e2e8f0' : '#64748b',
+              color: historyIndex < history.length - 1 ? '#f1f5f9' : '#64748b',
               cursor: historyIndex < history.length - 1 ? 'pointer' : 'default',
             }}
             title="Forward"
@@ -287,10 +287,10 @@ ${leak.rawSnippet}`;
             onClick={() => navigateTo(currentUrl)}
             style={{
               padding: '4px 8px',
-              backgroundColor: '#261444',
-              border: '1px solid #3d206d',
+              backgroundColor: '#381952',
+              border: '1px solid #592C82',
               borderRadius: '4px',
-              color: '#e2e8f0',
+              color: '#f1f5f9',
               cursor: 'pointer',
             }}
             title="Reload"
@@ -302,10 +302,10 @@ ${leak.rawSnippet}`;
             onClick={() => navigateTo('wiki.onion')}
             style={{
               padding: '4px 8px',
-              backgroundColor: '#261444',
-              border: '1px solid #3d206d',
+              backgroundColor: '#381952',
+              border: '1px solid #592C82',
               borderRadius: '4px',
-              color: '#a855f7',
+              color: '#b377cb',
               cursor: 'pointer',
             }}
             title="Home"
@@ -323,8 +323,8 @@ ${leak.rawSnippet}`;
               flex: 1,
               display: 'flex',
               alignItems: 'center',
-              backgroundColor: '#090510',
-              border: '1px solid #581c87',
+              backgroundColor: '#12071d',
+              border: '1px solid #592C82',
               borderRadius: '6px',
               padding: '2px 8px',
               gap: '6px',
@@ -339,7 +339,7 @@ ${leak.rawSnippet}`;
                 gap: '3px',
               }}
             >
-              🔒 <span style={{ color: '#a855f7', fontWeight: 600 }}>onion://</span>
+              🔒 <span style={{ color: '#b377cb', fontWeight: 600 }}>onion://</span>
             </span>
             <input
               type="text"
@@ -361,7 +361,7 @@ ${leak.rawSnippet}`;
               style={{
                 backgroundColor: 'transparent',
                 border: 'none',
-                color: '#a855f7',
+                color: '#b377cb',
                 cursor: 'pointer',
                 fontWeight: 600,
                 fontSize: '12px',
@@ -379,34 +379,34 @@ ${leak.rawSnippet}`;
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              backgroundColor: showCircuitModal ? '#581c87' : '#261444',
-              border: '1px solid #7e22ce',
+              backgroundColor: showCircuitModal ? '#592C82' : '#381952',
+              border: '1px solid #7D4698',
               borderRadius: '4px',
               padding: '4px 10px',
-              color: '#e9d5ff',
+              color: '#f3e8ff',
               cursor: 'pointer',
               fontSize: '11px',
               fontWeight: 600,
             }}
             title="Inspect Tor Multi-Hop Circuit"
           >
-            <OsIcon name="tor" size={14} color="#c084fc" />
+            <OsIcon name="tor" size={14} color="#d9b8ef" />
             <span>Circuit ({circuit.latencyMs}ms)</span>
           </button>
         </div>
 
         {/* Bookmarks toolbar */}
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '11px' }}>
-          <span style={{ color: '#6b7280', fontSize: '10px' }}>BOOKMARKS:</span>
+          <span style={{ color: '#94a3b8', fontSize: '10px' }}>BOOKMARKS:</span>
           {ONION_DIRECTORY.map(site => (
             <button
               key={site.address}
               type="button"
               onClick={() => navigateTo(site.address)}
               style={{
-                backgroundColor: currentUrl === site.address ? '#3b1c66' : 'transparent',
+                backgroundColor: currentUrl === site.address ? '#592C82' : 'transparent',
                 border: 'none',
-                color: currentUrl === site.address ? '#f3e8ff' : '#c084fc',
+                color: currentUrl === site.address ? '#ffffff' : '#d9b8ef',
                 cursor: 'pointer',
                 padding: '2px 6px',
                 borderRadius: '3px',
@@ -427,8 +427,8 @@ ${leak.rawSnippet}`;
         <div
           className="tor-circuit-modal"
           style={{
-            backgroundColor: '#130924',
-            borderBottom: '2px solid #7e22ce',
+            backgroundColor: '#1f0d32',
+            borderBottom: '2px solid #7D4698',
             padding: '12px 16px',
             display: 'flex',
             flexDirection: 'column',
@@ -438,7 +438,7 @@ ${leak.rawSnippet}`;
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <OsIcon name="tor" size={16} color="#c084fc" />
+              <OsIcon name="tor" size={16} color="#d9b8ef" />
               <span style={{ fontWeight: 700, color: '#f3e8ff' }}>
                 Tor Circuit for {currentUrl}
               </span>
@@ -459,8 +459,8 @@ ${leak.rawSnippet}`;
               onClick={handleRotateCircuit}
               disabled={isRotatingCircuit}
               style={{
-                backgroundColor: '#3b1c66',
-                border: '1px solid #7e22ce',
+                backgroundColor: '#592C82',
+                border: '1px solid #7D4698',
                 color: '#f3e8ff',
                 borderRadius: '4px',
                 padding: '4px 10px',
@@ -478,13 +478,13 @@ ${leak.rawSnippet}`;
             <div
               style={{
                 flex: 1,
-                backgroundColor: '#1e1136',
+                backgroundColor: '#2b1342',
                 padding: '8px',
                 borderRadius: '4px',
-                border: '1px solid #4c1d95',
+                border: '1px solid #592C82',
               }}
             >
-              <div style={{ fontSize: '10px', color: '#9333ea', fontWeight: 700 }}>
+              <div style={{ fontSize: '10px', color: '#b377cb', fontWeight: 700 }}>
                 GUARD NODE (ENTRY)
               </div>
               <div
@@ -501,24 +501,24 @@ ${leak.rawSnippet}`;
               >
                 {circuit.guard.ip}
               </div>
-              <div style={{ fontSize: '10px', color: '#6b7280' }}>
+              <div style={{ fontSize: '10px', color: '#94a3b8' }}>
                 BW: {circuit.guard.bandwidth}
               </div>
             </div>
 
-            <div style={{ color: '#a855f7', fontWeight: 700 }}>➔</div>
+            <div style={{ color: '#b377cb', fontWeight: 700 }}>➔</div>
 
             {/* Middle Relay */}
             <div
               style={{
                 flex: 1,
-                backgroundColor: '#1e1136',
+                backgroundColor: '#2b1342',
                 padding: '8px',
                 borderRadius: '4px',
-                border: '1px solid #4c1d95',
+                border: '1px solid #592C82',
               }}
             >
-              <div style={{ fontSize: '10px', color: '#9333ea', fontWeight: 700 }}>
+              <div style={{ fontSize: '10px', color: '#b377cb', fontWeight: 700 }}>
                 MIDDLE RELAY
               </div>
               <div
@@ -535,24 +535,24 @@ ${leak.rawSnippet}`;
               >
                 {circuit.relay.ip}
               </div>
-              <div style={{ fontSize: '10px', color: '#6b7280' }}>
+              <div style={{ fontSize: '10px', color: '#94a3b8' }}>
                 BW: {circuit.relay.bandwidth}
               </div>
             </div>
 
-            <div style={{ color: '#a855f7', fontWeight: 700 }}>➔</div>
+            <div style={{ color: '#b377cb', fontWeight: 700 }}>➔</div>
 
             {/* Exit / Rendezvous */}
             <div
               style={{
                 flex: 1,
-                backgroundColor: '#1e1136',
+                backgroundColor: '#2b1342',
                 padding: '8px',
                 borderRadius: '4px',
-                border: '1px solid #4c1d95',
+                border: '1px solid #592C82',
               }}
             >
-              <div style={{ fontSize: '10px', color: '#9333ea', fontWeight: 700 }}>
+              <div style={{ fontSize: '10px', color: '#b377cb', fontWeight: 700 }}>
                 EXIT / RENDEZVOUS
               </div>
               <div
@@ -569,7 +569,7 @@ ${leak.rawSnippet}`;
               >
                 {circuit.exit.hostname}
               </div>
-              <div style={{ fontSize: '10px', color: '#6b7280' }}>
+              <div style={{ fontSize: '10px', color: '#94a3b8' }}>
                 Latency: {circuit.latencyMs}ms
               </div>
             </div>
@@ -592,16 +592,18 @@ ${leak.rawSnippet}`;
           >
             <div
               style={{
-                backgroundColor: '#190e2d',
-                border: '1px solid #4c1d95',
+                backgroundColor: '#592C82',
+                background: 'linear-gradient(135deg, #592C82 0%, #3e195c 100%)',
+                border: '1px solid #7D4698',
                 borderRadius: '8px',
                 padding: '16px 20px',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
               }}
             >
-              <h1 style={{ fontSize: '1.4rem', color: '#f3e8ff', margin: 0, fontWeight: 700 }}>
+              <h1 style={{ fontSize: '1.4rem', color: '#ffffff', margin: 0, fontWeight: 700 }}>
                 🧅 The Hidden Wiki // Lagos Underground Mirror
               </h1>
-              <p style={{ color: '#c084fc', marginTop: '4px', marginBottom: 0, fontSize: '12px' }}>
+              <p style={{ color: '#e9d5ff', marginTop: '4px', marginBottom: 0, fontSize: '12px' }}>
                 Verified decentralized directory of underground security exchanges, leaks, and
                 communication services.
               </p>
@@ -619,8 +621,8 @@ ${leak.rawSnippet}`;
                   key={site.address}
                   onClick={() => navigateTo(site.address)}
                   style={{
-                    backgroundColor: '#120b20',
-                    border: '1px solid #2e1a4f',
+                    backgroundColor: '#200f30',
+                    border: '1px solid #4a216b',
                     borderRadius: '6px',
                     padding: '14px',
                     cursor: 'pointer',
@@ -629,8 +631,8 @@ ${leak.rawSnippet}`;
                     gap: '6px',
                     transition: 'border-color 0.15s ease',
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.borderColor = '#7e22ce')}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = '#2e1a4f')}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = '#7D4698')}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = '#4a216b')}
                 >
                   <div
                     style={{
@@ -642,7 +644,7 @@ ${leak.rawSnippet}`;
                     <span
                       style={{
                         fontFamily: "'JetBrains Mono', monospace",
-                        color: '#a855f7',
+                        color: '#b377cb',
                         fontWeight: 600,
                       }}
                     >
@@ -652,10 +654,11 @@ ${leak.rawSnippet}`;
                       style={{
                         fontSize: '10px',
                         fontWeight: 700,
-                        backgroundColor: '#3b1c66',
-                        color: '#f3e8ff',
+                        backgroundColor: '#592C82',
+                        color: '#ffffff',
                         padding: '2px 6px',
                         borderRadius: '3px',
+                        border: '1px solid #7D4698',
                       }}
                     >
                       {site.badge}
@@ -665,7 +668,7 @@ ${leak.rawSnippet}`;
                     {site.title}
                   </div>
                   <div style={{ color: '#94a3b8', fontSize: '12px' }}>{site.tagline}</div>
-                  <div style={{ color: '#a855f7', fontSize: '11px', marginTop: '4px' }}>
+                  <div style={{ color: '#b377cb', fontSize: '11px', marginTop: '4px' }}>
                     ➔ Connect to Onion Service
                   </div>
                 </div>
@@ -674,8 +677,8 @@ ${leak.rawSnippet}`;
 
             <div
               style={{
-                backgroundColor: '#0f0918',
-                border: '1px solid #261444',
+                backgroundColor: '#190a25',
+                border: '1px solid #3e1b59',
                 borderRadius: '6px',
                 padding: '12px 16px',
               }}
@@ -706,27 +709,29 @@ ${leak.rawSnippet}`;
             {/* Header banner */}
             <div
               style={{
-                backgroundColor: '#1b0d33',
-                border: '1px solid #6b21a8',
+                backgroundColor: '#592C82',
+                background: 'linear-gradient(135deg, #592C82 0%, #3e195c 100%)',
+                border: '1px solid #7D4698',
                 borderRadius: '8px',
                 padding: '16px 20px',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
               }}
             >
               <div>
-                <h1 style={{ fontSize: '1.4rem', color: '#f3e8ff', margin: 0, fontWeight: 700 }}>
+                <h1 style={{ fontSize: '1.4rem', color: '#ffffff', margin: 0, fontWeight: 700 }}>
                   🛒 CipherMarket // Underground Security Exchange
                 </h1>
-                <div style={{ color: '#c084fc', fontSize: '12px', marginTop: '2px' }}>
+                <div style={{ color: '#e9d5ff', fontSize: '12px', marginTop: '2px' }}>
                   Decentralized escrow marketplace • Zero logs • Automatic PGP signing
                 </div>
               </div>
               <div
                 style={{
-                  backgroundColor: '#0f071d',
-                  border: '1px solid #7e22ce',
+                  backgroundColor: '#190a25',
+                  border: '1px solid #7D4698',
                   borderRadius: '6px',
                   padding: '8px 14px',
                   textAlign: 'right',
@@ -788,8 +793,8 @@ ${leak.rawSnippet}`;
                 onChange={e => setMarketSearch(e.target.value)}
                 style={{
                   flex: 1,
-                  backgroundColor: '#130a21',
-                  border: '1px solid #3b1c66',
+                  backgroundColor: '#12071d',
+                  border: '1px solid #592C82',
                   borderRadius: '4px',
                   padding: '6px 10px',
                   color: '#f8fafc',
@@ -804,11 +809,11 @@ ${leak.rawSnippet}`;
                     type="button"
                     onClick={() => setMarketFilter(cat)}
                     style={{
-                      backgroundColor: marketFilter === cat ? '#581c87' : '#1b0f2e',
-                      border: '1px solid #4c1d95',
+                      backgroundColor: marketFilter === cat ? '#592C82' : '#28143a',
+                      border: marketFilter === cat ? '1px solid #7D4698' : '1px solid #4a216b',
                       borderRadius: '4px',
                       padding: '6px 10px',
-                      color: marketFilter === cat ? '#f3e8ff' : '#c084fc',
+                      color: marketFilter === cat ? '#ffffff' : '#d9b8ef',
                       cursor: 'pointer',
                       fontSize: '11px',
                       textTransform: 'uppercase',
@@ -836,8 +841,8 @@ ${leak.rawSnippet}`;
                   <div
                     key={listing.id}
                     style={{
-                      backgroundColor: '#140c22',
-                      border: isPurchased ? '1px solid #00e676' : '1px solid #311854',
+                      backgroundColor: '#200f30',
+                      border: isPurchased ? '1px solid #00e676' : '1px solid #4a216b',
                       borderRadius: '6px',
                       padding: '14px',
                       display: 'flex',
@@ -859,9 +864,10 @@ ${leak.rawSnippet}`;
                             fontWeight: 700,
                             padding: '2px 5px',
                             borderRadius: '3px',
-                            backgroundColor: '#2e1850',
-                            color: '#a855f7',
+                            backgroundColor: '#371952',
+                            color: '#d9b8ef',
                             textTransform: 'uppercase',
+                            border: '1px solid #592C82',
                           }}
                         >
                           {listing.category}
@@ -900,10 +906,11 @@ ${leak.rawSnippet}`;
 
                     <div
                       style={{
-                        backgroundColor: '#0d0717',
+                        backgroundColor: '#190a25',
                         padding: '6px 8px',
                         borderRadius: '4px',
                         fontSize: '10px',
+                        border: '1px solid #3e1b59',
                       }}
                     >
                       <span style={{ color: '#64748b' }}>FEATURES: </span>
@@ -932,8 +939,8 @@ ${leak.rawSnippet}`;
                         onClick={() => handlePurchaseListing(listing)}
                         disabled={isPurchased}
                         style={{
-                          backgroundColor: isPurchased ? '#065f46' : '#7e22ce',
-                          border: 'none',
+                          backgroundColor: isPurchased ? '#065f46' : '#592C82',
+                          border: isPurchased ? 'none' : '1px solid #7D4698',
                           borderRadius: '4px',
                           color: '#ffffff',
                           padding: '6px 12px',
@@ -967,8 +974,8 @@ ${leak.rawSnippet}`;
           >
             <div
               style={{
-                backgroundColor: '#190a23',
-                border: '1px solid #701a75',
+                background: 'linear-gradient(135deg, #592C82 0%, #3e195c 100%)',
+                border: '1px solid #7D4698',
                 borderRadius: '8px',
                 padding: '16px 20px',
               }}
@@ -976,7 +983,7 @@ ${leak.rawSnippet}`;
               <h1 style={{ fontSize: '1.4rem', color: '#fdf4ff', margin: 0, fontWeight: 700 }}>
                 📄 DeepLeaks // Whistleblower Vault & Telemetry Dump
               </h1>
-              <p style={{ color: '#f0abfc', marginTop: '4px', marginBottom: 0, fontSize: '12px' }}>
+              <p style={{ color: '#d9b8ef', marginTop: '4px', marginBottom: 0, fontSize: '12px' }}>
                 Cryptographically signed whistleblower pastebin. Raw unredacted logs, corporate
                 incident notes, and configuration dumps.
               </p>
@@ -991,8 +998,8 @@ ${leak.rawSnippet}`;
                   value={leakSearch}
                   onChange={e => setLeakSearch(e.target.value)}
                   style={{
-                    backgroundColor: '#130a21',
-                    border: '1px solid #3b1c66',
+                    backgroundColor: '#12071d',
+                    border: '1px solid #592C82',
                     borderRadius: '4px',
                     padding: '6px 10px',
                     color: '#f8fafc',
@@ -1010,14 +1017,14 @@ ${leak.rawSnippet}`;
                     key={leak.id}
                     onClick={() => setActiveLeakId(leak.id)}
                     style={{
-                      backgroundColor: activeLeakId === leak.id ? '#3b0764' : '#140c22',
-                      border: activeLeakId === leak.id ? '1px solid #c084fc' : '1px solid #2e1850',
+                      backgroundColor: activeLeakId === leak.id ? '#371952' : '#200f30',
+                      border: activeLeakId === leak.id ? '1px solid #7D4698' : '1px solid #4a216b',
                       borderRadius: '5px',
                       padding: '10px',
                       cursor: 'pointer',
                     }}
                   >
-                    <div style={{ fontSize: '10px', color: '#e879f9', fontWeight: 700 }}>
+                    <div style={{ fontSize: '10px', color: '#d9b8ef', fontWeight: 700 }}>
                       {leak.classification} // {leak.targetOrg}
                     </div>
                     <div
@@ -1041,8 +1048,8 @@ ${leak.rawSnippet}`;
               {activeLeak && (
                 <div
                   style={{
-                    backgroundColor: '#0c0617',
-                    border: '1px solid #3b1c66',
+                    backgroundColor: '#190a25',
+                    border: '1px solid #592C82',
                     borderRadius: '6px',
                     padding: '16px',
                     display: 'flex',
@@ -1060,12 +1067,13 @@ ${leak.rawSnippet}`;
                     <div>
                       <span
                         style={{
-                          backgroundColor: '#701a75',
+                          backgroundColor: '#592C82',
                           color: '#fdf4ff',
                           fontSize: '10px',
                           fontWeight: 700,
                           padding: '2px 6px',
                           borderRadius: '3px',
+                          border: '1px solid #7D4698',
                         }}
                       >
                         {activeLeak.classification}
@@ -1083,8 +1091,10 @@ ${leak.rawSnippet}`;
                       style={{
                         backgroundColor: downloadedLeakIds.has(activeLeak.id)
                           ? '#065f46'
-                          : '#9333ea',
-                        border: 'none',
+                          : '#592C82',
+                        border: downloadedLeakIds.has(activeLeak.id)
+                          ? '1px solid #10b981'
+                          : '1px solid #7D4698',
                         color: '#f8fafc',
                         borderRadius: '4px',
                         padding: '6px 12px',
@@ -1102,11 +1112,12 @@ ${leak.rawSnippet}`;
                   <div
                     style={{
                       fontSize: '10px',
-                      color: '#6b7280',
+                      color: '#a39cb0',
                       fontFamily: "'JetBrains Mono', monospace",
-                      backgroundColor: '#130a21',
+                      backgroundColor: '#12071d',
                       padding: '6px 8px',
                       borderRadius: '4px',
+                      border: '1px solid #381552',
                     }}
                   >
                     SHA256: {activeLeak.sha256}
@@ -1114,11 +1125,11 @@ ${leak.rawSnippet}`;
 
                   <pre
                     style={{
-                      backgroundColor: '#07030d',
-                      border: '1px solid #22123d',
+                      backgroundColor: '#0d0414',
+                      border: '1px solid #381552',
                       borderRadius: '4px',
                       padding: '12px',
-                      color: '#00e5ff',
+                      color: '#b377cb',
                       fontSize: '11px',
                       fontFamily: "'JetBrains Mono', monospace",
                       whiteSpace: 'pre-wrap',
@@ -1148,8 +1159,8 @@ ${leak.rawSnippet}`;
           >
             <div
               style={{
-                backgroundColor: '#120b20',
-                border: '1px solid #4c1d95',
+                background: 'linear-gradient(135deg, #592C82 0%, #3e195c 100%)',
+                border: '1px solid #7D4698',
                 borderRadius: '8px',
                 padding: '16px 20px',
               }}
@@ -1157,7 +1168,7 @@ ${leak.rawSnippet}`;
               <h1 style={{ fontSize: '1.4rem', color: '#f3e8ff', margin: 0, fontWeight: 700 }}>
                 💬 0xBoard // Underground Hacker Community
               </h1>
-              <p style={{ color: '#c084fc', marginTop: '4px', marginBottom: 0, fontSize: '12px' }}>
+              <p style={{ color: '#d9b8ef', marginTop: '4px', marginBottom: 0, fontSize: '12px' }}>
                 Tor-routed discussion board for vulnerability discovery, reverse engineering, and
                 threat evasion.
               </p>
@@ -1176,9 +1187,9 @@ ${leak.rawSnippet}`;
                     key={thread.id}
                     onClick={() => setActiveThreadId(thread.id)}
                     style={{
-                      backgroundColor: activeThreadId === thread.id ? '#2e1065' : '#140c22',
+                      backgroundColor: activeThreadId === thread.id ? '#371952' : '#200f30',
                       border:
-                        activeThreadId === thread.id ? '1px solid #a855f7' : '1px solid #2e1850',
+                        activeThreadId === thread.id ? '1px solid #7D4698' : '1px solid #4a216b',
                       borderRadius: '5px',
                       padding: '10px',
                       cursor: 'pointer',
@@ -1187,7 +1198,7 @@ ${leak.rawSnippet}`;
                     <div
                       style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px' }}
                     >
-                      <span style={{ color: '#a855f7', fontWeight: 700 }}>{thread.category}</span>
+                      <span style={{ color: '#b377cb', fontWeight: 700 }}>{thread.category}</span>
                       {thread.pinned && <span style={{ color: '#f59e0b' }}>📌 PINNED</span>}
                     </div>
                     <div
@@ -1211,8 +1222,8 @@ ${leak.rawSnippet}`;
               {activeThread && (
                 <div
                   style={{
-                    backgroundColor: '#0c0617',
-                    border: '1px solid #3b1c66',
+                    backgroundColor: '#190a25',
+                    border: '1px solid #592C82',
                     borderRadius: '6px',
                     padding: '16px',
                     display: 'flex',
@@ -1224,7 +1235,7 @@ ${leak.rawSnippet}`;
                     <span
                       style={{
                         fontSize: '10px',
-                        color: '#c084fc',
+                        color: '#b377cb',
                         textTransform: 'uppercase',
                         fontWeight: 700,
                       }}
@@ -1244,8 +1255,8 @@ ${leak.rawSnippet}`;
                       <div
                         key={post.id}
                         style={{
-                          backgroundColor: '#140c22',
-                          border: '1px solid #281446',
+                          backgroundColor: '#200f30',
+                          border: '1px solid #3e1b59',
                           borderRadius: '4px',
                           padding: '10px 12px',
                         }}
@@ -1259,7 +1270,7 @@ ${leak.rawSnippet}`;
                           }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span style={{ fontWeight: 600, color: '#a855f7', fontSize: '12px' }}>
+                            <span style={{ fontWeight: 600, color: '#b377cb', fontSize: '12px' }}>
                               {post.author}
                             </span>
                             <span style={{ fontSize: '10px', color: '#64748b' }}>
@@ -1296,8 +1307,8 @@ ${leak.rawSnippet}`;
                       }}
                       style={{
                         flex: 1,
-                        backgroundColor: '#130a21',
-                        border: '1px solid #4c1d95',
+                        backgroundColor: '#12071d',
+                        border: '1px solid #592C82',
                         borderRadius: '4px',
                         padding: '6px 10px',
                         color: '#f8fafc',
@@ -1309,8 +1320,8 @@ ${leak.rawSnippet}`;
                       type="button"
                       onClick={() => handlePostReply(activeThread.id)}
                       style={{
-                        backgroundColor: '#7e22ce',
-                        border: 'none',
+                        backgroundColor: '#592C82',
+                        border: '1px solid #7D4698',
                         color: '#ffffff',
                         borderRadius: '4px',
                         padding: '6px 14px',
@@ -1351,8 +1362,8 @@ ${leak.rawSnippet}`;
               onClick={() => navigateTo('wiki.onion')}
               style={{
                 marginTop: '12px',
-                backgroundColor: '#7e22ce',
-                border: 'none',
+                backgroundColor: '#592C82',
+                border: '1px solid #7D4698',
                 color: '#fff',
                 padding: '8px 16px',
                 borderRadius: '4px',

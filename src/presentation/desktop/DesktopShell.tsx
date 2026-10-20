@@ -397,49 +397,112 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
           </div>
 
           {/* Active Mission Incident Banner (Prominently alerts player of active case) */}
-          {sim?.state.mission && (
-            <div
-              className="desktop-incident-banner"
-              data-testid="desktop-incident-banner"
-              style={{
-                position: 'absolute',
-                top: '12px',
-                left: '96px',
-                right: '16px',
-                zIndex: 12,
-              }}
-            >
-              <div className="incident-banner-left">
-                <span className="incident-pulse-icon" aria-hidden="true">
-                  🚨
-                </span>
-                <div className="incident-banner-meta">
-                  <span className="incident-banner-case">
-                    ACTIVE SOC DISPATCH // {sim.state.mission.title}
+          {sim?.state.mission && (() => {
+            const isMissionDone = Boolean(
+              sim.state.mission.isCompleted || sim.state.flags?.mission_aster_completed
+            );
+            const activeObjIndex = sim.state.mission.objectives.findIndex(o => !o.isCompleted);
+            const activeObj =
+              activeObjIndex >= 0
+                ? sim.state.mission.objectives[activeObjIndex]
+                : sim.state.mission.objectives[sim.state.mission.objectives.length - 1];
+            const currentStepNum = isMissionDone
+              ? sim.state.mission.objectives.length
+              : activeObjIndex >= 0
+                ? activeObjIndex + 1
+                : sim.state.mission.objectives.length;
+
+            return (
+              <div
+                className={`desktop-incident-banner ${isMissionDone ? 'incident-banner-resolved' : ''}`}
+                data-testid="desktop-incident-banner"
+                style={{
+                  position: 'absolute',
+                  top: '12px',
+                  left: '96px',
+                  right: '16px',
+                  zIndex: 12,
+                  backgroundColor: isMissionDone
+                    ? 'rgba(6, 78, 59, 0.9)'
+                    : 'rgba(15, 23, 42, 0.94)',
+                  borderColor: isMissionDone ? '#10b981' : '#f59e0b',
+                }}
+              >
+                <div className="incident-banner-left">
+                  <span className="incident-pulse-icon" aria-hidden="true">
+                    {isMissionDone ? '🎉' : '🚨'}
                   </span>
-                  <span className="incident-banner-objective">
-                    Current Objective:{' '}
-                    {sim.state.mission.objectives.find(o => !o.isCompleted)?.title ??
-                      'Finalize & submit incident report'}
-                  </span>
+                  <div className="incident-banner-meta">
+                    <span
+                      className="incident-banner-case"
+                      style={{ color: isMissionDone ? '#6ee7b7' : '#fef08a' }}
+                    >
+                      {isMissionDone
+                        ? 'INCIDENT RESOLVED // AST-01 CLOSED & APPROVED'
+                        : `ACTIVE SOC DISPATCH // ${sim.state.mission.title}`}
+                    </span>
+                    <span className="incident-banner-objective">
+                      {isMissionDone
+                        ? 'All 9 objectives verified. Next Play: Visit Amina, meet Tunde at Marina Seawall, or open Career & Market.'
+                        : `Step ${currentStepNum}/9: ${activeObj?.title ?? 'Finalize & submit incident report'}`}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="incident-banner-actions">
+                  {isMissionDone ? (
+                    <>
+                      <button
+                        type="button"
+                        className="btn-incident-banner-primary"
+                        onClick={() => {
+                          openApp('career');
+                          focusWindow('career');
+                        }}
+                        style={{
+                          backgroundColor: 'rgba(16, 185, 129, 0.25)',
+                          borderColor: '#10b981',
+                          color: '#6ee7b7',
+                        }}
+                      >
+                        💼 Career &amp; Market
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-incident-banner-primary"
+                        onClick={() => {
+                          openApp('incident');
+                          focusWindow('incident');
+                        }}
+                      >
+                        📋 Review Incident Report
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-incident-banner-primary"
+                        onClick={onExitDesktop}
+                        style={{ backgroundColor: '#1e293b' }}
+                      >
+                        🚶 Stand Up &amp; Explore
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn-incident-banner-primary"
+                      onClick={() => {
+                        openApp('incident');
+                        focusWindow('incident');
+                      }}
+                      data-testid="btn-banner-open-incident"
+                    >
+                      📋 Open Incident Report &amp; Checklist
+                    </button>
+                  )}
                 </div>
               </div>
-
-              <div className="incident-banner-actions">
-                <button
-                  type="button"
-                  className="btn-incident-banner-primary"
-                  onClick={() => {
-                    openApp('incident');
-                    focusWindow('incident');
-                  }}
-                  data-testid="btn-banner-open-incident"
-                >
-                  📋 Open Incident Report &amp; Checklist
-                </button>
-              </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Desktop Shortcut Icons (Left vertical grid) */}
           <div
