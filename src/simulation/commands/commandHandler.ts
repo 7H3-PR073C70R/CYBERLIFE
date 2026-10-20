@@ -833,6 +833,56 @@ export function handleCommand(
           [`ran_tool_${toolLower}`]: true,
         };
 
+        // Auto-progress active mission objectives when corresponding cyber tools execute
+        let nextMission = currentState.mission;
+        if (nextMission && success) {
+          const simTime = currentState.time.simulationTimeSeconds;
+          let discoveredHosts = [...nextMission.discoveredHosts];
+          let inspectedServices = [...nextMission.inspectedServices];
+          let analyzedLogIds = [...nextMission.analyzedLogIds];
+
+          if (toolLower === 'netmap' || toolLower === 'nmap') {
+            const hostsToAdd = ['app-portal-01', 'filesrv-01', 'gw-core-01', 'ws-sec-04', 'mon-siem-01', 'vault-core-01'];
+            discoveredHosts = Array.from(new Set([...discoveredHosts, ...hostsToAdd]));
+          } else if (toolLower === 'svcscan') {
+            const targetHost = target?.trim() || 'app-portal-01';
+            inspectedServices = Array.from(new Set([...inspectedServices, targetHost, 'filesrv-01']));
+          } else if (toolLower === 'logview') {
+            const logId = target?.trim() || 'LOG-2026-107B';
+            analyzedLogIds = Array.from(new Set([...analyzedLogIds, logId, 'LOG-2026-109B']));
+          }
+
+          const updatedObjectives = nextMission.objectives.map(obj => {
+            if (obj.id === 'obj-assess-01' && (toolLower === 'netmap' || toolLower === 'nmap')) {
+              return { ...obj, isCompleted: true, completedAt: simTime };
+            }
+            if (obj.id === 'obj-investigate-01' && toolLower === 'svcscan') {
+              return { ...obj, isCompleted: true, completedAt: simTime };
+            }
+            if (obj.id === 'obj-investigate-02' && toolLower === 'logview') {
+              return { ...obj, isCompleted: true, completedAt: simTime };
+            }
+            if (obj.id === 'obj-evidence-01' && toolLower === 'evidence') {
+              return { ...obj, isCompleted: true, completedAt: simTime };
+            }
+            return obj;
+          });
+
+          let nextPhase = nextMission.phase;
+          if (nextPhase === 'initial_assessment' && (toolLower === 'netmap' || toolLower === 'nmap')) {
+            nextPhase = 'investigation';
+          }
+
+          nextMission = {
+            ...nextMission,
+            phase: nextPhase,
+            discoveredHosts,
+            inspectedServices,
+            analyzedLogIds,
+            objectives: updatedObjectives,
+          };
+        }
+
         const nextState: SimulationState = {
           ...currentState,
           metadata: {
@@ -840,6 +890,7 @@ export function handleCommand(
             revision: nextRevision,
           },
           flags: nextFlags,
+          ...(nextMission ? { mission: nextMission } : {}),
         };
 
         validateSimulationState(nextState);

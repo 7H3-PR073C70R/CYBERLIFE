@@ -92,8 +92,10 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
     getActiveWindowId,
   } = useWindowManager({ initialOpenApp: initialApp });
 
-  // Orientation banner (auto-dismiss when an initialApp is requested)
-  const [showWelcomeBanner, setShowWelcomeBanner] = useState<boolean>(() => !initialApp);
+  // Orientation banner (auto-dismiss when a non-terminal initialApp is requested)
+  const [showWelcomeBanner, setShowWelcomeBanner] = useState<boolean>(
+    () => !initialApp || initialApp === 'terminal'
+  );
   const showWelcomeBannerRef = useRef(showWelcomeBanner);
   showWelcomeBannerRef.current = showWelcomeBanner;
 

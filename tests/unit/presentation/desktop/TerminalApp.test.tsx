@@ -184,7 +184,7 @@ describe('TerminalApp Component', () => {
     fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
     expect(screen.getByText(/DISCOVERED SUBNET HOST INVENTORY/i)).toBeInTheDocument();
-    expect(screen.getByText(/filesrv-01/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/filesrv-01/i).length).toBeGreaterThanOrEqual(1);
   });
 
   it('supports Tab completion for netmap command', () => {

@@ -76,82 +76,148 @@ export const SocialPretextApp: React.FC = () => {
     }
   };
 
-  const getToneBadgeStyle = (tone: string) => {
+  const getToneBadgeColors = (tone: string) => {
     switch (tone) {
       case 'STRICT_PROCEDURE':
-        return 'bg-emerald-950/80 text-emerald-400 border-emerald-800/80';
+        return { bg: '#0d3824', border: '#238636', text: '#3fb950' };
       case 'SKEPTICAL_CHALLENGE':
-        return 'bg-amber-950/80 text-amber-400 border-amber-800/80';
+        return { bg: '#382b0d', border: '#9e6a03', text: '#d29922' };
       case 'AUTHORITATIVE':
-        return 'bg-purple-950/80 text-purple-400 border-purple-800/80';
+        return { bg: '#2b1b38', border: '#8957e5', text: '#a371f7' };
       case 'EMPATHETIC':
-        return 'bg-sky-950/80 text-sky-400 border-sky-800/80';
+        return { bg: '#0d2847', border: '#1f6feb', text: '#58a6ff' };
       case 'EVASIVE':
-        return 'bg-rose-950/80 text-rose-400 border-rose-800/80';
+        return { bg: '#3d1618', border: '#da3633', text: '#f85149' };
       default:
-        return 'bg-gray-800/80 text-gray-300 border-gray-700/80';
+        return { bg: '#21262d', border: '#30363d', text: '#8b949e' };
     }
   };
 
-  const getOutcomeBannerStyle = (status?: string) => {
+  const getOutcomeColors = (status?: string) => {
     switch (status) {
       case 'POLICY_UPHELD':
       case 'SUCCESS_VERIFIED':
       case 'THREAT_CONTAINED':
-        return {
-          bg: 'bg-emerald-950/60 border-emerald-500/50 text-emerald-200',
-          badge: 'bg-emerald-800/60 text-emerald-300 border-emerald-700',
-          title: 'text-emerald-400',
-        };
+        return { bg: '#0d3824', border: '#238636', text: '#3fb950', badge: '#238636' };
       case 'SECURITY_BREACH_ALLOWED':
-        return {
-          bg: 'bg-rose-950/60 border-rose-500/50 text-rose-200',
-          badge: 'bg-rose-800/60 text-rose-300 border-rose-700',
-          title: 'text-rose-400',
-        };
-      case 'FALSE_ACCUSATION':
-      case 'SUSPICION_RAISED':
+        return { bg: '#3d1618', border: '#da3633', text: '#f85149', badge: '#da3633' };
       default:
-        return {
-          bg: 'bg-amber-950/60 border-amber-500/50 text-amber-200',
-          badge: 'bg-amber-800/60 text-amber-300 border-amber-700',
-          title: 'text-amber-400',
-        };
+        return { bg: '#382b0d', border: '#9e6a03', text: '#d29922', badge: '#9e6a03' };
     }
   };
 
-  const outcomeStyle = getOutcomeBannerStyle(activeSession.finalOutcome?.status);
+  const outcomeStyle = getOutcomeColors(activeSession.finalOutcome?.status);
 
   return (
-    <div className="flex flex-col h-full bg-gray-950 text-gray-100 font-sans text-xs select-none">
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        backgroundColor: '#0d1117',
+        color: '#c9d1d9',
+        fontFamily: 'Inter, -apple-system, sans-serif',
+        fontSize: '12px',
+        userSelect: 'none',
+      }}
+    >
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="absolute top-2 right-4 z-50 bg-cyan-950 border border-cyan-500/60 text-cyan-200 px-3 py-1.5 rounded shadow-lg text-[11px] animate-fade-in flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+        <div
+          style={{
+            position: 'absolute',
+            top: '8px',
+            right: '16px',
+            zIndex: 50,
+            backgroundColor: '#0d2847',
+            border: '1px solid #1f6feb',
+            color: '#58a6ff',
+            padding: '6px 12px',
+            borderRadius: '6px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+            fontSize: '11px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <span
+            style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor: '#58a6ff',
+            }}
+          />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Top Application Bar */}
-      <div className="flex items-center justify-between px-3 py-2 bg-gray-900 border-b border-gray-800">
-        <div className="flex items-center gap-2">
-          <span className="flex h-2.5 w-2.5 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50" />
-          <span className="font-bold tracking-wider text-gray-200 text-sm">
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '8px 12px',
+          backgroundColor: '#161b22',
+          borderBottom: '1px solid #30363d',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span
+            style={{
+              width: '10px',
+              height: '10px',
+              borderRadius: '50%',
+              backgroundColor: '#f85149',
+              boxShadow: '0 0 6px #f85149',
+            }}
+          />
+          <span style={{ fontWeight: 700, letterSpacing: '0.5px', color: '#f0f6fc', fontSize: '13px' }}>
             EKOMIND SOCIAL PRETEXT & HUMAN RESILIENCE LAB
           </span>
-          <span className="px-1.5 py-0.5 rounded text-[10px] bg-rose-950 text-rose-400 border border-rose-800/60 font-mono">
+          <span
+            style={{
+              padding: '2px 6px',
+              borderRadius: '4px',
+              fontSize: '10px',
+              backgroundColor: '#3d1618',
+              color: '#f85149',
+              border: '1px solid #da3633',
+              fontFamily: 'monospace',
+            }}
+          >
             HUMAN-SEC-SIM // V14.0
           </span>
         </div>
 
-        <div className="flex items-center gap-2 text-gray-400">
-          <span className="text-[11px]">Venue:</span>
-          <span className="px-2 py-0.5 rounded bg-gray-800 text-gray-200 border border-gray-700 font-medium">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ color: '#8b949e', fontSize: '11px' }}>Venue:</span>
+          <span
+            style={{
+              padding: '2px 8px',
+              borderRadius: '4px',
+              backgroundColor: '#21262d',
+              color: '#f0f6fc',
+              border: '1px solid #30363d',
+              fontWeight: 500,
+              fontSize: '11px',
+            }}
+          >
             {activeScenario.venueLabel}
           </span>
           <button
             onClick={handleRestartScenario}
-            className="px-2 py-0.5 bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 rounded transition text-[11px]"
+            style={{
+              padding: '3px 8px',
+              backgroundColor: '#21262d',
+              color: '#c9d1d9',
+              border: '1px solid #30363d',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '11px',
+            }}
             title="Reset active scenario encounter"
           >
             Restart Encounter
@@ -160,40 +226,61 @@ export const SocialPretextApp: React.FC = () => {
       </div>
 
       {/* Main Workspace Layout */}
-      <div className="flex flex-1 overflow-hidden">
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         {/* Left Column: Scenario Catalog */}
-        <div className="w-72 bg-gray-900/60 border-r border-gray-800 flex flex-col flex-shrink-0">
-          <div className="p-2 border-b border-gray-800 bg-gray-900/80">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
-              Authored Pretext Encounters ({scenarios.length})
-            </span>
+        <div
+          style={{
+            width: '280px',
+            backgroundColor: '#161b22',
+            borderRight: '1px solid #30363d',
+            display: 'flex',
+            flexDirection: 'column',
+            flexShrink: 0,
+          }}
+        >
+          <div
+            style={{
+              padding: '8px 12px',
+              borderBottom: '1px solid #30363d',
+              backgroundColor: '#21262d',
+              fontWeight: 700,
+              fontSize: '10px',
+              letterSpacing: '0.5px',
+              color: '#8b949e',
+              textTransform: 'uppercase',
+            }}
+          >
+            Authored Pretext Encounters ({scenarios.length})
           </div>
 
-          <div className="flex-1 overflow-y-auto p-2 space-y-1.5">
+          <div style={{ flex: 1, overflowY: 'auto', padding: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {scenarios.map(scen => {
               const isSelected = scen.id === selectedScenarioId;
               return (
                 <button
                   key={scen.id}
                   onClick={() => handleSelectScenario(scen.id)}
-                  className={`w-full text-left p-2 rounded border transition ${
-                    isSelected
-                      ? 'bg-rose-950/30 border-rose-600/70 text-rose-200 shadow-sm'
-                      : 'bg-gray-950/40 border-gray-800/80 text-gray-400 hover:bg-gray-800/50 hover:text-gray-200'
-                  }`}
+                  style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    padding: '8px 10px',
+                    borderRadius: '6px',
+                    border: isSelected ? '1px solid #f85149' : '1px solid #30363d',
+                    backgroundColor: isSelected ? '#2d1819' : '#0d1117',
+                    color: isSelected ? '#f0f6fc' : '#8b949e',
+                    cursor: 'pointer',
+                    transition: 'all 150ms ease',
+                  }}
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-xs text-gray-200 truncate">
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <span style={{ fontWeight: 600, fontSize: '11px', color: isSelected ? '#f85149' : '#f0f6fc' }}>
                       {scen.title}
                     </span>
-                    <span className="text-[9px] px-1 py-0.2 rounded bg-gray-800 text-gray-400 border border-gray-700 uppercase">
-                      {scen.venue.replace(/_/g, ' ')}
-                    </span>
                   </div>
-                  <p className="text-[11px] text-gray-400 line-clamp-2 mt-1">
+                  <p style={{ margin: '0 0 4px 0', fontSize: '10px', color: '#8b949e', lineHeight: '1.4' }}>
                     {scen.summary}
                   </p>
-                  <div className="mt-1 flex items-center gap-1 text-[10px] text-gray-500">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '9px', color: '#6e7681' }}>
                     <span>NPC: {scen.targetNpc.name}</span>
                     <span>•</span>
                     <span>{scen.targetNpc.title}</span>
@@ -204,142 +291,236 @@ export const SocialPretextApp: React.FC = () => {
           </div>
 
           {/* NPC Profile Box */}
-          <div className="p-2.5 bg-gray-950 border-t border-gray-800 text-gray-300">
-            <span className="text-[10px] font-bold uppercase text-gray-400 tracking-wider block mb-1">
+          <div style={{ padding: '10px', backgroundColor: '#0d1117', borderTop: '1px solid #30363d' }}>
+            <span
+              style={{
+                fontSize: '10px',
+                fontWeight: 700,
+                color: '#8b949e',
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase',
+                display: 'block',
+                marginBottom: '6px',
+              }}
+            >
               Active Interlocutor Profile
             </span>
-            <div className="bg-gray-900 p-2 rounded border border-gray-800 space-y-1 text-[11px]">
-              <div className="flex justify-between">
-                <span className="text-gray-400">Name:</span>
-                <span className="font-semibold text-rose-300">{activeScenario.targetNpc.name}</span>
+            <div
+              style={{
+                backgroundColor: '#161b22',
+                padding: '8px',
+                borderRadius: '6px',
+                border: '1px solid #30363d',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+                fontSize: '11px',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#8b949e' }}>Name:</span>
+                <span style={{ fontWeight: 600, color: '#f85149' }}>{activeScenario.targetNpc.name}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Role:</span>
-                <span className="text-gray-300">{activeScenario.targetNpc.title}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#8b949e' }}>Role:</span>
+                <span style={{ color: '#c9d1d9' }}>{activeScenario.targetNpc.title}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Dept:</span>
-                <span className="text-gray-300">{activeScenario.targetNpc.department}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#8b949e' }}>Dept:</span>
+                <span style={{ color: '#c9d1d9' }}>{activeScenario.targetNpc.department}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Badge ID:</span>
-                <span className="font-mono text-amber-400">{activeScenario.targetNpc.badgeNumber}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#8b949e' }}>Badge ID:</span>
+                <span style={{ fontFamily: 'monospace', color: '#d29922' }}>
+                  {activeScenario.targetNpc.badgeNumber}
+                </span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Center Column: Encounter Stage & Dialogue Branching */}
-        <div className="flex-1 flex flex-col overflow-hidden bg-gray-950">
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: '#0d1117' }}>
           {/* Situation Briefing Bar */}
-          <div className="p-3 bg-gray-900/90 border-b border-gray-800 flex flex-col gap-1">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-sm text-gray-100">{activeScenario.title}</span>
-              <span className="text-[11px] text-cyan-400 font-mono">
+          <div
+            style={{
+              padding: '10px 14px',
+              backgroundColor: '#161b22',
+              borderBottom: '1px solid #30363d',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontWeight: 700, fontSize: '13px', color: '#f0f6fc' }}>
+                {activeScenario.title}
+              </span>
+              <span style={{ fontSize: '11px', color: '#58a6ff', fontFamily: 'monospace' }}>
                 Location: {activeScenario.venueLabel}
               </span>
             </div>
-            <p className="text-[11px] text-gray-300 leading-relaxed">
+            <p style={{ margin: 0, fontSize: '11px', color: '#8b949e', lineHeight: '1.5' }}>
               {activeScenario.situationBriefing}
             </p>
           </div>
 
           {/* Psychological & Trust Meters Dashboard */}
-          <div className="grid grid-cols-4 gap-2 px-3 py-2 bg-gray-900/50 border-b border-gray-800">
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '8px',
+              padding: '8px 12px',
+              backgroundColor: '#161b22',
+              borderBottom: '1px solid #30363d',
+            }}
+          >
             {/* Trust Meter (-100 to 100) */}
-            <div className="bg-gray-950 p-2 rounded border border-gray-800 flex flex-col justify-between">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-[10px] text-gray-400 font-semibold uppercase">Trust Index</span>
+            <div
+              style={{
+                backgroundColor: '#0d1117',
+                padding: '8px',
+                borderRadius: '6px',
+                border: '1px solid #30363d',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <span style={{ fontSize: '10px', color: '#8b949e', fontWeight: 600, textTransform: 'uppercase' }}>
+                  Trust Index
+                </span>
                 <span
-                  className={`font-mono text-[11px] font-bold ${
-                    activeSession.metrics.trust >= 20
-                      ? 'text-emerald-400'
-                      : activeSession.metrics.trust <= -20
-                      ? 'text-rose-400'
-                      : 'text-amber-400'
-                  }`}
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: activeSession.metrics.trust >= 20 ? '#3fb950' : activeSession.metrics.trust <= -20 ? '#f85149' : '#d29922',
+                  }}
                 >
                   {activeSession.metrics.trust > 0 ? `+${activeSession.metrics.trust}` : activeSession.metrics.trust}
                 </span>
               </div>
-              <div className="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden relative">
+              <div style={{ width: '100%', backgroundColor: '#21262d', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
                 <div
-                  className={`h-full transition-all duration-300 ${
-                    activeSession.metrics.trust >= 0 ? 'bg-emerald-500' : 'bg-rose-500'
-                  }`}
                   style={{
+                    height: '100%',
+                    backgroundColor: activeSession.metrics.trust >= 0 ? '#238636' : '#da3633',
                     width: `${Math.min(100, Math.max(0, (activeSession.metrics.trust + 100) / 2))}%`,
+                    transition: 'width 300ms ease',
                   }}
                 />
               </div>
             </div>
 
             {/* Suspicion Meter (0 to 100) */}
-            <div className="bg-gray-950 p-2 rounded border border-gray-800 flex flex-col justify-between">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-[10px] text-gray-400 font-semibold uppercase">Suspicion Level</span>
+            <div
+              style={{
+                backgroundColor: '#0d1117',
+                padding: '8px',
+                borderRadius: '6px',
+                border: '1px solid #30363d',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <span style={{ fontSize: '10px', color: '#8b949e', fontWeight: 600, textTransform: 'uppercase' }}>
+                  Suspicion Level
+                </span>
                 <span
-                  className={`font-mono text-[11px] font-bold ${
-                    activeSession.metrics.suspicion >= 50
-                      ? 'text-rose-400'
-                      : activeSession.metrics.suspicion >= 25
-                      ? 'text-amber-400'
-                      : 'text-cyan-400'
-                  }`}
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: activeSession.metrics.suspicion >= 50 ? '#f85149' : activeSession.metrics.suspicion >= 25 ? '#d29922' : '#58a6ff',
+                  }}
                 >
                   {activeSession.metrics.suspicion}%
                 </span>
               </div>
-              <div className="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+              <div style={{ width: '100%', backgroundColor: '#21262d', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
                 <div
-                  className={`h-full transition-all duration-300 ${
-                    activeSession.metrics.suspicion >= 50
-                      ? 'bg-rose-500'
-                      : activeSession.metrics.suspicion >= 25
-                      ? 'bg-amber-500'
-                      : 'bg-cyan-500'
-                  }`}
-                  style={{ width: `${Math.min(100, Math.max(0, activeSession.metrics.suspicion))}%` }}
+                  style={{
+                    height: '100%',
+                    backgroundColor: activeSession.metrics.suspicion >= 50 ? '#da3633' : activeSession.metrics.suspicion >= 25 ? '#9e6a03' : '#1f6feb',
+                    width: `${Math.min(100, Math.max(0, activeSession.metrics.suspicion))}%`,
+                    transition: 'width 300ms ease',
+                  }}
                 />
               </div>
             </div>
 
             {/* Credibility Meter (0 to 100) */}
-            <div className="bg-gray-950 p-2 rounded border border-gray-800 flex flex-col justify-between">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-[10px] text-gray-400 font-semibold uppercase">Credibility</span>
-                <span className="font-mono text-[11px] font-bold text-sky-400">
+            <div
+              style={{
+                backgroundColor: '#0d1117',
+                padding: '8px',
+                borderRadius: '6px',
+                border: '1px solid #30363d',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <span style={{ fontSize: '10px', color: '#8b949e', fontWeight: 600, textTransform: 'uppercase' }}>
+                  Credibility
+                </span>
+                <span style={{ fontFamily: 'monospace', fontSize: '11px', fontWeight: 700, color: '#58a6ff' }}>
                   {activeSession.metrics.credibility}%
                 </span>
               </div>
-              <div className="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+              <div style={{ width: '100%', backgroundColor: '#21262d', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
                 <div
-                  className="h-full bg-sky-500 transition-all duration-300"
-                  style={{ width: `${Math.min(100, Math.max(0, activeSession.metrics.credibility))}%` }}
+                  style={{
+                    height: '100%',
+                    backgroundColor: '#1f6feb',
+                    width: `${Math.min(100, Math.max(0, activeSession.metrics.credibility))}%`,
+                    transition: 'width 300ms ease',
+                  }}
                 />
               </div>
             </div>
 
             {/* Authority Meter (0 to 100) */}
-            <div className="bg-gray-950 p-2 rounded border border-gray-800 flex flex-col justify-between">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-[10px] text-gray-400 font-semibold uppercase">Perceived Authority</span>
-                <span className="font-mono text-[11px] font-bold text-purple-400">
+            <div
+              style={{
+                backgroundColor: '#0d1117',
+                padding: '8px',
+                borderRadius: '6px',
+                border: '1px solid #30363d',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <span style={{ fontSize: '10px', color: '#8b949e', fontWeight: 600, textTransform: 'uppercase' }}>
+                  Perceived Authority
+                </span>
+                <span style={{ fontFamily: 'monospace', fontSize: '11px', fontWeight: 700, color: '#a371f7' }}>
                   {activeSession.metrics.authority}%
                 </span>
               </div>
-              <div className="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+              <div style={{ width: '100%', backgroundColor: '#21262d', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
                 <div
-                  className="h-full bg-purple-500 transition-all duration-300"
-                  style={{ width: `${Math.min(100, Math.max(0, activeSession.metrics.authority))}%` }}
+                  style={{
+                    height: '100%',
+                    backgroundColor: '#8957e5',
+                    width: `${Math.min(100, Math.max(0, activeSession.metrics.authority))}%`,
+                    transition: 'width 300ms ease',
+                  }}
                 />
               </div>
             </div>
           </div>
 
           {/* Dialogue Transcript Stream */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {/* Display completed nodes in historical sequence */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {activeSession.history.map((step, idx) => {
               const node = activeScenario.nodes[step.nodeId];
               if (!node) return null;
@@ -349,30 +530,40 @@ export const SocialPretextApp: React.FC = () => {
               return (
                 <div
                   key={`${step.nodeId}-${idx}`}
-                  className={`flex flex-col gap-1 ${
-                    isPlayer ? 'items-end' : isNpc ? 'items-start' : 'items-center'
-                  }`}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: isPlayer ? 'flex-end' : isNpc ? 'flex-start' : 'center',
+                    gap: '4px',
+                  }}
                 >
-                  <div className="flex items-center gap-1.5 text-[10px] text-gray-400">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10px', color: '#8b949e' }}>
                     <span
-                      className={`font-bold ${
-                        isNpc ? 'text-rose-400' : isPlayer ? 'text-cyan-400' : 'text-amber-400'
-                      }`}
+                      style={{
+                        fontWeight: 700,
+                        color: isNpc ? '#f85149' : isPlayer ? '#58a6ff' : '#d29922',
+                      }}
                     >
                       {node.speakerName}
                     </span>
-                    <span className="text-gray-600">•</span>
-                    <span className="text-gray-500 font-mono text-[9px]">{step.timestamp.slice(11, 19)}</span>
+                    <span>•</span>
+                    <span style={{ fontFamily: 'monospace', fontSize: '9px', color: '#6e7681' }}>
+                      {step.timestamp.slice(11, 19)}
+                    </span>
                   </div>
 
                   <div
-                    className={`max-w-xl p-3 rounded-lg border text-[11px] leading-relaxed shadow-sm ${
-                      isPlayer
-                        ? 'bg-cyan-950/40 border-cyan-800/80 text-cyan-100 rounded-tr-none'
-                        : isNpc
-                        ? 'bg-gray-900 border-gray-800 text-gray-200 rounded-tl-none'
-                        : 'bg-amber-950/30 border-amber-800/60 text-amber-200 text-center'
-                    }`}
+                    style={{
+                      maxWidth: '560px',
+                      padding: '10px 14px',
+                      borderRadius: '8px',
+                      border: isPlayer ? '1px solid #1f6feb' : isNpc ? '1px solid #30363d' : '1px solid #9e6a03',
+                      backgroundColor: isPlayer ? '#0d2847' : isNpc ? '#161b22' : '#2b210d',
+                      color: isPlayer ? '#c9d1d9' : isNpc ? '#f0f6fc' : '#e3b341',
+                      fontSize: '11px',
+                      lineHeight: '1.5',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                    }}
                   >
                     {node.text}
                   </div>
@@ -382,42 +573,101 @@ export const SocialPretextApp: React.FC = () => {
 
             {/* Terminal Outcome Banner */}
             {activeSession.isCompleted && activeSession.finalOutcome && (
-              <div className={`mt-4 p-4 rounded-lg border shadow-lg ${outcomeStyle.bg}`}>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold border uppercase ${outcomeStyle.badge}`}>
+              <div
+                style={{
+                  marginTop: '12px',
+                  padding: '14px',
+                  borderRadius: '8px',
+                  border: `1px solid ${outcomeStyle.border}`,
+                  backgroundColor: outcomeStyle.bg,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span
+                      style={{
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        backgroundColor: outcomeStyle.badge,
+                        color: '#f0f6fc',
+                        textTransform: 'uppercase',
+                      }}
+                    >
                       {activeSession.finalOutcome.status.replace(/_/g, ' ')}
                     </span>
-                    <h3 className={`text-sm font-bold ${outcomeStyle.title}`}>
+                    <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: outcomeStyle.text }}>
                       {activeSession.finalOutcome.title}
                     </h3>
                   </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span
+                      style={{
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        backgroundColor: '#0d3824',
+                        color: '#3fb950',
+                        border: '1px solid #238636',
+                        fontFamily: 'monospace',
+                        fontWeight: 600,
+                      }}
+                    >
                       +{activeSession.finalOutcome.xpReward} XP
                     </span>
-                    <span className="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 font-mono">
+                    <span
+                      style={{
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        backgroundColor: '#382b0d',
+                        color: '#d29922',
+                        border: '1px solid #9e6a03',
+                        fontFamily: 'monospace',
+                        fontWeight: 600,
+                      }}
+                    >
                       ₦{(activeSession.finalOutcome.nairaRewardKobo / 100).toLocaleString()}
                     </span>
                   </div>
                 </div>
 
-                <p className="text-[11px] text-gray-200 leading-relaxed mb-3">
+                <p style={{ margin: '0 0 10px 0', fontSize: '11px', color: '#c9d1d9', lineHeight: '1.5' }}>
                   {activeSession.finalOutcome.summary}
                 </p>
 
                 {/* Evidence Item Generated */}
                 {activeSession.finalOutcome.evidenceGenerated && (
-                  <div className="mb-3 p-2.5 rounded bg-gray-900/90 border border-cyan-700/60 flex items-center justify-between">
+                  <div
+                    style={{
+                      marginBottom: '10px',
+                      padding: '8px 12px',
+                      borderRadius: '6px',
+                      backgroundColor: '#161b22',
+                      border: '1px solid #1f6feb',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-cyan-400 block">
+                      <span style={{ fontSize: '10px', textTransform: 'uppercase', fontWeight: 700, color: '#58a6ff', display: 'block' }}>
                         Forensic Evidence Captured
                       </span>
-                      <span className="font-mono text-[11px] text-gray-200">
+                      <span style={{ fontFamily: 'monospace', fontSize: '11px', color: '#f0f6fc' }}>
                         {activeSession.finalOutcome.evidenceGenerated}
                       </span>
                     </div>
-                    <span className="px-2 py-1 rounded bg-cyan-900 text-cyan-200 text-[10px] font-medium border border-cyan-600">
+                    <span
+                      style={{
+                        padding: '3px 8px',
+                        borderRadius: '4px',
+                        backgroundColor: '#0d2847',
+                        color: '#58a6ff',
+                        fontSize: '10px',
+                        fontWeight: 600,
+                        border: '1px solid #1f6feb',
+                      }}
+                    >
                       Saved to Evidence Vault
                     </span>
                   </div>
@@ -425,13 +675,13 @@ export const SocialPretextApp: React.FC = () => {
 
                 {/* Feedback Notes */}
                 {activeSession.finalOutcome.feedbackNotes.length > 0 && (
-                  <div className="space-y-1 border-t border-gray-800/80 pt-2 text-[11px]">
-                    <span className="text-[10px] uppercase font-bold text-gray-400 block mb-1">
+                  <div style={{ borderTop: '1px solid #30363d', paddingTop: '8px', fontSize: '11px' }}>
+                    <span style={{ fontSize: '10px', textTransform: 'uppercase', fontWeight: 700, color: '#8b949e', display: 'block', marginBottom: '4px' }}>
                       Procedural & Security Feedback
                     </span>
                     {activeSession.finalOutcome.feedbackNotes.map((note, i) => (
-                      <div key={i} className="flex items-start gap-1.5 text-gray-300">
-                        <span className="text-cyan-400">•</span>
+                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', color: '#c9d1d9', marginBottom: '2px' }}>
+                        <span style={{ color: '#58a6ff' }}>•</span>
                         <span>{note}</span>
                       </div>
                     ))}
@@ -443,52 +693,119 @@ export const SocialPretextApp: React.FC = () => {
 
           {/* Action Options Tray */}
           {!activeSession.isCompleted && currentNode && currentNode.options && (
-            <div className="p-3 bg-gray-900 border-t border-gray-800 flex flex-col gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+            <div
+              style={{
+                padding: '12px',
+                backgroundColor: '#161b22',
+                borderTop: '1px solid #30363d',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+              }}
+            >
+              <span style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: '#8b949e' }}>
                 Choose Response / Operational Security Verification Action:
               </span>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {currentNode.options.map(option => (
-                  <button
-                    key={option.id}
-                    onClick={() => handleChooseOption(option)}
-                    className="p-2.5 text-left rounded bg-gray-950 border border-gray-800 hover:border-rose-500/80 hover:bg-rose-950/20 text-gray-200 transition group flex flex-col justify-between"
-                  >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span
-                        className={`px-1.5 py-0.5 rounded text-[9px] font-bold border uppercase ${getToneBadgeStyle(
-                          option.tone
-                        )}`}
-                      >
-                        {option.tone.replace(/_/g, ' ')}
-                      </span>
-                      {option.verificationAction && (
-                        <span className="px-1.5 py-0.5 rounded text-[9px] bg-cyan-950 text-cyan-300 border border-cyan-700/80 font-mono">
-                          [{option.verificationAction.replace(/_/g, ' ')}]
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                {currentNode.options.map(option => {
+                  const colors = getToneBadgeColors(option.tone);
+                  return (
+                    <button
+                      key={option.id}
+                      onClick={() => handleChooseOption(option)}
+                      style={{
+                        padding: '10px 12px',
+                        textAlign: 'left',
+                        borderRadius: '6px',
+                        backgroundColor: '#0d1117',
+                        border: '1px solid #30363d',
+                        color: '#f0f6fc',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        gap: '6px',
+                        transition: 'border-color 150ms ease',
+                      }}
+                      onMouseEnter={e => {
+                        (e.currentTarget as HTMLElement).style.borderColor = '#f85149';
+                      }}
+                      onMouseLeave={e => {
+                        (e.currentTarget as HTMLElement).style.borderColor = '#30363d';
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span
+                          style={{
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            fontSize: '9px',
+                            fontWeight: 700,
+                            backgroundColor: colors.bg,
+                            border: `1px solid ${colors.border}`,
+                            color: colors.text,
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {option.tone.replace(/_/g, ' ')}
                         </span>
-                      )}
-                    </div>
-                    <span className="text-[11px] leading-snug group-hover:text-white">
-                      "{option.text}"
-                    </span>
-                  </button>
-                ))}
+                        {option.verificationAction && (
+                          <span
+                            style={{
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              fontSize: '9px',
+                              backgroundColor: '#0d2847',
+                              color: '#58a6ff',
+                              border: '1px solid #1f6feb',
+                              fontFamily: 'monospace',
+                            }}
+                          >
+                            [{option.verificationAction.replace(/_/g, ' ')}]
+                          </span>
+                        )}
+                      </div>
+                      <span style={{ fontSize: '11px', lineHeight: '1.4' }}>
+                        "{option.text}"
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
         </div>
 
         {/* Right Column: Security Procedures & Real-Time Audit Log */}
-        <div className="w-80 bg-gray-900/40 border-l border-gray-800 flex flex-col flex-shrink-0">
+        <div
+          style={{
+            width: '280px',
+            backgroundColor: '#161b22',
+            borderLeft: '1px solid #30363d',
+            display: 'flex',
+            flexDirection: 'column',
+            flexShrink: 0,
+          }}
+        >
           {/* Learning Objectives */}
-          <div className="p-3 border-b border-gray-800 bg-gray-900/60">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-1.5">
+          <div style={{ padding: '12px', borderBottom: '1px solid #30363d', backgroundColor: '#161b22' }}>
+            <span
+              style={{
+                fontSize: '10px',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                color: '#8b949e',
+                display: 'block',
+                marginBottom: '6px',
+              }}
+            >
               Target Learning Objectives
             </span>
-            <div className="space-y-1">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {activeScenario.learningObjectives.map((obj, i) => (
-                <div key={i} className="flex items-start gap-1.5 text-[11px] text-gray-300">
-                  <span className="text-rose-400">✓</span>
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', fontSize: '11px', color: '#c9d1d9' }}>
+                  <span style={{ color: '#f85149' }}>✓</span>
                   <span>{obj}</span>
                 </div>
               ))}
@@ -496,19 +813,49 @@ export const SocialPretextApp: React.FC = () => {
           </div>
 
           {/* Real-time Audit Trail */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <div className="p-2 border-b border-gray-800 bg-gray-900/80 flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <div
+              style={{
+                padding: '8px 12px',
+                borderBottom: '1px solid #30363d',
+                backgroundColor: '#21262d',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <span style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: '#8b949e' }}>
                 Simulation Audit Trail ({activeSession.auditEvents.length})
               </span>
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#3fb950' }} />
             </div>
 
-            <div className="flex-1 overflow-y-auto p-2 font-mono text-[10px] text-gray-400 space-y-1.5 bg-gray-950">
+            <div
+              style={{
+                flex: 1,
+                overflowY: 'auto',
+                padding: '8px',
+                fontFamily: 'monospace',
+                fontSize: '10px',
+                color: '#8b949e',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px',
+                backgroundColor: '#0d1117',
+              }}
+            >
               {activeSession.auditEvents.map((evt, idx) => (
                 <div
                   key={idx}
-                  className="p-1.5 rounded bg-gray-900/80 border border-gray-800/80 text-gray-300 break-words leading-tight"
+                  style={{
+                    padding: '6px 8px',
+                    borderRadius: '4px',
+                    backgroundColor: '#161b22',
+                    border: '1px solid #30363d',
+                    color: '#c9d1d9',
+                    wordBreak: 'break-word',
+                    lineHeight: '1.4',
+                  }}
                 >
                   {evt}
                 </div>

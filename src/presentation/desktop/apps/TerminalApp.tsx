@@ -277,11 +277,33 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
       return;
     }
 
+    const firstToken = trimmed.split(/\s+/)[0]?.toLowerCase();
+    const guidedStdout = [...result.stdout];
+    if (!result.isError && firstToken) {
+      if (firstToken === 'netmap' || firstToken === 'nmap') {
+        guidedStdout.push('');
+        guidedStdout.push('  [✓] OBJECTIVE COMPLETED: Identify Active Corporate Subnet Nodes');
+        guidedStdout.push("  [→] NEXT STEP: Run 'svcscan inspect <host>' to audit services");
+      } else if (firstToken === 'svcscan') {
+        guidedStdout.push('');
+        guidedStdout.push('  [✓] OBJECTIVE COMPLETED: Audit Exposed Services');
+        guidedStdout.push("  [→] NEXT STEP: Run 'logview recent' or 'logview filter --severity=WARN'");
+      } else if (firstToken === 'logview') {
+        guidedStdout.push('');
+        guidedStdout.push('  [✓] OBJECTIVE COMPLETED: Analyze Authentication and Application Logs');
+        guidedStdout.push("  [→] NEXT STEP: Inspect artifacts with 'evidence list' and 'evidence inspect EVD-2026-004'");
+      } else if (firstToken === 'evidence') {
+        guidedStdout.push('');
+        guidedStdout.push('  [✓] OBJECTIVE COMPLETED: Inspect & Preserve Forensic Artifacts');
+        guidedStdout.push("  [→] NEXT STEP: Open Incident Portal on desktop to submit Root Cause & Contain Aster Service");
+      }
+    }
+
     const newEntry: TerminalEntry = {
       id: `entry-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       command: trimmed,
       directory: formatDirForPrompt(activeTab.currentDirectory),
-      stdout: result.stdout,
+      stdout: guidedStdout,
       stderr: result.stderr,
       isError: result.isError,
       timestamp: ctx.simulationTime.timeString,
@@ -304,10 +326,9 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
       )
     );
 
-    onTerminalOutput?.(result.stdout);
+    onTerminalOutput?.(guidedStdout);
 
     // If a cyber tool was executed, record cyber activity on the authoritative simulation engine
-    const firstToken = trimmed.split(/\s+/)[0]?.toLowerCase();
     if (
       firstToken &&
       [

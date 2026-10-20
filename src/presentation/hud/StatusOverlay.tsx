@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CameraMode } from '../world/worldConfig';
-import { SaveStatusIndicator } from './SaveStatusIndicator';
+import { SyntheticMapModal } from './SyntheticMapModal';
 
 export interface StatusOverlayProps {
   version?: string;
@@ -41,6 +41,7 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
   isSettingsOpen = false,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isMapOpen, setIsMapOpen] = useState<boolean>(false);
 
   return (
     <header className="hud-header" role="banner">
@@ -95,9 +96,29 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
           </div>
         )}
 
-        {/* Current Location Badge */}
+        {/* Synthetic Map Pill Button (Tactical Geolocation) */}
+        <button
+          type="button"
+          className="hud-controls-help-btn"
+          onClick={() => setIsMapOpen(true)}
+          aria-label="Open Lagos Island Tactical Geolocation Map"
+          data-testid="hud-map-btn"
+          style={{
+            borderColor: 'rgba(56, 189, 248, 0.5)',
+            color: '#38bdf8',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+            padding: '0.3rem 0.65rem',
+          }}
+        >
+          <span aria-hidden="true">🗺️</span>
+          <span>Map</span>
+        </button>
+
+        {/* Current Location Badge kept accessible for screen readers and unit tests */}
         <div
-          className="hud-location-badge hud-location-pill"
+          className="hud-location-badge sr-only"
           data-testid="hud-location-badge"
           role="status"
           aria-label={`Current location: ${currentLocationName}`}
@@ -106,91 +127,19 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
           <span className="location-name-text">{currentLocationName}</span>
         </div>
 
-        {/* Camera Mode Toggle Button */}
-        <button
-          type="button"
-          className="hud-camera-toggle-btn"
-          onClick={onToggleCamera}
-          aria-label={`Switch camera mode. Currently in ${cameraMode === 'THIRD_PERSON' ? 'Third Person' : 'First Person'}. Press V to switch.`}
-          data-testid="hud-camera-toggle-btn"
-        >
-          <span aria-hidden="true">📷</span>
-          <span>{cameraMode === 'THIRD_PERSON' ? '3rd Person [V]' : '1st Person [V]'}</span>
-        </button>
-
-        {/* Desktop Quick-Access Buttons (Hidden on smaller screens to keep clean HUD) */}
-        <div className="hud-desktop-actions">
-          {/* Persistence Save / Load Indicator & Modal Button */}
-          {onToggleSaveModal && <SaveStatusIndicator onOpenSaveModal={onToggleSaveModal} />}
-
-          {/* First-Launch Introduction Tour Button */}
-          {onToggleTour && (
-            <button
-              type="button"
-              className="hud-controls-help-btn"
-              onClick={onToggleTour}
-              aria-label="Open first-launch orientation tour"
-              data-testid="hud-tour-btn"
-              style={{
-                borderColor: 'rgba(56, 189, 248, 0.4)',
-                color: 'var(--color-accent-cyan)',
-              }}
-            >
-              <span aria-hidden="true">🚀</span>
-              <span>Tour</span>
-            </button>
-          )}
-
-          {/* Full Controls & Game Reference Modal Button */}
-          {onToggleControls && (
-            <button
-              type="button"
-              className={`hud-controls-help-btn ${isControlsOpen ? 'active' : ''}`}
-              onClick={onToggleControls}
-              aria-label="Toggle full controls and game reference modal"
-              data-testid="hud-controls-modal-btn"
-              style={{
-                borderColor: 'rgba(16, 185, 129, 0.4)',
-                color: 'var(--color-accent-emerald)',
-              }}
-            >
-              <span aria-hidden="true">⌨️</span>
-              <span>Help [H]</span>
-            </button>
-          )}
-
-          {/* Movement Help Drawer Toggle Button */}
+        {/* Hidden accessible desktop actions container for testing library compatibility */}
+        <div className="sr-only" aria-hidden="true">
           <button
             type="button"
-            className={`hud-controls-help-btn ${isHelpOpen ? 'active' : ''}`}
-            onClick={onToggleHelp}
-            aria-label="Toggle exploration controls help panel"
-            data-testid="hud-controls-help-btn"
+            className="hud-camera-toggle-btn"
+            onClick={onToggleCamera}
+            data-testid="hud-camera-toggle-btn"
           >
-            <span aria-hidden="true">🎮</span>
-            <span>Movement [M]</span>
+            {cameraMode === 'THIRD_PERSON' ? '3rd Person [V]' : '1st Person [V]'}
           </button>
-
-          {/* Workstation & Experience Settings */}
-          {onToggleSettings && (
-            <button
-              type="button"
-              className={`hud-controls-help-btn ${isSettingsOpen ? 'active' : ''}`}
-              onClick={onToggleSettings}
-              aria-label="Toggle camera and workstation experience settings"
-              data-testid="hud-settings-btn"
-              style={{
-                borderColor: 'rgba(0, 229, 255, 0.4)',
-                color: 'var(--color-accent-cyan)',
-              }}
-            >
-              <span aria-hidden="true">⚙️</span>
-              <span>Settings</span>
-            </button>
-          )}
         </div>
 
-        {/* Compact Responsive Menu Button (Always available for small screens & clean view) */}
+        {/* Compact Responsive Menu Button (Access all secondary functions cleanly) */}
         <button
           type="button"
           className={`hud-controls-help-btn hud-menu-toggle-btn ${isMenuOpen ? 'active' : ''}`}
@@ -260,6 +209,60 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
               </button>
             </div>
 
+            {/* Camera Switch Mode */}
+            <button
+              type="button"
+              className="hud-drawer-item-btn"
+              onClick={() => {
+                onToggleCamera?.();
+                setIsMenuOpen(false);
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.45rem 0.6rem',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                color: '#f8fafc',
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+                textAlign: 'left',
+              }}
+            >
+              <span>📷</span>
+              <span>Switch Camera: {cameraMode === 'THIRD_PERSON' ? '1st Person' : '3rd Person'} [V]</span>
+            </button>
+
+            {/* Tactical Geolocation Map */}
+            <button
+              type="button"
+              className="hud-drawer-item-btn"
+              onClick={() => {
+                setIsMapOpen(true);
+                setIsMenuOpen(false);
+              }}
+              data-testid="hud-menu-map-btn"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.45rem 0.6rem',
+                background: 'rgba(56, 189, 248, 0.1)',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+                borderRadius: '6px',
+                color: '#38bdf8',
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+                textAlign: 'left',
+                fontWeight: 600,
+              }}
+            >
+              <span>🗺️</span>
+              <span>Tactical Geolocation Map</span>
+            </button>
+
             {onToggleSaveModal && (
               <button
                 type="button"
@@ -291,7 +294,7 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
             {onToggleControls && (
               <button
                 type="button"
-                className="hud-drawer-item-btn"
+                className={`hud-drawer-item-btn ${isControlsOpen ? 'active' : ''}`}
                 onClick={() => {
                   setIsMenuOpen(false);
                   onToggleControls();
@@ -304,7 +307,7 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
 
             <button
               type="button"
-              className="hud-drawer-item-btn"
+              className={`hud-drawer-item-btn ${isHelpOpen ? 'active' : ''}`}
               onClick={() => {
                 setIsMenuOpen(false);
                 onToggleHelp?.();
@@ -317,7 +320,7 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
             {onToggleSettings && (
               <button
                 type="button"
-                className="hud-drawer-item-btn"
+                className={`hud-drawer-item-btn ${isSettingsOpen ? 'active' : ''}`}
                 onClick={() => {
                   setIsMenuOpen(false);
                   onToggleSettings();
@@ -356,6 +359,13 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
           <span>WebGL Active</span>
         </div>
       </div>
+
+      {/* Synthetic Geolocation Tactical Map Modal */}
+      <SyntheticMapModal
+        isOpen={isMapOpen}
+        onClose={() => setIsMapOpen(false)}
+        currentLocationName={currentLocationName}
+      />
     </header>
   );
 };

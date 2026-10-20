@@ -176,4 +176,31 @@ describe('Milestone 7: NPC Integration with The Aster Incident (M6)', () => {
     }).state;
     expect(s4.mission!.preservedEvidenceIds).toContain('EVD-2026-004');
   });
+
+  it('automatically completes objective and advances phase when netmap command executes', () => {
+    // Start at initial_assessment
+    const assessmentState = handleCommand(state, {
+      type: 'AdvanceAsterMissionPhase',
+      targetPhase: 'initial_assessment',
+    }).state;
+
+    const objAssess = assessmentState.mission!.objectives.find(o => o.id === 'obj-assess-01');
+    expect(objAssess?.isCompleted).toBe(false);
+
+    // Simulate running netmap hosts in the terminal
+    const executedState = handleCommand(assessmentState, {
+      type: 'RecordCyberActivity',
+      activityId: 'act-test-netmap',
+      tool: 'netmap',
+      action: 'hosts',
+      summary: 'Executed netmap hosts',
+      success: true,
+    }).state;
+
+    const completedObj = executedState.mission!.objectives.find(o => o.id === 'obj-assess-01');
+    expect(completedObj?.isCompleted).toBe(true);
+    expect(executedState.mission!.discoveredHosts).toContain('app-portal-01');
+    expect(executedState.mission!.discoveredHosts).toContain('filesrv-01');
+    expect(executedState.mission!.phase).toBe('investigation');
+  });
 });

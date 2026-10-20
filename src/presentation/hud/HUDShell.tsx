@@ -44,10 +44,12 @@ export const HUDShell: React.FC<HUDShellProps> = ({
   const [isSaveModalOpen, setIsSaveModalOpen] = useState<boolean>(false);
 
   // M10 First-launch intro modal: Opens by default if onboarding intro is not yet completed or skipped
+  const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const isIntroPending = Boolean(
     onboarding &&
     !onboarding.introCompleted &&
     !onboarding.introSkipped &&
+    !urlParams?.get('skipIntro') &&
     (typeof window === 'undefined' || !localStorage.getItem('cyberlife_intro_skipped'))
   );
   const [isIntroModalOpen, setIsIntroModalOpen] = useState<boolean>(isIntroPending);
@@ -106,6 +108,21 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         isSettingsOpen={isSettingsOpen}
       />
 
+      {/* Top Objective Tracker Bar (Collapsible at top, clean unobstructed view) */}
+      <div
+        className="hud-top-objective-wrapper"
+        style={{
+          position: 'absolute',
+          top: '3.75rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 35,
+          pointerEvents: 'auto',
+        }}
+      >
+        <ObjectiveTrackerHUD />
+      </div>
+
       {/* Middle Layout: Side Panels & Nearby Interaction Prompt */}
       <div className="hud-body">
         {/* Left Side: Movement & Controls Guide */}
@@ -117,9 +134,6 @@ export const HUDShell: React.FC<HUDShellProps> = ({
 
         {/* Center: Contextual Interaction Prompt (Appears when near an interactive location) */}
         <InteractionPrompt target={activeTarget} onInteract={onInteract} />
-
-        {/* Right Side: Objective Tracker */}
-        <ObjectiveTrackerHUD />
       </div>
 
       {/* Dynamic Contextual Guidance Card - only render when free-roaming without an active target prompt */}

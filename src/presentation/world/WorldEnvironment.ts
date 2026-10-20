@@ -410,54 +410,102 @@ export class WorldEnvironment {
       'Building: Lagos Island Printing House'
     );
 
-    // 5. Commercial Bank Tower ("Eko Merchant Bank") along Marina Road
-    const ekoBank = new Building({
-      name: 'Eko Merchant Bank Tower',
-      x: 20,
-      z: 24,
-      width: 14,
-      height: 18,
-      depth: 14,
-      style: 'COMMERCIAL_TOWER',
+    // ----------------------------------------------------
+    // LANDMARK 5: Marina Coastal Promenade & Cyber Plaza (Clear of Marina Road)
+    // Replaced misplaced road buildings with an open-air public waterfront esplanade,
+    // illuminated cyber spire sculpture, oceanview benches, and tropical palm grove.
+    // ----------------------------------------------------
+    // 1. East Esplanade Plaza Apron (Positioned safely north of road at z = 12)
+    const eastPlazaGeo = new THREE.PlaneGeometry(18, 10);
+    const plazaStoneMat = new THREE.MeshStandardMaterial({
       color: 0x1e293b,
-      trimColor: 0xd97706, // Gold trim
-      accentColor: 0xfacc15,
-      entranceSide: 'NORTH',
-      roofEquipment: true,
+      roughness: 0.65,
+      metalness: 0.2,
     });
-    this.buildings.push(ekoBank);
-    this.group.add(ekoBank.getMesh());
-    this.collisionWorld.addObstacle(
-      ekoBank.getBoundingBox().minX,
-      ekoBank.getBoundingBox().maxX,
-      ekoBank.getBoundingBox().minZ,
-      ekoBank.getBoundingBox().maxZ,
-      'Building: Eko Merchant Bank Tower'
-    );
+    const eastPlaza = new THREE.Mesh(eastPlazaGeo, plazaStoneMat);
+    eastPlaza.rotation.x = -Math.PI / 2;
+    eastPlaza.position.set(20, 0.015, 12);
+    eastPlaza.receiveShadow = true;
+    this.group.add(eastPlaza);
 
-    // 6. West Marina Commercial Office ("Maritime House")
-    const maritimeHouse = new Building({
-      name: 'Lagos Maritime House',
-      x: -22,
-      z: 26,
-      width: 16,
-      height: 14,
-      depth: 12,
-      style: 'MODERN_OFFICE',
-      color: 0x334155,
-      trimColor: 0x0284c7,
-      entranceSide: 'NORTH',
-      roofEquipment: true,
+    // 2. Centerpiece Cyber Spire Monument ("Eko Tech Spire") at x = 20, z = 12
+    const spireGroup = new THREE.Group();
+    spireGroup.position.set(20, 0, 12);
+    
+    // Spire tiered base
+    const baseGeo = new THREE.CylinderGeometry(2.4, 2.8, 0.6, 8);
+    const baseMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4 });
+    const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+    baseMesh.position.y = 0.3;
+    spireGroup.add(baseMesh);
+
+    // Illuminated glass obelisk
+    const spireGeo = new THREE.ConeGeometry(0.8, 7.5, 6);
+    const spireMat = new THREE.MeshStandardMaterial({
+      color: 0x00e5ff,
+      roughness: 0.1,
+      metalness: 0.8,
+      emissive: 0x00e5ff,
+      emissiveIntensity: 0.4,
     });
-    this.buildings.push(maritimeHouse);
-    this.group.add(maritimeHouse.getMesh());
-    this.collisionWorld.addObstacle(
-      maritimeHouse.getBoundingBox().minX,
-      maritimeHouse.getBoundingBox().maxX,
-      maritimeHouse.getBoundingBox().minZ,
-      maritimeHouse.getBoundingBox().maxZ,
-      'Building: Lagos Maritime House'
-    );
+    const spireMesh = new THREE.Mesh(spireGeo, spireMat);
+    spireMesh.position.y = 4.35;
+    spireGroup.add(spireMesh);
+
+    // Glowing energy rings around spire
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+    for (let r = 0; r < 3; r++) {
+      const ringGeo = new THREE.TorusGeometry(1.2 - r * 0.25, 0.04, 8, 24);
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI / 2;
+      ring.position.y = 2.2 + r * 1.6;
+      spireGroup.add(ring);
+    }
+    this.group.add(spireGroup);
+    this.collisionWorld.addObstacle(17.5, 22.5, 9.5, 14.5, 'Monument: Eko Tech Spire');
+
+    // Tropical Palms & Modern Benches around the East Plaza
+    const eastPalm1 = LagosProps.createPalmTree(14, 12, 6.5);
+    const eastPalm2 = LagosProps.createPalmTree(26, 12, 6.0);
+    this.group.add(eastPalm1);
+    this.group.add(eastPalm2);
+
+    // 3. West Waterfront Lookout & Smart Transit Shelter at x = -20, z = 12
+    const westPlazaGeo = new THREE.PlaneGeometry(16, 10);
+    const westPlaza = new THREE.Mesh(westPlazaGeo, plazaStoneMat);
+    westPlaza.rotation.x = -Math.PI / 2;
+    westPlaza.position.set(-20, 0.015, 12);
+    westPlaza.receiveShadow = true;
+    this.group.add(westPlaza);
+
+    const busShelter = LagosProps.createBusShelterWithAd(-20, 0.02, 12, Math.PI, 'CYBER_ACADEMY');
+    this.group.add(busShelter.mesh);
+    if (busShelter.aabb) {
+      this.collisionWorld.addObstacle(
+        busShelter.aabb.minX,
+        busShelter.aabb.maxX,
+        busShelter.aabb.minZ,
+        busShelter.aabb.maxZ,
+        'Marina Transit Shelter'
+      );
+    }
+
+    const westPalm = LagosProps.createPalmTree(-26, 12, 6.2);
+    this.group.add(westPalm);
+
+    // Interactive Waterfront Observation Viewpoint Marker
+    const viewpointMarker = new InteractableMarker(-15, 12, 0x38bdf8, 'Marina Lagoon Viewpoint');
+    this.markers.push(viewpointMarker);
+    this.group.add(viewpointMarker.getMesh());
+
+    this.interactionRegistry.register({
+      id: 'interact_marina_viewpoint',
+      name: 'Marina Lagoon Viewpoint',
+      promptAction: 'admire panoramic Lagos Lagoon harbor view [E]',
+      description: 'Scenic vista overlooking Lagos Lagoon, ocean cargo vessels, and the Marina coastal skyline.',
+      position: [-15, 0, 12],
+      radius: 2.8,
+    });
 
     // 7. Relocated Idumota Wholesale Depot (Strategically placed on East Lot, clear of road)
     const depot = new Building({

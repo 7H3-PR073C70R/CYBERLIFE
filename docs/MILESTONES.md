@@ -534,14 +534,15 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 
 ## M14 — Authorized Offensive Simulation & Social Pretexting Engine
 
-- **Purpose**: Implement the interactive Red Team and penetration testing gameplay loop under strict, inspectable Rules of Engagement (RoE).
-- **Scope**:
-  - `tool_exploit_lab`: Dry-run Metasploit-style simulation runner with deterministic vulnerability triggers (e.g. CVE-2026-ASTER-01 buffer bounds, unpatched Redis daemon).
-  - `tool_web_proxy`: Fictional HTTP/HTTPS interception console simulating parameter tampering, SQLi payloads, and JWT signature bypass against simulated internal APIs.
-  - Interactive social engineering pretexting dialogues with branching dialogue trees, trust metrics, badge cloning/counterfeiting, and employee verification challenges.
-  - Sandboxed execution: Zero real networking, zero real payload execution on the host machine.
+- **Purpose**: Implement the interactive Red Team and penetration testing gameplay loop under strict, inspectable Rules of Engagement (RoE), simulated web request inspection, safe exploit-lab workflows, and human-centered social pretexting across authentic Lagos Island venues.
+- **Scope & Implementation**:
+  - `tool_exploit_lab` (Playable): Interactive dry-run exploit simulation engine (`ExploitLabEngine.ts`) with RoE authorization checks, target discovery, preflight dry-run analysis, simulated execution, structured findings, and reproducible forensic evidence generation (CVE-2026-ASTER-01, Redis RCE, Go Gin API bypass).
+  - `tool_web_proxy` (Playable): Simulated HTTP/HTTPS web application proxy console (`WebProxyEngine.ts`) with request/response tampering, interactive replay, side-by-side diff highlighting, preset vulnerability scenarios (BOLA/IDOR CWE-639, SQL injection, Mass Assignment), and defense toggles.
+  - `tool_social_eng` (Playable): Interactive social pretexting engine (`SocialPretextEngine.ts`) with 6 authentic Lagos Island scenarios across corporate lobbies, datacenters, and executive telecom switchboards; real-time dynamic gauges (Trust, Authority, Credibility, Suspicion); procedure verification challenges (out-of-band callbacks, badge validation).
+  - Desktop & Terminal Integration: Mounted in EkoSec OS desktop (`ExploitLabApp.tsx`, `WebProxyApp.tsx`, `SocialPretextApp.tsx`), full CLI support (`exploitlab`, `webproxy`, `pretext`), and CyberCatalogue live inspection.
+  - Strict Security Sandbox: 100% deterministic in-memory domain model. Zero host execution, zero external network sockets, zero live malware or phishing generation.
 - **Dependencies**: M13.
-- **Status**: **PLANNED**.
+- **Status**: **COMPLETED & VERIFIED** (92/92 test files, 667/667 tests passing; 35/35 M14 tests; 9/9 authentic high-resolution browser verification captures).
 
 ---
 
