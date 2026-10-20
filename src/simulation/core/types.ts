@@ -71,6 +71,7 @@ import type {
 } from '../career/types';
 import type { OnboardingSimulationState } from '../onboarding/types';
 import type { CatalogueSimulationState } from '../catalogue/types';
+import type { NarrativeState } from '../narrative/narrativeTypes';
 
 export interface SimulationState {
   readonly metadata: SimulationMetadata;
@@ -89,4 +90,5 @@ export interface SimulationState {
   readonly economy?: EconomyState;
   readonly onboarding?: OnboardingSimulationState;
   readonly catalogue?: CatalogueSimulationState;
+  readonly narrative?: NarrativeState;
 }

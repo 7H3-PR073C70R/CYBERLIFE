@@ -34,6 +34,13 @@ export type SimulationErrorCode =
   | 'EXPENSE_NOT_OVERDUE'
   | 'CATALOGUE_ENTRY_NOT_FOUND'
   | 'CATALOGUE_EXERCISE_ERROR'
+  | 'STORY_ARC_NOT_FOUND'
+  | 'STORY_CHAPTER_NOT_FOUND'
+  | 'NARRATIVE_MISSION_NOT_FOUND'
+  | 'NARRATIVE_PREREQUISITES_NOT_MET'
+  | 'FACTION_NOT_FOUND'
+  | 'CONCLUSION_NOT_FOUND'
+  | 'INSUFFICIENT_EVIDENCE'
   | 'INVARIANT_VIOLATION';
 
 export interface AdvanceSimulationTimeCommand {
@@ -345,7 +352,64 @@ export type SimulationCommand =
   | RunPurpleScenarioCommand
   | SubmitRedTeamFindingCommand
   | CompleteCatalogueExerciseCommand
-  | ResetCatalogueExerciseCommand;
+  | ResetCatalogueExerciseCommand
+  | StartStoryArcCommand
+  | AdvanceStoryChapterCommand
+  | CompleteNarrativeMissionCommand
+  | FailNarrativeMissionCommand
+  | RecordInvestigativeEvidenceCommand
+  | FormulateConclusionCommand
+  | SubmitInvestigativeConclusionCommand
+  | ChangeFactionStandingCommand;
+
+export interface StartStoryArcCommand {
+  readonly type: 'StartStoryArc';
+  readonly arcId: string;
+}
+
+export interface AdvanceStoryChapterCommand {
+  readonly type: 'AdvanceStoryChapter';
+  readonly chapterId: string;
+}
+
+export interface CompleteNarrativeMissionCommand {
+  readonly type: 'CompleteNarrativeMission';
+  readonly missionId: string;
+}
+
+export interface FailNarrativeMissionCommand {
+  readonly type: 'FailNarrativeMission';
+  readonly missionId: string;
+  readonly reason: string;
+}
+
+export interface RecordInvestigativeEvidenceCommand {
+  readonly type: 'RecordInvestigativeEvidence';
+  readonly evidenceId: string;
+  readonly source: string;
+  readonly title: string;
+  readonly description: string;
+  readonly hash: string;
+  readonly tags?: readonly string[];
+}
+
+export interface FormulateConclusionCommand {
+  readonly type: 'FormulateConclusion';
+  readonly conclusionId: string;
+}
+
+export interface SubmitInvestigativeConclusionCommand {
+  readonly type: 'SubmitInvestigativeConclusion';
+  readonly conclusionId: string;
+  readonly recipientFactionId: string;
+}
+
+export interface ChangeFactionStandingCommand {
+  readonly type: 'ChangeFactionStanding';
+  readonly factionId: string;
+  readonly delta: number;
+  readonly reason: string;
+}
 
 export interface CommandResult {
   readonly success: boolean;

@@ -12,6 +12,8 @@ import { DEFAULT_RECURRING_EXPENSES } from '../career/shopDefinitions';
 import { OnboardingSimulationState } from '../onboarding/types';
 import { CatalogueSimulationState } from '../catalogue/types';
 import { createInitialCatalogueState } from '../catalogue/catalogueHandler';
+import { NarrativeState } from '../narrative/narrativeTypes';
+import { createInitialNarrativeState } from '../narrative/initialNarrativeState';
 
 export interface InitialStateOverrides {
   readonly schemaVersion?: number;
@@ -35,6 +37,7 @@ export interface InitialStateOverrides {
   readonly economy?: EconomyState;
   readonly onboarding?: OnboardingSimulationState;
   readonly catalogue?: CatalogueSimulationState;
+  readonly narrative?: NarrativeState;
 }
 
 /**
@@ -144,6 +147,7 @@ export function createInitialSimulationState(
       activeStepId: 'step_intro_welcome',
     },
     catalogue: overrides?.catalogue ?? createInitialCatalogueState(),
+    narrative: overrides?.narrative ?? createInitialNarrativeState(),
   };
 
   validateSimulationState(state);

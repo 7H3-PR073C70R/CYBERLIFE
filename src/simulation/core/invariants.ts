@@ -438,4 +438,85 @@ export function validateSimulationState(state: SimulationState): void {
       );
     }
   }
+
+  // 15. Narrative invariants (if present)
+  if (state.narrative) {
+    const { narrative } = state;
+    if (narrative.activeArcId !== null && typeof narrative.activeArcId !== 'string') {
+      throw new InvariantViolationError('narrative.activeArcId must be a string or null');
+    }
+    if (!Array.isArray(narrative.completedArcIds)) {
+      throw new InvariantViolationError('narrative.completedArcIds must be an array');
+    }
+    const seenArcs = new Set<string>();
+    for (const arcId of narrative.completedArcIds) {
+      if (!arcId || typeof arcId !== 'string') {
+        throw new InvariantViolationError('narrative.completedArcIds items must be non-empty strings');
+      }
+      if (seenArcs.has(arcId)) {
+        throw new InvariantViolationError(`Duplicate arc ID "${arcId}" in completedArcIds`);
+      }
+      seenArcs.add(arcId);
+    }
+
+    if (narrative.activeChapterId !== null && typeof narrative.activeChapterId !== 'string') {
+      throw new InvariantViolationError('narrative.activeChapterId must be a string or null');
+    }
+    if (!Array.isArray(narrative.completedChapterIds)) {
+      throw new InvariantViolationError('narrative.completedChapterIds must be an array');
+    }
+    if (!Array.isArray(narrative.activeMissionIds)) {
+      throw new InvariantViolationError('narrative.activeMissionIds must be an array');
+    }
+    if (!Array.isArray(narrative.completedMissionIds)) {
+      throw new InvariantViolationError('narrative.completedMissionIds must be an array');
+    }
+    if (!Array.isArray(narrative.failedMissionIds)) {
+      throw new InvariantViolationError('narrative.failedMissionIds must be an array');
+    }
+    if (!Array.isArray(narrative.completedObjectiveIds)) {
+      throw new InvariantViolationError('narrative.completedObjectiveIds must be an array');
+    }
+
+    if (!narrative.factions || typeof narrative.factions !== 'object') {
+      throw new InvariantViolationError('narrative.factions must be an object');
+    }
+    for (const [factionId, fState] of Object.entries(narrative.factions)) {
+      if (!fState || typeof fState !== 'object') {
+        throw new InvariantViolationError(`narrative.factions["${factionId}"] must be an object`);
+      }
+      if (
+        !Number.isSafeInteger(fState.standing) ||
+        fState.standing < -100 ||
+        fState.standing > 100
+      ) {
+        throw new InvariantViolationError(
+          `Faction "${factionId}" standing must be safe integer in [-100, 100], received ${fState.standing}`
+        );
+      }
+      const validBands = ['HOSTILE', 'DISTRUSTED', 'NEUTRAL', 'FAVORED', 'ALLIED'];
+      if (!validBands.includes(fState.band)) {
+        throw new InvariantViolationError(
+          `Faction "${factionId}" has invalid band: ${fState.band}`
+        );
+      }
+    }
+
+    if (!narrative.evidenceVault || typeof narrative.evidenceVault !== 'object') {
+      throw new InvariantViolationError('narrative.evidenceVault must be an object');
+    }
+    for (const [evId, item] of Object.entries(narrative.evidenceVault)) {
+      if (!item || !item.evidenceId || !item.hash) {
+        throw new InvariantViolationError(`Evidence vault item "${evId}" is missing evidenceId or hash`);
+      }
+    }
+
+    if (!Array.isArray(narrative.discoveredConclusions)) {
+      throw new InvariantViolationError('narrative.discoveredConclusions must be an array');
+    }
+    if (!Array.isArray(narrative.submittedConclusions)) {
+      throw new InvariantViolationError('narrative.submittedConclusions must be an array');
+    }
+  }
 }
+

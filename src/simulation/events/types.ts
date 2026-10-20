@@ -46,7 +46,15 @@ export type SimulationEventType =
   | 'PURPLE_SCENARIO_EXECUTED'
   | 'RED_TEAM_FINDING_SUBMITTED'
   | 'CATALOGUE_EXERCISE_COMPLETED'
-  | 'CATALOGUE_EXERCISE_RESET';
+  | 'CATALOGUE_EXERCISE_RESET'
+  | 'STORY_ARC_STARTED'
+  | 'STORY_CHAPTER_ADVANCED'
+  | 'NARRATIVE_MISSION_COMPLETED'
+  | 'NARRATIVE_MISSION_FAILED'
+  | 'INVESTIGATIVE_EVIDENCE_RECORDED'
+  | 'INVESTIGATIVE_CONCLUSION_FORMULATED'
+  | 'INVESTIGATIVE_CONCLUSION_SUBMITTED'
+  | 'FACTION_STANDING_CHANGED';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -431,7 +439,15 @@ export type SimulationEvent =
   | PurpleScenarioExecutedEvent
   | RedTeamFindingSubmittedEvent
   | CatalogueExerciseCompletedEvent
-  | CatalogueExerciseResetEvent;
+  | CatalogueExerciseResetEvent
+  | StoryArcStartedEvent
+  | StoryChapterAdvancedEvent
+  | NarrativeMissionCompletedEvent
+  | NarrativeMissionFailedEvent
+  | InvestigativeEvidenceRecordedEvent
+  | InvestigativeConclusionFormulatedEvent
+  | InvestigativeConclusionSubmittedEvent
+  | FactionStandingChangedEvent;
 
 export type OnboardingStepCompletedEvent = BaseSimulationEvent<
   'ONBOARDING_STEP_COMPLETED',
@@ -532,3 +548,79 @@ export type CatalogueExerciseResetEvent = BaseSimulationEvent<
     readonly exerciseId: string;
   }
 >;
+
+export type StoryArcStartedEvent = BaseSimulationEvent<
+  'STORY_ARC_STARTED',
+  {
+    readonly arcId: string;
+    readonly title: string;
+  }
+>;
+
+export type StoryChapterAdvancedEvent = BaseSimulationEvent<
+  'STORY_CHAPTER_ADVANCED',
+  {
+    readonly arcId: string;
+    readonly previousChapterId?: string | null;
+    readonly currentChapterId: string;
+  }
+>;
+
+export type NarrativeMissionCompletedEvent = BaseSimulationEvent<
+  'NARRATIVE_MISSION_COMPLETED',
+  {
+    readonly missionId: string;
+    readonly chapterId: string;
+    readonly rewardXp?: number;
+    readonly rewardKobo?: number;
+  }
+>;
+
+export type NarrativeMissionFailedEvent = BaseSimulationEvent<
+  'NARRATIVE_MISSION_FAILED',
+  {
+    readonly missionId: string;
+    readonly reason: string;
+    readonly recoveryBranchMissionId?: string;
+  }
+>;
+
+export type InvestigativeEvidenceRecordedEvent = BaseSimulationEvent<
+  'INVESTIGATIVE_EVIDENCE_RECORDED',
+  {
+    readonly evidenceId: string;
+    readonly source: string;
+    readonly title: string;
+    readonly hash: string;
+  }
+>;
+
+export type InvestigativeConclusionFormulatedEvent = BaseSimulationEvent<
+  'INVESTIGATIVE_CONCLUSION_FORMULATED',
+  {
+    readonly conclusionId: string;
+    readonly hypothesis: string;
+    readonly confidenceScore: number;
+  }
+>;
+
+export type InvestigativeConclusionSubmittedEvent = BaseSimulationEvent<
+  'INVESTIGATIVE_CONCLUSION_SUBMITTED',
+  {
+    readonly conclusionId: string;
+    readonly recipientFactionId: string;
+  }
+>;
+
+export type FactionStandingChangedEvent = BaseSimulationEvent<
+  'FACTION_STANDING_CHANGED',
+  {
+    readonly factionId: string;
+    readonly previousStanding: number;
+    readonly newStanding: number;
+    readonly delta: number;
+    readonly reason: string;
+    readonly band: string;
+  }
+>;
+

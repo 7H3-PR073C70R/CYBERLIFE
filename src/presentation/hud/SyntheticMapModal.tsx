@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 export interface MapMarker {
   id: string;
@@ -24,18 +24,79 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
   isOpen,
   onClose,
   currentLocationName = 'Lagos Island – Broad Street & Marina',
-  playerCoords = { x: 0, z: 0 },
+  playerCoords = { x: 0, z: 10 },
 }) => {
+  // Live tracked coordinates: combines React prop with real-time 3D simulation telemetry
+  const [liveCoords, setLiveCoords] = useState<{ x: number; z: number }>(playerCoords);
+
+  useEffect(() => {
+    setLiveCoords(playerCoords);
+  }, [playerCoords.x, playerCoords.z]);
+
+  // Real-time 10Hz position polling while map is open to ensure 100% fluid movement tracking
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const readLivePosition = () => {
+      const worldMgr = (window as unknown as Record<string, unknown>)?.__CYBERLIFE_WORLD_MANAGER__ as
+        | {
+            getPlayerPosition?: () => { x: number; y: number; z: number };
+            getCurrentLocation?: () => { id: string };
+          }
+        | undefined;
+      if (worldMgr) {
+        const loc = worldMgr.getCurrentLocation?.();
+        if (loc?.id === 'apartment_interior') {
+          setLiveCoords({ x: -12.0, z: -14.0 });
+          return;
+        }
+        if (loc?.id === 'cedarline_interior') {
+          setLiveCoords({ x: 18.0, z: 6.0 });
+          return;
+        }
+        if (typeof worldMgr.getPlayerPosition === 'function') {
+          const pos = worldMgr.getPlayerPosition();
+          if (pos && typeof pos.x === 'number' && typeof pos.z === 'number') {
+            setLiveCoords({ x: pos.x, z: pos.z });
+          }
+        }
+      }
+    };
+
+    readLivePosition();
+    const interval = setInterval(readLivePosition, 100);
+    return () => clearInterval(interval);
+  }, [isOpen]);
+
+  // Global Escape key listener for immediate responsive modal dismissal
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [isOpen, onClose]);
+
+  // Map 3D world coordinates (-35..35, -35..35) to synthetic vector radar percentage (15%..85%)
+  const playerPos = useMemo(() => {
+    const normX = (liveCoords.x + 35) / 70;
+    const normZ = (liveCoords.z + 35) / 70;
+    const xPct = Math.min(Math.max(15 + normX * 70, 8), 92);
+    const yPct = Math.min(Math.max(14 + normZ * 70, 8), 92);
+    return {
+      x: Math.round(xPct * 10) / 10,
+      y: Math.round(yPct * 10) / 10,
+    };
+  }, [liveCoords.x, liveCoords.z]);
+
   if (!isOpen) return null;
-
-  // Map world coordinates (-40..40, -40..40) to percentage (10%..90%)
-  const mapWorldToMapPercent = (worldX: number, worldZ: number) => {
-    const xPct = Math.min(Math.max(((worldX + 35) / 70) * 100, 8), 92);
-    const yPct = Math.min(Math.max(((worldZ + 35) / 70) * 100, 8), 92);
-    return { x: xPct, y: yPct };
-  };
-
-  const playerPos = mapWorldToMapPercent(playerCoords.x, playerCoords.z);
 
   const markers: MapMarker[] = [
     {
@@ -44,8 +105,8 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
       type: 'home',
       label: 'HOME',
       sublabel: 'Broad Street 14, Apt 4B',
-      xPercent: 26,
-      yPercent: 30,
+      xPercent: 38,
+      yPercent: 35,
       color: '#f59e0b',
       icon: '🏠',
       description: 'Your safehouse residence, backup flash drives, and personal workstation rig.',
@@ -56,8 +117,8 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
       type: 'office',
       label: 'OFFICES',
       sublabel: 'Marina Tower, 14th Floor SOC',
-      xPercent: 74,
-      yPercent: 58,
+      xPercent: 68,
+      yPercent: 55,
       color: '#00e5ff',
       icon: '🏢',
       description: 'Cedarline Security Operations Center (SOC) — central site of the Aster AI incident.',
@@ -68,8 +129,8 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
       type: 'market',
       label: 'MARKET',
       sublabel: 'Hardware & Mobile Alley',
-      xPercent: 78,
-      yPercent: 28,
+      xPercent: 70,
+      yPercent: 34,
       color: '#10b981',
       icon: '🛍️',
       description: 'Hardware modders, burner cables, SIM merchants, and local tech traders.',
@@ -79,9 +140,9 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
       name: 'CMS Marina Ferry & Transit Hub',
       type: 'transit',
       label: 'TRANSIT',
-      sublabel: 'Waterfront Jetty & Bus Park',
+      sublabel: 'Waterfront Jetty & Esplanade',
       xPercent: 50,
-      yPercent: 88,
+      yPercent: 78,
       color: '#38bdf8',
       icon: '🛥️',
       description: 'Primary transportation artery connecting Lagos Island, Victoria Island, and the Mainland.',
@@ -91,12 +152,12 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
       name: 'Current Player Location',
       type: 'player',
       label: 'YOU ARE HERE',
-      sublabel: currentLocationName,
+      sublabel: `X: ${liveCoords.x.toFixed(1)}m, Z: ${liveCoords.z.toFixed(1)}m`,
       xPercent: playerPos.x,
       yPercent: playerPos.y,
       color: '#ec4899',
       icon: '📍',
-      description: `Active geolocation telemetry: ${currentLocationName} (Sector B-4)`,
+      description: `Active geolocation telemetry: ${currentLocationName} (Sector B-4, Pos: [${liveCoords.x.toFixed(1)}, ${liveCoords.z.toFixed(1)}])`,
     },
   ];
 
@@ -110,14 +171,15 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(4, 8, 16, 0.85)',
+        backgroundColor: 'rgba(4, 8, 16, 0.88)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 900,
+        zIndex: 9999,
         padding: '1.2rem',
+        pointerEvents: 'auto',
       }}
       onClick={onClose}
     >
@@ -127,13 +189,14 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
           width: '840px',
           maxWidth: '96vw',
           maxHeight: '92vh',
-          backgroundColor: 'rgba(10, 18, 30, 0.96)',
-          border: '1px solid rgba(0, 229, 255, 0.35)',
+          backgroundColor: 'rgba(10, 18, 30, 0.98)',
+          border: '1px solid rgba(0, 229, 255, 0.4)',
           borderRadius: '12px',
-          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 229, 255, 0.15)',
+          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 229, 255, 0.2)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
+          pointerEvents: 'auto',
         }}
         onClick={e => e.stopPropagation()}
       >
@@ -141,15 +204,15 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
         <div
           style={{
             padding: '1rem 1.4rem',
-            borderBottom: '1px solid rgba(0, 229, 255, 0.2)',
+            borderBottom: '1px solid rgba(0, 229, 255, 0.25)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            background: 'linear-gradient(90deg, rgba(0, 229, 255, 0.08) 0%, transparent 100%)',
+            background: 'linear-gradient(90deg, rgba(0, 229, 255, 0.1) 0%, transparent 100%)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <span style={{ fontSize: '1.4rem' }}>🗺️</span>
+            <span style={{ fontSize: '1.5rem' }}>🗺️</span>
             <div>
               <h2
                 style={{
@@ -164,29 +227,64 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
               >
                 Lagos Island Tactical Geolocation Map
               </h2>
-              <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '2px' }}>
-                Coordinates: 6.4531° N, 3.3958° E • Elevation: 4m ASL • Marina Subnet 10.0.4.0/24
+              <div
+                style={{
+                  fontSize: '0.75rem',
+                  color: '#94a3b8',
+                  marginTop: '2px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  flexWrap: 'wrap',
+                }}
+              >
+                <span>6.4531° N, 3.3958° E</span>
+                <span>•</span>
+                <span style={{ color: '#38bdf8', fontFamily: 'monospace' }}>
+                  Grid X: {liveCoords.x.toFixed(1)}m, Z: {liveCoords.z.toFixed(1)}m
+                </span>
+                <span>•</span>
+                <span style={{ color: '#10b981', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <span
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      backgroundColor: '#10b981',
+                      boxShadow: '0 0 6px #10b981',
+                    }}
+                  />
+                  Live Tracking Active
+                </span>
               </div>
             </div>
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={e => {
+              e.stopPropagation();
+              onClose();
+            }}
             aria-label="Close synthetic map"
             data-testid="synthetic-map-close-btn"
+            className="synthetic-map-close-btn btn-icon-close"
             style={{
               background: 'rgba(255, 255, 255, 0.08)',
               border: '1px solid rgba(255, 255, 255, 0.15)',
               color: '#f8fafc',
               borderRadius: '6px',
-              width: '32px',
-              height: '32px',
+              width: '38px',
+              height: '38px',
+              minWidth: '38px',
+              minHeight: '38px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              fontSize: '1.1rem',
+              fontSize: '1.2rem',
               fontWeight: 700,
+              pointerEvents: 'auto',
+              transition: 'all 0.15s ease',
             }}
           >
             ✕
@@ -207,6 +305,8 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
           <svg
             width="100%"
             height="100%"
+            viewBox="0 0 840 420"
+            preserveAspectRatio="none"
             style={{ position: 'absolute', inset: 0, opacity: 0.35, pointerEvents: 'none' }}
           >
             <defs>
@@ -228,16 +328,16 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
             </text>
 
             {/* Main Road Avenues */}
-            {/* Broad Street (Vertical) */}
-            <line x1="380" y1="20" x2="380" y2="350" stroke="rgba(250, 204, 21, 0.45)" strokeWidth="8" />
-            <line x1="380" y1="20" x2="380" y2="350" stroke="#facc15" strokeWidth="1.5" strokeDasharray="6 6" />
+            {/* Broad Street (Vertical Centerline at x=420) */}
+            <line x1="420" y1="20" x2="420" y2="350" stroke="rgba(250, 204, 21, 0.45)" strokeWidth="8" />
+            <line x1="420" y1="20" x2="420" y2="350" stroke="#facc15" strokeWidth="1.5" strokeDasharray="6 6" />
 
-            {/* Marina Road (Horizontal) */}
-            <line x1="20" y1="330" x2="820" y2="330" stroke="rgba(250, 204, 21, 0.45)" strokeWidth="8" />
-            <line x1="20" y1="330" x2="820" y2="330" stroke="#facc15" strokeWidth="1.5" strokeDasharray="6 6" />
+            {/* Marina Road (Horizontal Avenue along Waterfront at y=290) */}
+            <line x1="20" y1="290" x2="820" y2="290" stroke="rgba(250, 204, 21, 0.45)" strokeWidth="8" />
+            <line x1="20" y1="290" x2="820" y2="290" stroke="#facc15" strokeWidth="1.5" strokeDasharray="6 6" />
 
-            {/* Balogun Lane (Horizontal branch) */}
-            <line x1="380" y1="120" x2="780" y2="120" stroke="rgba(148, 163, 184, 0.3)" strokeWidth="4" />
+            {/* Balogun Lane (Horizontal branch east from Broad Street at y=145) */}
+            <line x1="420" y1="145" x2="780" y2="145" stroke="rgba(148, 163, 184, 0.35)" strokeWidth="5" />
           </svg>
 
           {/* Interactive Markers */}
@@ -254,21 +354,22 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
                 flexDirection: 'column',
                 alignItems: 'center',
                 cursor: 'pointer',
-                zIndex: m.type === 'player' ? 20 : 10,
+                zIndex: m.type === 'player' ? 25 : 10,
+                transition: m.type === 'player' ? 'left 0.15s linear, top 0.15s linear' : 'none',
               }}
             >
               <div
                 style={{
-                  width: m.type === 'player' ? '34px' : '28px',
-                  height: m.type === 'player' ? '34px' : '28px',
+                  width: m.type === 'player' ? '36px' : '28px',
+                  height: m.type === 'player' ? '36px' : '28px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(10, 18, 30, 0.9)',
+                  backgroundColor: 'rgba(10, 18, 30, 0.95)',
                   border: `2px solid ${m.color}`,
-                  boxShadow: `0 0 14px ${m.color}`,
+                  boxShadow: `0 0 16px ${m.color}`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: m.type === 'player' ? '1.1rem' : '0.9rem',
+                  fontSize: m.type === 'player' ? '1.15rem' : '0.9rem',
                   animation: m.type === 'player' ? 'pulse 2s infinite' : 'none',
                 }}
               >
@@ -279,8 +380,8 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
                   marginTop: '4px',
                   padding: '2px 6px',
                   borderRadius: '4px',
-                  backgroundColor: 'rgba(4, 8, 16, 0.85)',
-                  border: `1px solid ${m.color}66`,
+                  backgroundColor: 'rgba(4, 8, 16, 0.88)',
+                  border: `1px solid ${m.color}88`,
                   color: m.color,
                   fontSize: '0.68rem',
                   fontWeight: 700,
@@ -314,7 +415,7 @@ export const SyntheticMapModal: React.FC<SyntheticMapModalProps> = ({
         <div
           style={{
             padding: '1rem 1.4rem',
-            backgroundColor: 'rgba(15, 23, 42, 0.7)',
+            backgroundColor: 'rgba(15, 23, 42, 0.8)',
             borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',

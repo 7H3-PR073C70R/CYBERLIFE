@@ -42,4 +42,37 @@ describe('SyntheticMapModal Component', () => {
     fireEvent.click(backdrop);
     expect(handleClose).toHaveBeenCalledTimes(2);
   });
+
+  it('closes when Escape key is pressed', () => {
+    const handleClose = vi.fn();
+    render(<SyntheticMapModal isOpen={true} onClose={handleClose} />);
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(handleClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('dynamically tracks player coordinates and movement', () => {
+    const { rerender } = render(
+      <SyntheticMapModal
+        isOpen={true}
+        onClose={vi.fn()}
+        playerCoords={{ x: 0, z: 10 }}
+      />
+    );
+
+    const playerMarker = screen.getByTestId('map-marker-player');
+    expect(playerMarker).toBeInTheDocument();
+    expect(screen.getAllByText(/0\.0m.*10\.0m/i).length).toBeGreaterThan(0);
+
+    // Player moves to apartment (-12, -14)
+    rerender(
+      <SyntheticMapModal
+        isOpen={true}
+        onClose={vi.fn()}
+        playerCoords={{ x: -12, z: -14 }}
+      />
+    );
+
+    expect(screen.getAllByText(/-12\.0m.*-14\.0m/i).length).toBeGreaterThan(0);
+  });
 });

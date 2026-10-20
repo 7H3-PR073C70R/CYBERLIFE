@@ -53,6 +53,11 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   const [activeTarget, setActiveTarget] = useState<InteractableDefinition | null>(null);
   const [noticeMessage, setNoticeMessage] = useState<string | null>(null);
   const [activeNpcId, setActiveNpcId] = useState<string | null>(() => initialNpcParam ?? null);
+  const [playerPosition, setPlayerPosition] = useState<{ x: number; z: number }>(() => {
+    if (initialLocParam === 'apartment_interior') return { x: -12.0, z: -14.0 };
+    if (initialLocParam === 'cedarline_interior') return { x: 18.0, z: 6.0 };
+    return { x: 0, z: 10 };
+  });
 
   // M4 Virtual Desktop State
   const [isDesktopOpen, setIsDesktopOpen] = useState<boolean>(() => initialWsParam === 'open');
@@ -86,6 +91,14 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
         initialLocationId: initialLocParam ?? 'neighborhood',
         onLocationChanged: loc => {
           setCurrentLocation(loc);
+          if (loc.id === 'apartment_interior') {
+            setPlayerPosition({ x: -12.0, z: -14.0 });
+          } else if (loc.id === 'cedarline_interior') {
+            setPlayerPosition({ x: 18.0, z: 6.0 });
+          } else if (managerRef.current) {
+            const p = managerRef.current.getPlayerPosition();
+            setPlayerPosition({ x: p.x, z: p.z });
+          }
           if (simRef.current && simRef.current.state.player.locationId !== loc.id) {
             simRef.current.dispatch({
               type: 'SetLogicalPlayerLocation',
@@ -157,6 +170,9 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
           } else {
             setNoticeMessage('🛏️ You rested for 8 hours and feel refreshed.');
           }
+        },
+        onPlayerPositionChanged: coords => {
+          setPlayerPosition({ x: coords.x, z: coords.z });
         },
       });
 
@@ -421,6 +437,7 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
           activeTarget={activeTarget}
           simulationTimeString={sim ? sim.state.time.calendar.timeString : undefined}
           playerFunds={sim ? Money.fromKobo(sim.state.player.moneyKobo).format() : undefined}
+          playerCoords={playerPosition}
           onToggleCamera={handleToggleCamera}
           onInteract={handleInteract}
           onSettingsChanged={handleSettingsChanged}

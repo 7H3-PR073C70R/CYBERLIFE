@@ -120,6 +120,30 @@ export function isDialogueConditionMet(
     }
   }
 
+  // Required faction standing check
+  if (condition.requiredFactionStanding) {
+    const currentStanding =
+      context.factionStandings?.[condition.requiredFactionStanding.factionId] ?? 0;
+    if (currentStanding < condition.requiredFactionStanding.minStanding) {
+      return false;
+    }
+  }
+
+  // Required evidence IDs check
+  if (condition.requiredEvidenceIds && condition.requiredEvidenceIds.length > 0) {
+    const preserved = new Set(context.preservedEvidenceIds ?? []);
+    for (const evId of condition.requiredEvidenceIds) {
+      if (!preserved.has(evId)) {
+        return false;
+      }
+    }
+  }
+
+  // Required chapter check
+  if (condition.requiredChapterId && context.currentChapterId !== condition.requiredChapterId) {
+    return false;
+  }
+
   return true;
 }
 

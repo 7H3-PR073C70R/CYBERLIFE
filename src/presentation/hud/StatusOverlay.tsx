@@ -9,6 +9,7 @@ export interface StatusOverlayProps {
   cameraMode?: CameraMode;
   simulationTimeString?: string;
   playerFunds?: string;
+  playerCoords?: { x: number; z: number };
   onToggleCamera?: () => void;
   onToggleHelp?: () => void;
   onToggleDevDrawer?: () => void;
@@ -28,6 +29,7 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
   cameraMode = 'THIRD_PERSON',
   simulationTimeString,
   playerFunds,
+  playerCoords,
   onToggleCamera,
   onToggleHelp,
   onToggleDevDrawer,
@@ -40,8 +42,9 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
   isControlsOpen = false,
   isSettingsOpen = false,
 }) => {
+  const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [isMapOpen, setIsMapOpen] = useState<boolean>(false);
+  const [isMapOpen, setIsMapOpen] = useState<boolean>(() => Boolean(urlParams?.get('map') === 'open'));
 
   return (
     <header className="hud-header" role="banner">
@@ -365,6 +368,7 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
         isOpen={isMapOpen}
         onClose={() => setIsMapOpen(false)}
         currentLocationName={currentLocationName}
+        playerCoords={playerCoords}
       />
     </header>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export interface MovementHelpProps {
   isOpen: boolean;
@@ -7,6 +7,21 @@ export interface MovementHelpProps {
 }
 
 export const MovementHelp: React.FC<MovementHelpProps> = ({ isOpen, onClose, cameraMode }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
@@ -24,7 +39,10 @@ export const MovementHelp: React.FC<MovementHelpProps> = ({ isOpen, onClose, cam
         <button
           type="button"
           className="btn-icon-close"
-          onClick={onClose}
+          onClick={e => {
+            e.stopPropagation();
+            onClose();
+          }}
           aria-label="Dismiss movement instructions"
           data-testid="dismiss-movement-help"
         >

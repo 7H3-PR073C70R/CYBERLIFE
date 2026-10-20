@@ -39,6 +39,7 @@ export interface WorldSceneOptions {
   onNpcDialogue?: (dialogue: NpcDialogueData) => void;
   onNpcInteract?: (npcId: string) => void;
   onBedSleep?: () => void;
+  onPlayerPositionChanged?: (coords: { x: number; y: number; z: number }) => void;
 }
 
 export interface SceneStatistics {
@@ -87,6 +88,8 @@ export class WorldSceneManager {
   private onNpcDialogue?: (dialogue: NpcDialogueData) => void;
   private onNpcInteract?: (npcId: string) => void;
   private onBedSleep?: () => void;
+  private onPlayerPositionChanged?: (coords: { x: number; y: number; z: number }) => void;
+  private lastReportedPlayerPos = { x: 0, y: 0, z: 0 };
 
   private frameCount = 0;
   private isDisposed = false;
@@ -136,6 +139,7 @@ export class WorldSceneManager {
     this.onNpcDialogue = options.onNpcDialogue;
     this.onNpcInteract = options.onNpcInteract;
     this.onBedSleep = options.onBedSleep;
+    this.onPlayerPositionChanged = options.onPlayerPositionChanged;
 
     // 1. Scene Setup
     this.scene = new THREE.Scene();
@@ -232,6 +236,11 @@ export class WorldSceneManager {
       onLocationChanged: loc => {
         this.skyEnvironment?.setLocationMode(loc.type === 'INTERIOR');
         this.onLocationChanged?.(loc);
+        if (this.playerController && this.onPlayerPositionChanged) {
+          const p = this.playerController.getPosition();
+          this.lastReportedPlayerPos = { x: p.x, y: p.y, z: p.z };
+          this.onPlayerPositionChanged(this.lastReportedPlayerPos);
+        }
       },
     });
 
@@ -504,6 +513,17 @@ export class WorldSceneManager {
       // 1. Update Player Movement (camera-relative)
       if (this.playerController && this.cameraController) {
         this.playerController.update(deltaTime, this.cameraController.getYaw());
+
+        if (this.onPlayerPositionChanged) {
+          const currentPos = this.playerController.getPosition();
+          if (
+            Math.abs(currentPos.x - this.lastReportedPlayerPos.x) > 0.05 ||
+            Math.abs(currentPos.z - this.lastReportedPlayerPos.z) > 0.05
+          ) {
+            this.lastReportedPlayerPos = { x: currentPos.x, y: currentPos.y, z: currentPos.z };
+            this.onPlayerPositionChanged(this.lastReportedPlayerPos);
+          }
+        }
       }
 
       // 2. Update Camera Position and Orientation (using deltaTime for frame-rate independence)

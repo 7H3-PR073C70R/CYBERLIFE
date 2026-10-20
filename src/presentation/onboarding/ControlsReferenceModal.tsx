@@ -162,8 +162,14 @@ export const ControlsReferenceModal: React.FC<ControlsReferenceModalProps> = ({
       aria-modal="true"
       aria-labelledby="controls-modal-title"
       data-testid="controls-reference-modal"
+      onClick={onClose}
+      style={{ pointerEvents: 'auto', zIndex: 9999 }}
     >
-      <div className="controls-modal-card hud-interactive">
+      <div
+        className="controls-modal-card hud-interactive"
+        style={{ pointerEvents: 'auto' }}
+        onClick={e => e.stopPropagation()}
+      >
         <div className="controls-modal-header">
           <div className="controls-title-group">
             <span className="controls-header-icon" aria-hidden="true">
@@ -182,7 +188,10 @@ export const ControlsReferenceModal: React.FC<ControlsReferenceModalProps> = ({
           <button
             type="button"
             className="btn-icon-close"
-            onClick={onClose}
+            onClick={e => {
+              e.stopPropagation();
+              onClose();
+            }}
             aria-label="Close controls reference"
             data-testid="controls-close-btn"
           >

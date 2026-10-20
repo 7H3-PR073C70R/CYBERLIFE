@@ -57,6 +57,17 @@ import {
   handleSimulationCompleteCatalogueExercise,
   handleSimulationResetCatalogueExercise,
 } from '../catalogue/catalogueHandler';
+import {
+  handleStartStoryArc,
+  handleAdvanceStoryChapter,
+  handleCompleteNarrativeMission,
+  handleFailNarrativeMission,
+  handleRecordInvestigativeEvidence,
+  handleFormulateConclusion,
+  handleSubmitInvestigativeConclusion,
+  handleChangeFactionStanding,
+} from '../narrative/narrativeCommandHandler';
+import { clampFactionStanding, getFactionStandingBand } from '../narrative/narrativeEvaluator';
 
 function makeFailure(
   state: Readonly<SimulationState>,
@@ -1532,6 +1543,15 @@ export function handleCommand(
           skills: currentState.skills
             ? Object.fromEntries(Object.entries(currentState.skills).map(([k, v]) => [k, v.level]))
             : undefined,
+          factionStandings: currentState.narrative?.factions
+            ? Object.fromEntries(
+                Object.entries(currentState.narrative.factions).map(([k, v]) => [k, v.standing])
+              )
+            : undefined,
+          preservedEvidenceIds: currentState.narrative?.evidenceVault
+            ? Object.keys(currentState.narrative.evidenceVault)
+            : undefined,
+          currentChapterId: currentState.narrative?.activeChapterId ?? undefined,
         };
 
         const selectedNodeId =
@@ -1647,6 +1667,15 @@ export function handleCommand(
           skills: currentState.skills
             ? Object.fromEntries(Object.entries(currentState.skills).map(([k, v]) => [k, v.level]))
             : undefined,
+          factionStandings: currentState.narrative?.factions
+            ? Object.fromEntries(
+                Object.entries(currentState.narrative.factions).map(([k, v]) => [k, v.standing])
+              )
+            : undefined,
+          preservedEvidenceIds: currentState.narrative?.evidenceVault
+            ? Object.keys(currentState.narrative.evidenceVault)
+            : undefined,
+          currentChapterId: currentState.narrative?.activeChapterId ?? undefined,
         };
 
         if (!isDialogueConditionMet(choice.condition, evalContext)) {
@@ -1665,6 +1694,7 @@ export function handleCommand(
         const updatedFlags = { ...currentState.flags };
         let updatedMission = currentState.mission ? { ...currentState.mission } : undefined;
         let updatedJobs = currentState.jobs ? { ...currentState.jobs } : undefined;
+        let updatedNarrative = currentState.narrative ? { ...currentState.narrative } : undefined;
         const newTopics = [...npcState.memory.topicsDiscussed];
         const newChoices = [...npcState.memory.choicesMade];
         if (!newChoices.includes(choiceId)) {
@@ -1791,6 +1821,94 @@ export function handleCommand(
                 }
                 break;
               }
+              case 'CHANGE_FACTION_STANDING': {
+                if (updatedNarrative) {
+                  const existing = updatedNarrative.factions[action.factionId] ?? {
+                    factionId: action.factionId,
+                    standing: 0,
+                    band: getFactionStandingBand(0),
+                    history: [],
+                  };
+                  const prevStanding = existing.standing;
+                  const newStanding = clampFactionStanding(prevStanding + action.delta);
+                  const actualDelta = newStanding - prevStanding;
+                  updatedNarrative = {
+                    ...updatedNarrative,
+                    factions: {
+                      ...updatedNarrative.factions,
+                      [action.factionId]: {
+                        ...existing,
+                        standing: newStanding,
+                        band: getFactionStandingBand(newStanding),
+                        history: [
+                          ...existing.history,
+                          { delta: action.delta, reason: action.reason, timestamp: simTime },
+                        ],
+                      },
+                    },
+                  };
+                  events.push(
+                    createSimulationEvent('FACTION_STANDING_CHANGED', simTime, nextRevision, {
+                      factionId: action.factionId,
+                      previousStanding: prevStanding,
+                      newStanding,
+                      delta: actualDelta,
+                      reason: action.reason,
+                      band: getFactionStandingBand(newStanding),
+                    })
+                  );
+                }
+                break;
+              }
+              case 'RECORD_INVESTIGATIVE_CONCLUSION': {
+                if (
+                  updatedNarrative &&
+                  !updatedNarrative.discoveredConclusions.includes(action.conclusionId)
+                ) {
+                  updatedNarrative = {
+                    ...updatedNarrative,
+                    discoveredConclusions: [
+                      ...updatedNarrative.discoveredConclusions,
+                      action.conclusionId,
+                    ],
+                  };
+                  events.push(
+                    createSimulationEvent(
+                      'INVESTIGATIVE_CONCLUSION_FORMULATED',
+                      simTime,
+                      nextRevision,
+                      {
+                        conclusionId: action.conclusionId,
+                        hypothesis: 'Discovered through dialogue testimony',
+                        confidenceScore: 80,
+                      }
+                    )
+                  );
+                }
+                break;
+              }
+              case 'ADVANCE_STORY_CHAPTER': {
+                if (updatedNarrative && updatedNarrative.activeChapterId !== action.chapterId) {
+                  const prevCh = updatedNarrative.activeChapterId;
+                  const compChapters = [...updatedNarrative.completedChapterIds];
+                  if (prevCh && !compChapters.includes(prevCh)) {
+                    compChapters.push(prevCh);
+                  }
+                  updatedNarrative = {
+                    ...updatedNarrative,
+                    activeChapterId: action.chapterId,
+                    completedChapterIds: compChapters,
+                  };
+                  events.push(
+                    createSimulationEvent('STORY_CHAPTER_ADVANCED', simTime, nextRevision, {
+                      arcId: updatedNarrative.activeArcId ?? 'unknown',
+                      previousChapterId: prevCh,
+                      currentChapterId: action.chapterId,
+                    })
+                  );
+                }
+                break;
+              }
             }
           }
         }
@@ -1840,6 +1958,7 @@ export function handleCommand(
           flags: updatedFlags,
           mission: updatedMission,
           jobs: updatedJobs,
+          narrative: updatedNarrative,
           npcs: {
             ...(currentState.npcs ?? {}),
             [npcId]: updatedNpc,
@@ -2128,6 +2247,38 @@ export function handleCommand(
 
       case 'ResetCatalogueExercise': {
         return handleSimulationResetCatalogueExercise(currentState, command.exerciseId);
+      }
+
+      case 'StartStoryArc': {
+        return handleStartStoryArc(currentState, command);
+      }
+
+      case 'AdvanceStoryChapter': {
+        return handleAdvanceStoryChapter(currentState, command);
+      }
+
+      case 'CompleteNarrativeMission': {
+        return handleCompleteNarrativeMission(currentState, command);
+      }
+
+      case 'FailNarrativeMission': {
+        return handleFailNarrativeMission(currentState, command);
+      }
+
+      case 'RecordInvestigativeEvidence': {
+        return handleRecordInvestigativeEvidence(currentState, command);
+      }
+
+      case 'FormulateConclusion': {
+        return handleFormulateConclusion(currentState, command);
+      }
+
+      case 'SubmitInvestigativeConclusion': {
+        return handleSubmitInvestigativeConclusion(currentState, command);
+      }
+
+      case 'ChangeFactionStanding': {
+        return handleChangeFactionStanding(currentState, command);
       }
 
       default: {

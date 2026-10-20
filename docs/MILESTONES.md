@@ -532,131 +532,159 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 
 ---
 
-## M14 — Authorized Offensive Simulation & Social Pretexting Engine
+## M14 — Narrative, Factions, World Bible & Branching Story
 
-- **Purpose**: Implement the interactive Red Team and penetration testing gameplay loop under strict, inspectable Rules of Engagement (RoE), simulated web request inspection, safe exploit-lab workflows, and human-centered social pretexting across authentic Lagos Island venues.
+- **Purpose**: Establish the foundational narrative identity, world bible, central mystery, factions, recurring characters, branching story structure, player agency, and data-driven narrative architecture for Cyberlife.
 - **Scope & Implementation**:
-  - `tool_exploit_lab` (Playable): Interactive dry-run exploit simulation engine (`ExploitLabEngine.ts`) with RoE authorization checks, target discovery, preflight dry-run analysis, simulated execution, structured findings, and reproducible forensic evidence generation (CVE-2026-ASTER-01, Redis RCE, Go Gin API bypass).
-  - `tool_web_proxy` (Playable): Simulated HTTP/HTTPS web application proxy console (`WebProxyEngine.ts`) with request/response tampering, interactive replay, side-by-side diff highlighting, preset vulnerability scenarios (BOLA/IDOR CWE-639, SQL injection, Mass Assignment), and defense toggles.
-  - `tool_social_eng` (Playable): Interactive social pretexting engine (`SocialPretextEngine.ts`) with 6 authentic Lagos Island scenarios across corporate lobbies, datacenters, and executive telecom switchboards; real-time dynamic gauges (Trust, Authority, Credibility, Suspicion); procedure verification challenges (out-of-band callbacks, badge validation).
-  - Desktop & Terminal Integration: Mounted in EkoSec OS desktop (`ExploitLabApp.tsx`, `WebProxyApp.tsx`, `SocialPretextApp.tsx`), full CLI support (`exploitlab`, `webproxy`, `pretext`), and CyberCatalogue live inspection.
-  - Strict Security Sandbox: 100% deterministic in-memory domain model. Zero host execution, zero external network sockets, zero live malware or phishing generation.
+  - **Part 1 — Narrative Bible & Worldbuilding (`docs/narrative/cyberlife-world-bible.md`)**:
+    - Grounded near-future (2026–2027) Lagos Island setting (Broad Street, Marina Waterfront, Balogun Market, Tinubu Square, CMS Transit Hub, residential lofts).
+    - Socio-technological landscape balancing high-speed fiber landings and autonomous AI agent adoption against municipal power realities, diesel generator economics, and POS agency banking.
+    - Fictional technology ecosystem and strict simulation security boundaries (zero host execution, zero external sockets).
+  - **Part 2 — Central Mystery & Story Arcs (`docs/narrative/central-mystery-and-story-arcs.md`)**:
+    - The Eko Nexus Pipeline anomaly: Multi-tenant interconnect breach connecting Cedarline Services, Eko Merchant Bank, and Port logistics.
+    - The Four Investigative Hypotheses: Theory A (Corporate Cover-Up & Scapegoating), Theory B (Targeted Financial Espionage), Theory C (Phantom Weaver Agent Contagion), Theory D (Whistleblower Forced Audit).
+    - 3 Overarching Story Arcs: Arc 1 (The Aster Anomaly), Arc 2 (The Eko Nexus Pipeline), Arc 3 (Shadows Over Marina Tower).
+  - **Part 3 — Factions & Organizations (`docs/narrative/factions-and-organizations.md`)**:
+    - 8 nuanced factions: Cedarline Services Ltd., Eko Merchant Bank, Krest Incident Response, 0xLagos Research Syndicate, The Lagos Inquirer, Civic Rights & Cyber Integrity Initiative (CRCII), Balogun Traders Electronic Union, and National Digital Security Regulatory Commission (NDSRC).
+    - Continuous faction standing scale (-100 Hostile to +100 Allied) with 5 qualitative bands, perks, and access barriers.
+  - **Part 4 — Recurring Cast & Interpersonal Dynamics (`docs/narrative/recurring-characters-and-relationships.md`)**:
+    - 11 authored characters: Temitope Blessing (Amina), Marcus Adebayo, Dr. Elena Chen, Femi Martins, Mama Nkechi, Uncle Segun, Folake Davies, Tunde "ZeroDay" Bakare, Kemi Adeyemi, Babatunde Lawal, and Chidi Okonkwo.
+    - Explicit knowledge boundaries, conflicting loyalties, schedules, and progressive dialogue branches.
+  - **Part 5 — Player Agency & Consequence Architecture (`docs/narrative/player-agency-and-consequences.md`)**:
+    - 4 Ethical Alignments: Strict Procedural, Ethical Mentor, Uncompromising Truth, Pragmatic Commercial.
+    - Multi-dimensional agency, evidence integrity synthesis, persistent world flags, and failure recovery paths.
+  - **Part 6 — Data-Driven Narrative Architecture (`src/simulation/narrative/`)**:
+    - Type-safe, validated domain models for Story Arcs, Chapters, Missions, Objectives, Factions, Evidence Vault, and Investigative Conclusions.
+    - Authoritative validation engine (`narrativeValidator.ts`) detecting missing references, malformed prerequisites, and invalid state transitions.
+    - Integrated with authoritative `SimulationState`, deterministic `commandHandler`, and save/load persistence.
+    - Playable end-to-end story slice connecting technical evidence, dialogue, faction standing, and branching consequences.
 - **Dependencies**: M13.
-- **Status**: **COMPLETED & VERIFIED** (92/92 test files, 667/667 tests passing; 35/35 M14 tests; 9/9 authentic high-resolution browser verification captures).
+- **Status**: **COMPLETED & VERIFIED**.
+
+> [!NOTE]
+> **Existing Out-of-Sequence Offensive & Social Simulation Capabilities**:
+> Prior engineering work delivered interactive offensive security tools (`ExploitLabEngine.ts`, `WebProxyEngine.ts`, `SocialPretextEngine.ts`, desktop apps, terminal commands, and tests documented in `docs/milestone-14-offensive-simulation-report.md`). That work is preserved and fully intact in the codebase as valuable, verified simulation capabilities, but does not satisfy the narrative scope of M14. These capabilities serve as foundational building blocks mapped to the authoritative roadmap:
+> - Exploit Lab & Web Proxy map to **M17 — Red Team and authorized assessment workflows**.
+> - Social Pretexting & physical security badges map to **M21 — Social engineering, physical security and human-centered missions**.
 
 ---
 
-## M15 — Network Detection Engine & Endpoint Telemetry (EDR/SIEM)
+## M15 — Original Identity, Music, Ambience & Audio Systems
 
-- **Purpose**: Implement real-time packet inspection and endpoint process monitoring for Blue Team operations.
+- **Purpose**: Establish the complete auditory identity of Cyberlife, including original adaptive music, dynamic Lagos ambient soundscapes, workstation sound design, and voice dialogue audio integration.
 - **Scope**:
-  - `tool_network_detect`: Suricata-inspired signature evaluation engine running against synthetic network streams and PCAP logs.
-  - `tool_endpoint_telem`: Sysmon-inspired process execution tree, parent-child PID tracking, and file integrity monitoring (FIM).
-  - Live SIEM event bus aggregating physical access events, firewall rejects, and EDR detections into correlated alert timelines.
-- **Dependencies**: M13, M14.
+  - Original musical score combining modern techno-thriller synth textures with contemporary West African rhythmic undertones (Afrobeats polyrhythms, organic percussion, tense ambient pulses).
+  - Procedural time-of-day ambient audio: Broad Street morning traffic, Balogun Market bustle, generator hums, coastal Marina lagoon waves, and nocturnal quiet.
+  - Workstation interactive sound effects: mechanical keyboard clicks, terminal bell chirps, drive seek acoustics, alert stingers.
+  - Positional audio emitter system in 3D world tied to physical venues.
+- **Dependencies**: M14.
 - **Status**: **PLANNED**.
 
 ---
 
-## M16 — Sigma Compiler & Air-Gapped Digital Forensics Workbench
+## M16 — Network Analysis & Threat Intelligence
 
-- **Purpose**: Deliver detection engineering and forensic artifact carving capabilities.
+- **Purpose**: Implement real-time packet inspection, Suricata-inspired signature evaluation, and correlated threat intelligence workflows for defensive and investigative operations.
 - **Scope**:
-  - `tool_sigma_rules`: Generic Sigma YAML rule compiler translating adversary behaviors into LogView SIEM queries.
-  - `tool_artifact_foren`: Dedicated forensic workstation inside the air-gapped lab supporting disk image mounting, deleted file carving, and memory artifact analysis.
-  - Formal evidence hashing and chain-of-custody courtroom packaging.
-- **Dependencies**: M13, M15.
+  - Real-time packet capture inspection (`tool_packet_lens`) with BPF filtering and stream reconstruction.
+  - Fictional threat intelligence feeds (`onion-intel` and commercial threat databases) tracking adversary groups, IOCs, and CVE advisories.
+  - Correlated SIEM event bus aggregating physical access events, firewall rejects, and EDR detections.
+- **Dependencies**: M14.
 - **Status**: **PLANNED**.
 
 ---
 
-## M17 — Offline Password Auditing & Enterprise IAM Vault
+## M17 — Red Team & Authorized Assessment Workflows
 
-- **Purpose**: Expand identity and access management security simulation with realistic credential audits.
+- **Purpose**: Formalize comprehensive penetration testing and offensive assessment gameplay under strict Rules of Engagement (RoE).
 - **Scope**:
-  - `tool_hash_audit`: Offline hash evaluation sandbox measuring hash resistance (MD5, SHA-256, bcrypt) against dictionary attacks with synthetic wordlists.
-  - Enterprise IAM Vault: Active Directory/LDAP-inspired hierarchy simulating access control lists (ACLs), Kerberos ticket granting, and privilege escalation vectors.
+  - Integrate existing `ExploitLabEngine` and `WebProxyEngine` into formalized commercial Red Team engagements.
+  - Target discovery, preflight dry-run analysis, simulated lateral movement, and structured vulnerability findings.
+  - Executive penetration testing deliverable generation with CVSS risk scoring and remediation roadmaps.
 - **Dependencies**: M14, M16.
+- **Status**: **PLANNED** (Leverages existing M14 offensive simulation work).
+
+---
+
+## M18 — Blue Team & Purple Team Workflows
+
+- **Purpose**: Deliver integrated defensive operations, automated detection coverage verification, and adversary emulation.
+- **Scope**:
+  - Sysmon-inspired endpoint telemetry, parent-child PID tracking, and file integrity monitoring (FIM).
+  - Generic Sigma YAML rule compiler translating adversary behaviors into LogView SIEM queries.
+  - MITRE ATT&CK atomic test runner executing deterministic playbooks and measuring SIEM/EDR detection coverage scorecards.
+- **Dependencies**: M16, M17.
 - **Status**: **PLANNED**.
 
 ---
 
-## M18 — Purple Team Adversary Emulation & Automated Detection Coverage
+## M19 — Bounty Hunting & Contracts
 
-- **Purpose**: Unify offensive emulation and defensive telemetry into an automated Purple Team exercise platform.
+- **Purpose**: Implement open-market bug bounty networks, private sector consulting tenders, and competitive freelance security contracts.
 - **Scope**:
-  - `tool_purple_replay`: MITRE ATT&CK atomic test runner executing deterministic playbooks and measuring SIEM/EDR detection coverage.
-  - Detection coverage matrix scorecards (Visibility, Detection, Prevention) with automated remediation recommendations.
-- **Dependencies**: M14, M15, M16, M17.
+  - Eko Bounty Network portal listing verified corporate disclosure programs with varying bounty rewards.
+  - Responsible disclosure submission workflows, triage verification timelines, and bounty payouts.
+  - Private consulting contract bidding based on player reputation, career level, and faction standing.
+- **Dependencies**: M14, M17, M18.
 - **Status**: **PLANNED**.
 
 ---
 
-## M19 — Physical Facility Security & Access Control System
+## M20 — Flexible Career Progression
 
-- **Purpose**: Implement interactive 3D physical security gameplay in Marina Tower and corporate interiors.
+- **Purpose**: Expand non-linear cybersecurity career advancement across multiple distinct tracks and independent paths.
 - **Scope**:
-  - Interactive RFID badge turnstiles, biometric scanners, and electronic door strikes.
-  - Tailgating mechanics: Timing player or NPC movement through access doors during door-held-open windows.
-  - Security guard patrol routes, reception sign-in desks, visitor escort procedures, and CCTV camera sightline cones.
-- **Dependencies**: M13, M14.
+  - Non-linear career switching between Corporate SOC Analyst, Red Team Consultant, Purple Team Architect, Independent Bounty Hunter, and Digital Forensics Specialist.
+  - Dynamic certification exams, portfolio reviews, and senior stakeholder interviews.
+  - Workplace politics, performance reviews, and employer switching across Lagos Island firms.
+- **Dependencies**: M19.
 - **Status**: **PLANNED**.
 
 ---
 
-## M20 — Living City Living Interiors & Scheduled Commuter Simulation
+## M21 — Social Engineering, Physical Security & Human-Centered Missions
 
-- **Purpose**: Bring the 4-tier population system and authentic interior venues to life with scheduled routine NPCs.
+- **Purpose**: Deepen the human and physical attack surface with interactive access control, physical reconnaissance, and social pretexting.
 - **Scope**:
-  - Tier 2 Routine NPCs following diurnal schedules (morning commute, workday office tasks, lunch at Mama Nkechi Market, evening lounge).
-  - Tier 3 Interactive NPCs offering dynamic dialogue, rumors, freelance bounties, and hardware repair services.
-  - Operating hours transitions: Venues locking doors, switching interior lights, and changing ambient music based on time of day.
-- **Dependencies**: M13, M19.
+  - Integrate existing `SocialPretextEngine` and `HumanPhysicalEngine` into live physical missions.
+  - Physical facility security: RFID badge cloning, tailgating timing mechanics, visitor escort procedures, and security guard interaction.
+  - High-stakes human-centered missions: dumpster diving behind financial chambers, hardware drop deployment, and executive interview deception.
+- **Dependencies**: M14, M17, M20.
+- **Status**: **PLANNED** (Leverages existing M14 social pretexting work).
+
+---
+
+## M22 — Living City, Meaningful Interiors, NPC Routines & Social Locations
+
+- **Purpose**: Bring the 4-tier population hierarchy and Lagos Island interiors to life with persistent NPC daily schedules and rich social venues.
+- **Scope**:
+  - Diurnal NPC schedules (commute, workday desk routines, Balogun Market lunch, evening Marina recreation).
+  - Authentic accessible interiors: bank branches, regulatory offices, press newsrooms, cybercafés, and local canteens.
+  - Dynamic social locations where NPCs gather, share rumors, and react to major breaking news.
+- **Dependencies**: M14, M21.
 - **Status**: **PLANNED**.
 
 ---
 
-## M21 — Production Asset Pipeline, LOD Decimation & Browser Optimization
+## M23 — Asset Acquisition, Integration, Visual Quality & Additional Professions
 
-- **Purpose**: Decimate and optimize all external 3D assets to meet strict browser performance budgets.
+- **Purpose**: Production asset pipeline, performance optimization, visual fidelity enhancements, and expanded life-sim professions.
 - **Scope**:
-  - Decimate defect backlog assets (e.g. `island_tree_01.glb` from 66.3 MB down to <500 KB using gltf-transform and meshopt).
-  - Complete Level-of-Detail (LOD0, LOD1, LOD2) switching for all street architecture and vehicles.
-  - 100% WebP texture conversion with mipmapping and progressive loading.
-- **Dependencies**: M13.
+  - High-fidelity 3D asset decimation and LOD generation (achieving <500 KB per model budget).
+  - Photorealistic PBR textures, authentic Lagos architectural details, and rigged character models.
+  - Secondary economic professions: electronics refurbishment, IT hardware retail, cybercafé management.
+- **Dependencies**: M22.
 - **Status**: **PLANNED**.
 
 ---
 
-## M22 — Multi-Role Narrative Branching & Corporate Whistleblower Campaigns
+## M24 — Integrated Missions, Cross-System Validation & Release Readiness
 
-- **Purpose**: Deliver the full techno-thriller narrative with diverging multi-career story arcs.
+- **Purpose**: Final end-to-end integration of all narrative, simulation, career, audio, and visual systems into a commercial-grade, polished release.
 - **Scope**:
-  - Complete 4-branch storyline for the Aster Incident and the Cedarline-Eko Merchant Bank conspiracy.
-  - Divergent endings based on career path: Corporate Hero (Blue Team), Security Research Publication (Purple Team), Black Market Leaks (Bounty Hunter), Regulatory Whistleblower (Independent Investigator).
-  - Dynamic reputation system affecting NPC dialogue, job board opportunities, and security clearance grants.
-- **Dependencies**: M18, M20.
+  - Full multi-arc campaign playthrough across all career paths and faction endings.
+  - Cross-system validation: 100% test coverage, zero memory leaks, 60 FPS performance on standard hardware.
+  - Comprehensive player guidance, educational curriculum mapping, and release packaging.
+- **Dependencies**: M14 through M23.
 - **Status**: **PLANNED**.
 
----
-
-## M23 — Threat Intelligence Feeds & Community Modding SDK
-
-- **Purpose**: Provide extensible scenario authoring and external threat intel integration.
-- **Scope**:
-  - In-game Onion threat intel feed simulating darknet chatter, leaked credentials, and emerging zero-day advisories.
-  - Scenario Creator SDK allowing educators and players to package custom investigation cases as signed JSON bundles.
-- **Dependencies**: M18, M22.
-- **Status**: **PLANNED**.
-
----
-
-## M24 — Public Production Release & Cross-Browser Certification
-
-- **Purpose**: Commercial-grade production release, cross-platform performance certification, and final security audit.
-- **Scope**:
-  - Rock-solid 60 FPS on desktop browsers (Chrome, Firefox, Safari, Edge) with memory consumption under 400 MB.
-  - Full end-to-end automated Playwright regression suite passing across all career arcs.
-  - Public documentation, player onboarding handbook, and educational courseware mapping.
-- **Dependencies**: M13 through M23.
-- **Status**: **PLANNED**.

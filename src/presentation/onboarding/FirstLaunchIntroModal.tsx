@@ -130,8 +130,14 @@ export const FirstLaunchIntroModal: React.FC<FirstLaunchIntroModalProps> = ({
       aria-modal="true"
       aria-labelledby="onboarding-modal-title"
       data-testid="first-launch-intro-modal"
+      onClick={handleSkip}
+      style={{ pointerEvents: 'auto', zIndex: 9999 }}
     >
-      <div className="onboarding-modal-card hud-interactive">
+      <div
+        className="onboarding-modal-card hud-interactive"
+        style={{ pointerEvents: 'auto' }}
+        onClick={e => e.stopPropagation()}
+      >
         {/* Header with Title and Close / Skip */}
         <div className="onboarding-modal-header">
           <div className="onboarding-badge-group">
@@ -147,7 +153,10 @@ export const FirstLaunchIntroModal: React.FC<FirstLaunchIntroModalProps> = ({
           <button
             type="button"
             className="btn-icon-close"
-            onClick={handleSkip}
+            onClick={e => {
+              e.stopPropagation();
+              handleSkip();
+            }}
             aria-label="Skip introduction tour"
             data-testid="onboarding-skip-btn"
           >

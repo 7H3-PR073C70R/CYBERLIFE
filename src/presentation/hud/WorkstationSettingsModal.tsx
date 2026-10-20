@@ -68,6 +68,22 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
     onSettingsChanged?.(updated);
   };
 
+  // Escape key listener
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
@@ -75,16 +91,17 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
       role="dialog"
       aria-modal="true"
       aria-labelledby="settings-modal-title"
-      className="controls-reference-backdrop"
+      className="controls-modal-backdrop hud-interactive"
+      style={{ pointerEvents: 'auto' }}
       onClick={onClose}
       data-testid="workstation-settings-modal"
     >
       <div
-        className="controls-reference-card"
-        style={{ maxWidth: '520px' }}
+        className="controls-modal-card hud-interactive"
+        style={{ maxWidth: '520px', pointerEvents: 'auto' }}
         onClick={e => e.stopPropagation()}
       >
-        <div className="controls-reference-header">
+        <div className="controls-modal-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <span style={{ fontSize: '1.4rem' }}>⚙️</span>
             <div>
@@ -104,10 +121,24 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
           </div>
           <button
             type="button"
-            className="controls-close-btn"
-            onClick={onClose}
+            className="btn-icon-close"
+            onClick={e => {
+              e.stopPropagation();
+              onClose();
+            }}
             aria-label="Close settings"
             data-testid="settings-close-btn"
+            style={{
+              width: '36px',
+              height: '36px',
+              minWidth: '36px',
+              minHeight: '36px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              pointerEvents: 'auto',
+            }}
           >
             ✕
           </button>

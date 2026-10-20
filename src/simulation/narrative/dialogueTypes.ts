@@ -16,6 +16,9 @@ export interface DialogueCondition {
   readonly minCareerLevel?: number;
   readonly requiredCompletedJobId?: string;
   readonly minSkillLevel?: { readonly skillId: string; readonly level: number };
+  readonly requiredFactionStanding?: { readonly factionId: string; readonly minStanding: number };
+  readonly requiredEvidenceIds?: readonly string[];
+  readonly requiredChapterId?: string;
 }
 
 export type DialogueAction =
@@ -46,6 +49,20 @@ export type DialogueAction =
   | {
       readonly type: 'ACCEPT_JOB';
       readonly jobId: string;
+    }
+  | {
+      readonly type: 'CHANGE_FACTION_STANDING';
+      readonly factionId: string;
+      readonly delta: number;
+      readonly reason: string;
+    }
+  | {
+      readonly type: 'RECORD_INVESTIGATIVE_CONCLUSION';
+      readonly conclusionId: string;
+    }
+  | {
+      readonly type: 'ADVANCE_STORY_CHAPTER';
+      readonly chapterId: string;
     };
 
 export interface DialogueChoice {
@@ -72,6 +89,9 @@ export interface DialogueEvaluationContext {
   readonly careerLevel?: number;
   readonly completedJobs?: readonly string[];
   readonly skills?: Readonly<Record<string, number>>;
+  readonly factionStandings?: Readonly<Record<string, number>>;
+  readonly preservedEvidenceIds?: readonly string[];
+  readonly currentChapterId?: string;
 }
 
 export interface DialogueGraph {

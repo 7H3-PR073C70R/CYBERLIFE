@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useOptionalSimulation } from '../../application/simulation/SimulationContext';
 import { CommandResult } from '../../simulation/commands/types';
 import { Money } from '../../domain/common/Money';
@@ -11,6 +11,22 @@ export interface DevSimulationDrawerProps {
 export const DevSimulationDrawer: React.FC<DevSimulationDrawerProps> = ({ isOpen, onClose }) => {
   const sim = useOptionalSimulation();
   const [lastResult, setLastResult] = useState<CommandResult | null>(null);
+
+  // Escape key listener
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [isOpen, onClose]);
 
   if (!isOpen || !sim) return null;
 
@@ -25,7 +41,7 @@ export const DevSimulationDrawer: React.FC<DevSimulationDrawerProps> = ({ isOpen
 
   return (
     <div
-      className="dev-sim-drawer-overlay"
+      className="dev-sim-drawer-overlay hud-interactive"
       role="dialog"
       aria-modal="true"
       aria-labelledby="dev-sim-drawer-title"
@@ -40,11 +56,12 @@ export const DevSimulationDrawer: React.FC<DevSimulationDrawerProps> = ({ isOpen
         backdropFilter: 'blur(12px)',
         borderLeft: '1px solid var(--color-border-subtle)',
         boxShadow: '-8px 0 32px rgba(0, 0, 0, 0.6)',
-        zIndex: 100,
+        zIndex: 9999,
         display: 'flex',
         flexDirection: 'column',
         color: 'var(--color-text-primary)',
         fontFamily: 'var(--font-sans)',
+        pointerEvents: 'auto',
       }}
     >
       {/* Header */}
@@ -76,15 +93,22 @@ export const DevSimulationDrawer: React.FC<DevSimulationDrawerProps> = ({ isOpen
         </div>
         <button
           type="button"
-          onClick={onClose}
+          onClick={e => {
+            e.stopPropagation();
+            onClose();
+          }}
           aria-label="Close Simulation Inspector"
+          className="btn-icon-close"
           style={{
-            background: 'none',
-            border: 'none',
-            color: 'var(--color-text-secondary)',
-            fontSize: '1.2rem',
+            width: '36px',
+            height: '36px',
+            minWidth: '36px',
+            minHeight: '36px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             cursor: 'pointer',
-            padding: '0.2rem 0.5rem',
+            pointerEvents: 'auto',
           }}
         >
           ✕

@@ -20,6 +20,7 @@ export interface HUDShellProps {
   milestoneTitle?: string;
   simulationTimeString?: string;
   playerFunds?: string;
+  playerCoords?: { x: number; z: number };
   onToggleCamera?: () => void;
   onInteract?: () => void;
   onSettingsChanged?: (settings: WorkstationSettings) => void;
@@ -32,6 +33,7 @@ export const HUDShell: React.FC<HUDShellProps> = ({
   milestoneTitle = 'M10: Guided Learning & Onboarding',
   simulationTimeString,
   playerFunds,
+  playerCoords,
   onToggleCamera,
   onInteract,
   onSettingsChanged,
@@ -73,7 +75,14 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         return;
       }
 
-      if (e.key === 'h' || e.key === 'H') {
+      if (e.key === 'Escape') {
+        setIsMovementHelpOpen(false);
+        setIsControlsModalOpen(false);
+        setIsSettingsOpen(false);
+        setIsSaveModalOpen(false);
+        setIsDevDrawerOpen(false);
+        setIsIntroModalOpen(false);
+      } else if (e.key === 'h' || e.key === 'H') {
         e.preventDefault();
         setIsControlsModalOpen(prev => !prev);
       } else if (e.key === 'm' || e.key === 'M') {
@@ -95,6 +104,7 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         cameraMode={cameraMode}
         simulationTimeString={simulationTimeString}
         playerFunds={playerFunds}
+        playerCoords={playerCoords}
         onToggleCamera={onToggleCamera}
         onToggleHelp={() => setIsMovementHelpOpen(prev => !prev)}
         onToggleDevDrawer={() => setIsDevDrawerOpen(prev => !prev)}

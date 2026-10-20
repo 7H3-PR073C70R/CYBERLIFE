@@ -6,7 +6,7 @@
  * and guarded new game creation.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useOptionalPersistence } from '../../application/persistence/usePersistence';
 import { Money } from '../../domain/common/Money';
 
@@ -22,6 +22,22 @@ export const SaveManagerModal: React.FC<SaveManagerModalProps> = ({ isOpen, onCl
   const [confirmingDeleteSlot, setConfirmingDeleteSlot] = useState<string | null>(null);
   const [confirmingOverwriteSlot, setConfirmingOverwriteSlot] = useState<string | null>(null);
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
+
+  // Escape key listener for fast responsive modal exit
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [isOpen, onClose]);
 
   if (!isOpen || !persistence) return null;
 
@@ -110,19 +126,18 @@ export const SaveManagerModal: React.FC<SaveManagerModalProps> = ({ isOpen, onCl
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(5, 10, 20, 0.85)',
+        backgroundColor: 'rgba(5, 10, 20, 0.88)',
         backdropFilter: 'blur(8px)',
-        zIndex: 200,
+        zIndex: 9999,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '1rem',
         fontFamily: 'var(--font-sans)',
         color: 'var(--color-text-primary)',
+        pointerEvents: 'auto',
       }}
-      onClick={e => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+      onClick={onClose}
     >
       <div
         className="save-modal-container"
@@ -136,7 +151,9 @@ export const SaveManagerModal: React.FC<SaveManagerModalProps> = ({ isOpen, onCl
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
+          pointerEvents: 'auto',
         }}
+        onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div
@@ -167,17 +184,23 @@ export const SaveManagerModal: React.FC<SaveManagerModalProps> = ({ isOpen, onCl
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={e => {
+              e.stopPropagation();
+              onClose();
+            }}
             aria-label="Close Save Manager"
             data-testid="btn-close-save-modal"
+            className="btn-icon-close"
             style={{
-              background: 'none',
-              border: 'none',
-              color: '#94a3b8',
-              fontSize: '1.4rem',
+              width: '36px',
+              height: '36px',
+              minWidth: '36px',
+              minHeight: '36px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               cursor: 'pointer',
-              padding: '0.25rem 0.5rem',
-              borderRadius: '4px',
+              pointerEvents: 'auto',
             }}
           >
             ✕

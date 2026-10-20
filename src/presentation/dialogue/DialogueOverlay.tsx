@@ -373,24 +373,35 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
               🔁
             </button>
 
-            {/* Close button with Esc hint */}
+            {/* Close button with ✕ and Esc hint */}
             <button
               type="button"
-              onClick={handleClose}
+              onClick={e => {
+                e.stopPropagation();
+                handleClose();
+              }}
               data-testid="btn-close-dialogue"
               aria-label="Close conversation"
+              className="btn-icon-close"
               style={{
-                background: 'transparent',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
                 borderRadius: '6px',
-                color: 'var(--color-text-secondary, #94a3b8)',
-                fontSize: '0.75rem',
-                padding: '0.25rem 0.55rem',
+                color: 'var(--color-text-secondary, #cbd5e1)',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                padding: '0.35rem 0.65rem',
                 cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                minHeight: '36px',
+                pointerEvents: 'auto',
                 transition: 'all 0.15s ease',
               }}
             >
-              Exit [Esc]
+              <span style={{ fontSize: '0.95rem', fontWeight: 700 }}>✕</span>
+              <span>Exit [Esc]</span>
             </button>
           </div>
         </div>
