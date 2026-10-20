@@ -1,4 +1,4 @@
-# Heron OS Desktop Redesign & 3D Synchronization Report
+# Orion OS Desktop Redesign & 3D Synchronization Report
 
 This report documents the architectural and visual overhaul of Cyberlife's in-game cybersecurity computer workstation.
 
@@ -25,12 +25,12 @@ All high-resolution verification screenshots are saved in `docs/graphics/os_rede
 | Screenshot | Description | File Path |
 | :--- | :--- | :--- |
 | **01. Clean Desktop** | Desktop workspace with no windows open, showing procedural wallpaper, left icon column, and top panel. | [`01_desktop_no_windows.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/os_redesign/01_desktop_no_windows.png) |
-| **02. Terminal Open** | Heron OS Terminal open with two-line signature prompt, inline input, welcome banner, and quick-command chips. | [`02_terminal_open.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/os_redesign/02_terminal_open.png) |
+| **02. Terminal Open** | Orion OS Terminal open with two-line signature prompt, inline input, welcome banner, and quick-command chips. | [`02_terminal_open.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/os_redesign/02_terminal_open.png) |
 | **03. Two Windows Open** | Multitasking with Terminal and System Information open, demonstrating z-index elevation, centered titles, and focus states. | [`03_two_windows_focused.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/os_redesign/03_two_windows_focused.png) |
 | **04. Applications Menu** | MATE/GTK dropdown menu open with categorized tools (Cybersecurity, Utilities, Operations) and vector icons. | [`04_applications_menu_open.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/os_redesign/04_applications_menu_open.png) |
 | **05. Fullscreen Overlay** | Fullscreen computer view in active hacking/investigation session. | [`05_fullscreen_layout.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/os_redesign/05_fullscreen_layout.png) |
 | **06. Bounded Layout** | Seated third-person over-the-shoulder view with active in-world laptop display and peek controls. | [`06_bounded_layout.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/os_redesign/06_bounded_layout.png) |
-| **07. 3D Screen Closeup (Day)** | 3D physical laptop screen at `desk_screen_closeup` in daylight, rendering synchronized Heron OS desktop. | [`07_desk_screen_closeup_day.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/os_redesign/07_desk_screen_closeup_day.png) |
+| **07. 3D Screen Closeup (Day)** | 3D physical laptop screen at `desk_screen_closeup` in daylight, rendering synchronized Orion OS desktop. | [`07_desk_screen_closeup_day.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/os_redesign/07_desk_screen_closeup_day.png) |
 | **08. 3D Screen Closeup (Night)** | 3D physical laptop screen at `desk_screen_closeup` in night lighting with screen emissive glow. | [`08_desk_screen_closeup_night.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/os_redesign/08_desk_screen_closeup_night.png) |
 | **09. Overlay vs 3D Parity** | Side-by-side comparison proving 1:1 visual parity between React overlay and Three.js 3D screen. | [`09_overlay_vs_3d_screen_comparison.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/os_redesign/09_overlay_vs_3d_screen_comparison.png) |
 
@@ -41,23 +41,23 @@ All high-resolution verification screenshots are saved in `docs/graphics/os_rede
 All branding constants are centralized in [`src/presentation/desktop/osBranding.ts`](file:///Users/protector/Documents/projects/cyberlife/src/presentation/desktop/osBranding.ts):
 
 ```typescript
-export const OS_NAME = 'Heron OS';          // Change operating system name here
+export const OS_NAME = 'Orion OS';          // Change operating system name here
 export const OS_VERSION = '4.5';            // Change version string here
 export const OS_EDITION = 'Enterprise';     // Edition tag
 export const OS_CODENAME = 'Lagos Security Staging';
 
 export const HOSTNAMES = {
-  office: 'heron-ws04',                     // Office workstation hostname
-  home: 'heron-rig',                        // Home lab rig hostname
+  office: 'Orion-ws04',                     // Office workstation hostname
+  home: 'Orion-rig',                        // Home lab rig hostname
 } as const;
 
-export const KERNEL_STRING = '6.8.0-heron x86_64';
+export const KERNEL_STRING = '6.8.0-Orion x86_64';
 ```
 
 Changing `OS_NAME` automatically propagates to:
 - Top panel menus and title bars
 - Desktop watermark and orientation banners
-- Terminal prompt (`player@heron-rig` / `tade@heron-ws04`) and welcome message
+- Terminal prompt (`player@Orion-rig` / `tade@Orion-ws04`) and welcome message
 - System Information application
 - Three.js physical 3D laptop screen renderer
 

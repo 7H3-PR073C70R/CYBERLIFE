@@ -50,7 +50,7 @@ describe('Milestone 7: NPC Profiles, Schedules & Relationship System', () => {
   it('retrieves profile by ID correctly', () => {
     const amina = getNpcProfile('npc_amina');
     expect(amina).toBeDefined();
-    expect(amina?.name).toBe('Amina Okonjo');
+    expect(amina?.name).toBe('Temitope Blessing');
 
     const unknown = getNpcProfile('npc_nonexistent');
     expect(unknown).toBeUndefined();

@@ -4,7 +4,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 1. Cybersecurity mentor / experienced professional
   {
     id: 'npc_amina',
-    name: 'Amina Okonjo',
+    name: 'Temitope Blessing',
     role: 'Lead Security Analyst',
     organization: 'Cedarline Services Ltd.',
     bio: 'Veteran incident responder with over a decade defending critical financial and logistics networks across West Africa. Calm, exacting, and deeply committed to rigorous forensic standards.',

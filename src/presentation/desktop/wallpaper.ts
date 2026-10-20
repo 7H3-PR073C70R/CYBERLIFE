@@ -1,5 +1,5 @@
 /**
- * Generates an original SVG/CSS procedural wallpaper for Heron OS.
+ * Generates an original SVG/CSS procedural wallpaper for Orion OS.
  * Features an obsidian-to-teal gradient with geometric circuit traces,
  * hex-grid accent nodes, and soft neon illumination.
  */
@@ -64,13 +64,13 @@ export function generateWallpaperSvg(width = 1920, height = 1080): string {
 
   <!-- Subtle watermark branding text -->
   <g font-family="Inter, system-ui, sans-serif" text-anchor="middle" opacity="0.08">
-    <text x="${width / 2}" y="${height * 0.58}" font-size="36" font-weight="700" letter-spacing="8" fill="#00e5ff">HERON OS 4.5</text>
+    <text x="${width / 2}" y="${height * 0.58}" font-size="36" font-weight="700" letter-spacing="8" fill="#00e5ff">Orion OS 4.5</text>
     <text x="${width / 2}" y="${height * 0.62}" font-size="14" font-weight="500" letter-spacing="4" fill="#94a3b8">SECURITY STAGING // LINUX 6.8.0</text>
   </g>
 </svg>`;
 }
 
-export const WALLPAPER_IMAGE_URL = '/assets/os/heron_security_wallpaper.jpg';
+export const WALLPAPER_IMAGE_URL = '/assets/os/Orion_security_wallpaper.jpg';
 
 export function getWallpaperDataUrl(): string {
   return WALLPAPER_IMAGE_URL;

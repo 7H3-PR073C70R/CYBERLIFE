@@ -39,7 +39,10 @@ export type OsIconName =
   | 'tor'
   | 'chat'
   | 'call'
-  | 'securityNews';
+  | 'securityNews'
+  | 'exploitLab'
+  | 'webProxy'
+  | 'socialPretext';
 
 export interface OsIconProps extends React.SVGProps<SVGSVGElement> {
   name: OsIconName;
@@ -468,6 +471,40 @@ export const OsIcon: React.FC<OsIconProps> = ({
           <path d="M18 14h-8" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
           <path d="M15 18h-5" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
           <path d="M10 6h8v4h-8V6Z" stroke={color} strokeWidth="1.5" strokeLinejoin="round" />
+        </svg>
+      );
+
+    case 'exploitLab':
+      return (
+        <svg {...commonProps}>
+          <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="1.75" />
+          <line x1="22" y1="12" x2="18" y2="12" stroke={color} strokeWidth="1.75" strokeLinecap="round" />
+          <line x1="6" y1="12" x2="2" y2="12" stroke={color} strokeWidth="1.75" strokeLinecap="round" />
+          <line x1="12" y1="6" x2="12" y2="2" stroke={color} strokeWidth="1.75" strokeLinecap="round" />
+          <line x1="12" y1="22" x2="12" y2="18" stroke={color} strokeWidth="1.75" strokeLinecap="round" />
+          <circle cx="12" cy="12" r="4" fill={color} />
+        </svg>
+      );
+
+    case 'webProxy':
+      return (
+        <svg {...commonProps}>
+          <rect x="3" y="4" width="18" height="16" rx="2" stroke={color} strokeWidth="1.75" />
+          <line x1="3" y1="10" x2="21" y2="10" stroke={color} strokeWidth="1.5" />
+          <line x1="8" y1="7" x2="8.01" y2="7" stroke={color} strokeWidth="2" strokeLinecap="round" />
+          <line x1="12" y1="7" x2="12.01" y2="7" stroke={color} strokeWidth="2" strokeLinecap="round" />
+          <path d="M7 15l3-3-3-3" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <line x1="11" y1="15" x2="17" y2="15" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      );
+
+    case 'socialPretext':
+      return (
+        <svg {...commonProps}>
+          <path d="M12 2a5 5 0 0 0-5 5v3a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5z" stroke={color} strokeWidth="1.75" />
+          <path d="M3 21v-2a6 6 0 0 1 12 0v2" stroke={color} strokeWidth="1.75" strokeLinecap="round" />
+          <circle cx="18" cy="8" r="3" stroke={color} strokeWidth="1.5" />
+          <path d="M18 14a4 4 0 0 1 4 4v3" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
         </svg>
       );
 

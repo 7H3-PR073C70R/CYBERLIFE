@@ -13,6 +13,9 @@
 import { CyberToolDefinition, SupportedWorkflow } from './types';
 import { FictionalCyberRange, FictionalEvidenceItem } from '../range/types';
 import { SHARED_CYBER_RANGE } from '../range/fixtures';
+import { ExploitLabEngine } from '../offensive/ExploitLabEngine';
+import { WebProxyEngine } from '../webproxy/WebProxyEngine';
+import { SocialPretextEngine } from '../social/SocialPretextEngine';
 
 export interface ToolExecutionUser {
   readonly username: string;
@@ -397,6 +400,139 @@ function dispatchWorkflowToRange(
       }
       structuredData = evidenceList;
       emittedEvidence = [...evidenceList];
+      break;
+    }
+
+    case 'tool_exploit_lab': {
+      const engine = new ExploitLabEngine();
+      const targetId = (params.target as string) || 'filesrv-01';
+      const moduleId = (params.module as string) || 'mod_smb_tree_hijack';
+      const mode =
+        (params.mode as 'dry_run' | 'simulation') ||
+        (workflow.id.includes('dryrun') ? 'dry_run' : 'simulation');
+
+      if (workflow.id === 'workflow_exploit_scope_review') {
+        const roe = engine.getActiveEngagement();
+        const targets = engine.getTargets();
+        outLines.push(
+          `[+] Exploit Lab // Engagement Scope: ${roe.engagementId} (${roe.clientName})`
+        );
+        outLines.push(
+          `[+] Assessor: ${roe.authorizedAssessorName} | Status: ${roe.isSignedAndActive ? 'ACTIVE / AUTHORIZED' : 'EXPIRED'}`
+        );
+        outLines.push('Authorized In-Scope Targets:');
+        for (const t of targets) {
+          outLines.push(
+            `  - ${t.id.padEnd(14)} (${t.ipAddress}) [${t.primaryService}] - Vulnerable: ${t.isVulnerable ? 'YES' : 'NO'}`
+          );
+        }
+        structuredData = { roe, targets };
+        break;
+      }
+
+      if (workflow.id === 'workflow_exploit_retest') {
+        const retestResult = engine.retestTarget(targetId, moduleId, context.currentUser.username);
+        outLines.push(...retestResult.executionLogs);
+        structuredData = retestResult;
+        if (retestResult.evidenceItem) {
+          emittedEvidence = [retestResult.evidenceItem];
+        }
+        break;
+      }
+
+      const execResult = engine.executeModule({
+        targetId,
+        moduleId,
+        mode,
+        actorName: context.currentUser.username,
+      });
+      outLines.push(...execResult.executionLogs);
+      structuredData = execResult;
+      if (execResult.evidenceItem) {
+        emittedEvidence = [execResult.evidenceItem];
+      }
+      break;
+    }
+
+    case 'tool_web_proxy': {
+      const engine = new WebProxyEngine();
+      const txId = (params.transactionId as string) || 'tx-001';
+
+      if (workflow.id === 'workflow_proxy_browse') {
+        const txs = engine.getTransactions();
+        outLines.push(
+          `[+] Web Application Security Proxy // Synthetic Transaction History (${txs.length} captured)`
+        );
+        outLines.push(
+          '--------------------------------------------------------------------------------'
+        );
+        outLines.push('ID      METHOD   STATUS   PATH                             TAGS');
+        outLines.push(
+          '--------------------------------------------------------------------------------'
+        );
+        for (const tx of txs) {
+          outLines.push(
+            `${tx.id.padEnd(8)}${tx.originalRequest.method.padEnd(9)}${String(tx.originalResponse.statusCode).padEnd(9)}${tx.originalRequest.path.padEnd(33)}${tx.tags.join(', ')}`
+          );
+        }
+        structuredData = txs;
+        break;
+      }
+
+      const tx = engine.getTransaction(txId);
+      if (!tx) {
+        outLines.push(`[-] Error: Transaction '${txId}' not found in proxy buffer.`);
+        break;
+      }
+
+      outLines.push(
+        `[+] Web Proxy Inspector // Transaction: ${tx.id} [${tx.originalRequest.method} ${tx.originalRequest.path}]`
+      );
+      outLines.push(`Target: ${tx.targetHost}:${tx.targetPort} (${tx.appId})`);
+      outLines.push(`Request Headers:`);
+      for (const [k, v] of Object.entries(tx.originalRequest.headers)) {
+        outLines.push(`  ${k}: ${v}`);
+      }
+      outLines.push(
+        `Response: ${tx.originalResponse.statusCode} ${tx.originalResponse.statusText}`
+      );
+      outLines.push(`Response Body:`);
+      outLines.push(tx.originalResponse.body);
+      structuredData = tx;
+      if (tx.evidenceItem) {
+        emittedEvidence = [tx.evidenceItem];
+      }
+      break;
+    }
+
+    case 'tool_social_eng': {
+      const engine = new SocialPretextEngine();
+      const scenarioId = (params.scenario as string) || 'scen_reception_courier';
+
+      if (workflow.id === 'workflow_social_scenarios') {
+        const scenarios = engine.getAllScenarios();
+        outLines.push(`[+] Social Pretexting Lab // 6 Authored Scenarios`);
+        outLines.push(
+          '--------------------------------------------------------------------------------'
+        );
+        for (const s of scenarios) {
+          outLines.push(`[${s.id}] ${s.title}`);
+          outLines.push(
+            `  Venue: ${s.venueLabel} | Target: ${s.targetNpc.name} (${s.targetNpc.title})`
+          );
+        }
+        structuredData = scenarios;
+        break;
+      }
+
+      const session = engine.startEncounter(scenarioId);
+      const scenario = engine.getScenario(scenarioId);
+      outLines.push(`[+] Starting Pretext Encounter: ${scenario?.title ?? scenarioId}`);
+      outLines.push(`Briefing: ${scenario?.situationBriefing}`);
+      outLines.push(
+        `Initial Trust Metrics: Trust=${session.metrics.trust}, Credibility=${session.metrics.credibility}, Authority=${session.metrics.authority}, Suspicion=${session.metrics.suspicion}`
+      );
+      structuredData = session;
       break;
     }
 

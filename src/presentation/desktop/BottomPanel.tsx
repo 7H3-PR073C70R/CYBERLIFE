@@ -1,5 +1,5 @@
 /**
- * Cyberlife — Heron OS Bottom Panel (MATE-style Taskbar & Workspace Pager)
+ * Cyberlife — Orion OS Bottom Panel (MATE-style Taskbar & Workspace Pager)
  *
  * Classical Linux security distribution bottom panel:
  * - Left: Menu launcher & quick terminal button
@@ -36,10 +36,10 @@ export const BottomPanel: React.FC<BottomPanelProps> = ({
 
   return (
     <footer
-      className="heron-bottom-panel"
+      className="Orion-bottom-panel"
       data-testid="desktop-bottom-panel"
       role="region"
-      aria-label="Heron OS Bottom Taskbar"
+      aria-label="Orion OS Bottom Taskbar"
       style={{
         height: '28px',
         minHeight: '28px',

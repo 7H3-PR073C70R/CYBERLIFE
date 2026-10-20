@@ -9,7 +9,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
   {
     id: 'thread-amina',
     contactId: 'amina-okonjo',
-    contactName: 'Amina Okonjo',
+    contactName: 'Temitope Blessing',
     contactRole: 'Lead SecOps Architect',
     contactOrg: 'Cedarline Corp Cyber Defense',
     contactAvatarColor: '#00e5ff',
@@ -47,7 +47,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
       {
         id: 'msg-am-1',
         senderId: 'amina-okonjo',
-        senderName: 'Amina Okonjo',
+        senderName: 'Temitope Blessing',
         senderRole: 'Lead SecOps Architect',
         text: 'Tade, glad you got into the terminal. Broad Street perimeter traffic spiked 300% 20 minutes ago.',
         timestamp: '10:14 AM',
@@ -58,7 +58,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
       {
         id: 'msg-am-2',
         senderId: 'amina-okonjo',
-        senderName: 'Amina Okonjo',
+        senderName: 'Temitope Blessing',
         senderRole: 'Lead SecOps Architect',
         text: 'Run nmap or netstat against 10.42.0.0/24 subnet. We need eyes on port 8080 and unlisted egress.',
         timestamp: '10:16 AM',

@@ -1,7 +1,7 @@
 /**
  * Cyberlife — Simulated Security Tool Arsenal Registry
  *
- * Categorized cybersecurity tools inspired by Heron OS and modern Linux security workstations.
+ * Categorized cybersecurity tools inspired by Orion OS and modern Linux security workstations.
  * Features honest status tracking: 'playable', 'partial', 'reference_only', 'planned'.
  * Strictly internal to Cyberlife's synthetic in-game data model.
  */

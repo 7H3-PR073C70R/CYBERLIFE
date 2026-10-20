@@ -81,7 +81,7 @@ export const ONBOARDING_STEPS: readonly OnboardingStepDefinition[] = [
     category: 'workstation',
     title: 'Your Physical Workstation',
     description:
-      'Inside Cedarline HQ or your apartment, walk up to the computer desk and press [E]. Your avatar sits down, and your monitor boots into the simulated Heron OS virtual desktop.',
+      'Inside Cedarline HQ or your apartment, walk up to the computer desk and press [E]. Your avatar sits down, and your monitor boots into the simulated Orion OS virtual desktop.',
     controlsHint: 'Press [E] at the computer desk',
     whyItMatters:
       'The physical workstation is your command center for network scans, evidence verification, email coordination, and incident management.',

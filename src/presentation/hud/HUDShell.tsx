@@ -122,13 +122,15 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         <ObjectiveTrackerHUD />
       </div>
 
-      {/* Dynamic Contextual Guidance Card */}
-      <ContextualGuidanceHUD
-        isNearInteraction={Boolean(activeTarget)}
-        onOpenControlsReference={() => setIsControlsModalOpen(true)}
-      />
+      {/* Dynamic Contextual Guidance Card - only render when free-roaming without an active target prompt */}
+      {!activeTarget && (
+        <ContextualGuidanceHUD
+          isNearInteraction={false}
+          onOpenControlsReference={() => setIsControlsModalOpen(true)}
+        />
+      )}
 
-      {/* Accessible Interaction & Narrative Guidance Footer */}
+      {/* Beginner Guidance & Help Card */}
       <InteractionHelpPrompt />
 
       {/* First-Launch Introduction Walkthrough Modal */}

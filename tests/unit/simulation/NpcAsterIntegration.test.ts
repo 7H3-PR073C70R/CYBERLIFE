@@ -27,7 +27,7 @@ describe('Milestone 7: NPC Integration with The Aster Incident (M6)', () => {
     expect(startResult.state.mission!.preservedEvidenceIds).toHaveLength(0);
   });
 
-  describe('Amina Okonjo (Lead Security Analyst & SOC Mentor)', () => {
+  describe('Temitope Blessing (Lead Security Analyst & SOC Mentor)', () => {
     it('provides SOC briefing context without revealing root cause prematurely', () => {
       const graph = getDialogueGraph('npc_amina');
       expect(graph).toBeDefined();

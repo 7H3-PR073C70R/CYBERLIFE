@@ -1,5 +1,5 @@
 /**
- * Cyberlife — System Information Application Component (Heron OS)
+ * Cyberlife — System Information Application Component (Orion OS)
  *
  * Displays read-only fictional workstation specifications, kernel details,
  * and virtual network node status.

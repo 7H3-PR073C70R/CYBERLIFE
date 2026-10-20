@@ -134,7 +134,7 @@ export const FICTIONAL_EVIDENCE: readonly FictionalEvidenceItem[] = [
     chainOfCustody: [
       {
         time: '07:56:10 WAT',
-        handler: 'Amina Okonjo (Lead Security Analyst)',
+        handler: 'Temitope Blessing (Lead Security Analyst)',
         action: 'Extracted active service descriptor from app-portal-01 memory snapshot.',
         signature: 'SIG-LEAD-SEC-EXTRACT',
       },

@@ -1,8 +1,8 @@
 /**
- * Cyberlife — Heron OS Top Panel Component
+ * Cyberlife — Orion OS Top Panel Component
  *
  * Classical MATE/ParrotSec-inspired Linux cybersecurity desktop panel:
- * - Left: Cascading multi-level Applications menu (Heron Security -> Categories -> Tools)
+ * - Left: Cascading multi-level Applications menu (Orion Security -> Categories -> Tools)
  * - Places & System dropdown menus
  * - Quick Launchers: Terminal, Tor Browser, OnionChat, Files, Packet Lens
  * - Running Windows Task list
@@ -36,14 +36,14 @@ interface SecuritySubCategory {
   tools: Array<{ id: AppId; name: string; icon: OsIconName; desc: string }>;
 }
 
-const HERON_SECURITY_CATEGORIES: SecuritySubCategory[] = [
+const Orion_SECURITY_CATEGORIES: SecuritySubCategory[] = [
   {
     id: 'most_used',
     label: 'Most Used Tools',
     tools: [
       {
         id: 'terminal',
-        name: 'Heron Terminal',
+        name: 'Orion Terminal',
         icon: 'terminal',
         desc: 'Synthetic interactive shell',
       },
@@ -311,15 +311,15 @@ export const TopPanel: React.FC<TopPanelProps> = ({
     .map(id => windows[id])
     .filter(w => w.isOpen);
 
-  const selectedCategoryObj = HERON_SECURITY_CATEGORIES.find(c => c.id === activeCategory);
+  const selectedCategoryObj = Orion_SECURITY_CATEGORIES.find(c => c.id === activeCategory);
 
   return (
     <header
       ref={panelRef}
-      className="heron-top-panel"
+      className="Orion-top-panel"
       data-testid="desktop-taskbar"
       role="banner"
-      aria-label="Heron OS Desktop Panel"
+      aria-label="Orion OS Desktop Panel"
       style={{
         height: '30px',
         minHeight: '30px',
@@ -408,12 +408,12 @@ export const TopPanel: React.FC<TopPanelProps> = ({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <OsIcon name="osLogo" size={14} color="#00e5ff" />
-                  <span>Heron Security</span>
+                  <span>Orion Security</span>
                 </div>
                 <span>▶</span>
               </div>
 
-              {/* Level 2: Heron Security Categories Flyout */}
+              {/* Level 2: Orion Security Categories Flyout */}
               {activeSubMenu === 'security' && (
                 <div
                   style={{
@@ -429,7 +429,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
                     zIndex: 7100,
                   }}
                 >
-                  {HERON_SECURITY_CATEGORIES.map(cat => (
+                  {Orion_SECURITY_CATEGORIES.map(cat => (
                     <div
                       key={cat.id}
                       onMouseEnter={() => setActiveCategory(cat.id)}
@@ -864,7 +864,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
 
       {/* Running Windows Task Strip in top panel */}
       <div
-        className="heron-window-strip"
+        className="Orion-window-strip"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -922,7 +922,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
 
       {/* Right Tray */}
       <div
-        className="heron-panel-tray"
+        className="Orion-panel-tray"
         style={{
           display: 'flex',
           alignItems: 'center',

@@ -30,7 +30,7 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isPanelCollapsed, setIsPanelCollapsed] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
-      return window.innerWidth < 640;
+      return window.innerWidth <= 768;
     }
     return false;
   });

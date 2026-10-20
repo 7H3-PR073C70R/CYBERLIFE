@@ -1,5 +1,5 @@
 /**
- * Cyberlife — WindowFrame Component (Heron OS Desktop Chrome)
+ * Cyberlife — WindowFrame Component (Orion OS Desktop Chrome)
  *
  * Provides classical GTK/MATE inspired window chrome:
  * - Dark titlebar with centered title and subtle top gradient
@@ -220,7 +220,7 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({
 
   const iconName =
     typeof windowState.icon === 'string' &&
-    windowState.icon in
+      windowState.icon in
       {
         terminal: 1,
         fieldGuide: 1,
@@ -237,6 +237,10 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({
         packetLens: 1,
         revLens: 1,
         ruleTuner: 1,
+        tor: 1,
+        chat: 1,
+        call: 1,
+        securityNews: 1,
       }
       ? (windowState.icon as OsIconName)
       : undefined;

@@ -13,7 +13,7 @@ describe('SecurityNewsApp', () => {
   it('renders ParrotSec threat dispatch header and default articles', () => {
     render(<SecurityNewsApp />);
     expect(screen.getByTestId('security-news-app')).toBeInTheDocument();
-    expect(screen.getByText(/PARROTSEC \/ HERON THREAT DISPATCH/i)).toBeInTheDocument();
+    expect(screen.getByText(/PARROTSEC \/ Orion THREAT DISPATCH/i)).toBeInTheDocument();
     expect(screen.getByText(/WEST AFRICA CERT FEED/i)).toBeInTheDocument();
     expect(screen.getByText(/Critical SMB RCE \(CVE-2026-445\)/i)).toBeInTheDocument();
   });

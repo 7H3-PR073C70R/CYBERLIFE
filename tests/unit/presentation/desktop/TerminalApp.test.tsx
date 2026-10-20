@@ -12,7 +12,7 @@ describe('TerminalApp Component', () => {
     );
 
     expect(screen.getByTestId('terminal-app-container')).toBeInTheDocument();
-    expect(screen.getByText(/Heron OS/i)).toBeInTheDocument();
+    expect(screen.getByText(/Orion OS/i)).toBeInTheDocument();
     expect(screen.getByTestId('terminal-command-input')).toBeInTheDocument();
     expect(screen.getByTestId('terminal-input-row')).toBeInTheDocument();
     expect(screen.getByText(/tade/i)).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe('TerminalApp Component', () => {
     fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
     expect(screen.getByText(/cedarline-sec-ws04.corp.local/i)).toBeInTheDocument();
-    expect(screen.getByText(/Heron OS v4.5/i)).toBeInTheDocument();
+    expect(screen.getByText(/Orion OS v4.5/i)).toBeInTheDocument();
     expect(screen.getByText(/100% synthetic in-game sandbox/i)).toBeInTheDocument();
   });
 
@@ -119,14 +119,14 @@ describe('TerminalApp Component', () => {
     );
 
     // Initial greeting is present
-    expect(screen.getByText(/Heron OS/i)).toBeInTheDocument();
+    expect(screen.getByText(/Orion OS/i)).toBeInTheDocument();
 
     const input = screen.getByTestId('terminal-command-input');
     fireEvent.change(input, { target: { value: 'clear' } });
     fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
     // Screen should now be cleared
-    expect(screen.queryByText(/Heron OS/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Orion OS/i)).not.toBeInTheDocument();
   });
 
   it('isolates keyboard events by stopping propagation', () => {

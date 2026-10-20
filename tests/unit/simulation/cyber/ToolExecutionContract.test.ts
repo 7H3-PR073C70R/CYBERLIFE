@@ -80,9 +80,9 @@ describe('Tool Execution Contract', () => {
     expect(result.error?.code).toBe('TOOL_NOT_PLAYABLE');
     expect(result.error?.message).toContain('partial');
 
-    const exploitLab = GLOBAL_CYBER_ARSENAL_REGISTRY.getTool('tool_exploit_lab')!;
-    expect(exploitLab.status).toBe('planned');
-    const plannedResult = executeToolWorkflow(exploitLab, 'any', {}, baseContext);
+    const plannedTool = GLOBAL_CYBER_ARSENAL_REGISTRY.getTool('tool_network_detect')!;
+    expect(plannedTool.status).toBe('planned');
+    const plannedResult = executeToolWorkflow(plannedTool, 'any', {}, baseContext);
     expect(plannedResult.success).toBe(false);
     expect(plannedResult.error?.code).toBe('WORKFLOW_NOT_FOUND');
   });

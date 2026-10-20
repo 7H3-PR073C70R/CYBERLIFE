@@ -119,6 +119,9 @@ describe('CyberArsenalRegistry', () => {
     expect(playable.some(t => t.id === 'tool_evidence')).toBe(true);
     expect(playable.some(t => t.id === 'tool_incident')).toBe(true);
     expect(playable.some(t => t.id === 'tool_terminal')).toBe(true);
+    expect(playable.some(t => t.id === 'tool_exploit_lab')).toBe(true);
+    expect(playable.some(t => t.id === 'tool_web_proxy')).toBe(true);
+    expect(playable.some(t => t.id === 'tool_social_eng')).toBe(true);
 
     const partial = GLOBAL_CYBER_ARSENAL_REGISTRY.getToolsByStatus('partial');
     expect(partial.some(t => t.id === 'tool_packet_lens')).toBe(true);
@@ -130,8 +133,6 @@ describe('CyberArsenalRegistry', () => {
     expect(refOnly.some(t => t.id === 'tool_attck_matrix')).toBe(true);
 
     const planned = GLOBAL_CYBER_ARSENAL_REGISTRY.getToolsByStatus('planned');
-    expect(planned.some(t => t.id === 'tool_exploit_lab')).toBe(true);
-    expect(planned.some(t => t.id === 'tool_web_proxy')).toBe(true);
     expect(planned.some(t => t.id === 'tool_network_detect')).toBe(true);
   });
 

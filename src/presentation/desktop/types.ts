@@ -22,7 +22,10 @@ export type AppId =
   | 'ruleTuner'
   | 'torBrowser'
   | 'onionChat'
-  | 'securityNews';
+  | 'securityNews'
+  | 'exploitLab'
+  | 'webProxy'
+  | 'socialPretext';
 
 export interface AppDefinition {
   id: AppId;
@@ -226,5 +229,35 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
       'Real-time threat intelligence bulletins, CVE advisories, and Lagos Island cyber incident updates.',
     defaultSize: { width: 840, height: 580 },
     minSize: { width: 480, height: 360 },
+  },
+  exploitLab: {
+    id: 'exploitLab',
+    title: 'EkoSec Exploit Lab — Authorized Offensive Simulation',
+    shortTitle: 'Exploit Lab',
+    icon: 'exploitLab',
+    description:
+      'Metasploit-inspired offensive security framework for dry-run payload execution and vulnerability verification under strict Rules of Engagement (RoE).',
+    defaultSize: { width: 880, height: 600 },
+    minSize: { width: 480, height: 380 },
+  },
+  webProxy: {
+    id: 'webProxy',
+    title: 'Web Application Security Testing Proxy — Interception Console',
+    shortTitle: 'Web Proxy',
+    icon: 'webProxy',
+    description:
+      'Burp Suite / OWASP ZAP-inspired intercepting proxy for inspecting transactions, tampering parameters/headers, replaying requests, and diffing responses.',
+    defaultSize: { width: 880, height: 600 },
+    minSize: { width: 480, height: 380 },
+  },
+  socialPretext: {
+    id: 'socialPretext',
+    title: 'Pretext Lab — Human Attack Surface & Social Security Scenarios',
+    shortTitle: 'Pretext Lab',
+    icon: 'socialPretext',
+    description:
+      'Interactive social pretexting and identity verification scenarios evaluating trust, authority, and security policy compliance across 6 authentic venues.',
+    defaultSize: { width: 840, height: 580 },
+    minSize: { width: 480, height: 380 },
   },
 };

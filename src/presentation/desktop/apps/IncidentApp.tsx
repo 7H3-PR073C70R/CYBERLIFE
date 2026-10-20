@@ -412,7 +412,7 @@ export const IncidentApp: React.FC = () => {
               </div>
               <div className="memo-meta">
                 <div>
-                  <strong>From:</strong> Amina Okonjo (Lead Security Analyst, Cedarline Services)
+                  <strong>From:</strong> Temitope Blessing (Lead Security Analyst, Cedarline Services)
                 </div>
                 <div>
                   <strong>To:</strong> Tade Adebayo (Junior Incident Responder)
@@ -893,7 +893,7 @@ export const IncidentApp: React.FC = () => {
                   <h3 className="panel-card-title">Official Incident Report &amp; Post-Mortem</h3>
                   <p>
                     Document your findings across all 7 essential sections. The report will be
-                    reviewed by Lead Analyst Amina Okonjo and Cedarline management.
+                    reviewed by Lead Analyst Temitope Blessing and Cedarline management.
                   </p>
                 </div>
                 <button

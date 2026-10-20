@@ -18,7 +18,7 @@ export const FICTIONAL_HOSTS: readonly FictionalHost[] = [
     macAddress: '00:50:56:a4:01:15',
     role: 'workstation',
     roleLabel: 'Security Operations Analyst Workstation',
-    os: 'Heron OS v4.5 (Sandboxed Linux Kernel)',
+    os: 'Orion OS v4.5 (Sandboxed Linux Kernel)',
     status: 'UP',
     reachability: 'LOCAL_HOST',
     location: 'Marina Tower — 4th Floor SecOps Bullpen (Desk 04)',

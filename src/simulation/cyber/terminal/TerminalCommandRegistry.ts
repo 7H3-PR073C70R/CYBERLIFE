@@ -8,6 +8,9 @@
 import { TerminalCommandHandler, TerminalCommandResult, TerminalExecutionContext } from './types';
 import { createDefaultCyberTools, createToolCommandHandler } from '../tools';
 import { virtualFilesystem, resolveVirtualPath } from '../filesystem';
+import { ExploitLabEngine } from '../offensive/ExploitLabEngine';
+import { WebProxyEngine } from '../webproxy/WebProxyEngine';
+import { SocialPretextEngine } from '../social/SocialPretextEngine';
 
 export class TerminalCommandRegistry {
   private handlers = new Map<string, TerminalCommandHandler>();
@@ -585,7 +588,7 @@ export const nmapCommand: TerminalCommandHandler = {
     return {
       ...subResult,
       stdout: [
-        "💡 [EkoSec Educational Alias] 'nmap' maps to Cyberlife simulated tool 'netmap' (Heron OS / Linux Nmap equivalent).",
+        "💡 [EkoSec Educational Alias] 'nmap' maps to Cyberlife simulated tool 'netmap' (Orion OS / Linux Nmap equivalent).",
         ...subResult.stdout,
       ],
     };
@@ -672,6 +675,368 @@ export const revviewCommand: TerminalCommandHandler = {
   },
 };
 
+export const exploitlabCommand: TerminalCommandHandler = {
+  name: 'exploitlab',
+  description: 'Authorized attack simulation lab & Metasploit-style vulnerability runner.',
+  usage: 'exploitlab [scope|targets|modules|run|dryrun|retest|remediate] [targetId] [moduleId]',
+  execute(args: string[], context: TerminalExecutionContext): TerminalCommandResult {
+    const defaultExploitEngine = new ExploitLabEngine();
+    const sub = args[0]?.toLowerCase() || 'scope';
+
+    if (sub === 'scope') {
+      const roe = defaultExploitEngine.getActiveEngagement();
+      const inScope = roe.inScopeTargets.map(t => `  - [${t.targetType}] ${t.identifier}: ${t.description}`);
+      const prohibited = roe.prohibitedTechniques.map(p => `  - ${p}`);
+      return {
+        stdout: [
+          '=== EkoSec Exploit Lab // Rules of Engagement Scope ===',
+          `Engagement ID: ${roe.engagementId}`,
+          `Client:        ${roe.clientName}`,
+          `Assessor:      ${roe.authorizedAssessorName}`,
+          `Status:        ${roe.isSignedAndActive ? 'ACTIVE / SIGNED' : 'EXPIRED'}`,
+          `Validity:      ${roe.effectiveStartDate} to ${roe.effectiveEndDate}`,
+          '',
+          'In-Scope Targets:',
+          ...inScope,
+          '',
+          'Prohibited Techniques (Violations blocked by engine):',
+          ...prohibited,
+          '',
+          'Usage: "exploitlab targets", "exploitlab modules", "exploitlab run <target> <module>"',
+        ],
+      };
+    }
+
+    if (sub === 'targets') {
+      const targets = defaultExploitEngine.getTargets();
+      const rows = targets.map(
+        t =>
+          `${t.id.padEnd(14)}${t.ipAddress.padEnd(16)}${t.primaryService.padEnd(30)}${t.isVulnerable ? 'VULNERABLE' : 'HARDENED/PATCHED'}`
+      );
+      return {
+        stdout: [
+          '=== EkoSec Exploit Lab // Authorized Target Inventory ===',
+          'TARGET ID     IP ADDRESS      PRIMARY SERVICE               STATUS',
+          '--------------------------------------------------------------------------------',
+          ...rows,
+          '--------------------------------------------------------------------------------',
+          'Tip: Launch "Exploit Lab" GUI app for interactive exploit payloads and traces.',
+        ],
+      };
+    }
+
+    if (sub === 'modules') {
+      const modules = defaultExploitEngine.getModules();
+      const rows = modules.map(
+        m =>
+          `${m.id.padEnd(26)}${m.cve.padEnd(20)}${m.severity.padEnd(10)}${m.targetService}`
+      );
+      return {
+        stdout: [
+          '=== EkoSec Exploit Lab // Verified Simulation Modules ===',
+          'MODULE ID                 CVE ID              SEVERITY  TARGET SERVICE',
+          '--------------------------------------------------------------------------------',
+          ...rows,
+          '--------------------------------------------------------------------------------',
+          'Usage: exploitlab dryrun <targetId> <moduleId>',
+          '       exploitlab run <targetId> <moduleId>',
+        ],
+      };
+    }
+
+    if (sub === 'dryrun' || sub === 'run') {
+      const targetId = args[1];
+      const moduleId = args[2];
+      if (!targetId || !moduleId) {
+        return {
+          isError: true,
+          stdout: [
+            `Usage: exploitlab ${sub} <targetId> <moduleId>`,
+            'Example: exploitlab run filesrv-01 mod_smb_tree_hijack',
+          ],
+        };
+      }
+
+      const result = defaultExploitEngine.executeModule({
+        targetId,
+        moduleId,
+        mode: sub === 'dryrun' ? 'dry_run' : 'simulation',
+        actorName: context.currentUser.username,
+      });
+
+      return {
+        isError: result.status.startsWith('BLOCKED'),
+        stdout: [...result.executionLogs],
+      };
+    }
+
+    if (sub === 'retest') {
+      const targetId = args[1];
+      const moduleId = args[2];
+      if (!targetId || !moduleId) {
+        return {
+          isError: true,
+          stdout: ['Usage: exploitlab retest <targetId> <moduleId>'],
+        };
+      }
+
+      const result = defaultExploitEngine.retestTarget(
+        targetId,
+        moduleId,
+        context.currentUser.username
+      );
+
+      return {
+        stdout: [...result.executionLogs],
+      };
+    }
+
+    if (sub === 'remediate') {
+      const targetId = args[1];
+      const moduleId = args[2];
+      if (!targetId || !moduleId) {
+        return {
+          isError: true,
+          stdout: ['Usage: exploitlab remediate <targetId> <moduleId>'],
+        };
+      }
+
+      const patchRes = defaultExploitEngine.applyRemediation({
+        targetId,
+        moduleId,
+        patchTitle: `Security Hardening Configuration for ${targetId}`,
+        patchDescription: `Applied patch closing ${moduleId}`,
+        configChanges: ['Restrict anonymous session bind', 'Enforce authentication challenge'],
+      });
+
+      return {
+        stdout: [
+          `[+] Remediation Applied: ${patchRes.message}`,
+          'Run "exploitlab retest ' + targetId + ' ' + moduleId + '" to verify the fix.',
+        ],
+      };
+    }
+
+    return {
+      isError: true,
+      stdout: [
+        `Unknown subcommand '${sub}'. Available: scope, targets, modules, dryrun, run, retest, remediate`,
+      ],
+    };
+  },
+};
+
+export const webproxyCommand: TerminalCommandHandler = {
+  name: 'webproxy',
+  description: 'Simulated web application security proxy & request tamper console.',
+  usage: 'webproxy [list|inspect|replay] [txId]',
+  execute(args: string[]): TerminalCommandResult {
+    const defaultWebProxyEngine = new WebProxyEngine();
+    const sub = args[0]?.toLowerCase() || 'list';
+
+    if (sub === 'list') {
+      const txs = defaultWebProxyEngine.getTransactions();
+      const rows = txs.map(
+        tx =>
+          `${tx.id.padEnd(8)}${tx.originalRequest.method.padEnd(8)}${String(tx.originalResponse.statusCode).padEnd(8)}${tx.originalRequest.path.padEnd(30)}${tx.tags.join(', ')}`
+      );
+      return {
+        stdout: [
+          '=== EkoSec Web Application Proxy // Captured Transactions ===',
+          'ID      METHOD  STATUS  PATH                          TAGS',
+          '--------------------------------------------------------------------------------',
+          ...rows,
+          '--------------------------------------------------------------------------------',
+          'Usage: webproxy inspect <txId> | webproxy replay <txId>',
+          'Tip: Launch the graphical "Web Proxy" app for side-by-side tamper and diff views.',
+        ],
+      };
+    }
+
+    if (sub === 'inspect') {
+      const txId = args[1] || 'tx-001';
+      const tx = defaultWebProxyEngine.getTransaction(txId);
+      if (!tx) {
+        return {
+          isError: true,
+          stdout: [`Transaction '${txId}' not found. Use "webproxy list" to view buffer.`],
+        };
+      }
+
+      return {
+        stdout: [
+          `=== Web Proxy Transaction Details: ${tx.id} ===`,
+          `URL:    ${tx.originalRequest.method} ${tx.originalRequest.url}`,
+          `Host:   ${tx.targetHost}:${tx.targetPort} (${tx.appId})`,
+          'Request Headers:',
+          ...Object.entries(tx.originalRequest.headers).map(([k, v]) => `  ${k}: ${v}`),
+          '',
+          `Response: ${tx.originalResponse.statusCode} ${tx.originalResponse.statusText} (${tx.originalResponse.responseTimeMs}ms)`,
+          'Response Headers:',
+          ...Object.entries(tx.originalResponse.headers).map(([k, v]) => `  ${k}: ${v}`),
+          '',
+          'Response Body:',
+          tx.originalResponse.body,
+        ],
+      };
+    }
+
+    if (sub === 'replay') {
+      const txId = args[1] || 'tx-001';
+      const tx = defaultWebProxyEngine.getTransaction(txId);
+      if (!tx) {
+        return {
+          isError: true,
+          stdout: [`Transaction '${txId}' not found.`],
+        };
+      }
+
+      const tamperArg = args[2];
+      const modifiedReq = { ...tx.originalRequest };
+      if (tamperArg && tamperArg.includes('=')) {
+        const eqIdx = tamperArg.indexOf('=');
+        const k = tamperArg.substring(0, eqIdx);
+        const v = tamperArg.substring(eqIdx + 1);
+        modifiedReq.queryParams = { ...modifiedReq.queryParams, [k]: v };
+        modifiedReq.url = `${modifiedReq.path}?${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
+      }
+
+      const result = defaultWebProxyEngine.replayRequest(txId, modifiedReq);
+      return {
+        stdout: [
+          `[+] Replayed Transaction ${txId} against ${tx.targetHost}`,
+          `Status:   ${result.transaction.modifiedResponse?.statusCode} ${result.transaction.modifiedResponse?.statusText}`,
+          `Diff:     ${result.transaction.diff?.securityObservation ?? 'Completed'}`,
+          `Response Body:`,
+          result.transaction.modifiedResponse?.body ?? '(empty)',
+        ],
+      };
+    }
+
+    return {
+      isError: true,
+      stdout: ['Usage: webproxy [list|inspect|replay] [txId]'],
+    };
+  },
+};
+
+export const pretextCommand: TerminalCommandHandler = {
+  name: 'pretext',
+  description: 'Social engineering and human-centered security scenario console.',
+  usage: 'pretext [list|start|choose] [scenarioId] [optionId]',
+  execute(args: string[]): TerminalCommandResult {
+    const defaultSocialEngine = new SocialPretextEngine();
+    const sub = args[0]?.toLowerCase() || 'list';
+
+    if (sub === 'list') {
+      const scenarios = defaultSocialEngine.getAllScenarios();
+      const rows = scenarios.map(
+        s => `[${s.id}] ${s.title}\n  Venue: ${s.venueLabel} | Target: ${s.targetNpc.name}`
+      );
+      return {
+        stdout: [
+          '=== EkoSec Social Pretexting & Human Attack Surface Scenarios ===',
+          ...rows,
+          '',
+          'Usage: pretext start <scenarioId>',
+          'Tip: Launch the graphical "Pretext Lab" app for real-time trust meters and audio.',
+        ],
+      };
+    }
+
+    if (sub === 'start') {
+      const scenarioId = args[1] || 'scen_reception_courier';
+      const scenario = defaultSocialEngine.getScenario(scenarioId);
+      if (!scenario) {
+        return {
+          isError: true,
+          stdout: [`Scenario '${scenarioId}' not found. Use "pretext list" to view scenarios.`],
+        };
+      }
+
+      const session = defaultSocialEngine.startEncounter(scenarioId);
+      const node = scenario.nodes[session.currentNodeId];
+      if (!node) {
+        return {
+          isError: true,
+          stdout: [`Starting node '${session.currentNodeId}' not found.`],
+        };
+      }
+      const optLines =
+        node.options?.map((o, idx) => `  [${idx + 1}] (${o.id}): "${o.text}" [${o.tone}]`) ?? [];
+
+      return {
+        stdout: [
+          `=== Encounter Started: ${scenario.title} ===`,
+          `Venue:    ${scenario.venueLabel}`,
+          `Persona:  ${scenario.targetNpc.name} (${scenario.targetNpc.title})`,
+          `Briefing: ${scenario.situationBriefing}`,
+          '--------------------------------------------------------------------------------',
+          `Metrics:  Trust=${session.metrics.trust} | Credibility=${session.metrics.credibility} | Authority=${session.metrics.authority} | Suspicion=${session.metrics.suspicion}`,
+          '--------------------------------------------------------------------------------',
+          `${node.speakerName}: "${node.text}"`,
+          '',
+          'Options:',
+          ...optLines,
+          '',
+          `To choose, run: pretext choose ${scenarioId} <optionId>`,
+        ],
+      };
+    }
+
+    if (sub === 'choose') {
+      const scenarioId = args[1];
+      const optionId = args[2];
+      if (!scenarioId || !optionId) {
+        return {
+          isError: true,
+          stdout: ['Usage: pretext choose <scenarioId> <optionId>'],
+        };
+      }
+
+      defaultSocialEngine.startEncounter(scenarioId);
+      const session = defaultSocialEngine.selectOption(scenarioId, optionId);
+      const scenario = defaultSocialEngine.getScenario(scenarioId);
+      const node = scenario?.nodes[session.currentNodeId];
+
+      const out = [
+        `[+] Selected Option: ${optionId}`,
+        `Metrics: Trust=${session.metrics.trust} | Credibility=${session.metrics.credibility} | Authority=${session.metrics.authority} | Suspicion=${session.metrics.suspicion}`,
+        '--------------------------------------------------------------------------------',
+      ];
+
+      if (node) {
+        out.push(`${node.speakerName}: "${node.text}"`);
+        if (node.options && node.options.length > 0) {
+          out.push('');
+          out.push('Next Options:');
+          for (const o of node.options) {
+            out.push(`  - (${o.id}): "${o.text}"`);
+          }
+        }
+      }
+
+      if (session.isCompleted && session.finalOutcome) {
+        out.push('');
+        out.push('====================================================================');
+        out.push(`SCENARIO OUTCOME: ${session.finalOutcome.title} [${session.finalOutcome.status}]`);
+        out.push('====================================================================');
+        out.push(session.finalOutcome.summary);
+        out.push(
+          `Rewards: +${session.finalOutcome.xpReward} XP, ₦${(session.finalOutcome.nairaRewardKobo / 100).toLocaleString()}`
+        );
+      }
+
+      return { stdout: out };
+    }
+
+    return {
+      isError: true,
+      stdout: ['Usage: pretext [list|start|choose] [scenarioId] [optionId]'],
+    };
+  },
+};
+
 /**
  * Creates and initializes a TerminalCommandRegistry with the standard command set.
  */
@@ -699,6 +1064,11 @@ export function createDefaultCommandRegistry(): TerminalCommandRegistry {
   registry.register(packetviewCommand);
   registry.register(revviewCommand);
 
+  // M14 Authorized Offensive & Social Pretexting CLI tools
+  registry.register(exploitlabCommand);
+  registry.register(webproxyCommand);
+  registry.register(pretextCommand);
+
   // M5 simulated cybersecurity tools
   for (const tool of createDefaultCyberTools()) {
     registry.register(createToolCommandHandler(tool));
@@ -706,3 +1076,4 @@ export function createDefaultCommandRegistry(): TerminalCommandRegistry {
 
   return registry;
 }
+

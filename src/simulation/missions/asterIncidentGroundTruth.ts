@@ -49,7 +49,7 @@ export const DEFAULT_MISSION_OBJECTIVES: readonly MissionObjective[] = [
     phase: 'briefing',
     title: 'Review Incident Briefing with Lead Analyst Amina',
     description:
-      'Meet with Lead Security Analyst Amina Okonjo in the Cedarline office or review the initial alert in the Incident Portal.',
+      'Meet with Lead Security Analyst Temitope Blessing in the Cedarline office or review the initial alert in the Incident Portal.',
     isCompleted: false,
     hint: 'Amina is standing near the office console. Speak with her [E] or open the Incident Portal app on your workstation.',
     requiredAction: 'speak_amina_or_open_portal',
@@ -156,11 +156,11 @@ export const DEFAULT_MISSION_OBJECTIVES: readonly MissionObjective[] = [
 export function validateRootCauseAssessment(
   assessment:
     | {
-        suspectedRootCause: string;
-        affectedComponent: string;
-        observedImpact: string;
-        supportingEvidenceIds: readonly string[];
-      }
+      suspectedRootCause: string;
+      affectedComponent: string;
+      observedImpact: string;
+      supportingEvidenceIds: readonly string[];
+    }
     | RootCauseAssessment
 ): { isAccurate: boolean; feedback: string } {
   const causeLower = assessment.suspectedRootCause.toLowerCase();

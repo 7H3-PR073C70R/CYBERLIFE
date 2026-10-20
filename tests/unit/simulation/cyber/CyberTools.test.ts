@@ -26,7 +26,7 @@ describe('Milestone 5 Cybersecurity Tools', () => {
     workstation: {
       id: 'ws_cedarline_01',
       hostname: 'cedarline-sec-ws04.corp.local',
-      osVersion: 'Heron OS v4.5',
+      osVersion: 'Orion OS v4.5',
       ipAddress: '10.0.4.15',
       subnet: '255.255.255.0',
       status: 'Active (Simulated Intranet)',

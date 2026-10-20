@@ -12,6 +12,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChatThread, HackerCallState } from '@/simulation/cyber/chat/types';
 import { audioSfx } from '@/simulation/cyber/chat/audioSfx';
+import { voiceDialogueService } from '../audio/VoiceDialogueService';
 import { OsIcon } from './icons/OsIcons';
 
 export interface HackerCallOverlayProps {
@@ -72,11 +73,20 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
     return () => clearInterval(timer);
   }, [callState?.status]);
 
+  const [isVoiceActive, setIsVoiceActive] = useState<boolean>(false);
+
+  useEffect(() => {
+    return voiceDialogueService.onSpeakingChange(active => {
+      setIsVoiceActive(active);
+    });
+  }, []);
+
   // Handle dialogue streaming when active
   useEffect(() => {
     if (callState?.status !== 'active' || !activeThread || activeThread.callDialogue.length === 0) {
       setCurrentSubtitle('');
       setDialogueIndex(0);
+      voiceDialogueService.stop();
       return;
     }
 
@@ -94,6 +104,13 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
       const item = activeThread.callDialogue[currentIdx]!;
       setDialogueIndex(currentIdx);
 
+      // Trigger natural Nigerian English voice stream
+      voiceDialogueService.speak(item.text, {
+        speaker: activeThread.contactName,
+        role: activeThread.contactRole,
+        isPhoneCall: true,
+      });
+
       // Typewriter effect for speech
       let charIdx = 0;
       setCurrentSubtitle('');
@@ -106,9 +123,6 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
 
         if (charIdx <= item.text.length) {
           setCurrentSubtitle(item.text.slice(0, charIdx));
-          if (charIdx % 4 === 0) {
-            audioSfx.playSpeechBlip();
-          }
           charIdx++;
         } else {
           clearInterval(typeInterval);
@@ -129,6 +143,7 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
     return () => {
       isCancelled = true;
       clearTimeout(startTimeout);
+      voiceDialogueService.stop();
     };
   }, [callState?.status, activeThread]);
 
@@ -171,8 +186,9 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
       ctx.beginPath();
 
       const frequency = 0.04;
-      const isSpeaking = currentSubtitle.length > 0 && !currentSubtitle.startsWith('[');
-      const amplitude = isSpeaking ? (isMuted ? 4 : 26 + Math.sin(phase * 2) * 10) : 4;
+      const isSubtitleActive = currentSubtitle.length > 0 && !currentSubtitle.startsWith('[');
+      const isSpeakingWave = isVoiceActive || isSubtitleActive;
+      const amplitude = isSpeakingWave ? (isMuted ? 4 : 26 + Math.sin(phase * 2) * 10) : 4;
 
       for (let x = 0; x < width; x++) {
         const y =
@@ -473,25 +489,52 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
           alignItems: 'center',
         }}
       >
-        <button
-          type="button"
-          onClick={() => setIsMuted(!isMuted)}
-          style={{
-            backgroundColor: isMuted ? '#7f1d1d' : '#1e293b',
-            border: '1px solid #334155',
-            color: '#cbd5e1',
-            borderRadius: '4px',
-            padding: '6px 12px',
-            fontSize: '11px',
-            cursor: 'pointer',
-          }}
-        >
-          {isMuted ? '🔇 Unmute Mic' : '🎤 Mute Mic'}
-        </button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            type="button"
+            onClick={() => {
+              const nextMuted = !isMuted;
+              setIsMuted(nextMuted);
+              voiceDialogueService.setMuted(nextMuted);
+            }}
+            aria-label={isMuted ? 'Unmute Mic' : 'Mute Mic'}
+            style={{
+              backgroundColor: isMuted ? '#7f1d1d' : '#1e293b',
+              border: `1px solid ${isMuted ? '#ef4444' : '#334155'}`,
+              color: '#cbd5e1',
+              borderRadius: '4px',
+              padding: '6px 12px',
+              fontSize: '11px',
+              cursor: 'pointer',
+            }}
+          >
+            {isMuted ? '🔇 Unmute Mic' : '🎤 Mute Mic'}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => voiceDialogueService.replay()}
+            style={{
+              backgroundColor: '#1e293b',
+              border: '1px solid rgba(56, 189, 248, 0.4)',
+              color: '#38bdf8',
+              borderRadius: '4px',
+              padding: '6px 10px',
+              fontSize: '11px',
+              cursor: 'pointer',
+            }}
+            title="Replay dialogue voice"
+          >
+            🔁 Replay
+          </button>
+        </div>
 
         <button
           type="button"
-          onClick={onEndCall}
+          onClick={() => {
+            voiceDialogueService.stop();
+            onEndCall();
+          }}
           style={{
             backgroundColor: '#dc2626',
             border: 'none',

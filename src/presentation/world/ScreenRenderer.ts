@@ -34,7 +34,7 @@ export interface ScreenRendererOptions {
 }
 
 /**
- * ScreenRenderer renders a high-fidelity 1280x800 representation of Heron OS
+ * ScreenRenderer renders a high-fidelity 1280x800 representation of Orion OS
  * onto a dynamic Three.js canvas texture with SRGBColorSpace, mipmaps,
  * 8x anisotropy, and emissive lighting.
  *
@@ -43,7 +43,7 @@ export interface ScreenRendererOptions {
  * - Left vertical desktop icons (Home, Trash, Terminal, Tools)
  * - Restyled dark GTK window frame with centered title and controls
  * - Signature two-line colored terminal prompt:
- *   ┌─[tade@heron-ws04]─[~]
+ *   ┌─[tade@Orion-ws04]─[~]
  *   └──╼ $
  * - Procedural circuit & node background
  */
@@ -100,7 +100,7 @@ export class ScreenRenderer {
     this.texture.minFilter = THREE.LinearMipmapLinearFilter;
     this.texture.magFilter = THREE.LinearFilter;
 
-    // Load custom high-resolution Heron OS security wallpaper
+    // Load custom high-resolution Orion OS security wallpaper
     if (typeof Image !== 'undefined') {
       const img = new Image();
       img.onload = () => {
@@ -108,7 +108,7 @@ export class ScreenRenderer {
         this.isWallpaperLoaded = true;
         this.isDirty = true;
       };
-      img.src = '/assets/os/heron_security_wallpaper.jpg';
+      img.src = '/assets/os/Orion_security_wallpaper.jpg';
     }
 
     // Emissive screen material
@@ -190,10 +190,10 @@ export class ScreenRenderer {
       // 2. Left vertical desktop icons
       this.drawDesktopIcons(ctx);
 
-      // 3. Central Terminal Window with Heron OS chrome & two-line prompt
+      // 3. Central Terminal Window with Orion OS chrome & two-line prompt
       this.drawTerminalWindow(ctx, w, h);
 
-      // 4. Heron OS Top Panel (Applications / Places / System / Launchers / Windows / Tray Clock)
+      // 4. Orion OS Top Panel (Applications / Places / System / Launchers / Windows / Tray Clock)
       this.drawTopPanel(ctx, w);
 
       // 5. Thin bottom workspace pager strip
@@ -499,7 +499,7 @@ export class ScreenRenderer {
 
     const lines = this.state.terminalLines ?? [];
     lines.slice(-10).forEach(line => {
-      if (line.startsWith(OS_NAME.toUpperCase()) || line.includes('HERON OS')) {
+      if (line.startsWith(OS_NAME.toUpperCase()) || line.includes('Orion OS')) {
         ctx.fillStyle = '#00ff66';
       } else if (line.startsWith('[OK]') || line.startsWith('[SUCCESS]')) {
         ctx.fillStyle = '#00ff66';
@@ -516,7 +516,7 @@ export class ScreenRenderer {
 
     // Signature Two-Line Terminal Prompt (Green on Black)
     const host = HOSTNAMES.office;
-    // Line 1: ┌─[tade@heron-ws04]─[~]
+    // Line 1: ┌─[tade@Orion-ws04]─[~]
     ctx.fillStyle = '#00aa44';
     ctx.fillText('┌─[', winX + 16, lineY);
     ctx.fillStyle = '#00ff66';
@@ -570,7 +570,7 @@ export class ScreenRenderer {
     // Right status
     ctx.fillStyle = '#64748b';
     ctx.textAlign = 'right';
-    ctx.fillText('Heron OS Sandbox // Lagos Station 04', w - 12, stripY + 15);
+    ctx.fillText('Orion OS Sandbox // Lagos Station 04', w - 12, stripY + 15);
     ctx.textAlign = 'left';
   }
 

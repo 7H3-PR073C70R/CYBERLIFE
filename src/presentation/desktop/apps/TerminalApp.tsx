@@ -1,5 +1,5 @@
 /**
- * Cyberlife — Terminal Application Component (Heron OS Security Edition)
+ * Cyberlife — Terminal Application Component (Orion OS Security Edition)
  *
  * Provides a classical two-line signature prompt:
  * ┌─[user@host]─[dir]
@@ -173,36 +173,36 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         currentDirectory: dir,
         currentUser: isCedarline
           ? {
-              username: 'tade_adebayo',
-              displayName: 'Tade Adebayo',
-              role: 'Security Analyst Intern',
-              organization: 'Cedarline Services — Marina Tower',
-            }
+            username: 'tade_adebayo',
+            displayName: 'Tade Adebayo',
+            role: 'Security Analyst Intern',
+            organization: 'Cedarline Services — Marina Tower',
+          }
           : {
-              username: 'player',
-              displayName: 'Tade Adebayo',
-              role: 'Independent Security Researcher',
-              organization: 'Home Rig — Broad Street 14',
-            },
+            username: 'player',
+            displayName: 'Tade Adebayo',
+            role: 'Independent Security Researcher',
+            organization: 'Home Rig — Broad Street 14',
+          },
         workstation: isCedarline
           ? {
-              id: workstationId,
-              hostname: 'cedarline-sec-ws04.corp.local',
-              osVersion: `${OS_NAME} v${OS_VERSION} [Simulated Sandboxed Kernel]`,
-              ipAddress: '10.0.4.15',
-              subnet: '255.255.255.0',
-              status: 'Operational (Synthetic Enterprise Subnet)',
-              locationId: 'cedarline_interior',
-            }
+            id: workstationId,
+            hostname: 'cedarline-sec-ws04.corp.local',
+            osVersion: `${OS_NAME} v${OS_VERSION} [Simulated Sandboxed Kernel]`,
+            ipAddress: '10.0.4.15',
+            subnet: '255.255.255.0',
+            status: 'Operational (Synthetic Enterprise Subnet)',
+            locationId: 'cedarline_interior',
+          }
           : {
-              id: workstationId,
-              hostname: 'lagos-rig-dev01.local',
-              osVersion: `${OS_NAME} v${OS_VERSION} [Home Rig]`,
-              ipAddress: '192.168.1.104',
-              subnet: '255.255.255.0',
-              status: 'Operational (Simulated Local Rig)',
-              locationId: 'apartment_interior',
-            },
+            id: workstationId,
+            hostname: 'lagos-rig-dev01.local',
+            osVersion: `${OS_NAME} v${OS_VERSION} [Home Rig]`,
+            ipAddress: '192.168.1.104',
+            subnet: '255.255.255.0',
+            status: 'Operational (Simulated Local Rig)',
+            locationId: 'apartment_interior',
+          },
         history,
       };
     },
@@ -264,12 +264,12 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         prev.map(t =>
           t.id === activeTab.id
             ? {
-                ...t,
-                entries: [],
-                inputVal: '',
-                history: nextHistory,
-                historyIndex: -1,
-              }
+              ...t,
+              entries: [],
+              inputVal: '',
+              history: nextHistory,
+              historyIndex: -1,
+            }
             : t
         )
       );
@@ -292,14 +292,14 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
       prev.map(t =>
         t.id === activeTab.id
           ? {
-              ...t,
-              title: nextTitle,
-              currentDirectory: nextDir,
-              entries: [...t.entries, newEntry],
-              inputVal: '',
-              history: nextHistory,
-              historyIndex: -1,
-            }
+            ...t,
+            title: nextTitle,
+            currentDirectory: nextDir,
+            entries: [...t.entries, newEntry],
+            inputVal: '',
+            history: nextHistory,
+            historyIndex: -1,
+          }
           : t
       )
     );
@@ -364,10 +364,10 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         prev.map(t =>
           t.id === activeTab.id
             ? {
-                ...t,
-                historyIndex: nextIndex,
-                inputVal: activeTab.history[nextIndex] ?? '',
-              }
+              ...t,
+              historyIndex: nextIndex,
+              inputVal: activeTab.history[nextIndex] ?? '',
+            }
             : t
         )
       );
@@ -381,10 +381,10 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
           prev.map(t =>
             t.id === activeTab.id
               ? {
-                  ...t,
-                  historyIndex: -1,
-                  inputVal: '',
-                }
+                ...t,
+                historyIndex: -1,
+                inputVal: '',
+              }
               : t
           )
         );
@@ -393,10 +393,10 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
           prev.map(t =>
             t.id === activeTab.id
               ? {
-                  ...t,
-                  historyIndex: nextIndex,
-                  inputVal: activeTab.history[nextIndex] ?? '',
-                }
+                ...t,
+                historyIndex: nextIndex,
+                inputVal: activeTab.history[nextIndex] ?? '',
+              }
               : t
           )
         );
@@ -514,7 +514,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
                       type="button"
                       onClick={() => {
                         handleCloseTab(activeTabId, {
-                          stopPropagation: () => {},
+                          stopPropagation: () => { },
                         } as React.MouseEvent);
                         setOpenGtkMenu(null);
                       }}
@@ -706,7 +706,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
                       cursor: 'pointer',
                     }}
                   >
-                    <span>About Heron Terminal</span>
+                    <span>About Orion Terminal</span>
                   </button>
                 )}
               </div>

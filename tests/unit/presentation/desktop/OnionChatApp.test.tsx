@@ -7,10 +7,10 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { OnionChatApp } from '@/presentation/desktop/apps/OnionChatApp';
 
 describe('OnionChatApp', () => {
-  it('renders contacts list with Amina Okonjo and Cipher', () => {
+  it('renders contacts list with Temitope Blessing and Cipher', () => {
     render(<OnionChatApp />);
     expect(screen.getByTestId('onion-chat-app')).toBeInTheDocument();
-    expect(screen.getAllByText('Amina Okonjo').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Temitope Blessing').length).toBeGreaterThan(0);
     expect(screen.getByText('Cipher')).toBeInTheDocument();
     expect(screen.getByText('Aster SIEM Bot')).toBeInTheDocument();
   });

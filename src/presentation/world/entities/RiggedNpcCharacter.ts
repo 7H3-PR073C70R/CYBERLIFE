@@ -59,7 +59,7 @@ export function getNpcCustomPalette(profile: NpcProfile): CharacterPalette {
         skin: 0x8d5c3f, // Warm Caramel
       };
 
-    // 4. Amina Okonjo - Lead Security Analyst: Professional Cedarline Tech Uniform
+    // 4. Temitope Blessing - Lead Security Analyst: Professional Cedarline Tech Uniform
     case 'npc_amina':
       return {
         ...base,

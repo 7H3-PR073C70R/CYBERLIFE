@@ -16,12 +16,12 @@ The aesthetic is inspired by classical security distributions (specifically Parr
 │                                                                                                  │
 │ [📁 Home]                                                                                        │
 │                                      ┌────────────────────────────────────────────────────┐      │
-│ [💻 Terminal]                         │ ── □ ✕  bash - tade@heron-ws04: ~ (sandboxed)       │      │ Window Frame
+│ [💻 Terminal]                         │ ── □ ✕  bash - tade@Orion-ws04: ~ (sandboxed)       │      │ Window Frame
 │                                      ├────────────────────────────────────────────────────┤      │ (Dark GTK Style)
-│ [🛡️ Field Guide]                     │ ┌─[tade@heron-ws04]─[~]                            │      │
+│ [🛡️ Field Guide]                     │ ┌─[tade@Orion-ws04]─[~]                            │      │
 │                                      │ └──╼ $ uname -a                                    │      │
-│ [⚙️ SysInfo]                         │ Linux cyberlife 6.8.0-heron x86_64                 │      │
-│                                      │ ┌─[tade@heron-ws04]─[~]                            │      │
+│ [⚙️ SysInfo]                         │ Linux cyberlife 6.8.0-Orion x86_64                 │      │
+│                                      │ ┌─[tade@Orion-ws04]─[~]                            │      │
 │ [🗑️ Trash]                           │ └──╼ $ █                                           │      │
 │                                      └────────────────────────────────────────────────────┘      │
 │                                                                                                  │
@@ -62,10 +62,10 @@ The aesthetic is inspired by classical security distributions (specifically Parr
 ### C. Signature Two-Line Terminal Prompt (`TerminalApp.tsx`)
 - Signature cybersecurity two-line prompt:
   ```text
-  ┌─[tade@heron-ws04]─[~]
+  ┌─[tade@Orion-ws04]─[~]
   └──╼ $ whoami
   tade
-  ┌─[tade@heron-ws04]─[~]
+  ┌─[tade@Orion-ws04]─[~]
   └──╼ $ █
   ```
 - **Line 1 (`┌─[...]─[...]`):** Bracketed user@host in teal/cyan (`#00e5ff`), path in slate/cyan (`#38bdf8`).
@@ -76,7 +76,7 @@ The aesthetic is inspired by classical security distributions (specifically Parr
 - 100% original procedural SVG/Canvas wallpaper.
 - Gradient: Deep obsidian `#050811` into cybernetic slate `#0d1824`.
 - Grid: Subtle isometric circuit grid with cyan trace nodes (`rgba(0, 229, 255, 0.05)`).
-- Watermark: Subtle branded technical watermark (`HERON OS 4.5 // CYBERLIFE ENTERPRISE`).
+- Watermark: Subtle branded technical watermark (`Orion OS 4.5 // CYBERLIFE ENTERPRISE`).
 
 ---
 

@@ -1,5 +1,5 @@
 /**
- * Cyberlife — DesktopShell Component (Heron OS Security Workstation)
+ * Cyberlife — DesktopShell Component (Orion OS Security Workstation)
  *
  * MATE/GTK inspired classical cybersecurity workstation environment:
  * - Single source of truth branding via osBranding.ts & osTokens.ts
@@ -35,6 +35,9 @@ import { RuleTunerApp } from './apps/RuleTunerApp';
 import { TorBrowserApp } from './apps/TorBrowserApp';
 import { OnionChatApp } from './apps/OnionChatApp';
 import { SecurityNewsApp } from './apps/SecurityNewsApp';
+import { ExploitLabApp } from './apps/ExploitLabApp';
+import { WebProxyApp } from './apps/WebProxyApp';
+import { SocialPretextApp } from './apps/SocialPretextApp';
 import { BottomPanel } from './BottomPanel';
 import { HackerCallOverlay } from './HackerCallOverlay';
 import { HackerCallState, ChatThread, audioSfx } from '@/simulation/cyber/chat';
@@ -478,7 +481,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
               const isSelected = selectedIcon === appId;
               const iconName =
                 typeof def.icon === 'string' &&
-                def.icon in
+                  def.icon in
                   {
                     terminal: 1,
                     fieldGuide: 1,
@@ -498,6 +501,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                     tor: 1,
                     chat: 1,
                     call: 1,
+                    securityNews: 1,
                   }
                   ? (def.icon as OsIconName)
                   : undefined;
@@ -870,9 +874,9 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 onMove={(x, y) => {
                   const bounds = desktopRef.current
                     ? {
-                        width: desktopRef.current.clientWidth,
-                        height: desktopRef.current.clientHeight,
-                      }
+                      width: desktopRef.current.clientWidth,
+                      height: desktopRef.current.clientHeight,
+                    }
                     : undefined;
                   moveWindow(appId, x, y, bounds);
                   onMouseUse?.();
@@ -910,6 +914,9 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 {appId === 'torBrowser' && <TorBrowserApp />}
                 {appId === 'onionChat' && <OnionChatApp onStartCall={handleStartOutgoingCall} />}
                 {appId === 'securityNews' && <SecurityNewsApp />}
+                {appId === 'exploitLab' && <ExploitLabApp />}
+                {appId === 'webProxy' && <WebProxyApp />}
+                {appId === 'socialPretext' && <SocialPretextApp />}
               </WindowFrame>
             );
           })}
@@ -945,7 +952,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
         {/* Skippable Boot/Login Moment (1.6s auto-fadeout or click to dismiss) */}
         {bootMomentActive && (
           <div
-            className="heron-boot-splash"
+            className="Orion-boot-splash"
             onClick={dismissBoot}
             style={{
               position: 'absolute',
@@ -984,7 +991,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 marginTop: '4px',
               }}
             >
-              Kernel: {KERNEL_STRING} // Host: {isCedarline ? 'heron-ws04' : 'heron-rig'}
+              Kernel: {KERNEL_STRING} // Host: {isCedarline ? 'Orion-ws04' : 'Orion-rig'}
             </div>
             <div
               style={{

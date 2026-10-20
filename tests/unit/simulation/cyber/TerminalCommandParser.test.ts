@@ -63,7 +63,10 @@ describe('TerminalCommandParser & Registry', () => {
     expect(registry.has('nmap')).toBe(true);
     expect(registry.has('packetview')).toBe(true);
     expect(registry.has('revview')).toBe(true);
-    expect(registry.getAll().length).toBe(21);
+    expect(registry.has('exploitlab')).toBe(true);
+    expect(registry.has('webproxy')).toBe(true);
+    expect(registry.has('pretext')).toBe(true);
+    expect(registry.getAll().length).toBe(24);
   });
 
   it('executes help command returning available commands and beginner tips', () => {

@@ -984,7 +984,7 @@ export class WorldEnvironment {
         floorMat.map = tex;
         floorMat.needsUpdate = true;
       })
-      .catch(() => {});
+      .catch(() => { });
 
     AssetLoader.getInstance()
       .loadTexture('/assets/environment/textures/floor_tiles_06/floor_tiles_06_normal_1k.jpg')
@@ -995,7 +995,7 @@ export class WorldEnvironment {
         floorMat.normalMap = tex;
         floorMat.needsUpdate = true;
       })
-      .catch(() => {});
+      .catch(() => { });
 
     // Walls with PBR Painted Plaster Textures
     const wallMat = new THREE.MeshStandardMaterial({
@@ -1015,7 +1015,7 @@ export class WorldEnvironment {
         wallMat.map = tex;
         wallMat.needsUpdate = true;
       })
-      .catch(() => {});
+      .catch(() => { });
 
     AssetLoader.getInstance()
       .loadTexture(
@@ -1028,7 +1028,7 @@ export class WorldEnvironment {
         wallMat.normalMap = tex;
         wallMat.needsUpdate = true;
       })
-      .catch(() => {});
+      .catch(() => { });
 
     // North Wall (Behind Workstation)
     const nWallGeo = new THREE.BoxGeometry(roomW, roomH, 0.4);
@@ -1112,7 +1112,7 @@ export class WorldEnvironment {
       const aminaLaptop = new THREE.Mesh(aminaLaptopGeo, aminaLaptopMat);
       aminaLaptop.position.set(3.2, 0.76, 0);
       this.group.add(aminaLaptop);
-      this.collisionWorld.addObstacle(2.3, 4.1, -0.5, 0.5, 'Amina Okonjo Desk');
+      this.collisionWorld.addObstacle(2.3, 4.1, -0.5, 0.5, 'Temitope Blessing Desk');
 
       // Server infrastructure rack for Marcus
       const serverRackGeo = new THREE.BoxGeometry(1.2, 2.2, 0.9);
@@ -1389,14 +1389,14 @@ export class WorldEnvironment {
       rotY?: number;
       isFan?: boolean;
     }> = [
-      { path: '/assets/props/room_bed.glb', pos: [5.0, 0, -3.8], rotY: 0 },
-      { path: '/assets/props/room_cabinet.glb', pos: [6.8, 0, 1.5], rotY: -Math.PI / 2 },
-      { path: '/assets/props/room_bookshelf.glb', pos: [-6.8, 0, -3.5], rotY: Math.PI / 2 },
-      { path: '/assets/props/room_inverter.glb', pos: [-4.5, 0, -5.8], rotY: 0 },
-      { path: '/assets/props/room_fan.glb', pos: [0, 3.8, -1.0], rotY: 0, isFan: true },
-      { path: '/assets/props/room_ac.glb', pos: [2.5, 3.6, -6.75], rotY: 0 },
-      { path: '/assets/props/room_art.glb', pos: [-2.5, 2.4, -6.8], rotY: 0 },
-    ];
+        { path: '/assets/props/room_bed.glb', pos: [5.0, 0, -3.8], rotY: 0 },
+        { path: '/assets/props/room_cabinet.glb', pos: [6.8, 0, 1.5], rotY: -Math.PI / 2 },
+        { path: '/assets/props/room_bookshelf.glb', pos: [-6.8, 0, -3.5], rotY: Math.PI / 2 },
+        { path: '/assets/props/room_inverter.glb', pos: [-4.5, 0, -5.8], rotY: 0 },
+        { path: '/assets/props/room_fan.glb', pos: [0, 3.8, -1.0], rotY: 0, isFan: true },
+        { path: '/assets/props/room_ac.glb', pos: [2.5, 3.6, -6.75], rotY: 0 },
+        { path: '/assets/props/room_art.glb', pos: [-2.5, 2.4, -6.8], rotY: 0 },
+      ];
 
     try {
       const loadedModels = await Promise.all(

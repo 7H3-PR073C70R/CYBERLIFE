@@ -52,7 +52,7 @@ This log documents all 3D models, textures, audio, and visual assets shipped wit
 | **Lucide Icon SVGs** | `src/presentation/desktop/icons/OsIcons.tsx` | Lucide Project Authors | https://lucide.dev | **ISC License** | 2026-10-20 | Clean bundled inline vector components; zero external network requests |
 | **Inter UI Font** | Bundled / System fallback | Rasmus Andersson | https://rsms.me/inter/ | **SIL Open Font License 1.1** | 2026-10-20 | Bundled sans-serif typography |
 | **JetBrains Mono** | Bundled / System fallback | JetBrains | https://www.jetbrains.com/lp/mono/ | **SIL Open Font License 1.1** | 2026-10-20 | Terminal monospace typography |
-| **Heron OS Wallpaper** | `src/presentation/desktop/wallpaper.ts` | Cyberlife Team | Original procedural vector code | **CC0 (Public Domain)** | 2026-10-20 | Procedural SVG radial gradient with circuit trace geometry |
+| **Orion OS Wallpaper** | `src/presentation/desktop/wallpaper.ts` | Cyberlife Team | Original procedural vector code | **CC0 (Public Domain)** | 2026-10-20 | Procedural SVG radial gradient with circuit trace geometry |
 
 ---
 

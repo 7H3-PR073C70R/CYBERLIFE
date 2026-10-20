@@ -34,6 +34,9 @@ export function createInitialWindows(
     torBrowser: { x: 140, y: 50 },
     onionChat: { x: 160, y: 70 },
     securityNews: { x: 130, y: 55 },
+    exploitLab: { x: 85, y: 35 },
+    webProxy: { x: 110, y: 45 },
+    socialPretext: { x: 125, y: 55 },
   };
 
   const windows: Partial<Record<AppId, WindowState>> = {};

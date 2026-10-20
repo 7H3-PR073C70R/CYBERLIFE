@@ -41,7 +41,7 @@ export const CONTEXTUAL_HINTS: readonly ContextualHintDefinition[] = [
     id: 'hint_workstation_access',
     title: 'Boot Virtual Desktop',
     description:
-      'Approach your physical workstation desk and press [E] to access the simulated Heron OS workstation.',
+      'Approach your physical workstation desk and press [E] to access the simulated Orion OS workstation.',
     controlsHint: 'Press [E] at computer desk',
     priority: 'high',
     expectedOutcome:

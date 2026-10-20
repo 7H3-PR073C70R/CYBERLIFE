@@ -5,16 +5,16 @@ export const ALL_THREAT_ARTICLES: readonly ThreatNewsArticle[] = [
   {
     id: 'news-001',
     title:
-      'ParrotSec & Heron OS Issue West Africa Threat Advisory: Critical SMB RCE (CVE-2026-445)',
+      'ParrotSec & Orion OS Issue West Africa Threat Advisory: Critical SMB RCE (CVE-2026-445)',
     category: 'VULNERABILITY',
     severity: 'CRITICAL',
     publishedDate: 'Monday, Oct 12, 2026',
-    author: 'Heron CERT Vulnerability Lab',
+    author: 'Orion CERT Vulnerability Lab',
     source: 'ParrotSec West Africa Dispatch',
     summary:
       'A remote code execution flaw in legacy Samba implementations allows unauthenticated tree-connect packets to trigger kernel heap overflows.',
     content: [
-      'The Heron Security Vulnerability Lab has published a coordinated advisory regarding CVE-2026-445, an exploitable zero-day in Samba daemon handles.',
+      'The Orion Security Vulnerability Lab has published a coordinated advisory regarding CVE-2026-445, an exploitable zero-day in Samba daemon handles.',
       'Active network scanning targeting port 445/TCP has been observed originating from commercial staging subnets in Lagos Island and Victoria Island.',
       'SOC teams and incident responders are urged to immediately enforce SMB packet signing, block inbound 445 traffic at outer perimeter routers, and inspect internal lateral traversal logs.',
     ],
@@ -46,7 +46,7 @@ export const ALL_THREAT_ARTICLES: readonly ThreatNewsArticle[] = [
     category: 'CEDARLINE_INTERNAL',
     severity: 'HIGH',
     publishedDate: 'Monday, Oct 12, 2026',
-    author: 'Amina Okonjo, Senior SOC Analyst',
+    author: 'Temitope Blessing, Senior SOC Analyst',
     source: 'Cedarline Security Operations Centre',
     summary:
       'Internal auditor bot Aster flagged for excessive privilege delegation and lateral directory queries across staging servers.',
@@ -83,14 +83,14 @@ export const ALL_THREAT_ARTICLES: readonly ThreatNewsArticle[] = [
     category: 'VULNERABILITY',
     severity: 'MEDIUM',
     publishedDate: 'Tuesday, Oct 13, 2026',
-    author: 'Heron Threat Intelligence',
+    author: 'Orion Threat Intelligence',
     source: 'ParrotSec Global Intelligence',
     summary:
       'Adversary groups exploit session token stealing and SIM-swap proxies to circumvent traditional SMS MFA gateways.',
     content: [
       'Threat actors operating in the Gulf of Guinea region have refined adversary-in-the-middle (AiTM) phishing kits to capture authenticated session cookies.',
       'Financial institutions and digital payment platforms are recommended to transition from SMS codes to FIDO2 WebAuthn hardware tokens (such as YubiKeys).',
-      'The Heron OS security suite includes hardware token authentication helpers in the latest system updates.',
+      'The Orion OS security suite includes hardware token authentication helpers in the latest system updates.',
     ],
     minDay: 2,
     cve: 'CVE-2026-1092',
@@ -123,13 +123,13 @@ export const ALL_THREAT_ARTICLES: readonly ThreatNewsArticle[] = [
     category: 'DEFENSE_TOOLING',
     severity: 'INFO',
     publishedDate: 'Monday, Oct 12, 2026',
-    author: 'Heron Core Engineering',
-    source: 'Heron Security Tools',
+    author: 'Orion Core Engineering',
+    source: 'Orion Security Tools',
     summary:
-      'New versions of Packet Lens, NetMap, and Evidence Vault integrated into Heron OS for in-depth network and file triage.',
+      'New versions of Packet Lens, NetMap, and Evidence Vault integrated into Orion OS for in-depth network and file triage.',
     content: [
-      'The Heron OS engineering team has rolled out tool updates for packet inspection, automated banner grabbing, and forensic chain-of-custody logging.',
-      'Analysts can launch Packet Lens directly from the Heron Top Panel under Network Analysis or type netmap in the terminal.',
+      'The Orion OS engineering team has rolled out tool updates for packet inspection, automated banner grabbing, and forensic chain-of-custody logging.',
+      'Analysts can launch Packet Lens directly from the Orion Top Panel under Network Analysis or type netmap in the terminal.',
       'All tools adhere to strict sandbox execution contracts, preserving offline forensic integrity.',
     ],
   },

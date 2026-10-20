@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary & Verification Methodology
 
-Cyberlife is a browser-based 3D cybersecurity life RPG built with Three.js, React, and TypeScript. All cybersecurity gameplay executes inside a deterministic, sandboxed simulation engine (EkoSec OS / Heron OS workstation).
+Cyberlife is a browser-based 3D cybersecurity life RPG built with Three.js, React, and TypeScript. All cybersecurity gameplay executes inside a deterministic, sandboxed simulation engine (EkoSec OS / Orion OS workstation).
 
 To prepare the platform for an expansive, zero-to-hero cybersecurity curriculum covering **Blue Team (Defenders)**, **Red Team (Authorized Attack Simulators)**, **Purple Team (Detection Engineers)**, **Threat Intelligence**, and **Digital Forensics**, Milestone 13 establishes a verified capability audit and a typed, extensible shared tool architecture.
 

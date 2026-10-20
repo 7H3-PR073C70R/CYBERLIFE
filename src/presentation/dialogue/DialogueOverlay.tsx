@@ -9,6 +9,7 @@ import {
   getRelationshipBandLabel,
   RELATIONSHIP_BANDS,
 } from '@/simulation/actors/types';
+import { voiceDialogueService } from '../audio/VoiceDialogueService';
 
 export interface DialogueOverlayProps {
   readonly npcId: string;
@@ -71,8 +72,33 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
     setSelectedIndex(0);
   }, [currentNodeId, availableChoices.length]);
 
+  const [isVoiceMuted, setIsVoiceMuted] = useState<boolean>(() => voiceDialogueService.getIsMuted());
+
+  // Trigger natural Nigerian English voice stream when NPC speaks
+  useEffect(() => {
+    if (!currentNode?.text || !profile) return;
+    const isFemale =
+      ['npc_amina', 'npc_elena', 'npc_nkechi'].includes(profile.id) ||
+      profile.name.toLowerCase().includes('amina') ||
+      profile.name.toLowerCase().includes('temitope') ||
+      profile.name.toLowerCase().includes('elena') ||
+      profile.name.toLowerCase().includes('nkechi') ||
+      profile.name.toLowerCase().includes('blessing');
+
+    voiceDialogueService.speak(currentNode.text, {
+      speaker: profile.name,
+      role: profile.role,
+      gender: isFemale ? 'female' : 'male',
+    });
+
+    return () => {
+      voiceDialogueService.stop();
+    };
+  }, [currentNode?.id, currentNode?.text, profile]);
+
   const handleSelectChoice = useCallback(
     (choice: DialogueChoice) => {
+      voiceDialogueService.stop();
       if (!sim) return;
       const result = sim.dispatch({
         type: 'SelectDialogueChoice',
@@ -89,6 +115,7 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
   );
 
   const handleClose = useCallback(() => {
+    voiceDialogueService.stop();
     if (sim) {
       sim.dispatch({
         type: 'EndDialogue',
@@ -302,6 +329,49 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
                 {relationshipScore > 0 ? `+${relationshipScore}` : relationshipScore})
               </span>
             </div>
+
+            {/* Voice Mute / Unmute and Replay buttons */}
+            <button
+              type="button"
+              onClick={() => {
+                const nextMuted = voiceDialogueService.toggleMute();
+                setIsVoiceMuted(nextMuted);
+              }}
+              data-testid="btn-toggle-dialogue-voice"
+              title={isVoiceMuted ? 'Unmute voice' : 'Mute voice'}
+              style={{
+                background: isVoiceMuted ? 'rgba(239, 68, 68, 0.15)' : 'rgba(56, 189, 248, 0.15)',
+                border: `1px solid ${isVoiceMuted ? '#ef4444' : 'rgba(56, 189, 248, 0.4)'}`,
+                borderRadius: '6px',
+                color: isVoiceMuted ? '#f87171' : '#38bdf8',
+                fontSize: '0.75rem',
+                padding: '0.2rem 0.55rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+            >
+              <span>{isVoiceMuted ? '🔇 Muted' : '🔊 Voice'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => voiceDialogueService.replay()}
+              data-testid="btn-replay-dialogue-voice"
+              title="Replay dialogue voice"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '6px',
+                color: '#cbd5e1',
+                fontSize: '0.75rem',
+                padding: '0.2rem 0.45rem',
+                cursor: 'pointer',
+              }}
+            >
+              🔁
+            </button>
 
             {/* Close button with Esc hint */}
             <button

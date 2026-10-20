@@ -1,7 +1,7 @@
 /**
  * Cyberlife — OnionChat Application Component
  *
- * Classical Linux encrypted messaging client for the Heron OS security workstation.
+ * Classical Linux encrypted messaging client for the Orion OS security workstation.
  * - GPG signed end-to-end messaging stream
  * - Contact list with online indicators, roles, and unread badges
  * - Interactive suggested reply chips and custom message typing
@@ -58,9 +58,9 @@ export const OnionChatApp: React.FC<OnionChatAppProps> = ({ onStartCall }) => {
       prev.map(t =>
         t.id === activeThread.id
           ? {
-              ...t,
-              messages: [...t.messages, newMsg],
-            }
+            ...t,
+            messages: [...t.messages, newMsg],
+          }
           : t
       )
     );
@@ -97,9 +97,9 @@ export const OnionChatApp: React.FC<OnionChatAppProps> = ({ onStartCall }) => {
         prev.map(t =>
           t.id === activeThread.id
             ? {
-                ...t,
-                messages: [...t.messages, contactReply],
-              }
+              ...t,
+              messages: [...t.messages, contactReply],
+            }
             : t
         )
       );
