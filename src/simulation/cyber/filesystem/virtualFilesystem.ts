@@ -45,6 +45,17 @@ const INITIAL_VIRTUAL_FILES: Record<string, VirtualFileEntry> = {
     modifiedDate: '2026-10-12 08:00',
     readOnly: false,
   },
+  '/home/analyst/downloads': {
+    name: 'downloads',
+    path: '/home/analyst/downloads',
+    type: 'directory',
+    sizeBytes: 4096,
+    permissions: 'drwxr-xr-x',
+    owner: 'analyst',
+    group: 'analyst',
+    modifiedDate: '2026-10-12 08:00',
+    readOnly: false,
+  },
   '/home/analyst/notes.txt': {
     name: 'notes.txt',
     path: '/home/analyst/notes.txt',

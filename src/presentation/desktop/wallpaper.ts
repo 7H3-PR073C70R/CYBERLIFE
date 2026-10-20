@@ -70,7 +70,8 @@ export function generateWallpaperSvg(width = 1920, height = 1080): string {
 </svg>`;
 }
 
+export const WALLPAPER_IMAGE_URL = '/assets/os/heron_security_wallpaper.jpg';
+
 export function getWallpaperDataUrl(): string {
-  const svg = generateWallpaperSvg(1920, 1080);
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  return WALLPAPER_IMAGE_URL;
 }

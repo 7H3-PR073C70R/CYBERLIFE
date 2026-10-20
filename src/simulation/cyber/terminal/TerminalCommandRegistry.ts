@@ -202,7 +202,7 @@ export const helpCommand: TerminalCommandHandler = {
         'Tips for Beginners:',
         '  • Type any command name above and press Enter to execute it manually.',
         '  • Use the Up (↑) and Down (↓) arrow keys to recall previous commands.',
-        '  • Click command guide chips above the prompt for educational hints and syntax.',
+        '  • Use "help <command>" (e.g. "help netmap") for syntax and guidance.',
         '  • This terminal runs 100% inside Cyberlife; it cannot affect your real computer.',
         '==========================================================',
       ],

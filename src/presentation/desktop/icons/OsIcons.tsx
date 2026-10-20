@@ -35,7 +35,10 @@ export type OsIconName =
   | 'close'
   | 'chevronRight'
   | 'chevronDown'
-  | 'osLogo';
+  | 'osLogo'
+  | 'tor'
+  | 'chat'
+  | 'call';
 
 export interface OsIconProps extends React.SVGProps<SVGSVGElement> {
   name: OsIconName;
@@ -382,6 +385,73 @@ export const OsIcon: React.FC<OsIconProps> = ({
           />
           <line x1="12" y1="12" x2="12" y2="22" stroke={color} strokeWidth="1.25" opacity="0.8" />
           <circle cx="12" cy="12" r="2" fill={color} />
+        </svg>
+      );
+
+    case 'tor':
+      return (
+        <svg {...commonProps}>
+          {/* Onion layers */}
+          <path d="M12 2v2" stroke={color} strokeWidth="1.75" strokeLinecap="round" />
+          <path
+            d="M12 4C7 4 3 8 3 13c0 4.5 4 8 9 8s9-3.5 9-8c0-5-4-9-9-9z"
+            stroke={color}
+            strokeWidth="1.75"
+          />
+          <path
+            d="M12 7c-3 0-5.5 2.5-5.5 6s2.5 5 5.5 5 5.5-2 5.5-5-2.5-6-5.5-6z"
+            stroke={color}
+            strokeWidth="1.5"
+            opacity="0.85"
+          />
+          <path
+            d="M12 10c-1.5 0-2.5 1.5-2.5 3s1 2.5 2.5 2.5 2.5-1 2.5-2.5-1-3-2.5-3z"
+            stroke={color}
+            strokeWidth="1.25"
+            opacity="0.7"
+          />
+        </svg>
+      );
+
+    case 'chat':
+      return (
+        <svg {...commonProps}>
+          <path
+            d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+            stroke={color}
+            strokeWidth="1.75"
+            strokeLinejoin="round"
+          />
+          <line
+            x1="8"
+            y1="9"
+            x2="16"
+            y2="9"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <line
+            x1="8"
+            y1="13"
+            x2="13"
+            y2="13"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+
+    case 'call':
+      return (
+        <svg {...commonProps}>
+          <path
+            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+            stroke={color}
+            strokeWidth="1.75"
+            strokeLinejoin="round"
+          />
         </svg>
       );
 

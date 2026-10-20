@@ -47,13 +47,6 @@ export interface TerminalAppProps {
   onTerminalOutput?: (lines: string[]) => void;
 }
 
-interface CommandHint {
-  command: string;
-  purpose: string;
-  example: string;
-  expectedOutput: string;
-}
-
 const KNOWN_COMMANDS = [
   'help',
   'whoami',
@@ -73,112 +66,6 @@ const KNOWN_COMMANDS = [
   'logview',
   'evidence',
 ];
-
-const COMMAND_HINTS: Record<string, CommandHint> = {
-  help: {
-    command: 'help',
-    purpose: 'Lists all available simulated commands in the sandboxed system.',
-    example: 'help',
-    expectedOutput: 'Table of supported commands with descriptions.',
-  },
-  pwd: {
-    command: 'pwd',
-    purpose: 'Prints the current virtual working directory path.',
-    example: 'pwd',
-    expectedOutput: '/home/analyst',
-  },
-  ls: {
-    command: 'ls',
-    purpose: 'Lists files and directories in the virtual filesystem with permissions.',
-    example: 'ls -l /var/log',
-    expectedOutput: 'Permissions, owner, size, and filenames.',
-  },
-  cd: {
-    command: 'cd',
-    purpose: 'Navigates between virtual directories in the sandbox.',
-    example: 'cd /mnt/evidence',
-    expectedOutput: 'Changes directory prompt to target path.',
-  },
-  cat: {
-    command: 'cat',
-    purpose: 'Displays text content of synthetic logs, notes, or configs.',
-    example: 'cat /etc/security/access.conf',
-    expectedOutput: 'File content printed to terminal buffer.',
-  },
-  grep: {
-    command: 'grep',
-    purpose: 'Searches for matching patterns or strings within a virtual file.',
-    example: 'grep FAIL /var/log/auth.log',
-    expectedOutput: 'Lines containing the matching keyword.',
-  },
-  file: {
-    command: 'file',
-    purpose: 'Identifies file type and encoding of a virtual path.',
-    example: 'file /mnt/evidence/EVD-2026-001.pcap',
-    expectedOutput: 'tcpdump capture file (little-endian) - version 2.4',
-  },
-  nmap: {
-    command: 'nmap',
-    purpose: 'Educational alias for simulated network mapping tool (netmap).',
-    example: 'nmap hosts',
-    expectedOutput: 'Discovers reachable virtual hosts on the subnet.',
-  },
-  packetview: {
-    command: 'packetview',
-    purpose: 'Streams packet capture records from /mnt/evidence/EVD-2026-001.pcap.',
-    example: 'packetview smb',
-    expectedOutput: 'Filtered packet table with protocols and summaries.',
-  },
-  revview: {
-    command: 'revview',
-    purpose: 'Static binary inspector for aster_agent_daemon.bin strings and pseudocode.',
-    example: 'revview strings',
-    expectedOutput: 'Extracted string constants from .rodata section.',
-  },
-  whoami: {
-    command: 'whoami',
-    purpose:
-      'Displays your authenticated fictional cybersecurity username, role, and organization.',
-    example: 'whoami',
-    expectedOutput: 'tade_adebayo — Security Analyst Intern (Cedarline Services)',
-  },
-  date: {
-    command: 'date',
-    purpose: 'Reads the authoritative in-game civil calendar time from the simulation engine.',
-    example: 'date',
-    expectedOutput: '08:00 AM, Monday, Oct 12, 2026',
-  },
-  status: {
-    command: 'status',
-    purpose: 'Queries the synthetic workstation hostname, virtual IP, and network status.',
-    example: 'status',
-    expectedOutput: 'cedarline-sec-ws04.corp.local — 10.0.4.15/24 (Operational)',
-  },
-  netmap: {
-    command: 'netmap',
-    purpose: 'Discovers reachable virtual hosts, addresses, and device roles on the subnet.',
-    example: 'netmap hosts',
-    expectedOutput: 'Table of reachable hosts, IP addresses, and device roles.',
-  },
-  svcscan: {
-    command: 'svcscan',
-    purpose: 'Queries active listeners, port numbers, software products, and version banners.',
-    example: 'svcscan inspect filesrv-01',
-    expectedOutput: 'Open port list with service banners, approved status, and security notes.',
-  },
-  logview: {
-    command: 'logview',
-    purpose: 'Queries and filters structured auth, firewall, and application event telemetry.',
-    example: 'logview recent',
-    expectedOutput: 'Chronological event log table with timestamps and severity ratings.',
-  },
-  evidence: {
-    command: 'evidence',
-    purpose: 'Catalogs digital forensic evidence objects, SHA-256 hashes, and custody records.',
-    example: 'evidence list',
-    expectedOutput: 'Forensic evidence ledger with chain of custody and artifact content.',
-  },
-};
 
 function formatDirForPrompt(dir: string): string {
   if (dir === '/home/analyst') return '~';
@@ -229,7 +116,6 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
     },
   ]);
   const [activeTabId, setActiveTabId] = useState<string>('tab-1');
-  const [selectedHintCmd, setSelectedHintCmd] = useState<string | null>(null);
 
   const activeTab = useMemo(() => {
     return tabs.find(t => t.id === activeTabId) ?? tabs[0]!;
@@ -249,6 +135,19 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
   useEffect(() => {
     inputRef.current?.focus({ preventScroll: true });
   }, [activeTabId]);
+
+  // GTK Top Menu Bar State
+  const [openGtkMenu, setOpenGtkMenu] = useState<
+    'file' | 'edit' | 'view' | 'search' | 'terminal' | 'help' | null
+  >(null);
+
+  useEffect(() => {
+    const handleCloseGtk = () => setOpenGtkMenu(null);
+    if (openGtkMenu) {
+      window.addEventListener('click', handleCloseGtk);
+      return () => window.removeEventListener('click', handleCloseGtk);
+    }
+  }, [openGtkMenu]);
 
   const isCedarline = workstationId.includes('cedarline');
   const activeUser = isCedarline ? 'tade' : 'player';
@@ -518,7 +417,6 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
   };
 
   const promptDir = formatDirForPrompt(activeTab.currentDirectory);
-  const activeHint = selectedHintCmd ? COMMAND_HINTS[selectedHintCmd] : null;
 
   return (
     <div
@@ -531,19 +429,300 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        backgroundColor: '#05090f',
-        color: '#f8fafc',
+        backgroundColor: '#000000',
+        color: '#00ff66',
         fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
       }}
     >
+      {/* Classical GTK Menu Bar */}
+      <div
+        className="terminal-gtk-menubar"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          backgroundColor: '#070f07',
+          borderBottom: '1px solid #002b11',
+          padding: '1px 6px',
+          gap: '2px',
+          fontSize: '11px',
+          userSelect: 'none',
+          position: 'relative',
+          zIndex: 100,
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        {(['file', 'edit', 'view', 'search', 'terminal', 'help'] as const).map(menu => (
+          <div key={menu} style={{ position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => setOpenGtkMenu(openGtkMenu === menu ? null : menu)}
+              style={{
+                backgroundColor: openGtkMenu === menu ? '#003314' : 'transparent',
+                border: 'none',
+                color: openGtkMenu === menu ? '#00ff66' : '#94a3b8',
+                padding: '2px 7px',
+                borderRadius: '2px',
+                cursor: 'pointer',
+                fontSize: '11px',
+                textTransform: 'capitalize',
+                fontFamily: 'Inter, system-ui, sans-serif',
+              }}
+            >
+              {menu}
+            </button>
+
+            {openGtkMenu === menu && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '22px',
+                  left: 0,
+                  backgroundColor: '#0c131f',
+                  border: '1px solid #1e293b',
+                  borderRadius: '3px',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.85)',
+                  padding: '4px 0',
+                  minWidth: '160px',
+                  zIndex: 200,
+                  fontFamily: 'Inter, system-ui, sans-serif',
+                }}
+              >
+                {menu === 'file' && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleNewTab();
+                        setOpenGtkMenu(null);
+                      }}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        padding: '4px 10px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: '#f8fafc',
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span>New Tab</span>
+                      <span style={{ color: '#64748b' }}>Ctrl+Shift+T</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleCloseTab(activeTabId, {
+                          stopPropagation: () => {},
+                        } as React.MouseEvent);
+                        setOpenGtkMenu(null);
+                      }}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        padding: '4px 10px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: '#f8fafc',
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span>Close Tab</span>
+                      <span style={{ color: '#64748b' }}>Ctrl+Shift+W</span>
+                    </button>
+                  </>
+                )}
+                {menu === 'edit' && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setOpenGtkMenu(null)}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        padding: '4px 10px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: '#f8fafc',
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span>Copy</span>
+                      <span style={{ color: '#64748b' }}>Shift+Ctrl+C</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setOpenGtkMenu(null)}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        padding: '4px 10px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: '#f8fafc',
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span>Paste</span>
+                      <span style={{ color: '#64748b' }}>Shift+Ctrl+V</span>
+                    </button>
+                  </>
+                )}
+                {menu === 'view' && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setOpenGtkMenu(null)}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        padding: '4px 10px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: '#f8fafc',
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span>Zoom In</span>
+                      <span style={{ color: '#64748b' }}>Ctrl++</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setOpenGtkMenu(null)}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        padding: '4px 10px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: '#f8fafc',
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span>Zoom Out</span>
+                      <span style={{ color: '#64748b' }}>Ctrl+-</span>
+                    </button>
+                  </>
+                )}
+                {menu === 'search' && (
+                  <button
+                    type="button"
+                    onClick={() => setOpenGtkMenu(null)}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      padding: '4px 10px',
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      color: '#f8fafc',
+                      fontSize: '11px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <span>Find...</span>
+                    <span style={{ color: '#64748b' }}>Shift+Ctrl+F</span>
+                  </button>
+                )}
+                {menu === 'terminal' && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTabs(prev =>
+                          prev.map(t => (t.id === activeTab.id ? { ...t, entries: [] } : t))
+                        );
+                        onTerminalOutput?.([]);
+                        setOpenGtkMenu(null);
+                      }}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        padding: '4px 10px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: '#f8fafc',
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span>Clear Output</span>
+                      <span style={{ color: '#64748b' }}>Ctrl+L</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTabs(prev =>
+                          prev.map(t =>
+                            t.id === activeTab.id ? { ...t, entries: defaultWelcomeGreeting } : t
+                          )
+                        );
+                        setOpenGtkMenu(null);
+                      }}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        padding: '4px 10px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: '#f8fafc',
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span>Reset Terminal</span>
+                    </button>
+                  </>
+                )}
+                {menu === 'help' && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleExecute('help');
+                      setOpenGtkMenu(null);
+                    }}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      padding: '4px 10px',
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      color: '#f8fafc',
+                      fontSize: '11px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <span>About Heron Terminal</span>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
       {/* Multi-Tab Bar */}
       <div
         className="terminal-tab-bar"
         style={{
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: '#0c131f',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          backgroundColor: '#050a05',
+          borderBottom: '1px solid #002b11',
           padding: '2px 4px 0 4px',
           gap: '2px',
           userSelect: 'none',
@@ -560,14 +739,12 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
                 alignItems: 'center',
                 gap: '6px',
                 padding: '4px 10px',
-                backgroundColor: isActive ? '#05090f' : '#111a28',
-                color: isActive ? '#00e5ff' : '#94a3b8',
+                backgroundColor: isActive ? '#000000' : '#030803',
+                color: isActive ? '#00ff66' : '#008833',
                 borderTopLeftRadius: '4px',
                 borderTopRightRadius: '4px',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderBottom: isActive
-                  ? '1px solid #05090f'
-                  : '1px solid rgba(255, 255, 255, 0.08)',
+                border: isActive ? '1px solid #004d1f' : '1px solid #00220a',
+                borderBottom: isActive ? '1px solid #000000' : '1px solid #002b11',
                 cursor: 'pointer',
                 fontSize: '0.73rem',
                 fontFamily: "'JetBrains Mono', monospace",
@@ -576,7 +753,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
               title={tab.title}
               data-testid={`terminal-tab-${idx}`}
             >
-              <OsIcon name="terminal" size={13} color={isActive ? '#00e5ff' : '#64748b'} />
+              <OsIcon name="terminal" size={13} color={isActive ? '#00ff66' : '#006622'} />
               <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {tab.title}
               </span>
@@ -587,7 +764,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#64748b',
+                    color: '#006622',
                     cursor: 'pointer',
                     fontSize: '0.7rem',
                     padding: '0 2px',
@@ -611,7 +788,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
               padding: '2px 8px',
               backgroundColor: 'transparent',
               border: 'none',
-              color: '#64748b',
+              color: '#008833',
               cursor: 'pointer',
               fontSize: '0.85rem',
               fontWeight: 700,
@@ -628,102 +805,13 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
             marginLeft: 'auto',
             paddingRight: '8px',
             fontSize: '0.68rem',
-            color: '#64748b',
+            color: '#008833',
             fontFamily: "'JetBrains Mono', monospace",
           }}
         >
           <span>VFS: {activeTab.currentDirectory}</span>
         </div>
       </div>
-
-      {/* Educational Command Learning Toolbar */}
-      <div className="terminal-toolbar">
-        <div className="terminal-chips-group">
-          <span className="chips-label">Commands:</span>
-          {KNOWN_COMMANDS.map(cmd => (
-            <button
-              key={cmd}
-              type="button"
-              className={`terminal-chip-btn ${selectedHintCmd === cmd ? 'chip-active' : ''}`}
-              onClick={e => {
-                e.stopPropagation();
-                setSelectedHintCmd(prev => (prev === cmd ? null : cmd));
-                inputRef.current?.focus({ preventScroll: true });
-              }}
-              title={`View guidance for '${cmd}' (manual typing required)`}
-              data-testid={`terminal-chip-${cmd}`}
-            >
-              [{cmd}]
-            </button>
-          ))}
-        </div>
-
-        <button
-          type="button"
-          className="btn-terminal-clear"
-          onClick={e => {
-            e.stopPropagation();
-            setTabs(prev => prev.map(t => (t.id === activeTab.id ? { ...t, entries: [] } : t)));
-            inputRef.current?.focus();
-            onTerminalOutput?.([]);
-          }}
-          title="Clear Terminal Output"
-          data-testid="btn-terminal-clear"
-        >
-          Clear Screen
-        </button>
-      </div>
-
-      {/* Educational Syntax & Purpose Card (Mandatory Manual Typing) */}
-      {activeHint && (
-        <div
-          className="terminal-hint-banner"
-          role="note"
-          aria-label={`Command Guide: ${activeHint.command}`}
-          data-testid="terminal-hint-banner"
-        >
-          <div className="hint-content">
-            <span className="hint-icon" aria-hidden="true">
-              <OsIcon name="fieldGuide" size={16} color="#00e5ff" />
-            </span>
-            <div>
-              <div style={{ color: '#00e5ff', fontWeight: 600 }}>
-                Command Guide: <code>{activeHint.command}</code>
-              </div>
-              <div
-                style={{
-                  color: '#94a3b8',
-                  fontSize: '0.8rem',
-                  marginTop: '2px',
-                }}
-              >
-                {activeHint.purpose}
-              </div>
-              <div
-                style={{
-                  fontSize: '0.78rem',
-                  marginTop: '4px',
-                  color: '#00e676',
-                }}
-              >
-                <strong>Manual Typing:</strong> Type <code>{activeHint.example}</code> into the
-                prompt below and press <kbd>Enter</kbd>.
-              </div>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="btn-dismiss-hint"
-            onClick={e => {
-              e.stopPropagation();
-              setSelectedHintCmd(null);
-            }}
-            aria-label="Close command guide"
-          >
-            ✕
-          </button>
-        </div>
-      )}
 
       {/* Terminal Log Output Buffer */}
       <div
@@ -739,6 +827,8 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
           fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
           fontSize: '13px',
           lineHeight: '1.45',
+          backgroundColor: '#000000',
+          color: '#00ff66',
         }}
       >
         {activeTab.entries.map(entry => (
@@ -746,20 +836,20 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
             {entry.command && (
               <div className="terminal-command-block" style={{ marginBottom: '4px' }}>
                 {/* Line 1: ┌─[user@host]─[dir] */}
-                <div style={{ color: '#64748b', fontSize: '12px' }}>
+                <div style={{ color: '#00aa44', fontSize: '12px' }}>
                   <span>┌─[</span>
-                  <span style={{ color: '#00e676', fontWeight: 600 }}>{activeUser}</span>
-                  <span style={{ color: '#00e5ff' }}>@{activeHost}</span>
+                  <span style={{ color: '#00ff66', fontWeight: 600 }}>{activeUser}</span>
+                  <span style={{ color: '#39ff14' }}>@{activeHost}</span>
                   <span>]─[</span>
-                  <span style={{ color: '#38bdf8' }}>{entry.directory ?? promptDir}</span>
+                  <span style={{ color: '#00e575' }}>{entry.directory ?? promptDir}</span>
                   <span>]</span>
                 </div>
                 {/* Line 2: └──╼ $ command */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ color: '#64748b' }}>└──╼ </span>
-                  <span style={{ color: '#00e5ff', fontWeight: 700 }}>$ </span>
-                  <span style={{ color: '#f8fafc', fontWeight: 600 }}>{entry.command}</span>
-                  <span style={{ marginLeft: 'auto', color: '#475569', fontSize: '11px' }}>
+                  <span style={{ color: '#00aa44' }}>└──╼ </span>
+                  <span style={{ color: '#00ff66', fontWeight: 700 }}>$ </span>
+                  <span style={{ color: '#00ff66', fontWeight: 600 }}>{entry.command}</span>
+                  <span style={{ marginLeft: 'auto', color: '#008833', fontSize: '11px' }}>
                     {entry.timestamp}
                   </span>
                 </div>
@@ -771,7 +861,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
                 key={i}
                 className={`terminal-output-line ${entry.isError ? 'output-error' : 'output-normal'}`}
                 style={{
-                  color: entry.isError ? '#ef4444' : '#cbd5e1',
+                  color: entry.isError ? '#ef4444' : '#00ff66',
                   whiteSpace: 'pre-wrap',
                   wordBreak: 'break-all',
                 }}
@@ -782,15 +872,15 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
           </div>
         ))}
 
-        {/* Live Active Prompt Inline with Buffer */}
+        {/* Live Active Prompt Inline with Buffer (Zero Border, Pure Hacker Terminal) */}
         <div className="terminal-live-prompt" style={{ marginTop: '8px' }}>
           {/* Prompt Line 1 */}
-          <div style={{ color: '#64748b', fontSize: '12px' }}>
+          <div style={{ color: '#00aa44', fontSize: '12px' }}>
             <span>┌─[</span>
-            <span style={{ color: '#00e676', fontWeight: 600 }}>{activeUser}</span>
-            <span style={{ color: '#00e5ff' }}>@{activeHost}</span>
+            <span style={{ color: '#00ff66', fontWeight: 600 }}>{activeUser}</span>
+            <span style={{ color: '#39ff14' }}>@{activeHost}</span>
             <span>]─[</span>
-            <span style={{ color: '#38bdf8' }}>{promptDir}</span>
+            <span style={{ color: '#00e575' }}>{promptDir}</span>
             <span>]</span>
           </div>
 
@@ -819,8 +909,8 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
                 userSelect: 'none',
               }}
             >
-              <span style={{ color: '#64748b' }}>└──╼ </span>
-              <span style={{ color: '#00e5ff', fontWeight: 700, marginLeft: '2px' }}>$ </span>
+              <span style={{ color: '#00aa44' }}>└──╼ </span>
+              <span style={{ color: '#00ff66', fontWeight: 700, marginLeft: '2px' }}>$ </span>
             </label>
             <input
               ref={inputRef}
@@ -835,17 +925,17 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
               autoCapitalize="off"
               spellCheck="false"
               aria-label="Terminal command input"
-              placeholder="Type command (Tab to complete)..."
               data-testid="terminal-command-input"
               style={{
                 flex: 1,
                 background: 'transparent',
                 border: 'none',
                 outline: 'none',
-                color: '#f8fafc',
+                boxShadow: 'none',
+                color: '#00ff66',
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: '13px',
-                caretColor: '#00e5ff',
+                caretColor: '#00ff66',
                 padding: '2px 0',
               }}
             />

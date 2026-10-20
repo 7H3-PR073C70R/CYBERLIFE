@@ -61,6 +61,8 @@ export class ScreenRenderer {
   private isVisible = true;
   private isDirty = true;
   private blinkTimer = 0;
+  private wallpaperImage: HTMLImageElement | null = null;
+  private isWallpaperLoaded = false;
 
   private state: ScreenDesktopState = {
     wallpaperTheme: 'slate',
@@ -97,6 +99,17 @@ export class ScreenRenderer {
     this.texture.generateMipmaps = true;
     this.texture.minFilter = THREE.LinearMipmapLinearFilter;
     this.texture.magFilter = THREE.LinearFilter;
+
+    // Load custom high-resolution Heron OS security wallpaper
+    if (typeof Image !== 'undefined') {
+      const img = new Image();
+      img.onload = () => {
+        this.wallpaperImage = img;
+        this.isWallpaperLoaded = true;
+        this.isDirty = true;
+      };
+      img.src = '/assets/os/heron_security_wallpaper.jpg';
+    }
 
     // Emissive screen material
     const emissiveIntensity = options.emissiveIntensity ?? 1.4;
@@ -191,7 +204,13 @@ export class ScreenRenderer {
   }
 
   private drawWallpaper(ctx: CanvasRenderingContext2D, w: number, h: number): void {
-    // Radial glow background
+    // If high-resolution wallpaper is loaded, draw it directly
+    if (this.isWallpaperLoaded && this.wallpaperImage) {
+      ctx.drawImage(this.wallpaperImage, 0, 0, w, h);
+      return;
+    }
+
+    // Fallback: Procedural cybernetic background
     const grad = ctx.createRadialGradient(w * 0.5, h * 0.45, 100, w * 0.5, h * 0.5, w * 0.75);
     grad.addColorStop(0, '#122b3b');
     grad.addColorStop(0.45, '#0a1824');
@@ -391,19 +410,19 @@ export class ScreenRenderer {
     const winW = w - 200;
     const winH = h - 76;
 
-    // Window shadow & main body
+    // Window shadow & main body (hacker pure black)
     ctx.save();
     ctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
     ctx.shadowBlur = 24;
     ctx.shadowOffsetY = 12;
-    ctx.fillStyle = '#05090f';
+    ctx.fillStyle = '#000000';
     ctx.beginPath();
     ctx.roundRect(winX, winY, winW, winH, 6);
     ctx.fill();
     ctx.restore();
 
-    // 1px Window border
-    ctx.strokeStyle = 'rgba(0, 229, 255, 0.45)';
+    // 1px Window border (hacker green)
+    ctx.strokeStyle = 'rgba(0, 255, 102, 0.35)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.roundRect(winX, winY, winW, winH, 6);
@@ -412,27 +431,27 @@ export class ScreenRenderer {
     // Title bar
     const titleH = 32;
     const titleGrad = ctx.createLinearGradient(winX, winY, winX, winY + titleH);
-    titleGrad.addColorStop(0, '#131d2e');
-    titleGrad.addColorStop(1, '#0d1522');
+    titleGrad.addColorStop(0, '#0c180c');
+    titleGrad.addColorStop(1, '#040804');
     ctx.fillStyle = titleGrad;
     ctx.beginPath();
     ctx.roundRect(winX, winY, winW, titleH, [6, 6, 0, 0]);
     ctx.fill();
 
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.strokeStyle = 'rgba(0, 255, 102, 0.15)';
     ctx.beginPath();
     ctx.moveTo(winX, winY + titleH);
     ctx.lineTo(winX + winW, winY + titleH);
     ctx.stroke();
 
     // Left titlebar icon
-    ctx.fillStyle = '#00e5ff';
+    ctx.fillStyle = '#00ff66';
     ctx.font = 'bold 12px monospace';
     ctx.fillText('>_', winX + 12, winY + 20);
 
     // Centered Title Text
     ctx.save();
-    ctx.fillStyle = '#f8fafc';
+    ctx.fillStyle = '#00ff66';
     ctx.font = '600 12px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(`${OS_NAME} Terminal`, winX + winW / 2, winY + 20);
@@ -449,7 +468,7 @@ export class ScreenRenderer {
       ctx.fill();
       ctx.stroke();
 
-      ctx.fillStyle = symbol === '✕' ? '#f87171' : '#cbd5e1';
+      ctx.fillStyle = symbol === '✕' ? '#f87171' : '#00aa44';
       ctx.font = '10px sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(symbol, ctrlX + idx * 20 + 9, ctrlY + 13);
@@ -458,18 +477,18 @@ export class ScreenRenderer {
 
     // Sub-tab header strip
     const subTabY = winY + titleH;
-    ctx.fillStyle = '#0c131f';
+    ctx.fillStyle = '#050a05';
     ctx.fillRect(winX + 1, subTabY, winW - 2, 24);
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+    ctx.strokeStyle = 'rgba(0, 255, 102, 0.12)';
     ctx.beginPath();
     ctx.moveTo(winX + 1, subTabY + 24);
     ctx.lineTo(winX + winW - 1, subTabY + 24);
     ctx.stroke();
 
     // Active tab
-    ctx.fillStyle = '#05090f';
+    ctx.fillStyle = '#000000';
     ctx.fillRect(winX + 6, subTabY + 2, 120, 22);
-    ctx.fillStyle = '#00e5ff';
+    ctx.fillStyle = '#00ff66';
     ctx.font = '11px monospace';
     ctx.fillText('bash: ~', winX + 16, subTabY + 16);
 
@@ -481,46 +500,48 @@ export class ScreenRenderer {
     const lines = this.state.terminalLines ?? [];
     lines.slice(-10).forEach(line => {
       if (line.startsWith(OS_NAME.toUpperCase()) || line.includes('HERON OS')) {
-        ctx.fillStyle = '#00e5ff';
+        ctx.fillStyle = '#00ff66';
       } else if (line.startsWith('[OK]') || line.startsWith('[SUCCESS]')) {
-        ctx.fillStyle = '#00e676';
-      } else if (line.startsWith('[WARN]') || line.startsWith('[ERROR]')) {
+        ctx.fillStyle = '#00ff66';
+      } else if (line.startsWith('[WARN]')) {
+        ctx.fillStyle = '#facc15';
+      } else if (line.startsWith('[ERROR]')) {
         ctx.fillStyle = '#ef4444';
       } else {
-        ctx.fillStyle = '#cbd5e1';
+        ctx.fillStyle = '#00ff66';
       }
       ctx.fillText(line, winX + 16, lineY);
       lineY += lineHeight;
     });
 
-    // Signature Two-Line Terminal Prompt
+    // Signature Two-Line Terminal Prompt (Green on Black)
     const host = HOSTNAMES.office;
     // Line 1: ┌─[tade@heron-ws04]─[~]
-    ctx.fillStyle = '#64748b';
+    ctx.fillStyle = '#00aa44';
     ctx.fillText('┌─[', winX + 16, lineY);
-    ctx.fillStyle = '#00e676';
+    ctx.fillStyle = '#00ff66';
     ctx.fillText('tade', winX + 40, lineY);
-    ctx.fillStyle = '#00e5ff';
+    ctx.fillStyle = '#39ff14';
     ctx.fillText(`@${host}`, winX + 70, lineY);
-    ctx.fillStyle = '#64748b';
+    ctx.fillStyle = '#00aa44';
     const hostOffset = 70 + host.length * 8;
     ctx.fillText(']─[', winX + hostOffset, lineY);
-    ctx.fillStyle = '#38bdf8';
+    ctx.fillStyle = '#00e575';
     ctx.fillText('~', winX + hostOffset + 24, lineY);
-    ctx.fillStyle = '#64748b';
+    ctx.fillStyle = '#00aa44';
     ctx.fillText(']', winX + hostOffset + 32, lineY);
     lineY += lineHeight;
 
     // Line 2: └──╼ $
-    ctx.fillStyle = '#64748b';
+    ctx.fillStyle = '#00aa44';
     ctx.fillText('└──╼ ', winX + 16, lineY);
-    ctx.fillStyle = '#00e5ff';
+    ctx.fillStyle = '#00ff66';
     ctx.fillText('$ ', winX + 54, lineY);
 
     // Blinking Block Cursor
     const isBlinkOn = Math.floor(this.blinkTimer * 2) % 2 === 0;
     if (isBlinkOn) {
-      ctx.fillStyle = '#00e5ff';
+      ctx.fillStyle = '#00ff66';
       ctx.fillRect(winX + 70, lineY - 11, 8, 14);
     }
   }

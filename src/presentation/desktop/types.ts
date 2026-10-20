@@ -19,7 +19,9 @@ export type AppId =
   | 'files'
   | 'packetLens'
   | 'revLens'
-  | 'ruleTuner';
+  | 'ruleTuner'
+  | 'torBrowser'
+  | 'onionChat';
 
 export interface AppDefinition {
   id: AppId;
@@ -193,5 +195,25 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
       'Detection engineering interface to author SIEM detection rules, tune alert thresholds, and replay synthetic attack scenarios to measure false positive/negative delta.',
     defaultSize: { width: 840, height: 580 },
     minSize: { width: 480, height: 380 },
+  },
+  torBrowser: {
+    id: 'torBrowser',
+    title: 'Tor Browser — Onion Dark Web Gateway',
+    shortTitle: 'Tor Browser',
+    icon: 'tor',
+    description:
+      'Simulated multi-hop onion routing browser for exploring fictional dark web directories, leak pastebins, black-market tools, and underground forums.',
+    defaultSize: { width: 880, height: 600 },
+    minSize: { width: 500, height: 380 },
+  },
+  onionChat: {
+    id: 'onionChat',
+    title: 'OnionChat — End-to-End Encrypted Linux Messenger',
+    shortTitle: 'OnionChat',
+    icon: 'chat',
+    description:
+      'Simulated decentralized encrypted messenger and VoIP communicator for handling incoming hacker contracts, handler briefs, and audio calls.',
+    defaultSize: { width: 840, height: 560 },
+    minSize: { width: 480, height: 360 },
   },
 };

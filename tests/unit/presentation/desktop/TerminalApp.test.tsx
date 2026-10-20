@@ -4,7 +4,7 @@ import { TerminalApp } from '@/presentation/desktop/apps/TerminalApp';
 import { SimulationProvider } from '@/application/simulation/SimulationContext';
 
 describe('TerminalApp Component', () => {
-  it('renders initial terminal prompt, chips, and welcome greeting', () => {
+  it('renders initial terminal prompt, input, and welcome greeting', () => {
     render(
       <SimulationProvider>
         <TerminalApp workstationId="interact_cedarline_workstation" />
@@ -14,14 +14,8 @@ describe('TerminalApp Component', () => {
     expect(screen.getByTestId('terminal-app-container')).toBeInTheDocument();
     expect(screen.getByText(/Heron OS/i)).toBeInTheDocument();
     expect(screen.getByTestId('terminal-command-input')).toBeInTheDocument();
-    expect(screen.getByTestId('terminal-chip-help')).toBeInTheDocument();
-    expect(screen.getByTestId('terminal-chip-netmap')).toBeInTheDocument();
-    expect(screen.getByTestId('terminal-chip-svcscan')).toBeInTheDocument();
-    expect(screen.getByTestId('terminal-chip-logview')).toBeInTheDocument();
-    expect(screen.getByTestId('terminal-chip-evidence')).toBeInTheDocument();
-    expect(screen.getByTestId('terminal-chip-whoami')).toBeInTheDocument();
-    expect(screen.getByTestId('terminal-chip-date')).toBeInTheDocument();
-    expect(screen.getByTestId('terminal-chip-status')).toBeInTheDocument();
+    expect(screen.getByTestId('terminal-input-row')).toBeInTheDocument();
+    expect(screen.getByText(/tade/i)).toBeInTheDocument();
   });
 
   it('submits a command on Enter and displays formatted output', () => {
@@ -104,7 +98,7 @@ describe('TerminalApp Component', () => {
     expect(input.value).toBe('');
   });
 
-  it('displays guidance card and requires manual typing when clicking command guide chips without auto-filling input', () => {
+  it('supports Tab completion for manual command entry', () => {
     render(
       <SimulationProvider>
         <TerminalApp workstationId="interact_cedarline_workstation" />
@@ -112,18 +106,12 @@ describe('TerminalApp Component', () => {
     );
 
     const input = screen.getByTestId('terminal-command-input') as HTMLInputElement;
-    const statusChip = screen.getByTestId('terminal-chip-status');
-
-    fireEvent.click(statusChip);
-    // Mandatory manual typing: command chips must NOT auto-fill input
-    expect(input.value).toBe('');
-    // Instead, educational guidance card is displayed
-    expect(screen.getByTestId('terminal-hint-banner')).toBeInTheDocument();
-    expect(screen.getByText(/Queries the synthetic workstation hostname/i)).toBeInTheDocument();
-    expect(screen.getByText(/Manual Typing:/i)).toBeInTheDocument();
+    fireEvent.change(input, { target: { value: 'who' } });
+    fireEvent.keyDown(input, { key: 'Tab', code: 'Tab' });
+    expect(input.value).toBe('whoami');
   });
 
-  it('clears screen output when Clear Screen button is clicked', () => {
+  it('clears screen output when clear command is executed', () => {
     render(
       <SimulationProvider>
         <TerminalApp workstationId="interact_cedarline_workstation" />
@@ -133,8 +121,9 @@ describe('TerminalApp Component', () => {
     // Initial greeting is present
     expect(screen.getByText(/Heron OS/i)).toBeInTheDocument();
 
-    const clearBtn = screen.getByTestId('btn-terminal-clear');
-    fireEvent.click(clearBtn);
+    const input = screen.getByTestId('terminal-command-input');
+    fireEvent.change(input, { target: { value: 'clear' } });
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
     // Screen should now be cleared
     expect(screen.queryByText(/Heron OS/i)).not.toBeInTheDocument();
@@ -198,7 +187,7 @@ describe('TerminalApp Component', () => {
     expect(screen.getByText(/filesrv-01/i)).toBeInTheDocument();
   });
 
-  it('shows educational guidance card for netmap without auto-filling input', () => {
+  it('supports Tab completion for netmap command', () => {
     render(
       <SimulationProvider>
         <TerminalApp workstationId="interact_cedarline_workstation" />
@@ -206,12 +195,8 @@ describe('TerminalApp Component', () => {
     );
 
     const input = screen.getByTestId('terminal-command-input') as HTMLInputElement;
-    const netmapChip = screen.getByTestId('terminal-chip-netmap');
-
-    fireEvent.click(netmapChip);
-    expect(input.value).toBe('');
-    expect(screen.getByTestId('terminal-hint-banner')).toBeInTheDocument();
-    expect(screen.getByText(/Discovers reachable virtual hosts/i)).toBeInTheDocument();
-    expect(screen.getByText(/Manual Typing:/i)).toBeInTheDocument();
+    fireEvent.change(input, { target: { value: 'netm' } });
+    fireEvent.keyDown(input, { key: 'Tab', code: 'Tab' });
+    expect(input.value).toBe('netmap');
   });
 });

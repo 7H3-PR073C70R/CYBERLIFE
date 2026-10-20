@@ -1,11 +1,13 @@
 /**
  * Cyberlife — Heron OS Top Panel Component
  *
- * MATE/GTK inspired classical security desktop panel:
- * - Left: Applications, Places, System dropdown menus
- * - Quick Launchers: Terminal, Notes, Field Guide, System Info
- * - Center/Middle: Running windows task list with active state indicators
- * - Right Tray: Network, Volume, Power, authoritative simulation clock, and Session menu
+ * Classical MATE/ParrotSec-inspired Linux cybersecurity desktop panel:
+ * - Left: Cascading multi-level Applications menu (Heron Security -> Categories -> Tools)
+ * - Places & System dropdown menus
+ * - Quick Launchers: Terminal, Tor Browser, OnionChat, Files, Packet Lens
+ * - Running Windows Task list
+ * - Right Tray: CPU & RAM live resource graphs (MATE System Monitor Applet),
+ *   Network status, Volume, Simulation Clock, and Exit Workstation
  */
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
@@ -25,7 +27,156 @@ export interface TopPanelProps {
   isPeekAvailable?: boolean;
 }
 
-type MenuType = 'applications' | 'places' | 'system' | 'user' | null;
+type MenuType = 'applications' | 'places' | 'system' | null;
+
+// Parrot-style categorized security arsenal
+interface SecuritySubCategory {
+  id: string;
+  label: string;
+  tools: Array<{ id: AppId; name: string; icon: OsIconName; desc: string }>;
+}
+
+const HERON_SECURITY_CATEGORIES: SecuritySubCategory[] = [
+  {
+    id: 'most_used',
+    label: 'Most Used Tools',
+    tools: [
+      {
+        id: 'terminal',
+        name: 'Heron Terminal',
+        icon: 'terminal',
+        desc: 'Synthetic interactive shell',
+      },
+      { id: 'torBrowser', name: 'Tor Browser', icon: 'tor', desc: 'Onion dark web gateway' },
+      {
+        id: 'onionChat',
+        name: 'OnionChat & VoIP',
+        icon: 'chat',
+        desc: 'Encrypted Linux messenger',
+      },
+      {
+        id: 'packetLens',
+        name: 'Packet Lens',
+        icon: 'packetLens',
+        desc: 'Network protocol decoder',
+      },
+    ],
+  },
+  {
+    id: 'info_gathering',
+    label: 'Information Gathering',
+    tools: [
+      {
+        id: 'terminal',
+        name: 'Terminal Recon (nmap/netstat)',
+        icon: 'terminal',
+        desc: 'Port scanner & inventory',
+      },
+      {
+        id: 'catalogue',
+        name: 'Recon Knowledge Base',
+        icon: 'catalogue',
+        desc: 'Attack surface scoping',
+      },
+    ],
+  },
+  {
+    id: 'vuln_analysis',
+    label: 'Vulnerability Analysis',
+    tools: [
+      {
+        id: 'packetLens',
+        name: 'Packet Lens Analyzer',
+        icon: 'packetLens',
+        desc: 'PCAP stream forensics',
+      },
+      {
+        id: 'ruleTuner',
+        name: 'Rule Tuner (Suricata/Snort)',
+        icon: 'ruleTuner',
+        desc: 'Detection rule tuning',
+      },
+    ],
+  },
+  {
+    id: 'web_apps',
+    label: 'Web Application Analysis',
+    tools: [
+      {
+        id: 'torBrowser',
+        name: 'Tor Browser (.onion)',
+        icon: 'tor',
+        desc: 'Underground web inspection',
+      },
+      {
+        id: 'fieldGuide',
+        name: 'Field Guide — Web Security',
+        icon: 'fieldGuide',
+        desc: 'Web exploit principles',
+      },
+    ],
+  },
+  {
+    id: 'exploitation',
+    label: 'Exploitation Tools',
+    tools: [
+      {
+        id: 'terminal',
+        name: 'Terminal Shell & Payloads',
+        icon: 'terminal',
+        desc: 'PoC & hash cracking',
+      },
+      {
+        id: 'torBrowser',
+        name: 'CipherMarket Escrow',
+        icon: 'tor',
+        desc: 'Underground exploit broker',
+      },
+    ],
+  },
+  {
+    id: 'forensics',
+    label: 'Digital Forensics & Reverse',
+    tools: [
+      {
+        id: 'revLens',
+        name: 'Rev Lens Disassembler',
+        icon: 'revLens',
+        desc: 'Static binary analyzer',
+      },
+      {
+        id: 'incident',
+        name: 'Incident Response Portal',
+        icon: 'incident',
+        desc: 'Aster Incident workflow',
+      },
+      {
+        id: 'files',
+        name: 'Evidence Filesystem (/mnt)',
+        icon: 'files',
+        desc: 'Forensic artifacts storage',
+      },
+    ],
+  },
+  {
+    id: 'anonymity',
+    label: 'Anon Surf & Dark Web',
+    tools: [
+      {
+        id: 'torBrowser',
+        name: 'Tor Browser — Onion Network',
+        icon: 'tor',
+        desc: 'Multi-hop anonymity',
+      },
+      {
+        id: 'onionChat',
+        name: 'OnionChat Encrypted Line',
+        icon: 'chat',
+        desc: 'ZRTP VoIP & PGP chat',
+      },
+    ],
+  },
+];
 
 export const TopPanel: React.FC<TopPanelProps> = ({
   windows,
@@ -39,19 +190,25 @@ export const TopPanel: React.FC<TopPanelProps> = ({
   isPeekAvailable = false,
 }) => {
   const [openMenu, setOpenMenu] = useState<MenuType>(null);
+  const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>('most_used');
+
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const canvasMonitorRef = useRef<HTMLCanvasElement | null>(null);
 
   // Close menus on click outside
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
         setOpenMenu(null);
+        setActiveSubMenu(null);
       }
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && openMenu) {
         setOpenMenu(null);
+        setActiveSubMenu(null);
       }
     };
 
@@ -65,11 +222,90 @@ export const TopPanel: React.FC<TopPanelProps> = ({
 
   const toggleMenu = useCallback((menu: MenuType) => {
     setOpenMenu(prev => (prev === menu ? null : menu));
+    setActiveSubMenu(null);
+  }, []);
+
+  // MATE System Monitor Applet (live oscillating CPU & RAM bars)
+  useEffect(() => {
+    const canvas = canvasMonitorRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animId: number;
+    let step = 0;
+
+    const cpuHistory = [22, 28, 35, 18, 42, 29, 31, 24, 28, 38, 20, 26, 32, 27, 25];
+    const ramHistory = [41, 42, 42, 43, 42, 43, 44, 43, 43, 42, 43, 43, 44, 43, 43];
+
+    const renderMonitor = () => {
+      step++;
+      if (step % 20 === 0) {
+        cpuHistory.shift();
+        cpuHistory.push(Math.floor(18 + Math.random() * 28));
+        ramHistory.shift();
+        ramHistory.push(Math.floor(41 + Math.random() * 4));
+      }
+
+      ctx.fillStyle = '#060a12';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw grid
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, 9);
+      ctx.lineTo(canvas.width, 9);
+      ctx.stroke();
+
+      // Draw CPU line (Green)
+      ctx.strokeStyle = '#00ff66';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      for (let i = 0; i < cpuHistory.length; i++) {
+        const x = (i / (cpuHistory.length - 1)) * (canvas.width / 2 - 2);
+        const val = cpuHistory[i] ?? 25;
+        const y = canvas.height - (val / 100) * canvas.height;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Divider between CPU and RAM
+      ctx.strokeStyle = '#1e293b';
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2, 0);
+      ctx.lineTo(canvas.width / 2, canvas.height);
+      ctx.stroke();
+
+      // Draw RAM line (Teal/Cyan)
+      ctx.strokeStyle = '#00e5ff';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      for (let i = 0; i < ramHistory.length; i++) {
+        const x = canvas.width / 2 + 2 + (i / (ramHistory.length - 1)) * (canvas.width / 2 - 4);
+        const val = ramHistory[i] ?? 42;
+        const y = canvas.height - (val / 100) * canvas.height;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      animId = requestAnimationFrame(renderMonitor);
+    };
+
+    renderMonitor();
+
+    return () => {
+      cancelAnimationFrame(animId);
+    };
   }, []);
 
   const openWindows = (Object.keys(windows) as AppId[])
     .map(id => windows[id])
     .filter(w => w.isOpen);
+
+  const selectedCategoryObj = HERON_SECURITY_CATEGORIES.find(c => c.id === activeCategory);
 
   return (
     <header
@@ -81,7 +317,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
       style={{
         height: '30px',
         minHeight: '30px',
-        backgroundColor: 'rgba(12, 19, 31, 0.96)',
+        backgroundColor: 'rgba(10, 15, 24, 0.98)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
         display: 'flex',
@@ -123,7 +359,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
           <span>Applications</span>
         </button>
 
-        {/* Applications Dropdown Menu */}
+        {/* Level 1: Applications Dropdown Menu */}
         {openMenu === 'applications' && (
           <div
             className="panel-dropdown-menu"
@@ -134,7 +370,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
               position: 'absolute',
               top: '28px',
               left: 0,
-              width: '260px',
+              width: '240px',
               backgroundColor: '#0c131f',
               border: '1px solid #1e293b',
               borderRadius: '4px',
@@ -143,75 +379,169 @@ export const TopPanel: React.FC<TopPanelProps> = ({
               zIndex: 7000,
             }}
           >
+            {/* Top Security Category Highlight */}
             <div
               style={{
-                padding: '4px 12px 2px',
-                fontSize: '10px',
-                color: '#64748b',
-                fontWeight: 700,
-                letterSpacing: '0.05em',
+                position: 'relative',
+                backgroundColor:
+                  activeSubMenu === 'security' ? 'rgba(0, 229, 255, 0.16)' : 'transparent',
               }}
+              onMouseEnter={() => setActiveSubMenu('security')}
             >
-              CYBERSECURITY & FORENSICS
-            </div>
-            {[
-              { id: 'terminal', title: `${OS_NAME} Terminal`, icon: 'terminal' },
-              { id: 'packetLens', title: 'Packet Lens Analyzer', icon: 'packetLens' },
-              { id: 'revLens', title: 'Rev Lens Disassembler', icon: 'revLens' },
-              { id: 'ruleTuner', title: 'Rule Tuner (Suricata/Snort)', icon: 'ruleTuner' },
-              { id: 'incident', title: 'Incident Response Portal', icon: 'incident' },
-            ].map(item => (
-              <button
-                key={item.id}
-                type="button"
-                role="menuitem"
-                data-testid={`start-menu-item-${item.id}`}
-                onClick={() => {
-                  onOpenApp(item.id as AppId);
-                  setOpenMenu(null);
-                }}
+              <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  width: '100%',
+                  justifyContent: 'space-between',
                   padding: '6px 12px',
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  color: '#cbd5e1',
-                  textAlign: 'left',
-                  cursor: 'pointer',
+                  color: '#00e5ff',
+                  fontWeight: 700,
                   fontSize: '12px',
+                  cursor: 'pointer',
                 }}
-                onMouseEnter={e =>
-                  (e.currentTarget.style.backgroundColor = 'rgba(0, 229, 255, 0.12)')
-                }
-                onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
               >
-                <OsIcon name={item.icon as OsIconName} size={14} color="#00e5ff" />
-                <span>{item.title}</span>
-              </button>
-            ))}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <OsIcon name="osLogo" size={14} color="#00e5ff" />
+                  <span>Heron Security</span>
+                </div>
+                <span>▶</span>
+              </div>
+
+              {/* Level 2: Heron Security Categories Flyout */}
+              {activeSubMenu === 'security' && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '238px',
+                    width: '230px',
+                    backgroundColor: '#0c131f',
+                    border: '1px solid #1e293b',
+                    borderRadius: '4px',
+                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 229, 255, 0.2)',
+                    padding: '4px 0',
+                    zIndex: 7100,
+                  }}
+                >
+                  {HERON_SECURITY_CATEGORIES.map(cat => (
+                    <div
+                      key={cat.id}
+                      onMouseEnter={() => setActiveCategory(cat.id)}
+                      style={{
+                        position: 'relative',
+                        backgroundColor:
+                          activeCategory === cat.id ? 'rgba(0, 229, 255, 0.14)' : 'transparent',
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '6px 12px',
+                          color: activeCategory === cat.id ? '#00e5ff' : '#cbd5e1',
+                          fontSize: '12px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <span>{cat.label}</span>
+                        <span style={{ fontSize: '10px' }}>▶</span>
+                      </div>
+
+                      {/* Level 3: Tools Flyout */}
+                      {activeCategory === cat.id && selectedCategoryObj && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: '228px',
+                            width: '220px',
+                            backgroundColor: '#090e18',
+                            border: '1px solid #1e293b',
+                            borderRadius: '4px',
+                            boxShadow:
+                              '0 10px 30px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(0, 229, 255, 0.25)',
+                            padding: '4px 0',
+                            zIndex: 7200,
+                          }}
+                        >
+                          <div
+                            style={{
+                              padding: '4px 10px',
+                              fontSize: '10px',
+                              color: '#64748b',
+                              fontWeight: 700,
+                            }}
+                          >
+                            {selectedCategoryObj.label.toUpperCase()}
+                          </div>
+                          {selectedCategoryObj.tools.map(tool => (
+                            <button
+                              key={tool.name}
+                              type="button"
+                              onClick={() => {
+                                onOpenApp(tool.id);
+                                setOpenMenu(null);
+                                setActiveSubMenu(null);
+                              }}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                width: '100%',
+                                padding: '6px 10px',
+                                backgroundColor: 'transparent',
+                                border: 'none',
+                                color: '#f8fafc',
+                                textAlign: 'left',
+                                cursor: 'pointer',
+                                fontSize: '11px',
+                              }}
+                              onMouseEnter={e =>
+                                (e.currentTarget.style.backgroundColor = 'rgba(0, 229, 255, 0.15)')
+                              }
+                              onMouseLeave={e =>
+                                (e.currentTarget.style.backgroundColor = 'transparent')
+                              }
+                            >
+                              <OsIcon name={tool.icon} size={14} color="#00e5ff" />
+                              <div>
+                                <div style={{ fontWeight: 600 }}>{tool.name}</div>
+                                <div style={{ fontSize: '9px', color: '#94a3b8' }}>{tool.desc}</div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <div style={{ height: '1px', backgroundColor: '#1e293b', margin: '4px 0' }} />
 
-            <div
-              style={{
-                padding: '4px 12px 2px',
-                fontSize: '10px',
-                color: '#64748b',
-                fontWeight: 700,
-                letterSpacing: '0.05em',
-              }}
-            >
-              UTILITIES & SYSTEM
-            </div>
+            {/* Standard Desktop Applications */}
             {[
-              { id: 'fieldGuide', title: 'Cyberlife Field Guide', icon: 'fieldGuide' },
-              { id: 'notes', title: 'Security Memo & Notes', icon: 'notes' },
-              { id: 'files', title: `${OS_NAME} File Manager`, icon: 'files' },
-              { id: 'systemInfo', title: 'System Information', icon: 'systemInfo' },
-              { id: 'activity', title: 'Activity Telemetry', icon: 'activity' },
+              { id: 'torBrowser', title: 'Tor Browser (.onion)', icon: 'tor', cat: 'Internet' },
+              { id: 'onionChat', title: 'OnionChat & VoIP', icon: 'chat', cat: 'Internet' },
+              { id: 'files', title: `${OS_NAME} File Manager`, icon: 'files', cat: 'System' },
+              { id: 'notes', title: 'Security Notes & Memo', icon: 'notes', cat: 'Accessories' },
+              {
+                id: 'fieldGuide',
+                title: 'Cyberlife Field Guide',
+                icon: 'fieldGuide',
+                cat: 'Documentation',
+              },
+              { id: 'systemInfo', title: 'System Information', icon: 'systemInfo', cat: 'System' },
+              { id: 'activity', title: 'Activity Telemetry', icon: 'activity', cat: 'System' },
+              { id: 'career', title: 'Career Hub & Ledger', icon: 'career', cat: 'Operations' },
+              {
+                id: 'saveManager',
+                title: 'Save File Manager',
+                icon: 'saveManager',
+                cat: 'Operations',
+              },
             ].map(item => (
               <button
                 key={item.id}
@@ -221,6 +551,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
                 onClick={() => {
                   onOpenApp(item.id as AppId);
                   setOpenMenu(null);
+                  setActiveSubMenu(null);
                 }}
                 style={{
                   display: 'flex',
@@ -235,63 +566,13 @@ export const TopPanel: React.FC<TopPanelProps> = ({
                   cursor: 'pointer',
                   fontSize: '12px',
                 }}
-                onMouseEnter={e =>
-                  (e.currentTarget.style.backgroundColor = 'rgba(0, 229, 255, 0.12)')
-                }
+                onMouseEnter={e => {
+                  setActiveSubMenu(null);
+                  e.currentTarget.style.backgroundColor = 'rgba(0, 229, 255, 0.12)';
+                }}
                 onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
               >
-                <OsIcon name={item.icon as OsIconName} size={14} color="#00e676" />
-                <span>{item.title}</span>
-              </button>
-            ))}
-
-            <div style={{ height: '1px', backgroundColor: '#1e293b', margin: '4px 0' }} />
-
-            <div
-              style={{
-                padding: '4px 12px 2px',
-                fontSize: '10px',
-                color: '#64748b',
-                fontWeight: 700,
-                letterSpacing: '0.05em',
-              }}
-            >
-              OPERATIONS
-            </div>
-            {[
-              { id: 'career', title: 'Career Hub & Ledger', icon: 'career' },
-              { id: 'saveManager', title: 'Save File Manager', icon: 'saveManager' },
-              { id: 'catalogue', title: 'Cyber Concept Catalogue', icon: 'catalogue' },
-              { id: 'helpCenter', title: 'Help & Knowledge Center', icon: 'helpCenter' },
-            ].map(item => (
-              <button
-                key={item.id}
-                type="button"
-                role="menuitem"
-                data-testid={`start-menu-item-${item.id}`}
-                onClick={() => {
-                  onOpenApp(item.id as AppId);
-                  setOpenMenu(null);
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  width: '100%',
-                  padding: '6px 12px',
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  color: '#cbd5e1',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  fontSize: '12px',
-                }}
-                onMouseEnter={e =>
-                  (e.currentTarget.style.backgroundColor = 'rgba(0, 229, 255, 0.12)')
-                }
-                onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
-              >
-                <OsIcon name={item.icon as OsIconName} size={14} color="#38bdf8" />
+                <OsIcon name={item.icon as OsIconName} size={14} color="#cbd5e1" />
                 <span>{item.title}</span>
               </button>
             ))}
@@ -330,7 +611,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
               position: 'absolute',
               top: '28px',
               left: 0,
-              width: '200px',
+              width: '210px',
               backgroundColor: '#0c131f',
               border: '1px solid #1e293b',
               borderRadius: '4px',
@@ -340,13 +621,13 @@ export const TopPanel: React.FC<TopPanelProps> = ({
             }}
           >
             {[
-              { title: 'Home Folder (/home/analyst)', icon: 'home' },
-              { title: 'Documents', icon: 'documents' },
-              { title: 'Downloads', icon: 'downloads' },
-              { title: 'Forensic Vault (/mnt/evidence)', icon: 'folder' },
-            ].map((place, idx) => (
+              { name: 'Home Folder (/home/analyst)', icon: 'folder' },
+              { name: 'Downloads (/downloads)', icon: 'folder' },
+              { name: 'Evidence Vault (/mnt/evidence)', icon: 'folder' },
+              { name: 'System Logs (/var/log)', icon: 'folder' },
+            ].map(place => (
               <button
-                key={idx}
+                key={place.name}
                 type="button"
                 role="menuitem"
                 onClick={() => {
@@ -371,8 +652,8 @@ export const TopPanel: React.FC<TopPanelProps> = ({
                 }
                 onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
               >
-                <OsIcon name={place.icon as OsIconName} size={14} color="#00e5ff" />
-                <span>{place.title}</span>
+                <OsIcon name="folder" size={14} color="#38bdf8" />
+                <span>{place.name}</span>
               </button>
             ))}
           </div>
@@ -447,10 +728,14 @@ export const TopPanel: React.FC<TopPanelProps> = ({
               <OsIcon name="systemInfo" size={14} color="#00e5ff" />
               <span>System Information</span>
             </button>
+
             <button
               type="button"
               role="menuitem"
-              onClick={() => setOpenMenu(null)}
+              onClick={() => {
+                onOpenApp('helpCenter');
+                setOpenMenu(null);
+              }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -459,7 +744,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
                 padding: '6px 12px',
                 backgroundColor: 'transparent',
                 border: 'none',
-                color: '#94a3b8',
+                color: '#cbd5e1',
                 textAlign: 'left',
                 cursor: 'pointer',
                 fontSize: '12px',
@@ -469,8 +754,8 @@ export const TopPanel: React.FC<TopPanelProps> = ({
               }
               onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
             >
-              <OsIcon name="lock" size={14} color="#64748b" />
-              <span>Lock Screen (Active)</span>
+              <OsIcon name="helpCenter" size={14} color="#00e5ff" />
+              <span>Help Center</span>
             </button>
 
             <div style={{ height: '1px', backgroundColor: '#1e293b', margin: '4px 0' }} />
@@ -519,10 +804,11 @@ export const TopPanel: React.FC<TopPanelProps> = ({
       {/* Quick Launchers */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
         {[
-          { id: 'terminal', title: 'Terminal', icon: 'terminal' },
-          { id: 'notes', title: 'Notes', icon: 'notes' },
-          { id: 'fieldGuide', title: 'Field Guide', icon: 'fieldGuide' },
-          { id: 'systemInfo', title: 'System Info', icon: 'systemInfo' },
+          { id: 'terminal', title: 'Terminal', icon: 'terminal', color: '#00ff66' },
+          { id: 'torBrowser', title: 'Tor Browser', icon: 'tor', color: '#c084fc' },
+          { id: 'onionChat', title: 'OnionChat', icon: 'chat', color: '#00e5ff' },
+          { id: 'files', title: 'File Manager', icon: 'files', color: '#38bdf8' },
+          { id: 'packetLens', title: 'Packet Lens', icon: 'packetLens', color: '#38bdf8' },
         ].map(launcher => (
           <button
             key={launcher.id}
@@ -542,7 +828,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
             }}
             onMouseEnter={e => {
               e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-              e.currentTarget.style.color = '#00e5ff';
+              e.currentTarget.style.color = launcher.color;
             }}
             onMouseLeave={e => {
               e.currentTarget.style.backgroundColor = 'transparent';
@@ -563,7 +849,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
         }}
       />
 
-      {/* Running Windows Task Strip */}
+      {/* Running Windows Task Strip in top panel */}
       <div
         className="heron-window-strip"
         style={{
@@ -577,74 +863,51 @@ export const TopPanel: React.FC<TopPanelProps> = ({
       >
         {openWindows.map(win => {
           const isActive = activeWindowId === win.id && !win.isMinimized;
-          const iconName =
-            typeof win.icon === 'string' &&
-            win.icon in
-              {
-                terminal: 1,
-                fieldGuide: 1,
-                systemInfo: 1,
-                notes: 1,
-                activity: 1,
-                incident: 1,
-                contacts: 1,
-                career: 1,
-                saveManager: 1,
-                helpCenter: 1,
-                catalogue: 1,
-                files: 1,
-                packetLens: 1,
-                revLens: 1,
-                ruleTuner: 1,
-              }
-              ? (win.icon as OsIconName)
-              : undefined;
+          const iconName = typeof win.icon === 'string' ? (win.icon as OsIconName) : undefined;
 
           return (
             <button
               key={win.id}
               type="button"
+              className={`window-tab-btn ${isActive ? 'tab-active' : ''} ${win.isMinimized ? 'tab-minimized' : ''}`}
               onClick={() => {
-                if (isActive) {
-                  onToggleMinimize(win.id);
-                } else {
-                  onFocusWindow(win.id);
-                }
+                if (isActive) onToggleMinimize(win.id);
+                else onFocusWindow(win.id);
               }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '5px',
                 padding: '2px 8px',
-                height: '24px',
+                maxWidth: '170px',
+                height: '22px',
                 backgroundColor: isActive
                   ? 'rgba(0, 229, 255, 0.18)'
                   : win.isMinimized
-                    ? 'rgba(15, 23, 42, 0.4)'
-                    : 'rgba(255, 255, 255, 0.04)',
+                    ? 'rgba(255, 255, 255, 0.03)'
+                    : 'rgba(255, 255, 255, 0.06)',
                 border: isActive
                   ? '1px solid rgba(0, 229, 255, 0.45)'
                   : '1px solid rgba(255, 255, 255, 0.08)',
                 borderRadius: '3px',
                 color: isActive ? '#00e5ff' : win.isMinimized ? '#64748b' : '#cbd5e1',
-                cursor: 'pointer',
                 fontSize: '11px',
-                maxWidth: '180px',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
               }}
             >
-              {iconName ? <OsIcon name={iconName} size={13} color="currentColor" /> : win.icon}
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {win.title}
-              </span>
+              {iconName ? (
+                <OsIcon name={iconName} size={12} color={isActive ? '#00e5ff' : '#94a3b8'} />
+              ) : null}
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{win.title}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Right Side System Tray */}
+      {/* Right Tray */}
       <div
         className="heron-panel-tray"
         style={{
@@ -655,9 +918,25 @@ export const TopPanel: React.FC<TopPanelProps> = ({
           paddingLeft: '8px',
         }}
       >
+        {/* MATE System Monitor Applet (CPU / RAM graphs) */}
+        <div
+          title="MATE System Monitor — CPU (Green) & RAM (Cyan) Telemetry"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: '#060a12',
+            border: '1px solid #1e293b',
+            borderRadius: '2px',
+            padding: '1px',
+            cursor: 'help',
+          }}
+        >
+          <canvas ref={canvasMonitorRef} width={44} height={18} style={{ display: 'block' }} />
+        </div>
+
         {/* Network status */}
         <span
-          title="Virtual Subnet 10.0.4.15/24 (Connected)"
+          title="Virtual Subnet 10.0.4.15/24 (Tor Circuit Ready)"
           style={{ display: 'flex', alignItems: 'center', color: '#00e676', cursor: 'help' }}
         >
           <OsIcon name="network" size={14} color="#00e676" />
@@ -671,20 +950,12 @@ export const TopPanel: React.FC<TopPanelProps> = ({
           <OsIcon name="volume" size={14} color="#94a3b8" />
         </span>
 
-        {/* Battery / AC */}
-        <span
-          title="AC Power Line Connected (100%)"
-          style={{ display: 'flex', alignItems: 'center', color: '#00e5ff' }}
-        >
-          <OsIcon name="battery" size={14} color="#00e5ff" />
-        </span>
-
-        {/* Authoritative Simulation Clock */}
+        {/* Simulation Clock */}
         <span
           className="top-clock"
           style={{
             fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '12px',
+            fontSize: '11px',
             color: '#f8fafc',
             fontWeight: 600,
             padding: '1px 6px',

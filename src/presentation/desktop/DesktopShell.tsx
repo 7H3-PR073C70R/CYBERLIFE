@@ -32,6 +32,12 @@ import { FileManagerApp } from './apps/FileManagerApp';
 import { PacketLensApp } from './apps/PacketLensApp';
 import { RevLensApp } from './apps/RevLensApp';
 import { RuleTunerApp } from './apps/RuleTunerApp';
+import { TorBrowserApp } from './apps/TorBrowserApp';
+import { OnionChatApp } from './apps/OnionChatApp';
+import { BottomPanel } from './BottomPanel';
+import { HackerCallOverlay } from './HackerCallOverlay';
+import { HackerCallState, ChatThread, audioSfx } from '@/simulation/cyber/chat';
+import { INITIAL_CHAT_THREADS } from '@/simulation/cyber/chat/chatData';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { CameraMode } from '../world/worldConfig';
 import { ScreenDesktopState } from '../world/ScreenRenderer';
@@ -101,6 +107,85 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
 
   // Selected desktop icon
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
+
+  // Active Workspace (1-4)
+  const [activeWorkspace, setActiveWorkspace] = useState<number>(1);
+
+  // Hacker VoIP Call State (Hacker Simulator style)
+  const [callState, setCallState] = useState<HackerCallState | null>(null);
+  const [activeCallThread, setActiveCallThread] = useState<ChatThread | null>(null);
+
+  // Trigger initial story incoming call from SecOps lead after sitting down
+  useEffect(() => {
+    const callTimer = setTimeout(() => {
+      setCallState(current => {
+        if (current) return current;
+        const amina = INITIAL_CHAT_THREADS[0]!;
+        setActiveCallThread(amina);
+        return {
+          id: `call-incoming-${Date.now()}`,
+          callerId: amina.contactId,
+          callerName: amina.contactName,
+          callerRole: amina.contactRole,
+          callerOrg: amina.contactOrg,
+          status: 'ringing',
+          durationSeconds: 0,
+          currentSubtitleIndex: 0,
+          isMuted: false,
+        };
+      });
+    }, 6000);
+    return () => clearTimeout(callTimer);
+  }, []);
+
+  const handleStartOutgoingCall = (thread: ChatThread) => {
+    setActiveCallThread(thread);
+    setCallState({
+      id: `call-${Date.now()}`,
+      callerId: thread.contactId,
+      callerName: thread.contactName,
+      callerRole: thread.contactRole,
+      callerOrg: thread.contactOrg,
+      status: 'active',
+      durationSeconds: 0,
+      currentSubtitleIndex: 0,
+      isMuted: false,
+    });
+    audioSfx.playConnect();
+  };
+
+  const handleAcceptCall = () => {
+    if (!callState) return;
+    setCallState(prev => (prev ? { ...prev, status: 'active' } : null));
+    audioSfx.playConnect();
+  };
+
+  const handleDeclineCall = () => {
+    setCallState(null);
+    setActiveCallThread(null);
+    audioSfx.playDisconnect();
+  };
+
+  const handleEndCall = () => {
+    setCallState(null);
+    setActiveCallThread(null);
+    audioSfx.playDisconnect();
+  };
+
+  const handleToggleShowDesktop = () => {
+    const anyOpenNotMinimized = (Object.keys(APP_REGISTRY) as AppId[]).some(
+      id => windows[id].isOpen && !windows[id].isMinimized
+    );
+    (Object.keys(APP_REGISTRY) as AppId[]).forEach(id => {
+      if (windows[id].isOpen) {
+        if (anyOpenNotMinimized) {
+          minimizeWindow(id);
+        } else {
+          toggleMinimize(id);
+        }
+      }
+    });
+  };
 
   // Desktop Right-Click Context Menu
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
@@ -409,6 +494,9 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                     packetLens: 1,
                     revLens: 1,
                     ruleTuner: 1,
+                    tor: 1,
+                    chat: 1,
+                    call: 1,
                   }
                   ? (def.icon as OsIconName)
                   : undefined;
@@ -818,10 +906,39 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 {appId === 'packetLens' && <PacketLensApp />}
                 {appId === 'revLens' && <RevLensApp />}
                 {appId === 'ruleTuner' && <RuleTunerApp />}
+                {appId === 'torBrowser' && <TorBrowserApp />}
+                {appId === 'onionChat' && <OnionChatApp onStartCall={handleStartOutgoingCall} />}
               </WindowFrame>
             );
           })}
         </div>
+
+        {/* Bottom Panel (MATE-style Taskbar, Open Window Tabs & Workspace Pager) */}
+        <BottomPanel
+          windows={windows}
+          activeWindowId={activeWindowId}
+          activeWorkspace={activeWorkspace}
+          onSelectWorkspace={setActiveWorkspace}
+          onToggleWindow={appId => {
+            const win = windows[appId];
+            if (activeWindowId === appId && win && !win.isMinimized) {
+              minimizeWindow(appId);
+            } else {
+              focusWindow(appId);
+            }
+          }}
+          onToggleShowDesktop={handleToggleShowDesktop}
+          onOpenApp={openApp}
+        />
+
+        {/* Hacker VoIP Call Overlay HUD */}
+        <HackerCallOverlay
+          callState={callState}
+          activeThread={activeCallThread}
+          onAcceptCall={handleAcceptCall}
+          onDeclineCall={handleDeclineCall}
+          onEndCall={handleEndCall}
+        />
 
         {/* Skippable Boot/Login Moment (1.6s auto-fadeout or click to dismiss) */}
         {bootMomentActive && (

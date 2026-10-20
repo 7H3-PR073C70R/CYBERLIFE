@@ -31,6 +31,8 @@ export function createInitialWindows(
     packetLens: { x: 120, y: 55 },
     revLens: { x: 135, y: 65 },
     ruleTuner: { x: 150, y: 75 },
+    torBrowser: { x: 140, y: 50 },
+    onionChat: { x: 160, y: 70 },
   };
 
   const windows: Partial<Record<AppId, WindowState>> = {};
