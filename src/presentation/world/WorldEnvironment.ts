@@ -695,16 +695,16 @@ export class WorldEnvironment {
       }
     });
 
-    // 4. Iconic Lagos Danfo Minibus (parked curbside on Broad Street near Market Lane)
-    const danfo = LagosProps.createDanfoMinibus(6.5, -4, 0);
-    this.group.add(danfo.mesh);
-    if (danfo.aabb) {
+    // 4. Modern Lagos Bus Shelter with Google AdMob Digital Billboard Kiosk (West Sidewalk Danfo Stop)
+    const busShelter = LagosProps.createBusShelterWithAd(-7.3, 0.02, -8.0, Math.PI / 2, 'admob_bus_shelter_danfo');
+    this.group.add(busShelter.mesh);
+    if (busShelter.aabb) {
       this.collisionWorld.addObstacle(
-        danfo.aabb.minX,
-        danfo.aabb.maxX,
-        danfo.aabb.minZ,
-        danfo.aabb.maxZ,
-        danfo.aabb.label ?? 'Danfo Minibus'
+        busShelter.aabb.minX,
+        busShelter.aabb.maxX,
+        busShelter.aabb.minZ,
+        busShelter.aabb.maxZ,
+        busShelter.aabb.label ?? 'Bus Shelter: Google AdMob'
       );
     }
   }
@@ -835,6 +835,14 @@ export class WorldEnvironment {
     // 4. GTCO Private Banking Billboard on Cedarline Services HQ (facing West over Broad Street)
     const gtcoAd = LagosProps.createBillboardAd(18, 24.5, 6, -Math.PI / 2, 'GTCO_BANK', 8.0, 4.0);
     this.group.add(gtcoAd);
+
+    // 5. Google AdMob Digital Commercial Billboard on Broad Street North Portal Gantry
+    const admobAd = LagosProps.createBillboardAd(0, 7.8, -35.8, 0, 'GOOGLE_ADMOB', 8.5, 3.2);
+    this.group.add(admobAd);
+
+    // 6. Paystack Commercial Billboard on Marina Waterfront Promenade
+    const paystackAd = LagosProps.createBillboardAd(14, 4.5, 17, 0, 'PAYSTACK', 7.5, 3.8);
+    this.group.add(paystackAd);
   }
 
   /**
@@ -1487,6 +1495,9 @@ export class WorldEnvironment {
       const npcPositions = this.npcManager ? this.npcManager.getNpcPositions() : [];
       const obstacles = [...pedPositions, ...npcPositions];
       this.trafficSystem.update(deltaTime, obstacles, playerPosition);
+
+      // Synchronize dynamic vehicle collision boxes with CollisionWorld every frame
+      this.collisionWorld.setDynamicObstacles(this.trafficSystem.getVehicleBoundingBoxes());
     }
     if (this.workstationProps && !this.isOutdoor) {
       this.workstationProps.update(deltaTime, simulationTimeStr);

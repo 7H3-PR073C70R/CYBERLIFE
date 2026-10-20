@@ -23,131 +23,490 @@ export class LagosProps {
    * Recognizable yellow body (#facc15), twin black horizontal stripes,
    * passenger windows, wheels/tires, headlights, and front grille.
    */
-  public static createDanfoMinibus(x: number, z: number, rotationY = 0): LagosPropResult {
+  public static createDanfoMinibus(
+    x: number,
+    z: number,
+    rotationY = 0,
+    options: { withDoorCutout?: boolean; withConductorStep?: boolean } = {}
+  ): LagosPropResult {
     const group = new THREE.Group();
     group.name = 'DanfoMinibus';
     group.position.set(x, 0, z);
     group.rotation.y = rotationY;
 
-    // Dimensions: Length: 4.8m, Width: 2.0m, Height: 2.2m
-    const bodyW = 2.0;
-    const bodyH = 1.4;
-    const bodyL = 4.8;
-    const chassisY = 0.5;
+    const withCutout = options.withDoorCutout !== false; // Default true
 
-    // 1. Lower Body Chassis (Classic Lagos Danfo Yellow)
+    // Dimensions: Length: 4.8m, Width: 2.1m, Height: 2.15m
+    const bodyW = 2.1;
+    const bodyH = 1.25;
+    const bodyL = 4.8;
+    const chassisY = 0.42;
+
+    // Materials
     const yellowMat = new THREE.MeshStandardMaterial({
-      color: 0xfacc15,
-      roughness: 0.4,
+      color: 0xfacc15, // Authentic Lagos Transit Yellow
+      roughness: 0.32,
+      metalness: 0.18,
+    });
+    const stripeMat = new THREE.MeshBasicMaterial({ color: 0x09090b }); // Jet black livery stripe
+    const roofMat = new THREE.MeshStandardMaterial({
+      color: 0xf8fafc, // Ivory white roof panel
+      roughness: 0.28,
       metalness: 0.1,
     });
-    const lowerBodyGeo = new THREE.BoxGeometry(bodyW, bodyH, bodyL);
-    const lowerBody = new THREE.Mesh(lowerBodyGeo, yellowMat);
-    lowerBody.position.y = chassisY + bodyH / 2;
-    lowerBody.castShadow = true;
-    lowerBody.receiveShadow = true;
-    group.add(lowerBody);
+    const glassMat = new THREE.MeshStandardMaterial({
+      color: 0x0f172a, // Deep tinted safety glass
+      roughness: 0.08,
+      metalness: 0.92,
+      transparent: true,
+      opacity: 0.88,
+    });
+    const darkMetalMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      roughness: 0.6,
+      metalness: 0.7,
+    });
+    const chromeMat = new THREE.MeshStandardMaterial({
+      color: 0xe2e8f0,
+      roughness: 0.15,
+      metalness: 0.95,
+    });
+    const tireMat = new THREE.MeshStandardMaterial({
+      color: 0x111827,
+      roughness: 0.85,
+      metalness: 0.05,
+    });
+    const rimMat = new THREE.MeshStandardMaterial({
+      color: 0x94a3b8,
+      roughness: 0.3,
+      metalness: 0.8,
+    });
 
-    // 2. Twin Black Horizontal Stripes (Iconic Lagos Danfo livery - flush decals on sides and rear)
-    const stripeMat = new THREE.MeshBasicMaterial({ color: 0x09090b });
-    const sideStripeGeo = new THREE.PlaneGeometry(bodyL * 0.92, 0.1);
+    // 1. Chassis Floor Base & Rubber Matting (Hollow cabin interior)
+    const floorGeo = new THREE.BoxGeometry(bodyW - 0.12, 0.08, bodyL - 0.2);
+    const floor = new THREE.Mesh(floorGeo, darkMetalMat);
+    floor.position.set(0, chassisY + 0.04, 0);
+    floor.receiveShadow = true;
+    group.add(floor);
 
+    // Ribbed floor matting (dark charcoal transit rubber)
+    const matGeo = new THREE.BoxGeometry(bodyW - 0.25, 0.02, bodyL - 0.6);
+    const matMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.95 });
+    const rubberMat = new THREE.Mesh(matGeo, matMat);
+    rubberMat.position.set(0, chassisY + 0.09, -0.1);
+    group.add(rubberMat);
+
+    // 2. Driver Flank (+X: Driver Side) - Continuous lower body wall, upper cabin wall & windows
+    const driverWallGeo = new THREE.BoxGeometry(0.12, bodyH, bodyL - 0.3);
+    const driverWall = new THREE.Mesh(driverWallGeo, yellowMat);
+    driverWall.position.set(bodyW / 2 - 0.06, chassisY + bodyH / 2, -0.05);
+    driverWall.castShadow = true;
+    group.add(driverWall);
+
+    const driverUpperWallGeo = new THREE.BoxGeometry(0.12, 0.72, bodyL - 0.3);
+    const driverUpperWall = new THREE.Mesh(driverUpperWallGeo, yellowMat);
+    driverUpperWall.position.set(bodyW / 2 - 0.06, chassisY + bodyH + 0.36, -0.05);
+    driverUpperWall.castShadow = true;
+    group.add(driverUpperWall);
+
+    // Driver side panoramic tinted windows
+    const driverWinGeo = new THREE.BoxGeometry(0.04, 0.55, bodyL - 0.6);
+    const driverWin = new THREE.Mesh(driverWinGeo, glassMat);
+    driverWin.position.set(bodyW / 2 + 0.01, chassisY + bodyH + 0.36, -0.1);
+    group.add(driverWin);
+
+    // 3. Rear Flank (-Z) - Lower tailgate & upper rear window
+    const rearLowerGeo = new THREE.BoxGeometry(bodyW, bodyH, 0.12);
+    const rearLower = new THREE.Mesh(rearLowerGeo, yellowMat);
+    rearLower.position.set(0, chassisY + bodyH / 2, -bodyL / 2 + 0.06);
+    rearLower.castShadow = true;
+    group.add(rearLower);
+
+    const rearUpperGeo = new THREE.BoxGeometry(bodyW, 0.72, 0.12);
+    const rearUpper = new THREE.Mesh(rearUpperGeo, yellowMat);
+    rearUpper.position.set(0, chassisY + bodyH + 0.36, -bodyL / 2 + 0.06);
+    rearUpper.castShadow = true;
+    group.add(rearUpper);
+
+    // 4. Front Cowl (+Z) - Front cab nose & fascia
+    const frontLowerGeo = new THREE.BoxGeometry(bodyW, bodyH, 0.55);
+    const frontLower = new THREE.Mesh(frontLowerGeo, yellowMat);
+    frontLower.position.set(0, chassisY + bodyH / 2, bodyL / 2 - 0.275);
+    frontLower.castShadow = true;
+    group.add(frontLower);
+
+    // Front rounded aerodynamic nose cowl
+    const noseGeo = new THREE.CylinderGeometry(0.55, 0.55, bodyW, 16);
+    const nose = new THREE.Mesh(noseGeo, yellowMat);
+    nose.rotation.z = Math.PI / 2;
+    nose.position.set(0, chassisY + 0.55, bodyL / 2 - 0.1);
+    group.add(nose);
+
+    // 5. Cabin Interior: Commuter Bench Seats, Driver & Front Passenger Bucket Seats
+    const seatMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.7 });
+    [-0.3, -1.1, -1.8].forEach(sz => {
+      const bench = new THREE.Mesh(new THREE.BoxGeometry(bodyW - 0.5, 0.42, 0.36), seatMat);
+      bench.position.set(0.12, chassisY + 0.34, sz);
+      bench.castShadow = true;
+      group.add(bench);
+    });
+
+    // Front Driver & Front Passenger Bucket Seats
+    [-0.55, 0.55].forEach(sx => {
+      const fSeat = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.62, 0.44), seatMat);
+      fSeat.position.set(sx, chassisY + 0.44, 1.45);
+      fSeat.castShadow = true;
+      group.add(fSeat);
+    });
+
+    // Dashboard & Steering Wheel
+    const dash = new THREE.Mesh(new THREE.BoxGeometry(bodyW - 0.3, 0.35, 0.5), darkMetalMat);
+    dash.position.set(0, chassisY + 0.7, 1.85);
+    group.add(dash);
+
+    const steeringWheel = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.025, 8, 16), darkMetalMat);
+    steeringWheel.position.set(-0.55, chassisY + 0.88, 1.62);
+    steeringWheel.rotation.x = Math.PI / 4;
+    group.add(steeringWheel);
+
+    // Seated Driver Figure (authentic Nigerian driver with cap and uniform)
+    const driverGroup = new THREE.Group();
+    driverGroup.position.set(-0.55, chassisY + 0.36, 1.45);
+    const driverSkinMat = new THREE.MeshStandardMaterial({ color: 0x3d2314, roughness: 0.8 });
+    const driverShirtMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, roughness: 0.7 });
+    const driverCapMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.6 });
+
+    const driverTorso = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.44, 0.26), driverShirtMat);
+    driverTorso.position.y = 0.42;
+    const driverHead = new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 8), driverSkinMat);
+    driverHead.position.y = 0.72;
+    const driverCap = new THREE.Mesh(new THREE.SphereGeometry(0.115, 8, 8), driverCapMat);
+    driverCap.position.set(0, 0.75, 0.03);
+    // Arms reaching towards steering wheel
+    const armGeo = new THREE.BoxGeometry(0.08, 0.1, 0.32);
+    const armL = new THREE.Mesh(armGeo, driverShirtMat);
+    armL.position.set(-0.16, 0.42, 0.16);
+    const armR = new THREE.Mesh(armGeo, driverShirtMat);
+    armR.position.set(0.16, 0.42, 0.16);
+    driverGroup.add(driverTorso, driverHead, driverCap, armL, armR);
+    group.add(driverGroup);
+
+    // Seated Commuter Passengers (visible through windows and open sliding door)
+    const createSeatedPassenger = (xPos: number, zPos: number, skinColor: number, shirtColor: number) => {
+      const pGroup = new THREE.Group();
+      pGroup.position.set(xPos, chassisY + 0.32, zPos);
+      const skinM = new THREE.MeshStandardMaterial({ color: skinColor, roughness: 0.8 });
+      const shirtM = new THREE.MeshStandardMaterial({ color: shirtColor, roughness: 0.7 });
+      const torso = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.42, 0.24), shirtM);
+      torso.position.y = 0.38;
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.10, 8, 8), skinM);
+      head.position.y = 0.66;
+      pGroup.add(torso, head);
+      return pGroup;
+    };
+
+    // Commuters inside on bench rows
+    group.add(createSeatedPassenger(0.42, -0.3, 0x523220, 0xd97706)); // Row 1 window: bronze skin, orange Ankara
+    group.add(createSeatedPassenger(0.40, -1.1, 0x3a2012, 0xf8fafc)); // Row 2 window: dark mahogany skin, white shirt
+    group.add(createSeatedPassenger(-0.25, -1.8, 0x4a2818, 0x0d9488)); // Row 3: warm brown skin, teal top
+
+    // 6. Passenger Flank (-X: Curb / Sliding Door Side)
+    if (withCutout) {
+      // Cab Section: front lower door panel and upper window (z = 0.75 to 2.125)
+      const cabL = 1.375;
+      const cabDoorZ = 0.75 + cabL / 2; // 1.4375
+      const cabLower = new THREE.Mesh(new THREE.BoxGeometry(0.12, bodyH, cabL), yellowMat);
+      cabLower.position.set(-bodyW / 2 + 0.06, chassisY + bodyH / 2, cabDoorZ);
+      cabLower.castShadow = true;
+      group.add(cabLower);
+
+      const cabUpper = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.72, cabL), yellowMat);
+      cabUpper.position.set(-bodyW / 2 + 0.06, chassisY + bodyH + 0.36, cabDoorZ);
+      cabUpper.castShadow = true;
+      group.add(cabUpper);
+
+      const cabWin = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.52, cabL - 0.3), glassMat);
+      cabWin.position.set(-bodyW / 2 - 0.01, chassisY + bodyH + 0.36, cabDoorZ);
+      group.add(cabWin);
+
+      // Rear Quarter Section: behind sliding door (z = -2.34 to -0.75)
+      const rearL = 1.59;
+      const rearZ = -0.75 - rearL / 2; // -1.545
+      const rearQuarterLower = new THREE.Mesh(new THREE.BoxGeometry(0.12, bodyH, rearL), yellowMat);
+      rearQuarterLower.position.set(-bodyW / 2 + 0.06, chassisY + bodyH / 2, rearZ);
+      rearQuarterLower.castShadow = true;
+      group.add(rearQuarterLower);
+
+      const rearQuarterUpper = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.72, rearL), yellowMat);
+      rearQuarterUpper.position.set(-bodyW / 2 + 0.06, chassisY + bodyH + 0.36, rearZ);
+      rearQuarterUpper.castShadow = true;
+      group.add(rearQuarterUpper);
+
+      const rearWin2 = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.52, rearL - 0.3), glassMat);
+      rearWin2.position.set(-bodyW / 2 - 0.01, chassisY + bodyH + 0.36, rearZ);
+      group.add(rearWin2);
+
+      // --- THE AUTHENTIC OPEN SLIDING DOORWAY CUTOUT ("danfo should have a cut where the condor his") ---
+      // Spans z = -0.75 to +0.75 (1.50m wide, completely OPEN down to the runner step / floor!)
+      const doorwayW = 1.50;
+
+      // Top Door Lintel Frame
+      const topLintel = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.16, doorwayW), yellowMat);
+      topLintel.position.set(-bodyW / 2 + 0.06, chassisY + bodyH + 0.64, 0.0);
+      group.add(topLintel);
+
+      // Open Sliding Door Panel: parked slid back alongside the rear quarter panel!
+      const slidDoor = new THREE.Mesh(
+        new THREE.BoxGeometry(0.06, bodyH + 0.60, doorwayW - 0.05),
+        yellowMat
+      );
+      slidDoor.position.set(-bodyW / 2 - 0.06, chassisY + (bodyH + 0.60) / 2 + 0.02, rearZ);
+      slidDoor.castShadow = true;
+      group.add(slidDoor);
+
+      // Window on the slid door panel
+      const slidWin = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.52, doorwayW - 0.35), glassMat);
+      slidWin.position.set(-bodyW / 2 - 0.1, chassisY + bodyH + 0.36, rearZ);
+      group.add(slidWin);
+
+      // Chrome handle on slid door
+      const doorHandle = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.06, 0.16), chromeMat);
+      doorHandle.position.set(-bodyW / 2 - 0.11, chassisY + 0.85, rearZ + (doorwayW / 2) - 0.2);
+      group.add(doorHandle);
+
+      // Metal Runner Step / Footboard: extended threshold where conductor stands and commuters step
+      const stepGeo = new THREE.BoxGeometry(0.26, 0.06, doorwayW + 0.1);
+      const runnerStep = new THREE.Mesh(stepGeo, darkMetalMat);
+      runnerStep.position.set(-bodyW / 2 - 0.08, chassisY + 0.04, 0.0);
+      runnerStep.castShadow = true;
+      runnerStep.receiveShadow = true;
+      group.add(runnerStep);
+
+      // Overhead Tubular Steel Grab Rail: along top of doorway opening
+      const grabRailGeo = new THREE.CylinderGeometry(0.025, 0.025, doorwayW, 8);
+      const grabRail = new THREE.Mesh(grabRailGeo, darkMetalMat);
+      grabRail.rotation.x = Math.PI / 2;
+      grabRail.position.set(-bodyW / 2 + 0.02, chassisY + bodyH + 0.54, 0.0);
+      group.add(grabRail);
+
+      // Vertical Safety Grab Pole: inside front edge of the doorway
+      const vertPoleGeo = new THREE.CylinderGeometry(0.022, 0.022, bodyH + 0.62, 8);
+      const vertPole = new THREE.Mesh(vertPoleGeo, chromeMat);
+      vertPole.position.set(-bodyW / 2 + 0.16, chassisY + (bodyH + 0.62) / 2 + 0.02, 0.68);
+      group.add(vertPole);
+
+      // Livery stripes on -X side ONLY on cab and rear quarter (leaving door cutout clear!)
+      [-0.05, 0.15].forEach(dy => {
+        // Cab stripe
+        const sCab = new THREE.Mesh(new THREE.PlaneGeometry(cabL, 0.09), stripeMat);
+        sCab.position.set(-bodyW / 2 - 0.005, chassisY + 0.78 + dy, cabDoorZ);
+        sCab.rotation.y = -Math.PI / 2;
+        group.add(sCab);
+
+        // Rear quarter stripe
+        const sRear = new THREE.Mesh(new THREE.PlaneGeometry(rearL, 0.09), stripeMat);
+        sRear.position.set(-bodyW / 2 - 0.005, chassisY + 0.78 + dy, rearZ);
+        sRear.rotation.y = -Math.PI / 2;
+        group.add(sRear);
+
+        // Slid door exterior stripe
+        const sSlid = new THREE.Mesh(new THREE.PlaneGeometry(doorwayW - 0.05, 0.09), stripeMat);
+        sSlid.position.set(-bodyW / 2 - 0.095, chassisY + 0.78 + dy, rearZ);
+        sSlid.rotation.y = -Math.PI / 2;
+        group.add(sSlid);
+      });
+    } else {
+      // Solid closed flank if cutout not requested
+      const rCabinLower = new THREE.Mesh(new THREE.BoxGeometry(0.12, bodyH, bodyL - 0.3), yellowMat);
+      rCabinLower.position.set(-bodyW / 2 + 0.06, chassisY + bodyH / 2, -0.05);
+      group.add(rCabinLower);
+
+      const rCabinUpper = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.72, bodyL - 0.3), yellowMat);
+      rCabinUpper.position.set(-bodyW / 2 + 0.06, chassisY + bodyH + 0.36, -0.05);
+      group.add(rCabinUpper);
+
+      [-0.05, 0.15].forEach(dy => {
+        const sR = new THREE.Mesh(new THREE.PlaneGeometry(bodyL * 0.94, 0.09), stripeMat);
+        sR.position.set(-bodyW / 2 - 0.005, chassisY + 0.78 + dy, 0);
+        sR.rotation.y = -Math.PI / 2;
+        group.add(sR);
+      });
+    }
+
+    // 7. Twin Black Horizontal Stripes on Left Side (+X) and Rear (-Z)
+    const stripeGeo = new THREE.PlaneGeometry(bodyL * 0.94, 0.09);
     // Left side (+X)
-    const sLeftUpper = new THREE.Mesh(sideStripeGeo, stripeMat);
-    sLeftUpper.position.set(bodyW / 2 + 0.005, chassisY + 0.85, 0);
-    sLeftUpper.rotation.y = Math.PI / 2;
-    group.add(sLeftUpper);
+    [-0.05, 0.15].forEach(dy => {
+      const sL = new THREE.Mesh(stripeGeo, stripeMat);
+      sL.position.set(bodyW / 2 + 0.005, chassisY + 0.78 + dy, 0);
+      sL.rotation.y = Math.PI / 2;
+      group.add(sL);
+    });
 
-    const sLeftLower = new THREE.Mesh(sideStripeGeo, stripeMat);
-    sLeftLower.position.set(bodyW / 2 + 0.005, chassisY + 0.65, 0);
-    sLeftLower.rotation.y = Math.PI / 2;
-    group.add(sLeftLower);
+    // Rear stripes (-Z)
+    const rearStripeGeo = new THREE.PlaneGeometry(bodyW * 0.9, 0.09);
+    [-0.05, 0.15].forEach(dy => {
+      const sRear = new THREE.Mesh(rearStripeGeo, stripeMat);
+      sRear.position.set(0, chassisY + 0.78 + dy, -bodyL / 2 - 0.005);
+      sRear.rotation.y = Math.PI;
+      group.add(sRear);
+    });
 
-    // Right side (-X)
-    const sRightUpper = new THREE.Mesh(sideStripeGeo, stripeMat);
-    sRightUpper.position.set(-bodyW / 2 - 0.005, chassisY + 0.85, 0);
-    sRightUpper.rotation.y = -Math.PI / 2;
-    group.add(sRightUpper);
-
-    const sRightLower = new THREE.Mesh(sideStripeGeo, stripeMat);
-    sRightLower.position.set(-bodyW / 2 - 0.005, chassisY + 0.65, 0);
-    sRightLower.rotation.y = -Math.PI / 2;
-    group.add(sRightLower);
-
-    // 3. Cabin & Roof (White / Light Roof common on Toyota HiAce / VW T3 Danfos)
-    const roofH = 0.65;
-    const roofGeo = new THREE.BoxGeometry(bodyW - 0.1, roofH, bodyL - 0.3);
-    const roofMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3 });
+    // 6. Contoured Ivory / White Roof Panel with Strengthening Ribs
+    const roofH = 0.22;
+    const roofGeo = new THREE.BoxGeometry(bodyW + 0.04, roofH, bodyL - 0.15);
     const roof = new THREE.Mesh(roofGeo, roofMat);
-    roof.position.y = chassisY + bodyH + roofH / 2;
+    roof.position.set(0, chassisY + bodyH + 0.72 + roofH / 2, -0.05);
     roof.castShadow = true;
     group.add(roof);
 
-    // 4. Windows (Front Windshield, Rear, Sides)
-    const glassMat = new THREE.MeshStandardMaterial({
-      color: 0x1e293b,
-      roughness: 0.1,
-      metalness: 0.9,
+    // Roof Strengthening Ribs (3 longitudinal ribs on roof)
+    [-0.5, 0, 0.5].forEach(rx => {
+      const rib = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.04, bodyL - 0.6), roofMat);
+      rib.position.set(rx, chassisY + bodyH + 0.72 + roofH + 0.02, -0.05);
+      group.add(rib);
     });
-    // Windshield (Front at +Z)
-    const windshieldGeo = new THREE.BoxGeometry(bodyW - 0.2, 0.55, 0.1);
+
+    // 7. Windshield & Front Fascia
+    const windshieldGeo = new THREE.BoxGeometry(bodyW - 0.22, 0.65, 0.08);
     const windshield = new THREE.Mesh(windshieldGeo, glassMat);
-    windshield.position.set(0, chassisY + bodyH + 0.25, bodyL / 2 - 0.1);
-    windshield.rotation.x = -0.2;
+    windshield.position.set(0, chassisY + bodyH + 0.32, bodyL / 2 - 0.22);
+    windshield.rotation.x = -0.22;
     group.add(windshield);
 
-    // Rear Window (at -Z)
-    const rearWinGeo = new THREE.BoxGeometry(bodyW - 0.3, 0.5, 0.1);
-    const rearWin = new THREE.Mesh(rearWinGeo, glassMat);
-    rearWin.position.set(0, chassisY + bodyH + 0.25, -bodyL / 2 + 0.1);
+    // Wiper blades
+    [-0.35, 0.35].forEach(wx => {
+      const wiper = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.03, 0.02), darkMetalMat);
+      wiper.position.set(wx, chassisY + bodyH + 0.06, bodyL / 2 - 0.14);
+      wiper.rotation.z = -0.3;
+      group.add(wiper);
+    });
+
+    // Front Radiator Grille & Transit Emblem
+    const grille = new THREE.Mesh(new THREE.BoxGeometry(bodyW - 0.6, 0.26, 0.08), darkMetalMat);
+    grille.position.set(0, chassisY + 0.48, bodyL / 2 + 0.02);
+    group.add(grille);
+
+    const emblem = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.04, 16), chromeMat);
+    emblem.rotation.x = Math.PI / 2;
+    emblem.position.set(0, chassisY + 0.48, bodyL / 2 + 0.07);
+    group.add(emblem);
+
+    // Dual Round Headlights with Chrome Bezels
+    [-0.72, 0.72].forEach(hx => {
+      const bezel = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.06, 16), chromeMat);
+      bezel.rotation.x = Math.PI / 2;
+      bezel.position.set(hx, chassisY + 0.48, bodyL / 2 + 0.03);
+      group.add(bezel);
+
+      const bulb = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.14, 0.14, 0.07, 16),
+        new THREE.MeshBasicMaterial({ color: 0xfef08a })
+      );
+      bulb.rotation.x = Math.PI / 2;
+      bulb.position.set(hx, chassisY + 0.48, bodyL / 2 + 0.05);
+      group.add(bulb);
+
+      // Amber turn indicator
+      const ind = new THREE.Mesh(
+        new THREE.BoxGeometry(0.1, 0.12, 0.04),
+        new THREE.MeshBasicMaterial({ color: 0xf59e0b })
+      );
+      ind.position.set(hx + (hx > 0 ? 0.22 : -0.22), chassisY + 0.48, bodyL / 2 + 0.02);
+      group.add(ind);
+    });
+
+    // Front Bumper with License Plate
+    const fBumper = new THREE.Mesh(new THREE.BoxGeometry(bodyW + 0.08, 0.22, 0.2), darkMetalMat);
+    fBumper.position.set(0, chassisY + 0.15, bodyL / 2 + 0.08);
+    fBumper.castShadow = true;
+    group.add(fBumper);
+
+    // Lagos Commercial License Plate: Yellow / Blue text
+    const plate = new THREE.Mesh(
+      new THREE.BoxGeometry(0.48, 0.13, 0.02),
+      new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.5 })
+    );
+    plate.position.set(0, chassisY + 0.15, bodyL / 2 + 0.19);
+    group.add(plate);
+
+    // 8. Rear Hatch & Taillight Clusters
+    const rearWin = new THREE.Mesh(new THREE.BoxGeometry(bodyW - 0.4, 0.52, 0.08), glassMat);
+    rearWin.position.set(0, chassisY + bodyH + 0.35, -bodyL / 2 + 0.06);
     group.add(rearWin);
 
-    // Side Windows
-    const sideWinGeo = new THREE.BoxGeometry(bodyW + 0.04, 0.45, 1.1);
-    for (let s = -1.2; s <= 1.2; s += 1.2) {
-      const sideWin = new THREE.Mesh(sideWinGeo, glassMat);
-      sideWin.position.set(0, chassisY + bodyH + 0.25, s);
-      group.add(sideWin);
-    }
+    const rBumper = new THREE.Mesh(new THREE.BoxGeometry(bodyW + 0.08, 0.22, 0.2), darkMetalMat);
+    rBumper.position.set(0, chassisY + 0.15, -bodyL / 2 - 0.08);
+    group.add(rBumper);
 
-    // 5. Wheels (4 black rubber tires with grey rims)
-    const tireMat = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.8 });
-    const rimMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.7 });
-    const tireGeo = new THREE.CylinderGeometry(0.38, 0.38, 0.3, 12);
-    const rimGeo = new THREE.CylinderGeometry(0.22, 0.22, 0.32, 12);
+    // Vertical Taillight Clusters (Red brake, Amber blinker, White reverse)
+    [-bodyW / 2 + 0.18, bodyW / 2 - 0.18].forEach(tx => {
+      const tlHousing = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.42, 0.05), darkMetalMat);
+      tlHousing.position.set(tx, chassisY + 0.65, -bodyL / 2 - 0.02);
+      group.add(tlHousing);
 
-    const wheelOffsets: [number, number][] = [
-      [-bodyW / 2 + 0.05, 1.4],
-      [bodyW / 2 - 0.05, 1.4],
-      [-bodyW / 2 + 0.05, -1.4],
-      [bodyW / 2 - 0.05, -1.4],
+      // Red brake light
+      const redLight = new THREE.Mesh(
+        new THREE.BoxGeometry(0.1, 0.14, 0.06),
+        new THREE.MeshStandardMaterial({
+          color: 0xdc2626,
+          emissive: new THREE.Color(0x991b1b),
+          emissiveIntensity: 0.6,
+        })
+      );
+      redLight.position.set(tx, chassisY + 0.74, -bodyL / 2 - 0.03);
+      group.add(redLight);
+
+      // Amber turn light
+      const amberLight = new THREE.Mesh(
+        new THREE.BoxGeometry(0.1, 0.1, 0.06),
+        new THREE.MeshBasicMaterial({ color: 0xf59e0b })
+      );
+      amberLight.position.set(tx, chassisY + 0.61, -bodyL / 2 - 0.03);
+      group.add(amberLight);
+    });
+
+    // 9. Side Mirrors
+    [
+      { x: bodyW / 2 + 0.12, rot: 0.15 },
+      { x: -bodyW / 2 - 0.12, rot: -0.15 },
+    ].forEach(m => {
+      const mirrorArm = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.18, 6), darkMetalMat);
+      mirrorArm.rotation.z = Math.PI / 2;
+      mirrorArm.position.set(m.x > 0 ? bodyW / 2 + 0.06 : -bodyW / 2 - 0.06, chassisY + bodyH + 0.15, 1.6);
+      group.add(mirrorArm);
+
+      const mirrorHousing = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.22, 0.14), darkMetalMat);
+      mirrorHousing.position.set(m.x, chassisY + bodyH + 0.15, 1.6);
+      mirrorHousing.rotation.y = m.rot;
+      group.add(mirrorHousing);
+    });
+
+    // 10. Wheels (4 Realistic 3D Wheels with Rubber Tires & Steel Transit Rims)
+    const tireGeo = new THREE.CylinderGeometry(0.38, 0.38, 0.28, 18);
+    const rimGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.3, 16);
+    const capGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.32, 12);
+
+    const wheelCoords: [number, number][] = [
+      [bodyW / 2 - 0.04, 1.35],
+      [-bodyW / 2 + 0.04, 1.35],
+      [bodyW / 2 - 0.04, -1.35],
+      [-bodyW / 2 + 0.04, -1.35],
     ];
 
-    wheelOffsets.forEach(([wx, wz]) => {
+    wheelCoords.forEach(([wx, wz]) => {
       const wheelGroup = new THREE.Group();
       wheelGroup.position.set(wx, 0.38, wz);
       wheelGroup.rotation.z = Math.PI / 2;
 
       const tire = new THREE.Mesh(tireGeo, tireMat);
+      tire.castShadow = true;
       const rim = new THREE.Mesh(rimGeo, rimMat);
-      wheelGroup.add(tire, rim);
+      const cap = new THREE.Mesh(capGeo, chromeMat);
+
+      wheelGroup.add(tire, rim, cap);
       group.add(wheelGroup);
     });
-
-    // 6. Headlights and Front Bumper
-    const bumperGeo = new THREE.BoxGeometry(bodyW + 0.1, 0.3, 0.3);
-    const bumperMat = new THREE.MeshStandardMaterial({ color: 0x334155 });
-    const bumper = new THREE.Mesh(bumperGeo, bumperMat);
-    bumper.position.set(0, chassisY + 0.15, bodyL / 2 + 0.1);
-    group.add(bumper);
-
-    const headlightMat = new THREE.MeshBasicMaterial({ color: 0xfef08a });
-    const headGeo = new THREE.BoxGeometry(0.35, 0.2, 0.1);
-    const hl1 = new THREE.Mesh(headGeo, headlightMat);
-    hl1.position.set(-0.65, chassisY + 0.45, bodyL / 2 + 0.05);
-    const hl2 = new THREE.Mesh(headGeo, headlightMat);
-    hl2.position.set(0.65, chassisY + 0.45, bodyL / 2 + 0.05);
-    group.add(hl1, hl2);
 
     // Collision Bounding Box (accounting for rotation)
     const halfW = (rotationY !== 0 ? bodyL : bodyW) / 2;
@@ -157,7 +516,7 @@ export class LagosProps {
       maxX: x + halfW,
       minZ: z - halfL,
       maxZ: z + halfL,
-      label: 'Vehicle: Lagos Danfo Bus',
+      label: 'Vehicle: Lagos Danfo Van',
     };
 
     return { mesh: group, aabb };
@@ -1031,13 +1390,16 @@ export class LagosProps {
     kioskFrame.position.set(w / 2 + 0.45, 1.05, 0);
     group.add(kioskFrame);
 
+    const halfX = (rotationY !== 0 ? d : w) / 2 + 0.3;
+    const halfZ = (rotationY !== 0 ? w : d) / 2 + 0.3;
+
     return {
       mesh: group,
       aabb: {
-        minX: x - w / 2 - 0.5,
-        maxX: x + w / 2 + 0.9,
-        minZ: z - d / 2 - 0.2,
-        maxZ: z + d / 2 + 0.2,
+        minX: x - halfX,
+        maxX: x + halfX,
+        minZ: z - halfZ,
+        maxZ: z + halfZ,
         label: 'Bus Shelter & AdMob Kiosk',
       },
     };

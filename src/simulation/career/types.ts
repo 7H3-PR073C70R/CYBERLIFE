@@ -3,7 +3,12 @@
  */
 
 export type CareerPathId =
-  'career_it_support' | 'career_sec_analyst' | 'career_red_sec' | 'career_purple_sec';
+  | 'career_it_support'
+  | 'career_sec_analyst'
+  | 'career_red_sec'
+  | 'career_purple_sec'
+  | 'career_bounty_hunter'
+  | 'career_independent_investigator';
 
 export interface CareerLevelDefinition {
   readonly level: number;

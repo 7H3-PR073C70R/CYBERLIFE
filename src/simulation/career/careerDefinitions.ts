@@ -201,6 +201,100 @@ export const CAREER_PATHS: Readonly<Record<CareerPathId, CareerPathDefinition>> 
       },
     ],
   },
+  career_bounty_hunter: {
+    id: 'career_bounty_hunter',
+    title: 'Independent Bug Bounty & Security Research',
+    description:
+      'Discover and responsibly disclose security vulnerabilities in enterprise platforms across West Africa for competitive bounty rewards.',
+    issuingOrg: 'Eko Bounty Network & Cyber Defense Freelance',
+    levels: [
+      {
+        level: 1,
+        title: 'Freelance Bug Hunter',
+        description: 'Triage public bug bounty scopes, perform passive reconnaissance, and author proof-of-concept submissions.',
+        minXp: 0,
+        requiredSkillLevels: {
+          security_fundamentals: 1,
+          network_fundamentals: 1,
+        },
+        minCompletedJobs: 0,
+        salaryBonusKobo: 0,
+      },
+      {
+        level: 2,
+        title: 'Vulnerability Researcher',
+        description: 'Identify complex privilege escalations, tool-calling injection, and cloud misconfigurations.',
+        minXp: 150,
+        requiredSkillLevels: {
+          security_fundamentals: 2,
+          attack_simulation: 2,
+          reporting: 2,
+        },
+        minCompletedJobs: 2,
+        salaryBonusKobo: 40_000,
+      },
+      {
+        level: 3,
+        title: 'Principal Zero-Day Hunter',
+        description: 'High-reputation researcher uncovering critical infrastructure exposures and mentoring local analysts.',
+        minXp: 350,
+        requiredSkillLevels: {
+          attack_simulation: 3,
+          reporting: 3,
+          evidence_handling: 2,
+        },
+        minCompletedJobs: 4,
+        salaryBonusKobo: 95_000,
+      },
+    ],
+  },
+  career_independent_investigator: {
+    id: 'career_independent_investigator',
+    title: 'Digital Forensics & Corporate Integrity Investigations',
+    description:
+      'Conduct impartial digital investigations, preserve cryptographic evidence chains, and provide objective forensic audits.',
+    issuingOrg: 'Lagos Island Legal & Integrity Chambers',
+    levels: [
+      {
+        level: 1,
+        title: 'Forensic Associate',
+        description: 'Handle chain-of-custody tracking, compute cryptographic hashes, and inspect system log timelines.',
+        minXp: 0,
+        requiredSkillLevels: {
+          evidence_handling: 1,
+          log_analysis: 1,
+        },
+        minCompletedJobs: 0,
+        salaryBonusKobo: 0,
+      },
+      {
+        level: 2,
+        title: 'Digital Forensic Auditor',
+        description: 'Reconstruct physical-to-digital attack chronologies, analyze removable media telemetry, and verify SLA compliance.',
+        minXp: 150,
+        requiredSkillLevels: {
+          evidence_handling: 2,
+          log_analysis: 2,
+          reporting: 2,
+        },
+        minCompletedJobs: 2,
+        salaryBonusKobo: 45_000,
+      },
+      {
+        level: 3,
+        title: 'Lead Forensic Investigator',
+        description: 'Authoritative expert witness delivering certified forensic incident disclosure reports to executive boards.',
+        minXp: 350,
+        requiredSkillLevels: {
+          evidence_handling: 3,
+          reporting: 3,
+          incident_response: 2,
+        },
+        minCompletedJobs: 4,
+        salaryBonusKobo: 100_000,
+      },
+    ],
+  },
 };
 
 export function getCareerLevelDefinition(pathId: CareerPathId, level: number) {

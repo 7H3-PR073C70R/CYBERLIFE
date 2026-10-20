@@ -488,13 +488,174 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 
 ---
 
-## Future Work Outside Vertical Slice
+## M12 — Workstation & Living World Immersion
 
-The following features are formally recorded as **future roadmap items** and must **not** be incorporated into Milestones M0 through M11:
+- **Purpose**: Bridge the first-person/third-person physical world exploration and the in-game hacker workstation with smooth camera transitions, authentic Lagos audio/visual ambience, and lived-in environment props.
+- **Scope**:
+  - Seamless 7-state camera dolly transition from third-person walking to seated workstation view (`WorkstationCameraStates`).
+  - Lived-in Lagos apartment props (power inverter, battery bank, ceiling fan, split AC, workstation desk, ergonomic mesh chair).
+  - Day/night lighting cycle with warm interior desk lamps and Lagos street glow.
+  - Realistic Danfo minibus and pedestrian traffic integration along Broad Street.
+- **Dependencies**: M1 through M11.
+- **Status**: **COMPLETED**.
 
-1. **Expanded Metro Map & Multiple Neighborhoods**: Industrial server farm district, corporate downtown high-rises, underground hacker hackerspace.
-2. **Consultancy Management**: Hiring junior analysts, assigning tickets, and scaling an independent security agency.
-3. **Procedural Incident Campaigns**: Dynamically generated enterprise compromise scenarios with randomized network topologies.
-4. **Autonomous NPC Daily Life**: Fully simulated 24-hour schedules with dozens of independent town residents.
-5. **Multiplayer Cooperative Blue-Teaming**: Multi-terminal SOC operations where players collaborate in real time on large breaches.
-6. **Scenario Creator & Community Modding SDK**: In-browser tools for educators and players to design, package, and share custom cybersecurity scenarios.
+---
+
+## M13 — Cybersecurity Arsenal Audit, Human Attack Surface, Living City & Asset Provenance
+
+- **Purpose**: Foundational architecture and audit milestone establishing source-backed tool verification, data-driven human/physical security simulation, 4-tier population hierarchy, 9 urban environment profiles, authentic interior venues, machine-readable asset manifest, and multi-role investigation contracts.
+- **Scope**:
+  - **Part 1 — Cybersecurity Arsenal Audit & Tool Architecture**:
+    - Source-backed audit of all 28 tools (`playable`, `partial`, `reference_only`, `planned`).
+    - Discriminated tool execution contract enforcing input schemas, clearance levels, Rules of Engagement (RoE), and zero host/network side-effects.
+    - Fictional Cedarline Marina Tower range models (subnets, hosts, synthetic PCAPs, auth tokens).
+    - CyberCatalogue desktop application mode switcher and live tool browser.
+  - **Part 2 (Addendum) — Human & Physical Security Architecture**:
+    - Deterministic trust, credibility, authority, and suspicion evaluation engine (`HumanPhysicalEngine.ts`).
+    - Physical facility security: multi-zone access control (Clearance Levels 0–5: Public to Air-Gapped Lab), badge validation, tailgating sensor alarms, and door held open metrics.
+    - Removable media incident simulation generating synthetic endpoint process telemetry (`rundll32.exe`, `cscript.exe`) and network egress, strictly isolated from host execution.
+    - Air-gapped forensic lab environment suppressing synthetic network egress.
+    - Pretexting personas and challenge-response identity verification controls.
+  - **Part 3 — Living City & NPC Population Architecture**:
+    - 4-Tier population hierarchy (`TIER_1_AMBIENT_CROWD`, `TIER_2_ROUTINE_NPC`, `TIER_3_INTERACTIVE_NPC`, `TIER_4_STORY_CRITICAL`).
+    - 9 Urban environment population profiles with hourly density modifiers and attire styles.
+    - Meaningful interior venues with operating hours, badge checks, and non-constant access.
+  - **Part 4 — Asset Manifest & Provenance Pipeline**:
+    - Machine-readable asset manifest (`AssetManifest.ts` and `public/assets/asset_manifest.json`) tracking licensing, local paths, LOD, collision, visual verification evidence, and defect backlogs.
+    - Honest tracking of unoptimized assets (e.g. 66.3 MB `island_tree_01.glb` defect backlog with procedural palm fallback).
+  - **Part 5 — Narrative & Career Multi-Role Integration**:
+    - Expanded careers: `career_bounty_hunter`, `career_independent_investigator`, `career_blue_team`, `career_purple_team`, `career_red_team`.
+    - Multi-role investigation approaches for the Aster Incident and removable media drop.
+    - Persistent story flags tracking player choices and moral consequences.
+- **Dependencies**: M1 through M12.
+- **Status**: **COMPLETED & VERIFIED** (85/85 test files, 623/623 tests passing).
+
+---
+
+## M14 — Authorized Offensive Simulation & Social Pretexting Engine
+
+- **Purpose**: Implement the interactive Red Team and penetration testing gameplay loop under strict, inspectable Rules of Engagement (RoE).
+- **Scope**:
+  - `tool_exploit_lab`: Dry-run Metasploit-style simulation runner with deterministic vulnerability triggers (e.g. CVE-2026-ASTER-01 buffer bounds, unpatched Redis daemon).
+  - `tool_web_proxy`: Fictional HTTP/HTTPS interception console simulating parameter tampering, SQLi payloads, and JWT signature bypass against simulated internal APIs.
+  - Interactive social engineering pretexting dialogues with branching dialogue trees, trust metrics, badge cloning/counterfeiting, and employee verification challenges.
+  - Sandboxed execution: Zero real networking, zero real payload execution on the host machine.
+- **Dependencies**: M13.
+- **Status**: **PLANNED**.
+
+---
+
+## M15 — Network Detection Engine & Endpoint Telemetry (EDR/SIEM)
+
+- **Purpose**: Implement real-time packet inspection and endpoint process monitoring for Blue Team operations.
+- **Scope**:
+  - `tool_network_detect`: Suricata-inspired signature evaluation engine running against synthetic network streams and PCAP logs.
+  - `tool_endpoint_telem`: Sysmon-inspired process execution tree, parent-child PID tracking, and file integrity monitoring (FIM).
+  - Live SIEM event bus aggregating physical access events, firewall rejects, and EDR detections into correlated alert timelines.
+- **Dependencies**: M13, M14.
+- **Status**: **PLANNED**.
+
+---
+
+## M16 — Sigma Compiler & Air-Gapped Digital Forensics Workbench
+
+- **Purpose**: Deliver detection engineering and forensic artifact carving capabilities.
+- **Scope**:
+  - `tool_sigma_rules`: Generic Sigma YAML rule compiler translating adversary behaviors into LogView SIEM queries.
+  - `tool_artifact_foren`: Dedicated forensic workstation inside the air-gapped lab supporting disk image mounting, deleted file carving, and memory artifact analysis.
+  - Formal evidence hashing and chain-of-custody courtroom packaging.
+- **Dependencies**: M13, M15.
+- **Status**: **PLANNED**.
+
+---
+
+## M17 — Offline Password Auditing & Enterprise IAM Vault
+
+- **Purpose**: Expand identity and access management security simulation with realistic credential audits.
+- **Scope**:
+  - `tool_hash_audit`: Offline hash evaluation sandbox measuring hash resistance (MD5, SHA-256, bcrypt) against dictionary attacks with synthetic wordlists.
+  - Enterprise IAM Vault: Active Directory/LDAP-inspired hierarchy simulating access control lists (ACLs), Kerberos ticket granting, and privilege escalation vectors.
+- **Dependencies**: M14, M16.
+- **Status**: **PLANNED**.
+
+---
+
+## M18 — Purple Team Adversary Emulation & Automated Detection Coverage
+
+- **Purpose**: Unify offensive emulation and defensive telemetry into an automated Purple Team exercise platform.
+- **Scope**:
+  - `tool_purple_replay`: MITRE ATT&CK atomic test runner executing deterministic playbooks and measuring SIEM/EDR detection coverage.
+  - Detection coverage matrix scorecards (Visibility, Detection, Prevention) with automated remediation recommendations.
+- **Dependencies**: M14, M15, M16, M17.
+- **Status**: **PLANNED**.
+
+---
+
+## M19 — Physical Facility Security & Access Control System
+
+- **Purpose**: Implement interactive 3D physical security gameplay in Marina Tower and corporate interiors.
+- **Scope**:
+  - Interactive RFID badge turnstiles, biometric scanners, and electronic door strikes.
+  - Tailgating mechanics: Timing player or NPC movement through access doors during door-held-open windows.
+  - Security guard patrol routes, reception sign-in desks, visitor escort procedures, and CCTV camera sightline cones.
+- **Dependencies**: M13, M14.
+- **Status**: **PLANNED**.
+
+---
+
+## M20 — Living City Living Interiors & Scheduled Commuter Simulation
+
+- **Purpose**: Bring the 4-tier population system and authentic interior venues to life with scheduled routine NPCs.
+- **Scope**:
+  - Tier 2 Routine NPCs following diurnal schedules (morning commute, workday office tasks, lunch at Mama Nkechi Market, evening lounge).
+  - Tier 3 Interactive NPCs offering dynamic dialogue, rumors, freelance bounties, and hardware repair services.
+  - Operating hours transitions: Venues locking doors, switching interior lights, and changing ambient music based on time of day.
+- **Dependencies**: M13, M19.
+- **Status**: **PLANNED**.
+
+---
+
+## M21 — Production Asset Pipeline, LOD Decimation & Browser Optimization
+
+- **Purpose**: Decimate and optimize all external 3D assets to meet strict browser performance budgets.
+- **Scope**:
+  - Decimate defect backlog assets (e.g. `island_tree_01.glb` from 66.3 MB down to <500 KB using gltf-transform and meshopt).
+  - Complete Level-of-Detail (LOD0, LOD1, LOD2) switching for all street architecture and vehicles.
+  - 100% WebP texture conversion with mipmapping and progressive loading.
+- **Dependencies**: M13.
+- **Status**: **PLANNED**.
+
+---
+
+## M22 — Multi-Role Narrative Branching & Corporate Whistleblower Campaigns
+
+- **Purpose**: Deliver the full techno-thriller narrative with diverging multi-career story arcs.
+- **Scope**:
+  - Complete 4-branch storyline for the Aster Incident and the Cedarline-Eko Merchant Bank conspiracy.
+  - Divergent endings based on career path: Corporate Hero (Blue Team), Security Research Publication (Purple Team), Black Market Leaks (Bounty Hunter), Regulatory Whistleblower (Independent Investigator).
+  - Dynamic reputation system affecting NPC dialogue, job board opportunities, and security clearance grants.
+- **Dependencies**: M18, M20.
+- **Status**: **PLANNED**.
+
+---
+
+## M23 — Threat Intelligence Feeds & Community Modding SDK
+
+- **Purpose**: Provide extensible scenario authoring and external threat intel integration.
+- **Scope**:
+  - In-game Onion threat intel feed simulating darknet chatter, leaked credentials, and emerging zero-day advisories.
+  - Scenario Creator SDK allowing educators and players to package custom investigation cases as signed JSON bundles.
+- **Dependencies**: M18, M22.
+- **Status**: **PLANNED**.
+
+---
+
+## M24 — Public Production Release & Cross-Browser Certification
+
+- **Purpose**: Commercial-grade production release, cross-platform performance certification, and final security audit.
+- **Scope**:
+  - Rock-solid 60 FPS on desktop browsers (Chrome, Firefox, Safari, Edge) with memory consumption under 400 MB.
+  - Full end-to-end automated Playwright regression suite passing across all career arcs.
+  - Public documentation, player onboarding handbook, and educational courseware mapping.
+- **Dependencies**: M13 through M23.
+- **Status**: **PLANNED**.

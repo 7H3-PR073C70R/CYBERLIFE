@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { AssetLoader } from '../AssetLoader';
 import { AABB } from '../CollisionWorld';
 import { RiggedPedestrian } from './RiggedPedestrian';
+import { LagosProps } from './LagosProps';
 
 export type TrafficVehicleType = 'DANFO' | 'SUV' | 'SEDAN' | 'SPORTS' | 'DELIVERY';
 
@@ -26,13 +27,33 @@ export interface TrafficVehicle {
   laneId: string;
 }
 
-export type BusStopPhase = 'BOARDING' | 'DEPARTING' | 'APPROACHING';
+export type BusStopPhase = 'ALIGHTING' | 'BOARDING' | 'DEPARTING' | 'APPROACHING';
+
+export interface DanfoBusStopPassenger {
+  ped: RiggedPedestrian;
+  mesh: THREE.Group;
+  role: 'ALIGHTING' | 'BOARDING';
+  state: 'WAITING' | 'WALKING' | 'DONE';
+  startPos: THREE.Vector3;
+  targetPos: THREE.Vector3;
+  currentPos: THREE.Vector3;
+  directionYaw: number;
+  speed: number;
+}
+
+export interface DanfoBusStopPassengerPedEntry {
+  ped: RiggedPedestrian;
+  mesh: THREE.Group;
+  initialX: number;
+  targetX: number;
+}
 
 export interface DanfoBusStopState {
   group: THREE.Group;
   busGroup: THREE.Group;
   conductorPed?: RiggedPedestrian;
-  passengerPeds: Array<{ ped: RiggedPedestrian; mesh: THREE.Group; initialX: number; targetX: number }>;
+  passengers: DanfoBusStopPassenger[];
+  passengerPeds?: DanfoBusStopPassengerPedEntry[];
   phase: BusStopPhase;
   timer: number;
   position: THREE.Vector3;
@@ -198,13 +219,53 @@ export class TrafficSystem {
    */
   private async loadRealisticModel(v: TrafficVehicle): Promise<void> {
     try {
+      if (v.type === 'DANFO') {
+        // High-fidelity Lagos Danfo with authentic sliding door cutout, runner step, and interior
+        const danfoProp = LagosProps.createDanfoMinibus(0, 0, 0, {
+          withDoorCutout: true,
+          withConductorStep: true,
+        });
+
+        while (v.bodyRoot.children.length > 0) {
+          const c = v.bodyRoot.children[0];
+          if (c) v.bodyRoot.remove(c);
+        }
+        v.bodyRoot.add(danfoProp.mesh);
+
+        // Attach authentic Rigged Pedestrian Conductor standing on the door runner step
+        const conductor = new RiggedPedestrian({
+          bodyType: 'male_2',
+          palette: {
+            skin: 0x3d2314, // Nigerian rich warm brown
+            jacket: 0xfacc15, // Lagos yellow Danfo polo
+            pants: 0x1e3a8a, // Denim jeans
+            shoes: 0x111827, // Sneakers
+          },
+          randomScale: 0.98,
+        });
+
+        conductor.load().then(() => {
+          const condMesh = conductor.getMesh();
+          // Position on the runner step of the door cutout on the right side (-X)
+          condMesh.position.set(-1.08, 0.22, 0.0);
+          // Face the Danfo (pointing +X directly into the interior of the van)
+          condMesh.rotation.y = Math.PI / 2;
+          v.bodyRoot.add(condMesh);
+          v.conductorPed = conductor;
+        }).catch(() => {});
+
+        return;
+      }
+
       const glbUrl =
-        v.type === 'DANFO'
-          ? '/assets/vehicles/danfo_realistic.glb'
-          : '/assets/vehicles/suv_realistic.glb';
+        v.type === 'SUV'
+          ? '/assets/vehicles/suv_realistic.glb'
+          : v.type === 'SEDAN'
+          ? '/assets/vehicles/sedan.glb'
+          : '/assets/vehicles/sedan-sports.glb';
 
       const model = await AssetLoader.getInstance().loadGLTF(glbUrl);
-      const scale = 4.5;
+      const scale = v.type === 'SUV' ? 4.5 : 2.0;
       model.scale.set(scale, scale, scale);
 
       const newMaterials: THREE.Material[] = [];
@@ -223,11 +284,7 @@ export class TrafficSystem {
                 m.opacity = 1.0;
                 newMaterials.push(m);
 
-                if (v.type === 'DANFO') {
-                  m.color.setHex(0xfacc15); // Lagos Danfo Transit Yellow
-                  m.roughness = 0.35;
-                  m.metalness = 0.15;
-                } else if (v.type === 'SUV') {
+                if (v.type === 'SUV') {
                   m.color.setHex(0x0f172a); // Obsidian black metallic
                   m.roughness = 0.22;
                   m.metalness = 0.85;
@@ -244,45 +301,6 @@ export class TrafficSystem {
         if (c) v.bodyRoot.remove(c);
       }
       v.bodyRoot.add(model);
-
-      // Add flush black side stripes on Danfo at scale 1.0 (attached directly to bodyRoot)
-      if (v.type === 'DANFO') {
-        const stripeMat = new THREE.MeshBasicMaterial({ color: 0x09090b });
-        newMaterials.push(stripeMat);
-        const stripeGeo = new THREE.PlaneGeometry(3.6, 0.12);
-
-        const sLeft = new THREE.Mesh(stripeGeo, stripeMat);
-        sLeft.position.set(1.28, 1.15, 0);
-        sLeft.rotation.y = Math.PI / 2;
-        v.bodyRoot.add(sLeft);
-
-        const sRight = new THREE.Mesh(stripeGeo, stripeMat);
-        sRight.position.set(-1.28, 1.15, 0);
-        sRight.rotation.y = -Math.PI / 2;
-        v.bodyRoot.add(sRight);
-
-        // Attach a REAL rigged human pedestrian character as the Danfo Conductor (NO procedural boxes!)
-        const conductor = new RiggedPedestrian({
-          bodyType: 'male_2',
-          palette: {
-            skinTone: 0x3d2314, // Nigerian rich warm brown
-            topColor: 0xfacc15,  // Lagos yellow Danfo polo
-            pantsColor: 0x1e3a8a, // Denim jeans
-            shoesColor: 0x111827  // Sneakers
-          },
-          randomScale: 0.98,
-        });
-
-        conductor.load().then(() => {
-          const condMesh = conductor.getMesh();
-          condMesh.position.set(1.18, 0.18, -0.2);
-          condMesh.rotation.y = Math.PI / 2;
-          v.bodyRoot.add(condMesh);
-          v.conductorPed = conductor;
-        }).catch(() => {
-          // Fallback if network loading is pending
-        });
-      }
 
       // Add normal-sized red LED taillights at scale 1.0 directly on bodyRoot
       const blMat = new THREE.MeshStandardMaterial({
@@ -320,50 +338,31 @@ export class TrafficSystem {
     const stopPos = new THREE.Vector3(-4.8, 0, -8.0);
     busStopGroup.position.copy(stopPos);
 
-    // Parked Danfo Minibus
-    const danfoData = this.createProceduralVehicle('DANFO', 0xfacc15);
-    const bus = danfoData.group;
+    // Parked Danfo Minibus: Authentic high-fidelity Lagos Danfo with open sliding door cutout!
+    const danfoProp = LagosProps.createDanfoMinibus(0, 0, 0, {
+      withDoorCutout: true,
+      withConductorStep: true,
+    });
+    const bus = danfoProp.mesh;
     bus.rotation.y = 0; // facing south (+Z)
 
-    // Load realistic model for the parked bus as well
-    AssetLoader.getInstance()
-      .loadGLTF('/assets/vehicles/danfo_realistic.glb')
-      .then(model => {
-        model.scale.set(4.5, 4.5, 4.5);
-        model.traverse(node => {
-          if (node instanceof THREE.Mesh && node.material) {
-            const mats = Array.isArray(node.material) ? node.material : [node.material];
-            mats.forEach(m => {
-              if (m instanceof THREE.MeshStandardMaterial) {
-                m.color.setHex(0xfacc15);
-              }
-            });
-          }
-        });
-
-        while (danfoData.bodyRoot.children.length > 0) {
-          const c = danfoData.bodyRoot.children[0];
-          if (c) danfoData.bodyRoot.remove(c);
-        }
-        danfoData.bodyRoot.add(model);
-      })
-      .catch(() => {});
-
-    // Attach authentic Rigged Pedestrian Conductor standing on the bus runner
+    // Attach authentic Rigged Pedestrian Conductor standing on the door runner step
     const conductorPed = new RiggedPedestrian({
       bodyType: 'male_2',
       palette: {
-        skinTone: 0x3d2314, // Nigerian rich warm brown
-        topColor: 0xfacc15,  // Yellow Danfo polo
-        pantsColor: 0x1e3a8a, // Denim jeans
-        shoesColor: 0x111827  // Sneakers
+        skin: 0x3d2314, // Nigerian rich warm brown
+        jacket: 0xfacc15, // Yellow Danfo polo
+        pants: 0x1e3a8a, // Denim jeans
+        shoes: 0x111827, // Sneakers
       },
       randomScale: 0.98,
     });
 
     conductorPed.load().then(() => {
       const m = conductorPed.getMesh();
-      m.position.set(1.18, 0.18, -0.2);
+      // Position on the runner step in the open doorway cutout on the right side (-X)
+      m.position.set(-1.08, 0.22, 0.0);
+      // Face the Danfo (pointing +X directly into the interior of the van)
       m.rotation.y = Math.PI / 2;
       bus.add(m);
       if (this.busStopState) {
@@ -377,41 +376,122 @@ export class TrafficSystem {
     blinker.position.set(-1.05, 0.82, -2.2);
     bus.add(blinker);
 
-    // Waiting & Boarding Pedestrian Passengers: Real Rigged Pedestrians!
-    const passengerPeds: DanfoBusStopState['passengerPeds'] = [];
+    // Commuters: Real Rigged Pedestrians (Male and Female GLBs)
+    // All coordinates are strictly on the West Sidewalk (local x <= -1.08, world x <= -5.88). NEVER in the road!
+    const passengers: DanfoBusStopPassenger[] = [];
 
-    const p1 = new RiggedPedestrian({
+    // Alighting Passenger 1: female_2 (rich dark skin, office attire)
+    const alighting1 = new RiggedPedestrian({
       bodyType: 'female_2',
       palette: {
-        skinTone: 0x4a2e1b,
-        topColor: 0x0284c7, // electric blue top
-        pantsColor: 0x1e293b, // dark tailored trousers
-        shoesColor: 0x0f172a, // formal heels
+        skin: 0x3a2012,
+        jacket: 0xf1f5f9,
+        pants: 0x1e293b,
+        shoes: 0x0f172a,
       },
     });
-    p1.load().then(() => {
-      const mesh = p1.getMesh();
-      mesh.position.set(1.8, 0.02, -0.6);
-      mesh.rotation.y = -Math.PI / 2; // facing west into van door
+    alighting1.load().then(() => {
+      const mesh = alighting1.getMesh();
+      // Starts on the doorway threshold step
+      mesh.position.set(-1.08, 0.22, 0.2);
+      mesh.rotation.y = Math.PI; // heading north along sidewalk
       busStopGroup.add(mesh);
-      passengerPeds.push({ ped: p1, mesh, initialX: 1.8, targetX: 0.8 });
+      passengers.push({
+        ped: alighting1,
+        mesh,
+        role: 'ALIGHTING',
+        state: 'WAITING',
+        startPos: new THREE.Vector3(-1.08, 0.22, 0.2),
+        targetPos: new THREE.Vector3(-2.0, 0.02, -6.0),
+        currentPos: new THREE.Vector3(-1.08, 0.22, 0.2),
+        directionYaw: Math.PI,
+        speed: 1.1,
+      });
     }).catch(() => {});
 
-    const p2 = new RiggedPedestrian({
+    // Alighting Passenger 2: male_1 (bronze skin, smart casual)
+    const alighting2 = new RiggedPedestrian({
       bodyType: 'male_1',
       palette: {
-        skinTone: 0x3d2314,
-        topColor: 0x10b981, // emerald green polo
-        pantsColor: 0x111827, // dark jeans
-        shoesColor: 0xf8fafc, // white sneakers
+        skin: 0x523220,
+        jacket: 0x0d9488,
+        pants: 0xd97706,
+        shoes: 0x451a03,
       },
     });
-    p2.load().then(() => {
-      const mesh = p2.getMesh();
-      mesh.position.set(2.4, 0.02, -1.2);
-      mesh.rotation.y = -Math.PI / 2;
+    alighting2.load().then(() => {
+      const mesh = alighting2.getMesh();
+      mesh.position.set(-1.08, 0.22, -0.2);
+      mesh.rotation.y = 0; // heading south along sidewalk
       busStopGroup.add(mesh);
-      passengerPeds.push({ ped: p2, mesh, initialX: 2.4, targetX: 0.8 });
+      passengers.push({
+        ped: alighting2,
+        mesh,
+        role: 'ALIGHTING',
+        state: 'WAITING',
+        startPos: new THREE.Vector3(-1.08, 0.22, -0.2),
+        targetPos: new THREE.Vector3(-1.9, 0.02, 6.0),
+        currentPos: new THREE.Vector3(-1.08, 0.22, -0.2),
+        directionYaw: 0,
+        speed: 1.0,
+      });
+    }).catch(() => {});
+
+    // Boarding Passenger 1: female_1 (waiting on sidewalk shelter, golden skin, vibrant)
+    const boarding1 = new RiggedPedestrian({
+      bodyType: 'female_1',
+      palette: {
+        skin: 0x7a4b2c,
+        jacket: 0xdb2777,
+        pants: 0x18181b,
+        shoes: 0xf8fafc,
+      },
+    });
+    boarding1.load().then(() => {
+      const mesh = boarding1.getMesh();
+      // Waiting on the sidewalk by the bus shelter
+      mesh.position.set(-2.2, 0.02, -2.5);
+      mesh.rotation.y = 0; // facing south toward incoming bus
+      busStopGroup.add(mesh);
+      passengers.push({
+        ped: boarding1,
+        mesh,
+        role: 'BOARDING',
+        state: 'WAITING',
+        startPos: new THREE.Vector3(-2.2, 0.02, -2.5),
+        targetPos: new THREE.Vector3(-1.08, 0.22, 0.0),
+        currentPos: new THREE.Vector3(-2.2, 0.02, -2.5),
+        directionYaw: -Math.PI / 2,
+        speed: 0.9,
+      });
+    }).catch(() => {});
+
+    // Boarding Passenger 2: male_2 (waiting on sidewalk shelter, mahogany skin, casual)
+    const boarding2 = new RiggedPedestrian({
+      bodyType: 'male_2',
+      palette: {
+        skin: 0x3d2314,
+        jacket: 0x059669,
+        pants: 0x1e1b4b,
+        shoes: 0xffffff,
+      },
+    });
+    boarding2.load().then(() => {
+      const mesh = boarding2.getMesh();
+      mesh.position.set(-2.4, 0.02, -1.8);
+      mesh.rotation.y = 0;
+      busStopGroup.add(mesh);
+      passengers.push({
+        ped: boarding2,
+        mesh,
+        role: 'BOARDING',
+        state: 'WAITING',
+        startPos: new THREE.Vector3(-2.4, 0.02, -1.8),
+        targetPos: new THREE.Vector3(-1.08, 0.22, -0.3),
+        currentPos: new THREE.Vector3(-2.4, 0.02, -1.8),
+        directionYaw: -Math.PI / 2,
+        speed: 0.85,
+      });
     }).catch(() => {});
 
     busStopGroup.add(bus);
@@ -421,14 +501,15 @@ export class TrafficSystem {
       group: busStopGroup,
       busGroup: bus,
       conductorPed,
-      passengerPeds,
-      phase: 'BOARDING',
-      timer: 14.0,
+      passengers,
+      passengerPeds: [],
+      phase: 'ALIGHTING',
+      timer: 5.5,
       position: stopPos.clone(),
-      targetRoadX: -2.4,
+      targetRoadX: 2.4, // offset to reach Broad St road lane x = -2.4 (-4.8 + 2.4 = -2.4)
       busSpeed: 0,
       indicatorBlinker: blinker,
-      brakeLights: danfoData.brakeLights,
+      brakeLights: [],
     };
   }
 
@@ -456,6 +537,25 @@ export class TrafficSystem {
 
     const isDanfo = type === 'DANFO';
     const isSuv = type === 'SUV';
+
+    if (isDanfo) {
+      const danfoProp = LagosProps.createDanfoMinibus(0, 0, 0, {
+        withDoorCutout: true,
+        withConductorStep: true,
+      });
+      bodyRoot.add(danfoProp.mesh);
+
+      danfoProp.mesh.traverse(n => {
+        if (n instanceof THREE.Mesh && n.material) {
+          const mats = Array.isArray(n.material) ? n.material : [n.material];
+          mats.forEach(m => {
+            if (!materials.includes(m)) materials.push(m);
+          });
+        }
+      });
+
+      return { group: vGroup, bodyRoot, wheels, brakeLights, materials };
+    }
 
     const mainMat = new THREE.MeshStandardMaterial({
       color,
@@ -646,9 +746,85 @@ export class TrafficSystem {
         v.conductorPed.update(dt, false, 0, true);
       }
 
-      // Pedestrian & Player Detection Cone (8m lookahead, 2.2m lateral tolerance)
-      let shouldYield = false;
       const forward = v.direction;
+
+      // 1. Vehicle-to-Vehicle Collision Avoidance (Following distance & intersection priority)
+      let vehicleAheadDist = 999;
+      let leadSpeed = 0;
+      let shouldBrakeForVehicle = false;
+
+      // Check other moving vehicles in the same lane ahead
+      for (const other of this.vehicles) {
+        if (other === v) continue;
+        const dx = other.position.x - v.position.x;
+        const dz = other.position.z - v.position.z;
+        const fwdDist = dx * forward.x + dz * forward.z;
+        const latDist = Math.abs(-dx * forward.z + dz * forward.x);
+
+        if (fwdDist > 0.4 && fwdDist < 14.0 && latDist < 2.4) {
+          shouldBrakeForVehicle = true;
+          if (fwdDist < vehicleAheadDist) {
+            vehicleAheadDist = fwdDist;
+            leadSpeed = other.speed;
+          }
+        }
+      }
+
+      // Check Bus Stop Danfo (southbound Broad Street lane at x = -2.4)
+      if (v.laneId === 'broad_south' && this.busStopState) {
+        const busWorldPos = this.busStopState.position.clone().add(this.busStopState.busGroup.position);
+        const dx = busWorldPos.x - v.position.x;
+        const dz = busWorldPos.z - v.position.z;
+        const fwdDist = dz; // heading +Z
+        if (Math.abs(dx) < 2.4 && fwdDist > 0.4 && fwdDist < 14.0) {
+          shouldBrakeForVehicle = true;
+          if (fwdDist < vehicleAheadDist) {
+            vehicleAheadDist = fwdDist;
+            leadSpeed = this.busStopState.busSpeed;
+          }
+        }
+      }
+
+      // Intersection Collision Arbitration (Broad Street x Marina Junction)
+      // Intersection zone: X [-5.0, 5.0], Z [20.0, 32.0]
+      const isInIntersection = (pos: THREE.Vector3) =>
+        pos.x >= -5.0 && pos.x <= 5.0 && pos.z >= 20.0 && pos.z <= 32.0;
+
+      const vInIntersection = isInIntersection(v.position);
+
+      const anyOtherInIntersection = this.vehicles.some(
+        other => other !== v && isInIntersection(other.position)
+      );
+
+      const isApproachingIntersection =
+        (v.laneId === 'broad_south' && v.position.z >= 10.0 && v.position.z < 20.0) ||
+        (v.laneId === 'broad_north' && v.position.z <= 40.0 && v.position.z > 32.0) ||
+        (v.laneId === 'marina_east' && v.position.x >= -16.0 && v.position.x < -5.0) ||
+        (v.laneId === 'marina_west' && v.position.x <= 16.0 && v.position.x > 5.0);
+
+      if (isApproachingIntersection && !vInIntersection) {
+        if (anyOtherInIntersection) {
+          // Intersection is occupied - hold before entering!
+          shouldBrakeForVehicle = true;
+          vehicleAheadDist = Math.min(vehicleAheadDist, 4.0);
+          leadSpeed = 0;
+        } else if (v.laneId === 'broad_south' || v.laneId === 'broad_north') {
+          // Broad Street yields to Marina Expressway traffic approaching within 18m
+          const marinaApproaching = this.vehicles.some(
+            m =>
+              (m.laneId === 'marina_east' && m.position.x >= -20.0 && m.position.x < 5.0) ||
+              (m.laneId === 'marina_west' && m.position.x <= 20.0 && m.position.x > -5.0)
+          );
+          if (marinaApproaching) {
+            shouldBrakeForVehicle = true;
+            vehicleAheadDist = Math.min(vehicleAheadDist, 4.0);
+            leadSpeed = 0;
+          }
+        }
+      }
+
+      // 2. Pedestrian & Player Detection Cone (8m lookahead, 2.2m lateral tolerance)
+      let shouldYield = false;
 
       const checkPerson = (px: number, pz: number) => {
         const dx = px - v.position.x;
@@ -675,10 +851,14 @@ export class TrafficSystem {
         }
       }
 
-      // Physics: Deceleration / Acceleration
-      if (shouldYield) {
+      // 3. Physics: Deceleration / Acceleration
+      if (shouldYield || shouldBrakeForVehicle) {
         v.isYielding = true;
-        v.speed = Math.max(0, v.speed - 9.0 * dt);
+        if (shouldYield || vehicleAheadDist < 5.5) {
+          v.speed = Math.max(0, v.speed - 12.0 * dt);
+        } else {
+          v.speed = Math.max(0, Math.min(leadSpeed, v.speed - 5.5 * dt));
+        }
         v.brakeLights.forEach(bl => {
           if (bl.material instanceof THREE.MeshStandardMaterial) {
             bl.material.color.setHex(0xff0000);
@@ -727,10 +907,16 @@ export class TrafficSystem {
       else if (v.direction.x < 0 && v.position.x < v.endPos.x) reset = true;
 
       if (reset) {
-        v.position.copy(v.startPos);
-        const types: TrafficVehicleType[] = ['DANFO', 'SUV', 'SEDAN', 'SPORTS'];
-        v.type = types[(idx + Math.floor(Math.random() * 4)) % types.length]!;
-        this.loadRealisticModel(v);
+        // Safe Respawn Clearance: Only respawn if start position area is clear (> 18m from any car)
+        const laneBlocked = this.vehicles.some(
+          other => other !== v && other.laneId === v.laneId && other.position.distanceTo(v.startPos) < 18.0
+        );
+        if (!laneBlocked) {
+          v.position.copy(v.startPos);
+          const types: TrafficVehicleType[] = ['DANFO', 'SUV', 'SEDAN', 'SPORTS'];
+          v.type = types[(idx + Math.floor(Math.random() * 4)) % types.length]!;
+          this.loadRealisticModel(v);
+        }
       }
 
       v.group.position.copy(v.position);
@@ -751,34 +937,74 @@ export class TrafficSystem {
 
   /**
    * Drives the continuous Lagos Danfo bus stop life-cycle:
-   * 1. BOARDING: Commuters walk into the parked Danfo while conductor calls out.
-   * 2. DEPARTING: Danfo signals left, merges into active traffic lane, drives off south.
-   * 3. APPROACHING: Next incoming Danfo slows with brake lights, signals right, pulls in and parks.
+   * 1. ALIGHTING: Commuters step down from van onto sidewalk and walk away.
+   * 2. BOARDING: Waiting commuters on sidewalk walk into van while conductor calls out.
+   * 3. DEPARTING: Danfo signals left, merges into active traffic lane, drives off south.
+   * 4. APPROACHING: Next incoming Danfo slows with brake lights, signals right, pulls in and parks.
+   * ALL commuters stay strictly on the sidewalk (x <= -5.88). NEVER in the road!
    */
   private updateDanfoBusStopCycle(dt: number): void {
     const s = this.busStopState!;
     s.timer -= dt;
 
+    // Animate Conductor (Mixamo skeletal breathing & calling out)
     if (s.conductorPed) {
       s.conductorPed.update(dt, false, 0, true);
     }
 
     const isBlinkOn = Math.sin(this.blinkerTime * 8) > 0;
 
-    if (s.phase === 'BOARDING') {
-      // Rigged passengers walk smoothly toward open door
-      s.passengerPeds.forEach(entry => {
-        if (entry.mesh.position.x > entry.targetX) {
-          entry.mesh.position.x -= 0.35 * dt;
-          entry.ped.update(dt, true, 0.8, true); // walking animation
+    if (s.phase === 'ALIGHTING') {
+      // 1. Alighting commuters step down from door onto sidewalk and walk along sidewalk
+      s.passengers.forEach(p => {
+        if (p.role === 'ALIGHTING') {
+          const toTarget = p.targetPos.clone().sub(p.currentPos);
+          const dist = toTarget.length();
+          if (dist > 0.15) {
+            const step = Math.min(dist, p.speed * dt);
+            toTarget.normalize().multiplyScalar(step);
+            p.currentPos.add(toTarget);
+            p.mesh.position.copy(p.currentPos);
+            p.mesh.rotation.y = p.directionYaw;
+            p.ped.update(dt, true, p.speed, true);
+          } else {
+            p.ped.update(dt, false, 0, true);
+          }
         } else {
-          // Boarded inside
-          entry.mesh.visible = false;
-          entry.ped.update(dt, false, 0, true);
+          // Boarding passengers stand patiently on the sidewalk shelter
+          p.ped.update(dt, false, 0, true);
         }
       });
 
-      // Indicator off, idle brake lights
+      if (s.timer <= 0) {
+        s.phase = 'BOARDING';
+        s.timer = 7.0;
+      }
+    } else if (s.phase === 'BOARDING') {
+      // 2. Boarding commuters walk along the sidewalk towards the door cutout and enter
+      s.passengers.forEach(p => {
+        if (p.role === 'BOARDING') {
+          const toDoor = p.targetPos.clone().sub(p.currentPos);
+          const dist = toDoor.length();
+          if (dist > 0.18) {
+            const step = Math.min(dist, p.speed * dt);
+            toDoor.normalize().multiplyScalar(step);
+            p.currentPos.add(toDoor);
+            p.mesh.position.copy(p.currentPos);
+            p.mesh.rotation.y = Math.atan2(toDoor.x, toDoor.z);
+            p.ped.update(dt, true, p.speed, true);
+          } else {
+            // Boarded inside the van
+            p.mesh.visible = false;
+            p.ped.update(dt, false, 0, true);
+          }
+        } else {
+          // Alighting commuters continue walking or idle in distance
+          p.ped.update(dt, false, 0, true);
+        }
+      });
+
+      // Indicator off during boarding
       if (s.indicatorBlinker.material instanceof THREE.MeshBasicMaterial) {
         s.indicatorBlinker.material.color.setHex(0x332000);
       }
@@ -798,7 +1024,7 @@ export class TrafficSystem {
       s.busSpeed = Math.min(6.5, s.busSpeed + 3.0 * dt);
       s.busGroup.position.z += s.busSpeed * dt;
 
-      if (s.busGroup.position.x < 2.4) {
+      if (s.busGroup.position.x < s.targetRoadX) {
         s.busGroup.position.x += 1.2 * dt;
         s.busGroup.rotation.y = 0.12;
       } else {
@@ -808,14 +1034,15 @@ export class TrafficSystem {
       if (s.timer <= 0) {
         s.phase = 'APPROACHING';
         s.timer = 8.0;
-        s.busGroup.position.set(2.4, 0, -28);
+        s.busGroup.position.set(s.targetRoadX, 0, -28);
         s.busGroup.rotation.y = 0;
         s.busSpeed = 5.5;
 
-        // Reset waiting passengers on the curb
-        s.passengerPeds.forEach(entry => {
-          entry.mesh.visible = true;
-          entry.mesh.position.x = entry.initialX;
+        // Reset waiting and alighting passengers for the next cycle
+        s.passengers.forEach(p => {
+          p.currentPos.copy(p.startPos);
+          p.mesh.position.copy(p.currentPos);
+          p.mesh.visible = true;
         });
       }
     } else if (s.phase === 'APPROACHING') {
@@ -839,8 +1066,8 @@ export class TrafficSystem {
       if (s.busGroup.position.z >= 0 || s.timer <= 0) {
         s.busGroup.position.set(0, 0, 0);
         s.busGroup.rotation.y = 0;
-        s.phase = 'BOARDING';
-        s.timer = 14.0;
+        s.phase = 'ALIGHTING';
+        s.timer = 5.5;
       }
     }
   }
