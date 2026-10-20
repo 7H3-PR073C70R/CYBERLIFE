@@ -319,11 +319,13 @@ export class WorldCameraController {
   }
 
   private applyModeVisibility(): void {
+    const isFirstPerson = this.mode === 'FIRST_PERSON';
+    this.avatar.setFirstPerson(isFirstPerson);
     if (this.stateMachine.isWorkstationActive()) {
       this.avatar.setVisible(this.stateMachine.getExplorationMode() === 'THIRD_PERSON');
     } else {
-      // Hide avatar in 1st person exploration so camera does not clip inside player head
-      this.avatar.setVisible(this.mode === 'THIRD_PERSON');
+      // Show model in both camera modes (in first person, head & torso are hidden internally)
+      this.avatar.setVisible(true);
     }
   }
 

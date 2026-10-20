@@ -23,6 +23,16 @@ This log documents all 3D models, textures, audio, and visual assets shipped wit
 
 ---
 
+## Shipped Rigged Character Models & Animations (`public/assets/characters/`)
+
+| Asset Name | Local File Path | Author / Source | Source URL | License | Acquisition Date | Notes / Modifications |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Player Male Character** | `public/assets/characters/player_male.glb` | Adobe Mixamo | https://www.mixamo.com | Adobe Mixamo, free for use in projects; raw assets not redistributed | 2026-10-20 | Normalized bone hierarchy to `mixamorig:`, MeshStandardMaterial PBR, 2048 WebP textures, simplified under 40k triangles, meshopt compressed |
+| **Player Female Character** | `public/assets/characters/player_female.glb` | Adobe Mixamo | https://www.mixamo.com | Adobe Mixamo, free for use in projects; raw assets not redistributed | 2026-10-20 | Normalized bone hierarchy to `mixamorig:`, MeshStandardMaterial PBR, 2048 WebP textures, hair/eyelash MASK depth-tested, simplified under 40k triangles, meshopt compressed |
+| **Player Character Animations** | `public/assets/characters/animations.glb` | Adobe Mixamo | https://www.mixamo.com | Adobe Mixamo, free for use in projects; raw assets not redistributed | 2026-10-20 | Merged 7 clips (Idle, Walk, Run, SitIdle, Typing, StandToSit, SitToStand); root motion stripped from Walk and Run; hip height/offsets preserved for seated clips; resampled and meshopt compressed |
+
+---
+
 ## Shipped PBR Textures (`public/assets/environment/textures/`)
 
 | Texture Name | Local Directory | Source | Source URL | License | Resolution | Maps Included |

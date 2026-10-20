@@ -52,13 +52,15 @@ describe('WorldCameraController', () => {
     expect(modeController.getMode()).toBe('FIRST_PERSON');
     expect(handleMode).toHaveBeenCalledWith('FIRST_PERSON');
 
-    // Avatar must be hidden in 1st person to prevent camera clipping inside player head
-    expect(avatar.isVisible()).toBe(false);
+    // Avatar is shown in both modes, with first-person head/torso masking active
+    expect(avatar.isVisible()).toBe(true);
+    expect(avatar.getIsFirstPerson()).toBe(true);
 
     // Toggle back to 3rd person
     const backMode = modeController.toggleMode();
     expect(backMode).toBe('THIRD_PERSON');
     expect(avatar.isVisible()).toBe(true);
+    expect(avatar.getIsFirstPerson()).toBe(false);
 
     modeController.dispose();
   });

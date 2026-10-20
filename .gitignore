@@ -68,5 +68,6 @@ Thumbs.db
 .stylelintcache
 *.tsbuildinfo
 
-# Raw / Incoming Assets (Pre-optimization)
+# Raw / Incoming Assets (Pre-optimization) & Scratch Build Tools
 assets_incoming/
+scratch/

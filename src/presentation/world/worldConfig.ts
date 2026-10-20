@@ -1,5 +1,20 @@
 export type CameraMode = 'FIRST_PERSON' | 'THIRD_PERSON';
 
+export type PlayerCharacterGender = 'male' | 'female';
+
+function getInitialPlayerCharacter(): PlayerCharacterGender {
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    const param = params.get('character') || params.get('gender');
+    if (param === 'female' || param === 'male') {
+      return param;
+    }
+  }
+  return 'male';
+}
+
+export const PLAYER_CHARACTER: PlayerCharacterGender = getInitialPlayerCharacter();
+
 export interface LocationDefinition {
   id: string;
   name: string;

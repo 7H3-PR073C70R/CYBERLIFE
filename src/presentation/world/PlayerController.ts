@@ -94,11 +94,20 @@ export class PlayerController {
       return;
     }
 
-    // Movement keys
+    // Movement keys & Sprint
     if (
-      ['KeyW', 'ArrowUp', 'KeyS', 'ArrowDown', 'KeyA', 'ArrowLeft', 'KeyD', 'ArrowRight'].includes(
-        code
-      )
+      [
+        'KeyW',
+        'ArrowUp',
+        'KeyS',
+        'ArrowDown',
+        'KeyA',
+        'ArrowLeft',
+        'KeyD',
+        'ArrowRight',
+        'ShiftLeft',
+        'ShiftRight',
+      ].includes(code)
     ) {
       this.keysPressed.add(code);
     }
@@ -200,8 +209,12 @@ export class PlayerController {
     const sinYaw = Math.sin(cameraYaw);
     const cosYaw = Math.cos(cameraYaw);
 
-    const worldDx = (normRight * cosYaw - normForward * sinYaw) * this.walkSpeed * dt;
-    const worldDz = (-normRight * sinYaw - normForward * cosYaw) * this.walkSpeed * dt;
+    const isSprinting = this.keysPressed.has('ShiftLeft') || this.keysPressed.has('ShiftRight');
+    const speedMultiplier = isSprinting ? 1.6 : 1.0;
+    const currentSpeed = this.walkSpeed * speedMultiplier;
+
+    const worldDx = (normRight * cosYaw - normForward * sinYaw) * currentSpeed * dt;
+    const worldDz = (-normRight * sinYaw - normForward * cosYaw) * currentSpeed * dt;
 
     // 3. Resolve collision against obstacles & boundaries (with wall-sliding)
     const result = this.collisionWorld.resolveMovement(
@@ -224,8 +237,8 @@ export class PlayerController {
       this.setYaw(moveAngle);
     }
 
-    // 5. Update avatar walking animation
-    this.avatar.update(dt, true, 1.0);
+    // 5. Update avatar walking/running animation
+    this.avatar.update(dt, true, speedMultiplier);
   }
 
   public dispose(): void {

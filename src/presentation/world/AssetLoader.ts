@@ -23,6 +23,8 @@ export class AssetLoader {
     return AssetLoader.instance;
   }
 
+  private gltfFullCache = new Map<string, Promise<GLTF>>();
+
   /**
    * Loads a GLB/GLTF asset with caching. Clones the scene on return
    * so separate instances do not mutate shared transforms or hierarchies.
@@ -44,6 +46,32 @@ export class AssetLoader {
 
     const baseScene = await this.gltfCache.get(url)!;
     return SkeletonUtils.clone(baseScene) as THREE.Group;
+  }
+
+  /**
+   * Loads a GLB/GLTF asset including both scene and animation clips with caching.
+   * Clones the scene with SkeletonUtils.clone so separate instances do not mutate shared hierarchies.
+   */
+  public async loadGLTFWithAnimations(
+    url: string
+  ): Promise<{ scene: THREE.Group; animations: THREE.AnimationClip[] }> {
+    if (!this.gltfFullCache.has(url)) {
+      const loadPromise = new Promise<GLTF>((resolve, reject) => {
+        this.gltfLoader.load(
+          url,
+          (gltf: GLTF) => resolve(gltf),
+          undefined,
+          (err: unknown) => reject(err)
+        );
+      });
+      this.gltfFullCache.set(url, loadPromise);
+    }
+
+    const gltf = await this.gltfFullCache.get(url)!;
+    return {
+      scene: SkeletonUtils.clone(gltf.scene) as THREE.Group,
+      animations: gltf.animations ? [...gltf.animations] : [],
+    };
   }
 
   /**
@@ -72,6 +100,7 @@ export class AssetLoader {
    */
   public clearCache(): void {
     this.gltfCache.clear();
+    this.gltfFullCache.clear();
     this.textureCache.clear();
   }
 }
