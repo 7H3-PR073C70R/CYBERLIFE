@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { HumanoidCharacter, HumanoidPalette } from './HumanoidCharacter';
+import { HumanoidCharacter } from './HumanoidCharacter';
 import { RiggedPedestrian, PedestrianBodyType } from './RiggedPedestrian';
 
 export interface PedestrianWaypoint {
@@ -99,67 +99,57 @@ export interface PedestrianAgent {
   archetype: PedestrianArchetype;
 }
 
-const NPC_PALETTES: HumanoidPalette[] = [
-  // 1. Lagos Tech Entrepreneur
-  {
-    skin: 0x4d2d1d,
-    hair: 0x111111,
-    jacket: 0x0284c7,
-    jacketTrim: 0xf8fafc,
-    pants: 0x1e293b,
-    shoes: 0xffffff,
-    accent: 0x38bdf8,
-  },
-  // 2. Marina Corporate Professional
-  {
-    skin: 0x6e4732,
-    hair: 0x1c1917,
-    jacket: 0x065f46,
-    jacketTrim: 0xf59e0b,
-    pants: 0x0f172a,
-    shoes: 0x78350f,
-    accent: 0x10b981,
-  },
-  // 3. Balogun Market Merchant
-  {
-    skin: 0x543220,
-    hair: 0x0f0f0f,
-    jacket: 0x4338ca,
-    jacketTrim: 0xf43f5e,
-    pants: 0x312e81,
-    shoes: 0xe2e8f0,
-    accent: 0xec4899,
-  },
-  // 4. Broad Street Cyber Researcher
-  {
-    skin: 0x3d2012,
-    hair: 0x18181b,
-    jacket: 0xd97706,
-    jacketTrim: 0x00e5ff,
-    pants: 0x18181b,
-    shoes: 0xffffff,
-    accent: 0xfbbf24,
-  },
-  // 5. Marina Waterfront Commuter
-  {
-    skin: 0x5c3826,
-    hair: 0x09090b,
-    jacket: 0x475569,
-    jacketTrim: 0x38bdf8,
-    pants: 0x1e293b,
-    shoes: 0x0f172a,
-    accent: 0x0284c7,
-  },
-  // 6. Tinubu Square Tech Specialist
-  {
-    skin: 0x5a3825,
-    hair: 0x141414,
-    jacket: 0x7c3aed,
-    jacketTrim: 0x22d3ee,
-    pants: 0x1e1b4b,
-    shoes: 0xf8fafc,
-    accent: 0xa855f7,
-  },
+import { CharacterPalette } from './CharacterCustomizer';
+
+const NPC_PALETTES: CharacterPalette[] = [
+  // 0. Tunde - Lagos Tech Entrepreneur (Warm Cocoa + Cyan/Royal Blue)
+  { skin: 0x5c3826, jacket: 0x0284c7, pants: 0x1e293b, shoes: 0xf8fafc, hair: 0x111111 },
+  // 1. Ngozi - Marina Corporate Professional (Deep Bronze + Emerald Green)
+  { skin: 0x6e4732, jacket: 0x065f46, pants: 0x0f172a, shoes: 0x78350f, hair: 0x1c1917 },
+  // 2. Emeka - Balogun Market Merchant (Warm Mahogany + Ankara Indigo)
+  { skin: 0x543220, jacket: 0x4338ca, pants: 0x312e81, shoes: 0x451a03, hair: 0x0f0f0f },
+  // 3. Amina - Broad Street Cyber Researcher (Deep Ebony + Sunset Terracotta)
+  { skin: 0x3a2012, jacket: 0xd97706, pants: 0x18181b, shoes: 0xf8fafc, hair: 0x18181b },
+  // 4. Babajide - Marina Waterfront Commuter (Dark Espresso + Slate Grey)
+  { skin: 0x442616, jacket: 0x334155, pants: 0x1e293b, shoes: 0x09090b, hair: 0x09090b },
+  // 5. Folashade - Tinubu Square Tech Specialist (Golden Bronze + Regal Purple)
+  { skin: 0x7a4d33, jacket: 0x7c3aed, pants: 0x1e1b4b, shoes: 0xf8fafc, hair: 0x141414 },
+  // 6. Chidi - Balogun Electronics Trader (Rich Dark Chocolate + Crisp White)
+  { skin: 0x4d2d1d, jacket: 0xf8fafc, pants: 0x1e293b, shoes: 0x451a03, hair: 0x111111 },
+  // 7. Zainab - Marina Financial Analyst (Warm Caramel + Deep Ocean Teal)
+  { skin: 0x88563a, jacket: 0x0f766e, pants: 0x0f172a, shoes: 0x09090b, hair: 0x1c1917 },
+  // 8. Olumide - Cedarline Security Systems Lead (Deep Umber + Corporate Navy)
+  { skin: 0x4a2a1a, jacket: 0x0369a1, pants: 0x18181b, shoes: 0x18181b, hair: 0x111111 },
+  // 9. Halima - Lagos State Urban Planner (Warm Pecan + Danfo Saffron Yellow)
+  { skin: 0xaa704c, jacket: 0xfacc15, pants: 0x1e293b, shoes: 0x78350f, hair: 0x18181b },
+  // 10. Kunle - Broad Street Creative Director (Warm Chestnut + Deep Crimson)
+  { skin: 0x663c28, jacket: 0x991b1b, pants: 0x334155, shoes: 0x451a03, hair: 0x09090b },
+  // 11. Blessing - Idumota Logistics Coordinator (Rich Amber Honey + Mint Emerald)
+  { skin: 0x9c6140, jacket: 0x10b981, pants: 0x1e1b4b, shoes: 0xf8fafc, hair: 0x17120e },
+  // 12. Dayo - Marina Ferry Transit Officer (Deep Ebony + Crisp Light Ecru)
+  { skin: 0x3a2012, jacket: 0xf1f5f9, pants: 0x1e293b, shoes: 0x09090b, hair: 0x111111 },
+  // 13. Funke - Fintech Systems Architect (Golden Sand + Royal Violet)
+  { skin: 0xb87d58, jacket: 0x6d28d9, pants: 0x0f172a, shoes: 0x78350f, hair: 0x1c1917 },
+  // 14. Femi - Balogun Hardware Specialist (Warm Cocoa + Ochre Gold)
+  { skin: 0x5c3826, jacket: 0xb45309, pants: 0x18181b, shoes: 0x451a03, hair: 0x111111 },
+  // 15. Yetunde - Telecoms Network Engineer (Warm Mahogany + Coral Rose)
+  { skin: 0x543220, jacket: 0xe11d48, pants: 0x334155, shoes: 0xf8fafc, hair: 0x18181b },
+  // 16. Seyi - Green Energy Infrastructure Consultant (Dark Espresso + Lagos Green)
+  { skin: 0x442616, jacket: 0x15803d, pants: 0x1e293b, shoes: 0x92400e, hair: 0x0a0a0a },
+  // 17. Aisha - Cyber Forensics Investigator (Light Honey Caramel + Obsidian Slate)
+  { skin: 0xc48b66, jacket: 0x1e293b, pants: 0x1e1b4b, shoes: 0x09090b, hair: 0x1c1917 },
+  // 18. Kayode - Eko Maritime Logistics Manager (Golden Bronze + Ruby Wine)
+  { skin: 0x7a4d33, jacket: 0xbe123c, pants: 0x18181b, shoes: 0x451a03, hair: 0x111111 },
+  // 19. Ronke - Broad Street Commercial Attorney (Warm Caramel + Cedarline Royal Blue)
+  { skin: 0x88563a, jacket: 0x0284c7, pants: 0x0f172a, shoes: 0x78350f, hair: 0x141414 },
+  // 20. Uche - Balogun Textile Wholesaler (Rich Dark Chocolate + Vibrant Terracotta)
+  { skin: 0x4d2d1d, jacket: 0xd97706, pants: 0x334155, shoes: 0x92400e, hair: 0x111111 },
+  // 21. Hadiza - Tinubu Cultural Heritage Curator (Warm Pecan + Ankara Indigo)
+  { skin: 0xaa704c, jacket: 0x4338ca, pants: 0x1e1b4b, shoes: 0xf8fafc, hair: 0x18181b },
+  // 22. Segun - Solar Grid Installation Supervisor (Deep Dark Ebony + Danfo Yellow)
+  { skin: 0x3a2012, jacket: 0xfacc15, pants: 0x1e293b, shoes: 0x451a03, hair: 0x111111 },
+  // 23. Bisi - Digital Identity Compliance Officer (Deep Bronze + Deep Ocean Teal)
+  { skin: 0x6e4732, jacket: 0x0f766e, pants: 0x18181b, shoes: 0x09090b, hair: 0x141414 },
 ];
 
 export class PedestrianSystem {
@@ -507,9 +497,10 @@ export class PedestrianSystem {
       const speedVariation = 0.92 + Math.random() * 0.16; // +/- 8%
       const baseSpeed = 1.15 + (idx % 3) * 0.15; // 1.15 to 1.45 m/s
 
-      // Create rigged pedestrian instance
+      // Create rigged pedestrian instance with unique Nigerian skin tone & clothing palette
       const rigged = new RiggedPedestrian({
         bodyType: archetype.bodyType,
+        palette,
         randomScale,
         speedVariation,
       });

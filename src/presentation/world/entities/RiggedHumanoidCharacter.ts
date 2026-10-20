@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { AssetLoader } from '../AssetLoader';
 import { PlayerCharacterGender, PLAYER_CHARACTER } from '../worldConfig';
+import { CharacterPalette, applyCharacterCustomization } from './CharacterCustomizer';
 
 export type RiggedAnimationState =
   | 'IDLE'
@@ -45,10 +46,21 @@ export class RiggedHumanoidCharacter {
 
   // Configuration
   private gender: PlayerCharacterGender;
+  private palette: CharacterPalette;
   private isLoaded = false;
 
-  constructor(gender: PlayerCharacterGender = PLAYER_CHARACTER) {
+  constructor(
+    gender: PlayerCharacterGender = PLAYER_CHARACTER,
+    palette?: CharacterPalette
+  ) {
     this.gender = gender;
+    this.palette = palette ?? {
+      skin: 0x5c3826, // Warm cocoa Nigerian melanin
+      jacket: 0x0284c7, // Royal Blue
+      pants: 0x1e293b, // Dark denim
+      shoes: 0xffffff, // White sneakers
+      hair: 0x111111,
+    };
     this.group = new THREE.Group();
     this.group.name = `RiggedHumanoidCharacter_${gender}`;
   }
@@ -138,6 +150,9 @@ export class RiggedHumanoidCharacter {
         }
       }
     });
+
+    // Apply authentic Nigerian skin tone & clothing customization
+    applyCharacterCustomization(this.modelRoot, this.palette);
 
     // 4. Set up AnimationMixer and animation actions
     this.mixer = new THREE.AnimationMixer(this.modelRoot);

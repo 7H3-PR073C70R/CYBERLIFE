@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { HumanoidCharacter } from './HumanoidCharacter';
+import { RiggedNpcCharacter } from './RiggedNpcCharacter';
 import { InteractableMarker } from './InteractableMarker';
 import { InteractionRegistry } from '../InteractionRegistry';
 import { CollisionWorld } from '../CollisionWorld';
@@ -9,7 +10,9 @@ import { NpcProfile, NpcScheduleEntry } from '@/simulation/actors/types';
 
 export interface ActiveNpcInstance {
   readonly profile: NpcProfile;
-  readonly character: HumanoidCharacter;
+  character: HumanoidCharacter | RiggedNpcCharacter;
+  riggedCharacter: RiggedNpcCharacter | null;
+  fallbackCharacter: HumanoidCharacter | null;
   readonly marker: InteractableMarker;
   readonly schedule: NpcScheduleEntry;
   targetYaw: number;
@@ -49,9 +52,10 @@ export class NpcManager {
         continue;
       }
 
-      const character = new HumanoidCharacter(profile.palette);
-      character.setPosition(schedule.position[0], schedule.position[1], schedule.position[2]);
-      character.setRotation(schedule.yaw);
+      // Procedural fallback character displayed immediately while rigged model loads
+      const fallbackCharacter = new HumanoidCharacter(profile.palette);
+      fallbackCharacter.setPosition(schedule.position[0], schedule.position[1], schedule.position[2]);
+      fallbackCharacter.setRotation(schedule.yaw);
 
       // Add character collision obstacle to prevent player walking through NPCs
       const [px, , pz] = schedule.position;
@@ -82,18 +86,52 @@ export class NpcManager {
         radius: 2.6,
       });
 
-      this.group.add(character.getMesh());
+      this.group.add(fallbackCharacter.getMesh());
       this.group.add(marker.getMesh());
 
-      this.npcs.set(profile.id, {
+      // Rigged NPC character instance
+      const riggedCharacter = new RiggedNpcCharacter(profile, schedule);
+
+      const instance: ActiveNpcInstance = {
         profile,
-        character,
+        character: fallbackCharacter,
+        riggedCharacter,
+        fallbackCharacter,
         marker,
         schedule,
         targetYaw: schedule.yaw,
         currentYaw: schedule.yaw,
         isInDialogue: false,
-      });
+      };
+
+      this.npcs.set(profile.id, instance);
+
+      // Asynchronously load rigged model and hot-swap
+      this.loadRiggedNpc(instance, riggedCharacter);
+    }
+  }
+
+  private async loadRiggedNpc(
+    instance: ActiveNpcInstance,
+    rigged: RiggedNpcCharacter
+  ): Promise<void> {
+    try {
+      await rigged.load();
+      if (instance.fallbackCharacter) {
+        this.group.remove(instance.fallbackCharacter.getMesh());
+        instance.fallbackCharacter.dispose();
+        instance.fallbackCharacter = null;
+      }
+      instance.character = rigged;
+      this.group.add(rigged.getMesh());
+      rigged.setRotation(instance.currentYaw);
+    } catch (err) {
+      console.warn(
+        `NpcManager: Failed to load rigged model for ${instance.profile.name}, continuing with procedural character fallback.`,
+        err
+      );
+      instance.riggedCharacter = null;
+      instance.character = instance.fallbackCharacter!;
     }
   }
 
@@ -118,6 +156,9 @@ export class NpcManager {
           const dx = playerPosition.x - instance.schedule.position[0];
           const dz = playerPosition.z - instance.schedule.position[2];
           instance.targetYaw = Math.atan2(dx, dz);
+        }
+        if (instance.riggedCharacter && instance.schedule.animationState !== 'SEATED_IDLE') {
+          instance.riggedCharacter.playAnimation('Idle');
         }
       } else {
         instance.isInDialogue = false;
@@ -149,7 +190,7 @@ export class NpcManager {
         instance.targetYaw = Math.atan2(dx, dz);
       }
 
-      // Procedural breathing idle animation
+      // Update character animation
       instance.character.update(deltaTime, false);
     });
   }
@@ -160,7 +201,8 @@ export class NpcManager {
 
   public clear(): void {
     this.npcs.forEach(instance => {
-      instance.character.dispose();
+      if (instance.riggedCharacter) instance.riggedCharacter.dispose();
+      if (instance.fallbackCharacter) instance.fallbackCharacter.dispose();
       instance.marker.dispose();
       this.interactionRegistry.unregister(`interact_${instance.profile.id}`);
     });

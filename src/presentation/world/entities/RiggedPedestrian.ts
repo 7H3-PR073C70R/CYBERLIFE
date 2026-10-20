@@ -1,10 +1,12 @@
 import * as THREE from 'three';
 import { AssetLoader } from '../AssetLoader';
+import { CharacterPalette, applyCharacterCustomization } from './CharacterCustomizer';
 
 export type PedestrianBodyType = 'male_1' | 'male_2' | 'female_1' | 'female_2';
 
 export interface RiggedPedestrianOptions {
   bodyType: PedestrianBodyType;
+  palette?: CharacterPalette;
   randomScale?: number; // 0.95 to 1.05
   speedVariation?: number; // +/- 0.08
 }
@@ -18,6 +20,7 @@ export class RiggedPedestrian {
   private isMoving = false;
 
   private bodyType: PedestrianBodyType;
+  private palette?: CharacterPalette;
   private randomScale: number;
   private speedVariation: number;
   private isLoaded = false;
@@ -25,6 +28,7 @@ export class RiggedPedestrian {
 
   constructor(options: RiggedPedestrianOptions) {
     this.bodyType = options.bodyType;
+    this.palette = options.palette;
     this.randomScale = options.randomScale ?? (0.95 + Math.random() * 0.1);
     this.speedVariation = options.speedVariation ?? (0.92 + Math.random() * 0.16);
 
@@ -99,6 +103,11 @@ export class RiggedPedestrian {
         }
       }
     });
+
+    // Apply authentic Nigerian skin tone & clothing customization
+    if (this.palette) {
+      applyCharacterCustomization(this.modelRoot, this.palette);
+    }
 
     // Setup AnimationMixer with Idle and Walk
     this.mixer = new THREE.AnimationMixer(this.modelRoot);
