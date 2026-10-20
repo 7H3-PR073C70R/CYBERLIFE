@@ -20,14 +20,17 @@ import {
 } from '../../../simulation/cyber/social/types';
 
 export const SocialPretextApp: React.FC = () => {
+  const initialParams =
+    typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const initialScenId =
+    initialParams?.get('pretextScenario') || SOCIAL_PRETEXT_SCENARIOS[0]!.id;
+
   const [engine] = useState(() => new SocialPretextEngine());
   const scenarios = useMemo(() => engine.getAllScenarios(), [engine]);
 
-  const [selectedScenarioId, setSelectedScenarioId] = useState<string>(
-    SOCIAL_PRETEXT_SCENARIOS[0]!.id
-  );
+  const [selectedScenarioId, setSelectedScenarioId] = useState<string>(initialScenId);
   const [activeSession, setActiveSession] = useState(() =>
-    engine.startEncounter(SOCIAL_PRETEXT_SCENARIOS[0]!.id)
+    engine.startEncounter(initialScenId)
   );
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 

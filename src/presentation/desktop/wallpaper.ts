@@ -73,5 +73,6 @@ export function generateWallpaperSvg(width = 1920, height = 1080): string {
 export const WALLPAPER_IMAGE_URL = '/assets/os/Orion_security_wallpaper.jpg';
 
 export function getWallpaperDataUrl(): string {
+  // If the image fails or in headless/offline tests, returns a valid URL or SVG data
   return WALLPAPER_IMAGE_URL;
 }

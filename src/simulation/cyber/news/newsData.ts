@@ -5,12 +5,12 @@ export const ALL_THREAT_ARTICLES: readonly ThreatNewsArticle[] = [
   {
     id: 'news-001',
     title:
-      'ParrotSec & Orion OS Issue West Africa Threat Advisory: Critical SMB RCE (CVE-2026-445)',
+      'Orion OS Issue West Africa Threat Advisory: Critical SMB RCE (CVE-2026-445)',
     category: 'VULNERABILITY',
     severity: 'CRITICAL',
     publishedDate: 'Monday, Oct 12, 2026',
     author: 'Orion CERT Vulnerability Lab',
-    source: 'ParrotSec West Africa Dispatch',
+    source: 'Orion West Africa Dispatch',
     summary:
       'A remote code execution flaw in legacy Samba implementations allows unauthenticated tree-connect packets to trigger kernel heap overflows.',
     content: [
@@ -84,7 +84,7 @@ export const ALL_THREAT_ARTICLES: readonly ThreatNewsArticle[] = [
     severity: 'MEDIUM',
     publishedDate: 'Tuesday, Oct 13, 2026',
     author: 'Orion Threat Intelligence',
-    source: 'ParrotSec Global Intelligence',
+    source: 'Orion Global Intelligence',
     summary:
       'Adversary groups exploit session token stealing and SIM-swap proxies to circumvent traditional SMS MFA gateways.',
     content: [
@@ -119,7 +119,7 @@ export const ALL_THREAT_ARTICLES: readonly ThreatNewsArticle[] = [
   },
   {
     id: 'news-007',
-    title: 'ParrotSec Security Tool Release: Packet Lens 4.2 & Forensic Memory Dumper',
+    title: 'Orion Security Tool Release: Packet Lens 4.2 & Forensic Memory Dumper',
     category: 'DEFENSE_TOOLING',
     severity: 'INFO',
     publishedDate: 'Monday, Oct 12, 2026',

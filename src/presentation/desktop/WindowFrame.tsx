@@ -241,6 +241,9 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({
         chat: 1,
         call: 1,
         securityNews: 1,
+        exploitLab: 1,
+        webProxy: 1,
+        socialPretext: 1,
       }
       ? (windowState.icon as OsIconName)
       : undefined;

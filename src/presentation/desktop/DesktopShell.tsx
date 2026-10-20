@@ -92,8 +92,8 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
     getActiveWindowId,
   } = useWindowManager({ initialOpenApp: initialApp });
 
-  // Orientation banner
-  const [showWelcomeBanner, setShowWelcomeBanner] = useState<boolean>(true);
+  // Orientation banner (auto-dismiss when an initialApp is requested)
+  const [showWelcomeBanner, setShowWelcomeBanner] = useState<boolean>(() => !initialApp);
   const showWelcomeBannerRef = useRef(showWelcomeBanner);
   showWelcomeBannerRef.current = showWelcomeBanner;
 
@@ -414,8 +414,8 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                width: '74px',
-                padding: '4px',
+                width: '64px',
+                padding: '3px 2px',
                 background: selectedIcon === 'home' ? 'rgba(0, 229, 255, 0.15)' : 'transparent',
                 border:
                   selectedIcon === 'home'
@@ -427,9 +427,11 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)',
               }}
             >
-              <OsIcon name="home" size={32} color="#00e5ff" />
+              <div className="shortcut-icon" aria-hidden="true" style={{ width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <OsIcon name="home" size={26} color="#00e5ff" />
+              </div>
               <span
-                style={{ fontSize: '11px', marginTop: '4px', textAlign: 'center', fontWeight: 500 }}
+                style={{ fontSize: '10px', marginTop: '3px', textAlign: 'center', fontWeight: 500 }}
               >
                 Home
               </span>
@@ -452,8 +454,8 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                width: '74px',
-                padding: '4px',
+                width: '64px',
+                padding: '3px 2px',
                 background: selectedIcon === 'trash' ? 'rgba(0, 229, 255, 0.15)' : 'transparent',
                 border:
                   selectedIcon === 'trash'
@@ -465,9 +467,11 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)',
               }}
             >
-              <OsIcon name="trash" size={32} color="#94a3b8" />
+              <div className="shortcut-icon" aria-hidden="true" style={{ width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <OsIcon name="trash" size={26} color="#94a3b8" />
+              </div>
               <span
-                style={{ fontSize: '11px', marginTop: '4px', textAlign: 'center', fontWeight: 500 }}
+                style={{ fontSize: '10px', marginTop: '3px', textAlign: 'center', fontWeight: 500 }}
               >
                 Trash
               </span>
@@ -502,6 +506,9 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                     chat: 1,
                     call: 1,
                     securityNews: 1,
+                    exploitLab: 1,
+                    webProxy: 1,
+                    socialPretext: 1,
                   }
                   ? (def.icon as OsIconName)
                   : undefined;
@@ -528,8 +535,8 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    width: '74px',
-                    padding: '4px',
+                    width: '64px',
+                    padding: '3px 2px',
                     background: isSelected ? 'rgba(0, 229, 255, 0.15)' : 'transparent',
                     border: isSelected
                       ? '1px solid rgba(0, 229, 255, 0.4)'
@@ -541,17 +548,23 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                     position: 'relative',
                   }}
                 >
-                  <div className="shortcut-icon" aria-hidden="true">
-                    {iconName ? <OsIcon name={iconName} size={32} color="#00e5ff" /> : def.icon}
+                  <div className="shortcut-icon" aria-hidden="true" style={{ width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <OsIcon name={iconName || 'terminal'} size={26} color="#00e5ff" />
                   </div>
                   <div
                     className="shortcut-label"
                     style={{
-                      fontSize: '11px',
-                      marginTop: '4px',
+                      fontSize: '10px',
+                      marginTop: '3px',
                       textAlign: 'center',
                       fontWeight: 500,
-                      lineHeight: '1.2',
+                      lineHeight: '1.15',
+                      maxWidth: '62px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
                     }}
                   >
                     {def.shortTitle}

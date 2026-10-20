@@ -62,7 +62,7 @@ const Orion_SECURITY_CATEGORIES: SecuritySubCategory[] = [
       },
       {
         id: 'securityNews',
-        name: 'ParrotSec Threat Dispatch',
+        name: 'Orion Threat Dispatch',
         icon: 'securityNews',
         desc: 'Real-time threat advisories & CVE bulletins',
       },
@@ -531,7 +531,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
             {[
               {
                 id: 'securityNews',
-                title: 'ParrotSec Threat Dispatch',
+                title: 'Orion Threat Dispatch',
                 icon: 'securityNews',
                 cat: 'Intelligence',
               },

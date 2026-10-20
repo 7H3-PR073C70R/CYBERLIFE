@@ -15,7 +15,9 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:m14": "vitest run tests/unit/simulation/cyber/ExploitLabEngine.test.ts tests/unit/simulation/cyber/WebProxyEngine.test.ts tests/unit/simulation/cyber/SocialPretextEngine.test.ts tests/unit/simulation/cyber/OffensiveSecurityBoundary.test.ts tests/unit/simulation/cyber/M14Integration.test.ts",
+    "screenshots:m14": "node scripts/capture-m14-screenshots.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",

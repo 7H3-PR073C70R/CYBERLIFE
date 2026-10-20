@@ -10,10 +10,10 @@ import { createInitialSimulationState } from '@/simulation/core/initialState';
 import { SimulationState } from '@/simulation/core/types';
 
 describe('SecurityNewsApp', () => {
-  it('renders ParrotSec threat dispatch header and default articles', () => {
+  it('renders Orion threat dispatch header and default articles', () => {
     render(<SecurityNewsApp />);
     expect(screen.getByTestId('security-news-app')).toBeInTheDocument();
-    expect(screen.getByText(/PARROTSEC \/ Orion THREAT DISPATCH/i)).toBeInTheDocument();
+    expect(screen.getByText(/Orion THREAT DISPATCH/i)).toBeInTheDocument();
     expect(screen.getByText(/WEST AFRICA CERT FEED/i)).toBeInTheDocument();
     expect(screen.getByText(/Critical SMB RCE \(CVE-2026-445\)/i)).toBeInTheDocument();
   });
@@ -26,7 +26,7 @@ describe('SecurityNewsApp', () => {
     fireEvent.click(toolBtn);
 
     expect(
-      screen.getByText(/ParrotSec Security Tool Release: Packet Lens 4.2/i)
+      screen.getByText(/Orion Security Tool Release: Packet Lens 4.2/i)
     ).toBeInTheDocument();
     expect(screen.queryByText(/Critical SMB RCE \(CVE-2026-445\)/i)).not.toBeInTheDocument();
 

@@ -14,10 +14,34 @@ import { WebProxyEngine } from '../../../simulation/cyber/webproxy';
 import { ProxyHttpRequest } from '../../../simulation/cyber/webproxy/types';
 
 export const WebProxyApp: React.FC = () => {
-  const [engine] = useState(() => new WebProxyEngine());
-  const [selectedAppId, setSelectedAppId] = useState<string>('app_cedarline_portal');
-  const [selectedTxId, setSelectedTxId] = useState<string>('tx-001');
-  const [activeInspectorTab, setActiveInspectorTab] = useState<'tamper' | 'diff' | 'original' | 'scenarios'>('tamper');
+  const initialParams =
+    typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const initialTab =
+    (initialParams?.get('proxyTab') as 'tamper' | 'diff' | 'original' | 'scenarios') || 'tamper';
+  const initialTx = initialParams?.get('proxyTx') || 'tx-001';
+  const initialApp = initialParams?.get('proxyApp') || 'app_cedarline_portal';
+
+  const [engine] = useState(() => {
+    const eng = new WebProxyEngine();
+    if (initialParams?.get('proxyAuto') === '1') {
+      const orig = eng.getTransaction(initialTx);
+      if (orig) {
+        const tamperedReq = {
+          ...orig.originalRequest,
+          id: `req-replay-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          queryParams: { ...orig.originalRequest.queryParams, id: 'EMP-001' },
+          url: 'http://app-portal-01.cedarline.corp.local:8080/api/v1/employees?dept=FIN&id=EMP-001',
+        };
+        eng.replayRequest(initialTx, tamperedReq);
+      }
+    }
+    return eng;
+  });
+  const [selectedAppId, setSelectedAppId] = useState<string>(initialApp);
+  const [selectedTxId, setSelectedTxId] = useState<string>(initialTx);
+  const [activeInspectorTab, setActiveInspectorTab] =
+    useState<'tamper' | 'diff' | 'original' | 'scenarios'>(initialTab);
   const [tamperQueryParamKey, setTamperQueryParamKey] = useState<string>('id');
   const [tamperQueryParamVal, setTamperQueryParamVal] = useState<string>('EMP-001');
   const [tamperHeaderKey, setTamperHeaderKey] = useState<string>('X-User-Role');

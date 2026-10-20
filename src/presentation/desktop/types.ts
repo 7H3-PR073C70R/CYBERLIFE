@@ -222,7 +222,7 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
   },
   securityNews: {
     id: 'securityNews',
-    title: 'ParrotSec Threat Dispatch & Security News',
+    title: 'Orion Threat Dispatch & Security News',
     shortTitle: 'Security News',
     icon: 'securityNews',
     description:

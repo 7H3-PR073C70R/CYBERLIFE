@@ -126,7 +126,7 @@ export const SecurityNewsApp: React.FC<SecurityNewsAppProps> = () => {
                   color: '#38bdf8',
                 }}
               >
-                PARROTSEC / Orion THREAT DISPATCH
+                 Orion THREAT DISPATCH
               </span>
               <span
                 style={{
