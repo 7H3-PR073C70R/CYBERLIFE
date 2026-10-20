@@ -48,17 +48,31 @@ export class LagosProps {
     lowerBody.receiveShadow = true;
     group.add(lowerBody);
 
-    // 2. Twin Black Horizontal Stripes (Iconic Lagos Danfo livery)
-    const stripeMat = new THREE.MeshBasicMaterial({ color: 0x0f172a });
-    const stripeGeo = new THREE.BoxGeometry(bodyW + 0.04, 0.12, bodyL + 0.02);
+    // 2. Twin Black Horizontal Stripes (Iconic Lagos Danfo livery - flush decals on sides and rear)
+    const stripeMat = new THREE.MeshBasicMaterial({ color: 0x09090b });
+    const sideStripeGeo = new THREE.PlaneGeometry(bodyL * 0.92, 0.1);
 
-    const stripeUpper = new THREE.Mesh(stripeGeo, stripeMat);
-    stripeUpper.position.y = chassisY + 0.85;
-    group.add(stripeUpper);
+    // Left side (+X)
+    const sLeftUpper = new THREE.Mesh(sideStripeGeo, stripeMat);
+    sLeftUpper.position.set(bodyW / 2 + 0.005, chassisY + 0.85, 0);
+    sLeftUpper.rotation.y = Math.PI / 2;
+    group.add(sLeftUpper);
 
-    const stripeLower = new THREE.Mesh(stripeGeo, stripeMat);
-    stripeLower.position.y = chassisY + 0.6;
-    group.add(stripeLower);
+    const sLeftLower = new THREE.Mesh(sideStripeGeo, stripeMat);
+    sLeftLower.position.set(bodyW / 2 + 0.005, chassisY + 0.65, 0);
+    sLeftLower.rotation.y = Math.PI / 2;
+    group.add(sLeftLower);
+
+    // Right side (-X)
+    const sRightUpper = new THREE.Mesh(sideStripeGeo, stripeMat);
+    sRightUpper.position.set(-bodyW / 2 - 0.005, chassisY + 0.85, 0);
+    sRightUpper.rotation.y = -Math.PI / 2;
+    group.add(sRightUpper);
+
+    const sRightLower = new THREE.Mesh(sideStripeGeo, stripeMat);
+    sRightLower.position.set(-bodyW / 2 - 0.005, chassisY + 0.65, 0);
+    sRightLower.rotation.y = -Math.PI / 2;
+    group.add(sRightLower);
 
     // 3. Cabin & Roof (White / Light Roof common on Toyota HiAce / VW T3 Danfos)
     const roofH = 0.65;
@@ -518,7 +532,15 @@ export class LagosProps {
     y: number,
     z: number,
     rotationY: number,
-    brand: 'MTN_5G' | 'FLUTTERWAVE' | 'CYBERLIFE_OS' | 'GTCO_BANK',
+    brand:
+      | 'MTN_5G'
+      | 'FLUTTERWAVE'
+      | 'CYBERLIFE_OS'
+      | 'GTCO_BANK'
+      | 'PAYSTACK'
+      | 'OPAY'
+      | 'STARLINK'
+      | 'GOOGLE_ADMOB',
     width = 7.0,
     height = 3.6
   ): THREE.Group {
@@ -655,7 +677,7 @@ export class LagosProps {
           ctx.fillStyle = '#09090b';
           ctx.font = 'bold 26px monospace';
           ctx.fillText('PROTECT YOUR SYSTEM', 105, 425);
-        } else {
+        } else if (brand === 'GTCO_BANK') {
           // GTCO Private Banking
           ctx.fillStyle = '#111827';
           ctx.fillRect(0, 0, 1024, 512);
@@ -683,6 +705,116 @@ export class LagosProps {
           ctx.fillStyle = '#facc15';
           ctx.font = 'bold 24px sans-serif';
           ctx.fillText('SCHEDULE A CONSULTATION', 100, 416);
+        } else if (brand === 'PAYSTACK') {
+          // Paystack Modern Online Payments
+          ctx.fillStyle = '#091e42';
+          ctx.fillRect(0, 0, 1024, 512);
+
+          ctx.fillStyle = '#00c3f7';
+          ctx.fillRect(0, 0, 1024, 20);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '900 62px sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText('paystack', 80, 150);
+
+          ctx.fillStyle = '#00c3f7';
+          ctx.font = 'bold 42px sans-serif';
+          ctx.fillText('Modern Online & Offline Payments in Nigeria', 80, 230);
+
+          ctx.fillStyle = '#e2e8f0';
+          ctx.font = '28px sans-serif';
+          ctx.fillText('Cards • Bank Transfers • USSD • Apple Pay • POS Terminals', 80, 305);
+
+          ctx.fillStyle = '#00c3f7';
+          ctx.fillRect(80, 380, 330, 58);
+          ctx.fillStyle = '#091e42';
+          ctx.font = 'bold 26px sans-serif';
+          ctx.fillText('CREATE ACCOUNT →', 105, 418);
+        } else if (brand === 'OPAY') {
+          // OPay Beyond Banking
+          ctx.fillStyle = '#052e16';
+          ctx.fillRect(0, 0, 1024, 512);
+
+          ctx.fillStyle = '#00b875';
+          ctx.fillRect(0, 0, 1024, 22);
+
+          ctx.fillStyle = '#00b875';
+          ctx.font = '900 66px sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText('OPay', 80, 150);
+
+          ctx.fillStyle = '#f8fafc';
+          ctx.font = 'bold 42px sans-serif';
+          ctx.fillText('Fast, Secure & Free Money Transfers', 80, 230);
+
+          ctx.fillStyle = '#a7f3d0';
+          ctx.font = '28px sans-serif';
+          ctx.fillText('Instant debit card issuance across Lagos Island agent kiosks', 80, 305);
+
+          ctx.fillStyle = '#00b875';
+          ctx.fillRect(80, 380, 300, 58);
+          ctx.fillStyle = '#052e16';
+          ctx.font = 'bold 26px sans-serif';
+          ctx.fillText('DOWNLOAD APP', 110, 418);
+        } else if (brand === 'STARLINK') {
+          // Starlink High-Speed Satellite Internet
+          ctx.fillStyle = '#000000';
+          ctx.fillRect(0, 0, 1024, 512);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '900 70px monospace';
+          ctx.textAlign = 'left';
+          ctx.fillText('STARLINK', 80, 150);
+
+          ctx.fillStyle = '#67e8f9';
+          ctx.font = 'bold 38px sans-serif';
+          ctx.fillText('HIGH-SPEED LOW-LATENCY SATELLITE INTERNET', 80, 230);
+
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '28px sans-serif';
+          ctx.fillText('Available throughout Lagos, Marina waterfront, & nationwide Nigeria', 80, 305);
+
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 3;
+          ctx.strokeRect(80, 380, 280, 58);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 24px sans-serif';
+          ctx.fillText('ORDER KIT ONLINE', 105, 416);
+        } else {
+          // Google AdMob / Digital Advertising Monetization
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(0, 0, 1024, 512);
+
+          // Google colored top stripe
+          ctx.fillStyle = '#4285f4';
+          ctx.fillRect(0, 0, 256, 16);
+          ctx.fillStyle = '#ea4335';
+          ctx.fillRect(256, 0, 256, 16);
+          ctx.fillStyle = '#fbbc05';
+          ctx.fillRect(512, 0, 256, 16);
+          ctx.fillStyle = '#34a853';
+          ctx.fillRect(768, 0, 256, 16);
+
+          ctx.fillStyle = '#f8fafc';
+          ctx.font = '900 58px sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText('Google AdMob', 80, 140);
+
+          ctx.fillStyle = '#38bdf8';
+          ctx.font = 'bold 36px sans-serif';
+          ctx.fillText('Earn Maximum Revenue with Premium In-App & City Ads', 80, 220);
+
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '26px sans-serif';
+          ctx.fillText('Ad Space Placement Slot • Banner & Rewarded Video Enabled', 80, 290);
+          ctx.fillText('Global Demand Partners • Real-time Automated Bidding', 80, 335);
+
+          ctx.fillStyle = '#4285f4';
+          ctx.fillRect(80, 385, 340, 56);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 24px sans-serif';
+          ctx.fillText('GET STARTED WITH ADMOB', 95, 420);
         }
 
         adTexture = new THREE.CanvasTexture(canvas);
@@ -745,6 +877,173 @@ export class LagosProps {
 
     return group;
   }
+
+  /**
+   * Modern Lagos Bus Stop Shelter with overhead protective canopy, commuter seating bench,
+   * official bus route directory map, and an illuminated portrait digital ad kiosk (Google AdMob ready).
+   */
+  public static createBusShelterWithAd(
+    x: number,
+    y: number,
+    z: number,
+    rotationY: number,
+    adSlotId = 'admob_bus_shelter_danfo'
+  ): LagosPropResult {
+    const group = new THREE.Group();
+    group.name = `BusShelter_${adSlotId}`;
+    group.position.set(x, y, z);
+    group.rotation.y = rotationY;
+
+    const steelMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      metalness: 0.85,
+      roughness: 0.25,
+    });
+    const canopyMat = new THREE.MeshStandardMaterial({
+      color: 0x0284c7,
+      transparent: true,
+      opacity: 0.75,
+      roughness: 0.15,
+      metalness: 0.8,
+    });
+    const woodMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.7 });
+
+    // 1. Canopy Roof & Uprights
+    const w = 4.2;
+    const d = 1.8;
+    const h = 2.6;
+
+    // 4 Support Columns
+    [-w / 2 + 0.15, w / 2 - 0.15].forEach(cx => {
+      [-d / 2 + 0.15, d / 2 - 0.15].forEach(cz => {
+        const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, h, 8), steelMat);
+        post.position.set(cx, h / 2, cz);
+        post.castShadow = true;
+        group.add(post);
+      });
+    });
+
+    // Overhead curved canopy roof
+    const roof = new THREE.Mesh(new THREE.BoxGeometry(w + 0.4, 0.08, d + 0.4), canopyMat);
+    roof.position.set(0, h + 0.04, 0);
+    roof.castShadow = true;
+    group.add(roof);
+
+    // Rear Windscreen Glass
+    const backGlassMat = new THREE.MeshStandardMaterial({
+      color: 0x0f172a,
+      transparent: true,
+      opacity: 0.45,
+      roughness: 0.1,
+    });
+    const backGlass = new THREE.Mesh(new THREE.BoxGeometry(w - 0.3, h * 0.75, 0.04), backGlassMat);
+    backGlass.position.set(0, h * 0.55, -d / 2 + 0.15);
+    group.add(backGlass);
+
+    // 2. Commuter Bench
+    const bench = new THREE.Mesh(new THREE.BoxGeometry(w * 0.65, 0.08, 0.4), woodMat);
+    bench.position.set(0, 0.48, -d / 2 + 0.38);
+    bench.castShadow = true;
+    group.add(bench);
+
+    // 3. Illuminated Digital Ad Kiosk (Google AdMob Portrait Display)
+    let kioskAdTexture: THREE.CanvasTexture | null = null;
+    if (typeof document !== 'undefined') {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 1024;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, 512, 1024);
+
+        // Google AdMob Header
+        ctx.fillStyle = '#4285f4';
+        ctx.fillRect(0, 0, 128, 12);
+        ctx.fillStyle = '#ea4335';
+        ctx.fillRect(128, 0, 128, 12);
+        ctx.fillStyle = '#fbbc05';
+        ctx.fillRect(256, 0, 128, 12);
+        ctx.fillStyle = '#34a853';
+        ctx.fillRect(384, 0, 128, 12);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 48px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Google AdMob', 256, 100);
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 30px sans-serif';
+        ctx.fillText('PREMIUM TRANSIT AD', 256, 160);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '22px sans-serif';
+        ctx.fillText('Lagos Island Broad St Station', 256, 210);
+        ctx.fillText(`Slot ID: ${adSlotId}`, 256, 245);
+
+        // Graphic Ad Container
+        ctx.strokeStyle = '#0284c7';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(36, 290, 440, 520);
+
+        ctx.fillStyle = '#0284c7';
+        ctx.font = 'bold 36px sans-serif';
+        ctx.fillText('CONNECT YOUR BRAND', 256, 360);
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = '24px sans-serif';
+        ctx.fillText('Reach 250,000+ daily', 256, 440);
+        ctx.fillText('commuters across Lagos Island', 256, 480);
+        ctx.fillText('financial and tech districts.', 256, 520);
+
+        ctx.fillStyle = '#10b981';
+        ctx.fillRect(56, 680, 400, 64);
+        ctx.fillStyle = '#09090b';
+        ctx.font = 'bold 28px sans-serif';
+        ctx.fillText('BOOK ADMOB CAMPAIGN', 256, 722);
+
+        // Footer info
+        ctx.fillStyle = '#64748b';
+        ctx.font = '18px monospace';
+        ctx.fillText('LAMATA • LAGOS STATE TRANSIT', 256, 920);
+
+        kioskAdTexture = new THREE.CanvasTexture(canvas);
+        kioskAdTexture.colorSpace = THREE.SRGBColorSpace;
+      }
+    }
+
+    const kioskMat = new THREE.MeshStandardMaterial({
+      map: kioskAdTexture,
+      emissiveMap: kioskAdTexture,
+      emissive: new THREE.Color(0xffffff),
+      emissiveIntensity: 0.45,
+      roughness: 0.2,
+      metalness: 0.1,
+    });
+
+    const kioskMesh = new THREE.Mesh(new THREE.BoxGeometry(0.85, 1.8, 0.12), kioskMat);
+    kioskMesh.position.set(w / 2 + 0.45, 1.05, 0);
+    kioskMesh.castShadow = true;
+    group.add(kioskMesh);
+
+    const kioskFrameMat = new THREE.MeshStandardMaterial({ color: 0x09090b, metalness: 0.9 });
+    const kioskFrame = new THREE.Mesh(new THREE.BoxGeometry(0.95, 1.9, 0.16), kioskFrameMat);
+    kioskFrame.position.set(w / 2 + 0.45, 1.05, 0);
+    group.add(kioskFrame);
+
+    return {
+      mesh: group,
+      aabb: {
+        minX: x - w / 2 - 0.5,
+        maxX: x + w / 2 + 0.9,
+        minZ: z - d / 2 - 0.2,
+        maxZ: z + d / 2 + 0.2,
+        label: 'Bus Shelter & AdMob Kiosk',
+      },
+    };
+  }
+
+
 
   /**
    * Builds the iconic Broad Street Overhead Portal Arch / District Gateway Gantry:

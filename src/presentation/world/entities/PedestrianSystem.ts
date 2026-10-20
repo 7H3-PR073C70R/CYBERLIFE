@@ -977,6 +977,31 @@ export class PedestrianSystem {
               }
             }
 
+            // 4b. Pedestrian-to-Vehicle Avoidance (Characters never walk into moving vehicles)
+            const trafficSys = (worldManager as { worldEnvironment?: { trafficSystem?: { getVehicles?: () => Array<{ position: THREE.Vector3; speed: number }> } } })?.worldEnvironment?.trafficSystem;
+            if (trafficSys && typeof trafficSys.getVehicles === 'function') {
+              const activeVehicles = trafficSys.getVehicles();
+              for (const veh of activeVehicles) {
+                const vPos = veh.position;
+                const vDx = agent.position.x - vPos.x;
+                const vDz = agent.position.z - vPos.z;
+                const distToVehicle = Math.hypot(vDx, vDz);
+
+                // If a vehicle is within 4.0 meters of pedestrian
+                if (distToVehicle < 4.0 && distToVehicle > 0.001) {
+                  const push = (4.0 - distToVehicle) / 4.0;
+                  avoidX += (vDx / distToVehicle) * push * 6.5;
+                  avoidZ += (vDz / distToVehicle) * push * 6.5;
+
+                  // If vehicle is moving and close (< 2.8m), pedestrian stops safely on sidewalk
+                  if (distToVehicle < 2.8 && veh.speed > 0.8) {
+                    isMoving = false;
+                    agent.pauseTimer = 0.6;
+                  }
+                }
+              }
+            }
+
             // 5. Combine goal trajectory with avoidance steering
             const desiredMoveX = fwdX * agent.speed + avoidX;
             const desiredMoveZ = fwdZ * agent.speed + avoidZ;

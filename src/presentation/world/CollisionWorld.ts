@@ -21,6 +21,8 @@ export class CollisionWorld {
     this.bounds = { ...bounds };
   }
 
+  private dynamicObstacles: AABB[] = [];
+
   public setBounds(bounds: WorldBounds): void {
     this.bounds = { ...bounds };
   }
@@ -39,12 +41,21 @@ export class CollisionWorld {
     });
   }
 
+  public setDynamicObstacles(obstacles: AABB[]): void {
+    this.dynamicObstacles = obstacles;
+  }
+
+  public getDynamicObstacles(): readonly AABB[] {
+    return this.dynamicObstacles;
+  }
+
   public getObstacles(): readonly AABB[] {
     return this.obstacles;
   }
 
   public clear(): void {
     this.obstacles = [];
+    this.dynamicObstacles = [];
   }
 
   /**
@@ -63,6 +74,20 @@ export class CollisionWorld {
 
     // 2. Check collision with each solid obstacle AABB
     for (const box of this.obstacles) {
+      const closestX = Math.max(box.minX, Math.min(x, box.maxX));
+      const closestZ = Math.max(box.minZ, Math.min(z, box.maxZ));
+
+      const dx = x - closestX;
+      const dz = z - closestZ;
+      const distanceSq = dx * dx + dz * dz;
+
+      if (distanceSq < radius * radius) {
+        return true;
+      }
+    }
+
+    // 3. Check collision with dynamic obstacles (e.g. moving/parked vehicles)
+    for (const box of this.dynamicObstacles) {
       const closestX = Math.max(box.minX, Math.min(x, box.maxX));
       const closestZ = Math.max(box.minZ, Math.min(z, box.maxZ));
 
