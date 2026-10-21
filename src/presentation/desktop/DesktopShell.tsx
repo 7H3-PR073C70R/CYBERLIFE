@@ -38,7 +38,10 @@ import { SecurityNewsApp } from './apps/SecurityNewsApp';
 import { ExploitLabApp } from './apps/ExploitLabApp';
 import { WebProxyApp } from './apps/WebProxyApp';
 import { SocialPretextApp } from './apps/SocialPretextApp';
+import { DefensiveOpsApp } from './apps/DefensiveOpsApp';
+import { RedTeamApp } from './apps/RedTeamApp';
 import { BottomPanel } from './BottomPanel';
+
 import { HackerCallOverlay } from './HackerCallOverlay';
 import { HackerCallState, ChatThread } from '@/simulation/cyber/chat';
 import { audioSfx } from '../audio/audioSfx';
@@ -283,6 +286,11 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
   // Read authoritative in-game simulation time
   const simulationTime = sim?.state.time.calendar.timeString ?? '08:00 AM';
 
+  const isMissionDone = Boolean(
+    sim?.state.mission?.isCompleted || sim?.state.flags?.mission_aster_completed
+  );
+  const hasActiveIncident = Boolean(sim?.state.mission && !isMissionDone);
+
   const workstationName = workstationId.includes('cedarline')
     ? 'Cedarline Corp SecOps Desk 04'
     : 'Apartment Home Lab Rig';
@@ -398,24 +406,20 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
           </div>
 
           {/* Active Mission Incident Banner (Prominently alerts player of active case) */}
-          {sim?.state.mission && (() => {
-            const isMissionDone = Boolean(
-              sim.state.mission.isCompleted || sim.state.flags?.mission_aster_completed
-            );
+          {hasActiveIncident && sim?.state.mission && (() => {
             const activeObjIndex = sim.state.mission.objectives.findIndex(o => !o.isCompleted);
             const activeObj =
               activeObjIndex >= 0
                 ? sim.state.mission.objectives[activeObjIndex]
                 : sim.state.mission.objectives[sim.state.mission.objectives.length - 1];
-            const currentStepNum = isMissionDone
-              ? sim.state.mission.objectives.length
-              : activeObjIndex >= 0
+            const currentStepNum =
+              activeObjIndex >= 0
                 ? activeObjIndex + 1
                 : sim.state.mission.objectives.length;
 
             return (
               <div
-                className={`desktop-incident-banner ${isMissionDone ? 'incident-banner-resolved' : ''}`}
+                className="desktop-incident-banner"
                 data-testid="desktop-incident-banner"
                 style={{
                   position: 'absolute',
@@ -423,83 +427,39 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                   left: '96px',
                   right: '16px',
                   zIndex: 12,
-                  backgroundColor: isMissionDone
-                    ? 'rgba(6, 78, 59, 0.9)'
-                    : 'rgba(15, 23, 42, 0.94)',
-                  borderColor: isMissionDone ? '#10b981' : '#f59e0b',
+                  backgroundColor: 'rgba(15, 23, 42, 0.94)',
+                  borderColor: '#f59e0b',
                 }}
               >
                 <div className="incident-banner-left">
                   <span className="incident-pulse-icon" aria-hidden="true">
-                    {isMissionDone ? '🎉' : '🚨'}
+                    🚨
                   </span>
                   <div className="incident-banner-meta">
                     <span
                       className="incident-banner-case"
-                      style={{ color: isMissionDone ? '#6ee7b7' : '#fef08a' }}
+                      style={{ color: '#fef08a' }}
                     >
-                      {isMissionDone
-                        ? 'INCIDENT RESOLVED // AST-01 CLOSED & APPROVED'
-                        : `ACTIVE SOC DISPATCH // ${sim.state.mission.title}`}
+                      ACTIVE SOC DISPATCH // {sim.state.mission.title}
                     </span>
                     <span className="incident-banner-objective">
-                      {isMissionDone
-                        ? 'All 9 objectives verified. Next Play: Visit Amina, meet Tunde at Marina Seawall, or open Career & Market.'
-                        : `Step ${currentStepNum}/9: ${activeObj?.title ?? 'Finalize & submit incident report'}`}
+                      Step {currentStepNum}/9: {activeObj?.title ?? 'Finalize & submit incident report'}
                     </span>
                   </div>
                 </div>
 
                 <div className="incident-banner-actions">
-                  {isMissionDone ? (
-                    <>
-                      <button
-                        type="button"
-                        className="btn-incident-banner-primary"
-                        onClick={() => {
-                          openApp('career');
-                          focusWindow('career');
-                        }}
-                        style={{
-                          backgroundColor: 'rgba(16, 185, 129, 0.25)',
-                          borderColor: '#10b981',
-                          color: '#6ee7b7',
-                        }}
-                      >
-                        💼 Career &amp; Market
-                      </button>
-                      <button
-                        type="button"
-                        className="btn-incident-banner-primary"
-                        onClick={() => {
-                          openApp('incident');
-                          focusWindow('incident');
-                        }}
-                      >
-                        📋 Review Incident Report
-                      </button>
-                      <button
-                        type="button"
-                        className="btn-incident-banner-primary"
-                        onClick={onExitDesktop}
-                        style={{ backgroundColor: '#1e293b' }}
-                      >
-                        🚶 Stand Up &amp; Explore
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      type="button"
-                      className="btn-incident-banner-primary"
-                      onClick={() => {
-                        openApp('incident');
-                        focusWindow('incident');
-                      }}
-                      data-testid="btn-banner-open-incident"
-                    >
-                      📋 Open Incident Report &amp; Checklist
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    className="btn-incident-banner-primary"
+                    onClick={() => {
+                      openApp('incident');
+                      focusWindow('incident');
+                    }}
+                    data-testid="btn-banner-open-incident"
+                  >
+                    📋 Open Incident Report &amp; Checklist
+                  </button>
                 </div>
               </div>
             );
@@ -635,15 +595,18 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                     exploitLab: 1,
                     webProxy: 1,
                     socialPretext: 1,
+                    defensiveOps: 1,
+                    bountyHub: 1,
                   }
                   ? (def.icon as OsIconName)
+
                   : undefined;
 
               return (
                 <button
                   key={appId}
                   type="button"
-                  className={`desktop-shortcut-btn ${isSelected ? 'shortcut-selected' : ''} ${isRunning ? 'shortcut-running' : ''} ${appId === 'incident' && sim?.state.mission ? 'shortcut-active-incident' : ''}`}
+                  className={`desktop-shortcut-btn ${isSelected ? 'shortcut-selected' : ''} ${isRunning ? 'shortcut-running' : ''} ${appId === 'incident' && hasActiveIncident ? 'shortcut-active-incident' : ''}`}
                   onClick={e => {
                     e.stopPropagation();
                     setSelectedIcon(appId);
@@ -884,7 +847,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 launch tools.
               </p>
               <div style={{ display: 'flex', gap: '8px', marginTop: '0.5rem', flexWrap: 'wrap' }}>
-                {sim?.state.mission && (
+                {hasActiveIncident && (
                   <button
                     type="button"
                     className="btn-primary"
@@ -965,7 +928,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                   machine.
                 </p>
                 <div className="welcome-checklist">
-                  {sim?.state.mission && (
+                  {hasActiveIncident && (
                     <div
                       className="check-item"
                       style={{
@@ -1011,7 +974,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
               </div>
 
               <div className="welcome-banner-footer" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                {sim?.state.mission && (
+                {hasActiveIncident && (
                   <button
                     type="button"
                     className="btn-primary"
@@ -1117,7 +1080,10 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 {appId === 'exploitLab' && <ExploitLabApp />}
                 {appId === 'webProxy' && <WebProxyApp />}
                 {appId === 'socialPretext' && <SocialPretextApp />}
+                {appId === 'defensiveOps' && <DefensiveOpsApp />}
+                {appId === 'redTeam' && <RedTeamApp />}
               </WindowFrame>
+
             );
           })}
         </div>

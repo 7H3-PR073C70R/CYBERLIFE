@@ -73,7 +73,37 @@ import {
   handleAdvanceNetworkObjective,
   handleSubmitNetworkInvestigationConclusion,
 } from '../cyber/investigation/networkInvestigationCommandHandler';
+import {
+  handleAcceptRulesOfEngagement,
+  handleExecuteRedTeamAction,
+  handleValidateVulnerabilityFinding,
+  handleRecordRedTeamAnalystNote,
+  handlePreserveRedTeamEvidence,
+  handleSubmitAssessmentReport,
+} from '../cyber/redteam/redTeamCommandHandler';
+import {
+  handleTriageSecurityAlert,
+  handleToggleDetectionRule,
+  handleExecuteDefensiveResponse,
+  handleRecordDefensiveHypothesis,
+  handleAdvanceDefensiveObjective,
+  handleRunPurpleTeamScenario,
+  handleSubmitDefensiveIncidentReport,
+} from '../cyber/defensive/defensiveCommandHandler';
+import {
+  handleAcceptContract,
+  handleWithdrawContract,
+  handleClarifyContractScope,
+  handleExecuteContractSimulatedAction,
+  handleUpdateContractSubmissionDraft,
+  handleSubmitContractDeliverables,
+  handleResubmitContractRevision,
+  handleSelectBountyContract,
+  handleSetBountyCategoryFilter,
+  handleSetBountyTab,
+} from '../cyber/contracts/bountyCommandHandler';
 import { clampFactionStanding, getFactionStandingBand } from '../narrative/narrativeEvaluator';
+
 
 function makeFailure(
   state: Readonly<SimulationState>,
@@ -2370,7 +2400,100 @@ export function handleCommand(
         return handleSubmitNetworkInvestigationConclusion(currentState, command);
       }
 
+      case 'AcceptRulesOfEngagement': {
+        return handleAcceptRulesOfEngagement(currentState, command);
+      }
+
+      case 'ExecuteRedTeamAction': {
+        return handleExecuteRedTeamAction(currentState, command);
+      }
+
+      case 'ValidateVulnerabilityFinding': {
+        return handleValidateVulnerabilityFinding(currentState, command);
+      }
+
+      case 'RecordRedTeamAnalystNote': {
+        return handleRecordRedTeamAnalystNote(currentState, command);
+      }
+
+      case 'PreserveRedTeamEvidence': {
+        return handlePreserveRedTeamEvidence(currentState, command);
+      }
+
+      case 'SubmitAssessmentReport': {
+        return handleSubmitAssessmentReport(currentState, command);
+      }
+
+      case 'TriageSecurityAlert': {
+        return handleTriageSecurityAlert(currentState, command);
+      }
+
+      case 'ToggleDetectionRule': {
+        return handleToggleDetectionRule(currentState, command);
+      }
+
+      case 'ExecuteDefensiveResponse': {
+        return handleExecuteDefensiveResponse(currentState, command);
+      }
+
+      case 'RecordDefensiveHypothesis': {
+        return handleRecordDefensiveHypothesis(currentState, command);
+      }
+
+      case 'AdvanceDefensiveObjective': {
+        return handleAdvanceDefensiveObjective(currentState, command);
+      }
+
+      case 'RunPurpleTeamScenario': {
+        return handleRunPurpleTeamScenario(currentState, command);
+      }
+
+      case 'SubmitDefensiveIncidentReport': {
+        return handleSubmitDefensiveIncidentReport(currentState, command);
+      }
+
+      case 'AcceptContract': {
+        return handleAcceptContract(currentState, command);
+      }
+
+      case 'WithdrawContract': {
+        return handleWithdrawContract(currentState, command);
+      }
+
+      case 'ClarifyContractScope': {
+        return handleClarifyContractScope(currentState, command);
+      }
+
+      case 'ExecuteContractSimulatedAction': {
+        return handleExecuteContractSimulatedAction(currentState, command);
+      }
+
+      case 'UpdateContractSubmissionDraft': {
+        return handleUpdateContractSubmissionDraft(currentState, command);
+      }
+
+      case 'SubmitContractDeliverables': {
+        return handleSubmitContractDeliverables(currentState, command);
+      }
+
+      case 'ResubmitContractRevision': {
+        return handleResubmitContractRevision(currentState);
+      }
+
+      case 'SelectBountyContract': {
+        return handleSelectBountyContract(currentState, command);
+      }
+
+      case 'SetBountyCategoryFilter': {
+        return handleSetBountyCategoryFilter(currentState, command);
+      }
+
+      case 'SetBountyTab': {
+        return handleSetBountyTab(currentState, command);
+      }
+
       default: {
+
         const unknownCmd = command as { type?: string };
         return makeFailure(
           currentState,

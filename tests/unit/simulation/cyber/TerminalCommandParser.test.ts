@@ -68,7 +68,11 @@ describe('TerminalCommandParser & Registry', () => {
     expect(registry.has('pretext')).toBe(true);
     expect(registry.has('threatintel')).toBe(true);
     expect(registry.has('topology')).toBe(true);
-    expect(registry.getAll().length).toBe(26);
+    expect(registry.has('blueops')).toBe(true);
+    expect(registry.has('purpleteam')).toBe(true);
+    expect(registry.has('redteam')).toBe(true);
+    expect(registry.has('bounty')).toBe(true);
+    expect(registry.getAll().length).toBe(30);
   });
 
   it('executes help command returning available commands and beginner tips', () => {
@@ -226,5 +230,40 @@ describe('TerminalCommandParser & Registry', () => {
     const parser = createDefaultTerminalParser();
     const tokens = parser.tokenize('grep "admin token" \'secure notes\' plain_word');
     expect(tokens).toEqual(['grep', 'admin token', 'secure notes', 'plain_word']);
+  });
+
+  it('executes bounty CLI commands (list, view, rep, accept, status, scope)', async () => {
+    const parser = createDefaultTerminalParser();
+
+    // bounty list
+    const listRes = await parser.parseAndExecute('bounty list', mockContext);
+    expect(listRes.isError).toBeFalsy();
+    expect(listRes.stdout.some(l => l.includes('ct-balogun-pos-audit'))).toBe(true);
+
+    // bounty view
+    const viewRes = await parser.parseAndExecute('bounty view ct-balogun-pos-audit', mockContext);
+    expect(viewRes.isError).toBeFalsy();
+    expect(viewRes.stdout.some(l => l.includes('Balogun Market'))).toBe(true);
+    expect(viewRes.stdout.some(l => l.includes('Authorized In-Scope Targets'))).toBe(true);
+
+    // bounty rep
+    const repRes = await parser.parseAndExecute('bounty rep', mockContext);
+    expect(repRes.isError).toBeFalsy();
+    expect(repRes.stdout.some(l => l.includes('Reputation Score'))).toBe(true);
+
+    // bounty accept
+    const acceptRes = await parser.parseAndExecute('bounty accept ct-balogun-pos-audit', mockContext);
+    expect(acceptRes.isError).toBeFalsy();
+    expect(acceptRes.stdout.some(l => l.includes('CONTRACT ACCEPTED'))).toBe(true);
+
+    // bounty status
+    const statusRes = await parser.parseAndExecute('bounty status', mockContext);
+    expect(statusRes.isError).toBeFalsy();
+    expect(statusRes.stdout.some(l => l.includes('Objectives Progress'))).toBe(true);
+
+    // bounty scope
+    const scopeRes = await parser.parseAndExecute('bounty scope', mockContext);
+    expect(scopeRes.isError).toBeFalsy();
+    expect(scopeRes.stdout.some(l => l.includes('[IN-SCOPE] gw-balogun-pos-01'))).toBe(true);
   });
 });

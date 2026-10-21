@@ -43,6 +43,11 @@ export const HUDShell: React.FC<HUDShellProps> = ({
   const sim = useOptionalSimulation();
   const onboarding = sim?.state.onboarding;
 
+  const isMissionDone = Boolean(
+    sim?.state.mission?.isCompleted || sim?.state.flags?.mission_aster_completed
+  );
+  const hasActiveIncident = Boolean(sim?.state.mission && !isMissionDone);
+
   const [isMovementHelpOpen, setIsMovementHelpOpen] = useState<boolean>(false);
   const [isDevDrawerOpen, setIsDevDrawerOpen] = useState<boolean>(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState<boolean>(false);
@@ -94,13 +99,15 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         setIsMovementHelpOpen(prev => !prev);
       } else if (e.key === 'o' || e.key === 'O') {
         e.preventDefault();
-        setIsObjectiveExpanded(prev => !prev);
+        if (hasActiveIncident) {
+          setIsObjectiveExpanded(prev => !prev);
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [hasActiveIncident]);
 
   return (
     <div className="hud-layer" data-testid="hud-layer">
@@ -119,7 +126,9 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         onToggleTour={() => setIsIntroModalOpen(true)}
         onToggleControls={() => setIsControlsModalOpen(true)}
         onToggleSettings={() => setIsSettingsOpen(prev => !prev)}
-        onToggleIncidentChecklist={() => setIsObjectiveExpanded(prev => !prev)}
+        onToggleIncidentChecklist={
+          hasActiveIncident ? () => setIsObjectiveExpanded(prev => !prev) : undefined
+        }
         onOpenMainMenu={onOpenMainMenu}
         isHelpOpen={isMovementHelpOpen}
         isDevDrawerOpen={isDevDrawerOpen}
@@ -128,23 +137,25 @@ export const HUDShell: React.FC<HUDShellProps> = ({
       />
 
       {/* Top Objective Tracker Bar (Collapsible at top, clean unobstructed view) */}
-      <div
-        className="hud-top-objective-wrapper"
-        style={{
-          position: 'absolute',
-          top: '4.25rem',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 35,
-          pointerEvents: 'auto',
-          maxWidth: 'calc(100vw - 1rem)',
-        }}
-      >
-        <ObjectiveTrackerHUD
-          forceExpanded={isObjectiveExpanded}
-          onToggleExpanded={setIsObjectiveExpanded}
-        />
-      </div>
+      {hasActiveIncident && (
+        <div
+          className="hud-top-objective-wrapper"
+          style={{
+            position: 'absolute',
+            top: '4.25rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 35,
+            pointerEvents: 'auto',
+            maxWidth: 'calc(100vw - 1rem)',
+          }}
+        >
+          <ObjectiveTrackerHUD
+            forceExpanded={isObjectiveExpanded}
+            onToggleExpanded={setIsObjectiveExpanded}
+          />
+        </div>
+      )}
 
       {/* Middle Layout: Side Panels & Nearby Interaction Prompt */}
       <div className="hud-body">

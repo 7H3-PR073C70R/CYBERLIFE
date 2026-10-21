@@ -25,7 +25,11 @@ export type AppId =
   | 'securityNews'
   | 'exploitLab'
   | 'webProxy'
-  | 'socialPretext';
+  | 'socialPretext'
+  | 'defensiveOps'
+  | 'redTeam'
+  | 'bountyHub';
+
 
 export interface AppDefinition {
   id: AppId;
@@ -260,4 +264,35 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
     defaultSize: { width: 840, height: 580 },
     minSize: { width: 480, height: 380 },
   },
+  defensiveOps: {
+    id: 'defensiveOps',
+    title: 'Defensive Operations Console — Blue & Purple Team Workflows',
+    shortTitle: 'Defensive Ops',
+    icon: 'defensiveOps',
+    description:
+      'Enterprise security operations suite featuring synthetic telemetry monitoring, Sigma detection rules, alert triage, incident response mitigations, and Purple Team adversary emulation coverage scorecards.',
+    defaultSize: { width: 920, height: 620 },
+    minSize: { width: 500, height: 380 },
+  },
+  redTeam: {
+    id: 'redTeam',
+    title: 'Red Team Assessment Workspace — Authorized Penetration Testing',
+    shortTitle: 'Red Team Workspace',
+    icon: 'exploitLab',
+    description:
+      'Permission-driven offensive cybersecurity assessment suite featuring scope authorization, active Rules of Engagement (RoE), simulated reconnaissance, configuration audits, web API testing, finding validation, and executive penetration test reporting.',
+    defaultSize: { width: 920, height: 620 },
+    minSize: { width: 500, height: 380 },
+  },
+  bountyHub: {
+    id: 'bountyHub',
+    title: 'Eko Bounty Network & Security Contracts',
+    shortTitle: 'Bounty Network',
+    icon: 'bountyHub',
+    description:
+      'Open-market bug bounty portal and freelance cybersecurity contract marketplace. Discover opportunities, evaluate scopes of engagement, execute authorized security assessments, submit verified evidence, and build independent professional reputation.',
+    defaultSize: { width: 960, height: 640 },
+    minSize: { width: 520, height: 400 },
+  },
 };
+

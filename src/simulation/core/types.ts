@@ -73,6 +73,9 @@ import type { OnboardingSimulationState } from '../onboarding/types';
 import type { CatalogueSimulationState } from '../catalogue/types';
 import type { NarrativeState } from '../narrative/narrativeTypes';
 import type { NetworkInvestigationState } from '../cyber/investigation/types';
+import type { RedTeamAssessmentState } from '../cyber/redteam/types';
+import type { DefensiveOpsState } from '../cyber/defensive/types';
+import type { BountyHubState } from '../cyber/contracts/types';
 
 export interface SimulationState {
   readonly metadata: SimulationMetadata;
@@ -93,4 +96,9 @@ export interface SimulationState {
   readonly catalogue?: CatalogueSimulationState;
   readonly narrative?: NarrativeState;
   readonly networkInvestigation?: NetworkInvestigationState;
+  readonly redTeamAssessment?: RedTeamAssessmentState;
+  readonly defensiveOps?: DefensiveOpsState;
+  readonly bountyHub?: BountyHubState;
 }
+
+

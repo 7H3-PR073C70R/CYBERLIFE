@@ -42,7 +42,10 @@ export type OsIconName =
   | 'securityNews'
   | 'exploitLab'
   | 'webProxy'
-  | 'socialPretext';
+  | 'socialPretext'
+  | 'defensiveOps'
+  | 'bountyHub';
+
 
 export interface OsIconProps extends React.SVGProps<SVGSVGElement> {
   name: OsIconName;
@@ -508,7 +511,40 @@ export const OsIcon: React.FC<OsIconProps> = ({
         </svg>
       );
 
+    case 'defensiveOps':
+      return (
+        <svg {...commonProps}>
+          {/* Shield outline with inner security radar / pulse */}
+          <path
+            d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"
+            stroke={color}
+            strokeWidth="1.75"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M12 7v5l3 3"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <circle cx="12" cy="12" r="6" stroke={color} strokeWidth="1" strokeDasharray="2 2" />
+        </svg>
+      );
+
+    case 'bountyHub':
+      return (
+        <svg {...commonProps}>
+          {/* Target crosshair with central reward star */}
+          <circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.75" />
+          <circle cx="12" cy="12" r="5" stroke={color} strokeWidth="1.25" strokeDasharray="2 2" />
+          <path d="M12 1v3M12 20v3M1 12h3M20 12h3" stroke={color} strokeWidth="2" strokeLinecap="round" />
+          <polygon points="12,9 13,11 15,11.3 13.5,12.7 14,15 12,13.8 10,15 10.5,12.7 9,11.3 11,11" fill={color} />
+        </svg>
+      );
+
     default:
+
       return (
         <svg {...commonProps}>
           <circle cx="12" cy="12" r="10" />

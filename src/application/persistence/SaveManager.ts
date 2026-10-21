@@ -20,6 +20,10 @@ import { createSaveMetadata, validateSaveRecord } from './schema';
 import { calculateStateChecksum, verifyStateChecksum } from './checksum';
 import { migrateSaveRecord } from './migrations';
 import { createInitialCatalogueState } from '../../simulation/catalogue/catalogueHandler';
+import { createInitialDefensiveOpsState } from '../../simulation/cyber/defensive/defensiveScenarioData';
+import { createInitialRedTeamAssessmentState } from '../../simulation/cyber/redteam/scenarioFixtures';
+import { createInitialBountyHubState } from '../../simulation/cyber/contracts/contractCatalogue';
+
 
 export interface SaveManagerOptions {
   readonly engine: SimulationEngine;
@@ -316,7 +320,11 @@ export class SaveManager {
         activeStepId: 'step_intro_welcome',
       },
       catalogue: state.catalogue ?? createInitialCatalogueState(),
+      defensiveOps: state.defensiveOps ?? createInitialDefensiveOpsState(),
+      redTeamAssessment: state.redTeamAssessment ?? createInitialRedTeamAssessmentState(),
+      bountyHub: state.bountyHub ?? createInitialBountyHubState(),
     };
+
   }
 
   /**
@@ -384,7 +392,14 @@ export class SaveManager {
       'RECURRING_EXPENSE_PAID',
       'ONBOARDING_STEP_COMPLETED',
       'ONBOARDING_SKIPPED',
+      'DEFENSIVE_RESPONSE_EXECUTED',
+      'DEFENSIVE_MISSION_CONCLUDED',
+      'RED_TEAM_ROE_ACCEPTED',
+      'RED_TEAM_ACTION_EXECUTED',
+      'RED_TEAM_FINDING_VALIDATED',
+      'RED_TEAM_REPORT_SUBMITTED',
     ]);
+
 
     this._engineUnsubscribe = this._engine.subscribe((_, events) => {
       const hasCheckpointEvent = events.some(e => checkpointEventTypes.has(e.type));

@@ -17,6 +17,35 @@ import { ProtocolType } from '../network/types';
 import { THREAT_INTEL_RECORDS } from '../threatintel/threatIntelFixtures';
 import { searchThreatRecords, correlateAllTraffic } from '../threatintel/threatCorrelationEngine';
 import { SIMULATED_NETWORK_NODES, NETWORK_SEGMENTS } from '../network/topologyFixtures';
+import {
+  DETECTION_RULES_CATALOG,
+  SYNTHETIC_TELEMETRY_EVENTS,
+  PURPLE_TEAM_SCENARIOS,
+  evaluateDetectionRules,
+  runPurpleTeamScenario,
+  generatePurpleTeamScorecard,
+  executeDefensiveAction,
+  createInitialDefensiveOpsState,
+  EmulationCoverageResult,
+} from '../defensive';
+import {
+  createInitialRedTeamAssessmentState,
+  RedTeamEngine,
+  RedTeamAuthorizationGate,
+  RedTeamAssessmentState,
+  AssessmentTargetAsset,
+  RedTeamToolDefinition,
+  VulnerabilityFinding,
+  RedTeamObjective,
+} from '../redteam';
+import {
+  createInitialBountyHubState,
+} from '../contracts/contractCatalogue';
+import {
+  BountyContract,
+  BountyHubState,
+  ContractObjective,
+} from '../contracts/types';
 
 export class TerminalCommandRegistry {
   private handlers = new Map<string, TerminalCommandHandler>();
@@ -1163,6 +1192,786 @@ export const pretextCommand: TerminalCommandHandler = {
   },
 };
 
+export const blueopsCommand: TerminalCommandHandler = {
+  name: 'blueops',
+  description: 'Simulated Blue Team SIEM, detection rules, alert triage & defensive response console.',
+  usage: 'blueops [alerts | rules | telemetry | isolate <hostId> | block <indicator> | triage <alertId> <status>]',
+  execute(args: string[]): TerminalCommandResult {
+    const sub = args[0]?.toLowerCase() ?? 'alerts';
+
+    if (sub === 'telemetry') {
+      return {
+        stdout: [
+          '=== Synthetic Telemetry Event Stream (SIEM Collector) ===',
+          ...SYNTHETIC_TELEMETRY_EVENTS.map(
+            t => `[${t.id}] ${t.category.padEnd(20)} | src:${t.sourceHostId.padEnd(20)} (${t.sourceIp.padEnd(12)}) | ${t.title}`
+          ),
+        ],
+      };
+    }
+
+    if (sub === 'rules') {
+      return {
+        stdout: [
+          '=== Active Detection Rules Catalog (Sigma-Style) ===',
+          ...DETECTION_RULES_CATALOG.map(
+            r => `[${r.id}] ${r.name.padEnd(36)} | Sev: ${r.severity.padEnd(8)} | Conf: ${r.confidenceScore}% | ${r.mitreTechniques.join(', ')}`
+          ),
+        ],
+      };
+    }
+
+    if (sub === 'alerts') {
+      const generatedAlerts = evaluateDetectionRules(SYNTHETIC_TELEMETRY_EVENTS, DETECTION_RULES_CATALOG);
+      return {
+        stdout: [
+          `=== Active Alert Queue (${generatedAlerts.length} triggered detections) ===`,
+          ...generatedAlerts.map(
+            a => `[${a.id}] ${a.title.padEnd(36)} | ${a.priority.level.padEnd(12)} | Sev:${a.severity.padEnd(8)} | Conf:${a.confidenceScore}% | Status:${a.triageStatus}`
+          ),
+          '',
+          'Run "blueops triage <alertId> <status>" or "blueops isolate <hostId>" to respond.',
+        ],
+      };
+    }
+
+    if (sub === 'triage') {
+      const alertId = args[1];
+      const status = args[2]?.toUpperCase();
+      if (!alertId || !status) {
+        return {
+          isError: true,
+          stdout: ['Usage: blueops triage <alertId> <NEW|UNDER_INVESTIGATION|RESOLVED|FALSE_POSITIVE>'],
+        };
+      }
+      return {
+        stdout: [
+          `[+] Triage updated for Alert ${alertId}`,
+          `New Status: ${status}`,
+          'Audit trail updated in defensive operations state.',
+        ],
+      };
+    }
+
+    if (sub === 'isolate') {
+      const hostId = args[1];
+      if (!hostId) {
+        return {
+          isError: true,
+          stdout: ['Usage: blueops isolate <hostId> (e.g. host-broadst-db01, srv-fin-core)'],
+        };
+      }
+      const dummyState = createInitialDefensiveOpsState();
+      const res = executeDefensiveAction(
+        dummyState,
+        'ISOLATE_ENDPOINT',
+        hostId,
+        'CLI emergency containment isolation',
+        28000,
+        'Security Analyst (Player)'
+      );
+      return {
+        isError: !res.success,
+        stdout: [
+          res.success ? `[+] Endpoint Isolation Successful: ${hostId}` : `[-] Action Failed: ${res.message}`,
+          res.message,
+          res.action ? `Consequences: ${res.action.consequences.join('; ')}` : '',
+        ].filter(Boolean),
+      };
+    }
+
+    if (sub === 'block') {
+      const indicator = args[1];
+      if (!indicator) {
+        return {
+          isError: true,
+          stdout: ['Usage: blueops block <indicator> (e.g. 198.51.100.45)'],
+        };
+      }
+      const dummyState = createInitialDefensiveOpsState();
+      const res = executeDefensiveAction(
+        dummyState,
+        'BLOCK_INDICATOR',
+        indicator,
+        'CLI border firewall indicator block',
+        28000,
+        'Security Analyst (Player)'
+      );
+      return {
+        isError: !res.success,
+        stdout: [
+          res.success ? `[+] Indicator Blocked: ${indicator}` : `[-] Action Failed: ${res.message}`,
+          res.message,
+          res.action ? `Consequences: ${res.action.consequences.join('; ')}` : '',
+        ].filter(Boolean),
+      };
+    }
+
+    return {
+      isError: true,
+      stdout: ['Usage: blueops [alerts | rules | telemetry | isolate <hostId> | block <indicator> | triage <alertId> <status>]'],
+    };
+  },
+};
+
+export const purpleteamCommand: TerminalCommandHandler = {
+  name: 'purpleteam',
+  description: 'Adversary emulation scenarios and defensive detection coverage validation.',
+  usage: 'purpleteam [scenarios | run <scenarioId> | scorecard]',
+  execute(args: string[]): TerminalCommandResult {
+    const sub = args[0]?.toLowerCase() ?? 'scenarios';
+
+    if (sub === 'scenarios') {
+      return {
+        stdout: [
+          '=== Purple Team Adversary Emulation Catalog ===',
+          ...PURPLE_TEAM_SCENARIOS.map(
+            s => `[${s.id}] ${s.name.padEnd(36)} | ${s.mitreTechniqueId.padEnd(10)} | ${s.tactics.join(', ').padEnd(16)} | Target: ${s.targetHostId}`
+          ),
+          '',
+          'Run "purpleteam run <scenarioId>" to execute an atomic validation test.',
+          'Run "purpleteam scorecard" to inspect overall detection coverage.',
+        ],
+      };
+    }
+
+    if (sub === 'run') {
+      const scenarioId = args[1]?.trim();
+      const scenario = PURPLE_TEAM_SCENARIOS.find(s => s.id === scenarioId);
+      if (!scenario) {
+        return {
+          isError: true,
+          stdout: [`Scenario '${scenarioId}' not found. Use "purpleteam scenarios" to view catalog.`],
+        };
+      }
+
+      const result = runPurpleTeamScenario(scenario, DETECTION_RULES_CATALOG, SYNTHETIC_TELEMETRY_EVENTS);
+      return {
+        stdout: [
+          `=== Purple Team Emulation: ${scenario.name} (${scenario.id}) ===`,
+          `Adversary Tactic:     ${scenario.tactics.join(', ')} (${scenario.mitreTechniqueId} - ${scenario.mitreTechniqueName})`,
+          `Target Asset:         ${scenario.targetHostId}`,
+          `Simulated Activity:   ${scenario.description}`,
+          `Coverage Outcome:     [${result.status}]`,
+          `Triggered Rules:      ${result.matchedRuleIds.length > 0 ? result.matchedRuleIds.join(', ') : 'None (Detection Gap)'}`,
+          `Evaluation Notes:     ${result.detectionNotes}`,
+          `Remediation Guidance: ${scenario.remediationRecommendation}`,
+        ],
+      };
+    }
+
+    if (sub === 'scorecard') {
+      const resultsMap: Record<string, EmulationCoverageResult> = {};
+      for (const scen of PURPLE_TEAM_SCENARIOS) {
+        resultsMap[scen.id] = runPurpleTeamScenario(scen, DETECTION_RULES_CATALOG, SYNTHETIC_TELEMETRY_EVENTS);
+      }
+      const scorecard = generatePurpleTeamScorecard(resultsMap);
+      return {
+        stdout: [
+          '=== Purple Team Detection Coverage Scorecard ===',
+          `Overall Coverage:    ${scorecard.coveragePercentage}% (${scorecard.detectedCount}/${scorecard.totalScenarios} Scenarios Detected)`,
+          `Partially Detected:  ${scorecard.partialCount}`,
+          `Undetected / Gaps:   ${scorecard.undetectedCount}`,
+          `Evaluation Notes:    ${scorecard.evaluationNotes}`,
+          '',
+          'Scenario Coverage Breakdown:',
+          ...PURPLE_TEAM_SCENARIOS.map(scen => {
+            const res = resultsMap[scen.id];
+            const status = res?.status ?? 'UNDETECTED';
+            return `  [${status.padEnd(18)}] ${scen.id.padEnd(14)}: ${scen.name} (${scen.mitreTechniqueId})`;
+          }),
+        ],
+      };
+    }
+
+    return {
+      isError: true,
+      stdout: ['Usage: purpleteam [scenarios | run <scenarioId> | scorecard]'],
+    };
+  },
+};
+
+export let activeRedTeamSession: RedTeamAssessmentState = createInitialRedTeamAssessmentState();
+
+export function resetRedTeamCliSession(): void {
+  activeRedTeamSession = createInitialRedTeamAssessmentState();
+}
+
+export const redteamCommand: TerminalCommandHandler = {
+  name: 'redteam',
+  description: 'Authorized penetration testing, Rules of Engagement (RoE) inspection, and scope validation console.',
+  usage: 'redteam [status | scope | accept | targets | tools | run <toolId> <targetId> | findings | validate <id> <confirm|reject> | report]',
+  execute(args: string[], context: TerminalExecutionContext): TerminalCommandResult {
+    const assessmentState = activeRedTeamSession;
+    const roe = assessmentState.roe;
+    const sub = args[0]?.toLowerCase() ?? 'status';
+
+    if (sub === 'status') {
+      return {
+        stdout: [
+          '=== Red Team Authorized Assessment Status ===',
+          `Assessment ID:      ${assessmentState.scenarioId}`,
+          `Title:              ${assessmentState.scenarioTitle}`,
+          `Client:             ${roe.clientOrganization}`,
+          `Sponsor / CISO:     ${roe.authorizingOfficial} (${roe.assessmentId})`,
+          `Status:             ${assessmentState.activePhase}`,
+          `Operator Signed:    ${assessmentState.isAcceptedByPlayer ? '[YES - ROE ACCEPTED]' : '[NO - ACCEPTANCE REQUIRED]'}`,
+          `In-Scope Targets:   ${assessmentState.targets.filter((t: AssessmentTargetAsset) => t.inScope).length} assets authorized`,
+          `Excluded Targets:   ${assessmentState.targets.filter((t: AssessmentTargetAsset) => !t.inScope).length} assets strictly prohibited`,
+          `Completed Actions:  ${assessmentState.actionHistory.length}`,
+          `Validated Findings: ${assessmentState.findings.filter((f: VulnerabilityFinding) => f.status === 'VALIDATED').length}/${assessmentState.findings.length}`,
+          `Report Status:      ${assessmentState.evaluationResult ? 'EVALUATED' : assessmentState.reportSubmission ? 'SUBMITTED' : 'NOT GENERATED'}`,
+          '',
+          assessmentState.isAcceptedByPlayer
+            ? 'Run "redteam targets" to view authorized hosts or "redteam run <tool> <target>" to execute.'
+            : 'ACTION REQUIRED: Review scope ("redteam scope") and execute "redteam accept" before testing.',
+        ],
+      };
+    }
+
+    if (sub === 'scope' || sub === 'roe') {
+      return {
+        stdout: [
+          `=== Written Rules of Engagement: ${roe.assessmentId} ===`,
+          `Client:             ${roe.clientOrganization}`,
+          `Authorizing CISO:   ${roe.authorizingOfficial} (${roe.authorizingRole})`,
+          `Legal Framework:    ${roe.legalFramework}`,
+          `Emergency Contact:  ${roe.emergencyStopContact}`,
+          '',
+          'Authorized Action Categories:',
+          ...roe.allowedActionCategories.map((cat: string) => `  [+] ${cat}`),
+          '',
+          'Strictly Prohibited Techniques (Hard Simulation Guards):',
+          ...roe.prohibitedActions.map((p: string) => `  [-] ${p}`),
+          '',
+          'Authorized In-Scope Targets:',
+          ...assessmentState.targets.filter((t: AssessmentTargetAsset) => t.inScope).map((t: AssessmentTargetAsset) => `  * ${t.id.padEnd(14)} (${t.ipAddress.padEnd(12)}) - ${t.hostname} [${t.roleLabel}]`),
+          '',
+          'Explicit Out-of-Scope Assets (Zero-Tolerance Boundaries):',
+          ...assessmentState.targets.filter((t: AssessmentTargetAsset) => !t.inScope).map((t: AssessmentTargetAsset) => `  ! ${t.id.padEnd(14)} (${t.ipAddress.padEnd(12)}) - ${t.hostname} [PROHIBITED: ${t.scopeJustification}]`),
+          '',
+          assessmentState.isAcceptedByPlayer
+            ? '[+] Rules of Engagement ACCEPTED and active.'
+            : '[-] RoE not yet signed. Run "redteam accept" to affirm scope compliance.',
+        ],
+      };
+    }
+
+    if (sub === 'accept') {
+      if (assessmentState.isAcceptedByPlayer) {
+        return {
+          stdout: ['[*] Rules of Engagement already accepted. Assessment is active.'],
+        };
+      }
+      activeRedTeamSession = {
+        ...activeRedTeamSession,
+        isAcceptedByPlayer: true,
+        activePhase: 'RECON_DISCOVERY',
+        objectives: activeRedTeamSession.objectives.map((o: RedTeamObjective) =>
+          o.requiredAction === 'ACCEPT_ROE' ? { ...o, isCompleted: true } : o
+        ),
+      };
+      return {
+        stdout: [
+          '[+] AUTHORIZATION CONFIRMED',
+          `Rules of Engagement ${roe.assessmentId} accepted by Lead Operator.`,
+          'Authorized penetration testing activities are now unlocked for permitted targets.',
+          'Note: Out-of-Scope targets and prohibited actions remain strictly enforced by the simulation gate.',
+          'Run "redteam targets" or "redteam run <toolId> <targetId>" to begin.',
+        ],
+      };
+    }
+
+    if (sub === 'targets') {
+      return {
+        stdout: [
+          '=== Red Team Target Assets & Scope Boundaries ===',
+          ...assessmentState.targets.map((t: AssessmentTargetAsset) => {
+            const scopeTag = t.inScope ? '[IN-SCOPE]' : '[OUT-OF-SCOPE - FORBIDDEN]';
+            const ports = t.services.map((s: { port: number; protocol: string }) => `${s.port}/${s.protocol}`).join(', ');
+            return `${scopeTag.padEnd(28)} ${t.id.padEnd(14)} ${t.ipAddress.padEnd(14)} ${t.hostname.padEnd(30)} Services: ${ports || 'None'}`;
+          }),
+          '',
+          'Note: Attempting actions against [OUT-OF-SCOPE] targets will be authoritatively rejected by the domain authorization gate.',
+        ],
+      };
+    }
+
+    if (sub === 'tools') {
+      return {
+        stdout: [
+          '=== Registered Fictional Red Team Assessment Tools ===',
+          ...assessmentState.availableTools.map((tl: RedTeamToolDefinition) => `[${tl.id.padEnd(16)}] ${tl.name.padEnd(30)} Category: ${tl.category.padEnd(20)}`),
+          '',
+          'Usage: redteam run <toolId> <targetId>',
+        ],
+      };
+    }
+
+    if (sub === 'run') {
+      const toolId = args[1]?.trim();
+      const targetId = args[2]?.trim();
+      if (!toolId || !targetId) {
+        return {
+          isError: true,
+          stdout: ['Usage: redteam run <toolId> <targetId> (e.g. redteam run recon-mapper app-portal-01)'],
+        };
+      }
+
+      const tool = activeRedTeamSession.availableTools.find(t => t.id === toolId);
+      if (!tool) {
+        return {
+          isError: true,
+          stdout: [`Unknown tool '${toolId}'. Run "redteam tools" to view registered tools.`],
+        };
+      }
+
+      const simTime = context.simulationTime?.hour ? context.simulationTime.hour * 3600 + context.simulationTime.minute * 60 : 28800;
+
+      // Check authorization gate
+      const gateResult = RedTeamAuthorizationGate.evaluateScope(
+        activeRedTeamSession,
+        targetId,
+        tool.category,
+        tool.name,
+        simTime
+      );
+
+      if (!gateResult.isAuthorized) {
+        return {
+          isError: true,
+          stdout: [
+            '[-] RED TEAM SCOPE VIOLATION / REJECTION',
+            `Target:     ${targetId}`,
+            `Tool:       ${tool.name} (${toolId})`,
+            `Category:   ${tool.category}`,
+            `Decision:   DENIED (${gateResult.decision})`,
+            `Reason:     ${gateResult.reason}`,
+            'Zero host traffic dispatched. Simulation domain invariant preserved.',
+          ],
+        };
+      }
+
+      // Execute via RedTeamEngine
+      const result = RedTeamEngine.executeToolAction(activeRedTeamSession, {
+        targetId,
+        toolId,
+        currentSimTime: simTime,
+        actorName: context.currentUser?.displayName ?? 'Assessor (Player)',
+      });
+
+      // Update state snapshot
+      activeRedTeamSession = {
+        ...activeRedTeamSession,
+        actionHistory: [result, ...activeRedTeamSession.actionHistory],
+        executedActionIds: [result.actionId, ...activeRedTeamSession.executedActionIds],
+        evidenceVault: result.generatedEvidence
+          ? [result.generatedEvidence, ...activeRedTeamSession.evidenceVault]
+          : activeRedTeamSession.evidenceVault,
+      };
+
+      return {
+        stdout: [
+          `[+] ACTION EXECUTED: ${result.actionId}`,
+          `Target:          ${result.targetId}`,
+          `Status:          ${result.status}`,
+          `Simulated Time:  ${result.simulatedTimestamp}s`,
+          '',
+          'Observations & Diagnostic Trace:',
+          ...result.observations.map((obs: string) => `  * ${obs}`),
+          '',
+          result.generatedEvidence
+            ? `[Evidence Preserved] ${result.generatedEvidence.title} (SHA-256: ${result.generatedEvidence.hashSha256.substring(0, 16)}...)`
+            : '',
+          result.candidateFindingId
+            ? `[Candidate Finding Identified] ${result.candidateFindingId} - Review in Findings tab`
+            : '',
+          result.limitationExplanation ? `Limitation:      ${result.limitationExplanation}` : '',
+        ].filter(Boolean),
+      };
+    }
+
+    if (sub === 'findings') {
+      return {
+        stdout: [
+          '=== Identified Assessment Findings & Validation Status ===',
+          ...activeRedTeamSession.findings.map(f => {
+            const statusTag = `[${f.status}]`.padEnd(14);
+            const sevTag = `Sev:${f.severity}`.padEnd(14);
+            const confTag = `Conf:${f.confidence}`.padEnd(14);
+            return `${statusTag} ${f.id.padEnd(16)} ${sevTag} ${confTag} Target:${f.targetId.padEnd(14)} ${f.title}`;
+          }),
+          '',
+          'Use "redteam validate <findingId> <confirm|reject> [reason]" or Red Team Workspace UI.',
+        ],
+      };
+    }
+
+    if (sub === 'validate') {
+      const findingId = args[1]?.trim();
+      const decision = args[2]?.toLowerCase();
+      const reason = args.slice(3).join(' ') || 'CLI analyst determination';
+      if (!findingId || (decision !== 'confirm' && decision !== 'reject')) {
+        return {
+          isError: true,
+          stdout: ['Usage: redteam validate <findingId> <confirm|reject> [reason]'],
+        };
+      }
+
+      const action = decision === 'confirm' ? ('VALIDATE' as const) : ('REJECT' as const);
+      const simTime = 29000;
+      activeRedTeamSession = RedTeamEngine.validateFinding(
+        activeRedTeamSession,
+        findingId,
+        action,
+        reason,
+        simTime,
+        context.currentUser?.displayName ?? 'Assessor (Player)'
+      );
+
+      return {
+        stdout: [
+          `[+] Finding ${findingId} updated (${action}).`,
+          `Rationale: ${reason}`,
+        ],
+      };
+    }
+
+    if (sub === 'report') {
+      const deliverable = RedTeamEngine.generateExecutiveDeliverable(activeRedTeamSession);
+      return {
+        stdout: [
+          '=== Red Team Assessment Report Deliverable ===',
+          ...deliverable.split('\n'),
+        ],
+      };
+    }
+
+    return {
+      isError: true,
+      stdout: ['Usage: redteam [status | scope | accept | targets | tools | run <toolId> <targetId> | findings | validate <id> <confirm|reject> | report]'],
+    };
+  },
+};
+
+/**
+ * M19: Bounty Hunting, Security Contracts & Freelance Operations CLI Tool
+ */
+let activeBountyState: BountyHubState = createInitialBountyHubState();
+
+export const bountyCommand: TerminalCommandHandler = {
+  name: 'bounty',
+  description: 'Eko Bounty Network — Discover, evaluate, accept, and manage freelance cybersecurity contracts',
+  usage: 'bounty [list | view <id> | accept <id> | status | scope | clarify <optionId> | rep]',
+  execute: (args: string[], _context: TerminalExecutionContext): TerminalCommandResult => {
+    const sub = (args[0] ?? '').toLowerCase();
+
+    if (!sub || sub === 'help') {
+      return {
+        stdout: [
+          '=== Eko Bounty Network CLI ===',
+          'Usage: bounty <subcommand> [options]',
+          '',
+          'Subcommands:',
+          '  list                  List all available freelance security contracts',
+          '  view <contractId>     Inspect contract details, scope of engagement, and financial terms',
+          '  accept <contractId>   Accept an authorized contract and initialize engagement objectives',
+          '  status                View active engagement status, objectives progress, and audit logs',
+          '  scope                 Inspect active Scope of Engagement (in-scope vs out-of-scope targets)',
+          '  clarify <optionId>    Submit formal scope clarification for ambiguous contracts',
+          '  rep                   Display freelance reputation score, current tier, and stats',
+          '',
+          'Tip: Launch the Bounty Hub app via desktop for full graphical Submission Studio and debriefs.',
+        ],
+      };
+    }
+
+    if (sub === 'list') {
+      const contracts = activeBountyState.contracts;
+      return {
+        stdout: [
+          '=== Eko Bounty Network — Available Contracts ===',
+          'ID                          Category             Reward     Diff          Client',
+          '---------------------------------------------------------------------------------------------',
+          ...contracts.map((c: BountyContract) => {
+            const rewardNaira = `₦${(c.financialTerms.rewardKobo / 100).toLocaleString()}`;
+            return `${c.id.padEnd(28)} ${c.category.padEnd(20)} ${rewardNaira.padEnd(10)} ${c.difficulty.padEnd(13)} ${c.client.shortName}`;
+          }),
+          '',
+          'Run "bounty view <id>" to inspect Rules of Engagement and authorized targets.',
+          'Run "bounty accept <id>" to accept a contract.',
+        ],
+      };
+    }
+
+    if (sub === 'view') {
+      const contractId = args[1]?.trim();
+      if (!contractId) {
+        return {
+          isError: true,
+          stdout: ['Usage: bounty view <contractId> (e.g. bounty view ct-balogun-pos-audit)'],
+        };
+      }
+      const contract = activeBountyState.contracts.find((c: BountyContract) => c.id === contractId);
+      if (!contract) {
+        return {
+          isError: true,
+          stdout: [`Contract "${contractId}" not found. Run "bounty list" to view available listings.`],
+        };
+      }
+      const rewardNaira = `₦${(contract.financialTerms.rewardKobo / 100).toLocaleString()}`;
+      return {
+        stdout: [
+          `=== Contract Dossier: ${contract.title} ===`,
+          `ID:             ${contract.id}`,
+          `Client:         ${contract.client.name} (${contract.client.category})`,
+          `Category:       ${contract.category}`,
+          `Difficulty:     ${contract.difficulty} (Est. ${contract.estimatedEffortMinutes} mins)`,
+          `Reward:         ${rewardNaira} (Expenses: ₦${(contract.financialTerms.operationalExpensesKobo / 100).toLocaleString()})`,
+          '',
+          'Problem Statement:',
+          `  ${contract.problemStatement}`,
+          '',
+          'Scope of Engagement:',
+          '  Authorized In-Scope Targets:',
+          ...contract.scope.authorizedTargets.map(t => `    * ${t.hostname} (${t.ipAddress}:${t.port} ${t.protocol.toUpperCase()}) - ${t.serviceName}`),
+          '  Prohibited Targets & Networks:',
+          ...contract.scope.outOfScopeTargets.map(o => `    * [FORBIDDEN] ${o}`),
+          '  Prohibited Actions:',
+          ...contract.scope.prohibitedActions.map(p => `    * [STRICTLY PROHIBITED] ${p}`),
+          '',
+          contract.scope.hasScopeAmbiguity
+            ? '  [!] NOTICE: Contract scope contains unresolved ambiguities. Clarification required prior to testing.'
+            : '  [✓] Scope is fully specified and ready for engagement.',
+          '',
+          'Required Deliverables:',
+          ...contract.requiredDeliverables.map(d => `  * ${d.title}: ${d.description}`),
+        ],
+      };
+    }
+
+    if (sub === 'accept') {
+      const contractId = args[1]?.trim();
+      if (!contractId) {
+        return {
+          isError: true,
+          stdout: ['Usage: bounty accept <contractId>'],
+        };
+      }
+      if (activeBountyState.activeContract) {
+        return {
+          isError: true,
+          stdout: [
+            `[-] Already have an active contract: "${activeBountyState.activeContract.contractId}".`,
+            'Withdraw or complete the current contract before accepting another.',
+          ],
+        };
+      }
+      const contract = activeBountyState.contracts.find((c: BountyContract) => c.id === contractId);
+      if (!contract) {
+        return {
+          isError: true,
+          stdout: [`Contract "${contractId}" not found.`],
+        };
+      }
+      const rep = activeBountyState.reputation.score;
+      if (contract.prerequisites.minFreelanceReputation > rep) {
+        return {
+          isError: true,
+          stdout: [
+            `[-] Ineligible for contract "${contractId}".`,
+            `Required Reputation: ${contract.prerequisites.minFreelanceReputation} (Current: ${rep})`,
+          ],
+        };
+      }
+
+      const simTime = 28800;
+      activeBountyState = {
+        ...activeBountyState,
+        activeContract: {
+          contractId: contract.id,
+          acceptedAtSimTime: simTime,
+          acceptedScopeVersion: 1,
+          status: 'ACTIVE',
+          objectives: contract.initialObjectives.map(o => ({
+            ...o,
+            isCompleted: false,
+          })),
+          activeDraft: {
+            executiveSummary: '',
+            methodologyNotes: '',
+            findings: [],
+            linkedEvidenceIds: [],
+            scopeComplianceAffirmed: true,
+            riskImpactSummary: '',
+            remediationRecommendations: [],
+            remainingUncertainties: '',
+          },
+          auditEvents: [
+            {
+              id: `aud-${Date.now().toString(36)}`,
+              timestampSimTime: simTime,
+              actionName: 'CONTRACT_ACCEPTED',
+              targetResource: contract.scope.authorizedTargets[0]?.hostname ?? 'ALL',
+              decision: 'AUTHORIZED',
+              details: `Contract ${contract.id} accepted via CLI.`,
+              violationRecorded: false,
+            },
+          ],
+          scopeClarified: !contract.scope.hasScopeAmbiguity,
+          revisionCount: 0,
+        },
+      };
+
+      return {
+        stdout: [
+          '[+] CONTRACT ACCEPTED & ACTIVATED',
+          `Title:   ${contract.title}`,
+          `Client:  ${contract.client.name}`,
+          `Payout:  ₦${(contract.financialTerms.rewardKobo / 100).toLocaleString()}`,
+          '',
+          contract.scope.hasScopeAmbiguity
+            ? '[!] WARNING: Scope ambiguity detected. Run "bounty clarify" before executing technical operations.'
+            : 'Rules of engagement activated. Run "bounty status" to view objectives.',
+        ],
+      };
+    }
+
+    if (sub === 'status') {
+      const active = activeBountyState.activeContract;
+      if (!active) {
+        return {
+          stdout: [
+            'No active security contract in progress.',
+            'Run "bounty list" to discover available freelance opportunities.',
+          ],
+        };
+      }
+      const contract = activeBountyState.contracts.find(c => c.id === active.contractId);
+      return {
+        stdout: [
+          `=== Active Engagement: ${contract?.title ?? active.contractId} ===`,
+          `Status:           ${active.status}`,
+          `Scope Clarified:  ${active.scopeClarified ? 'YES' : 'NO - CLARIFICATION REQUIRED'}`,
+          `Revision Count:   ${active.revisionCount}`,
+          '',
+          'Objectives Progress:',
+          ...active.objectives.map((o: ContractObjective, idx: number) => {
+            const check = o.isCompleted ? '[✓ COMPLETE]' : '[ ] PENDING ';
+            return `  ${idx + 1}. ${check} ${o.title} — ${o.description}`;
+          }),
+          '',
+          'Recent Audit Logs:',
+          ...active.auditEvents.slice(-5).map(e => `  [${e.decision}] ${e.actionName} on ${e.targetResource}: ${e.details}`),
+        ],
+      };
+    }
+
+    if (sub === 'scope') {
+      const active = activeBountyState.activeContract;
+      if (!active) {
+        return {
+          stdout: ['No active contract. Run "bounty list" to find contracts.'],
+        };
+      }
+      const contract = activeBountyState.contracts.find(c => c.id === active.contractId);
+      if (!contract) {
+        return { isError: true, stdout: ['Contract data not found.'] };
+      }
+      return {
+        stdout: [
+          `=== Scope of Engagement: ${contract.title} ===`,
+          'Authorized Targets:',
+          ...contract.scope.authorizedTargets.map(t => `  * [IN-SCOPE] ${t.hostname} (${t.ipAddress}:${t.port}) - ${t.serviceName}`),
+          '',
+          'Strictly Prohibited Assets:',
+          ...contract.scope.outOfScopeTargets.map(o => `  * [OUT-OF-SCOPE] ${o}`),
+          '',
+          'Strictly Prohibited Techniques:',
+          ...contract.scope.prohibitedActions.map(p => `  * [PROHIBITED] ${p}`),
+        ],
+      };
+    }
+
+    if (sub === 'clarify') {
+      const active = activeBountyState.activeContract;
+      if (!active) {
+        return { stdout: ['No active contract.'] };
+      }
+      const contract = activeBountyState.contracts.find(c => c.id === active.contractId);
+      if (!contract || !contract.scope.hasScopeAmbiguity) {
+        return { stdout: ['This contract does not require scope clarification.'] };
+      }
+      const optionId = args[1]?.trim();
+      const options = contract.scope.clarificationOptions ?? [];
+      if (!optionId) {
+        return {
+          stdout: [
+            '=== Scope Clarification Required ===',
+            contract.scope.ambiguityDescription ?? 'The client brief contains conflicting instructions.',
+            '',
+            'Available Clarification Options:',
+            ...options.map(opt => `  [${opt.id}] ${opt.label} — ${opt.description}`),
+            '',
+            'Usage: bounty clarify <optionId>',
+          ],
+        };
+      }
+      const chosen = options.find(o => o.id === optionId);
+      if (!chosen) {
+        return { isError: true, stdout: [`Unknown option "${optionId}". Run "bounty clarify" to view options.`] };
+      }
+      activeBountyState = {
+        ...activeBountyState,
+        activeContract: {
+          ...active,
+          scopeClarified: true,
+          auditEvents: [
+            ...active.auditEvents,
+            {
+              id: `aud-${Date.now().toString(36)}`,
+              timestampSimTime: 28800,
+              actionName: 'SCOPE_CLARIFIED',
+              targetResource: 'CONTRACT_SCOPE',
+              decision: 'AUTHORIZED',
+              details: `Scope clarified via option: ${chosen.label}.`,
+              violationRecorded: false,
+            },
+          ],
+        },
+      };
+      return {
+        stdout: [
+          '[+] SCOPE CLARIFICATION SUBMITTED',
+          `Selection:  ${chosen.label}`,
+          `Resolution: ${chosen.resultingResolutionNotes}`,
+          'Technical operations against authorized assets are now unlocked.',
+        ],
+      };
+    }
+
+    if (sub === 'rep' || sub === 'reputation') {
+      const rep = activeBountyState.reputation;
+      return {
+        stdout: [
+          '=== Freelance Career Standing & Reputation ===',
+          `Reputation Score:       ${rep.score} pts`,
+          `Freelance Tier:         ${rep.tier}`,
+          `Completed Contracts:    ${rep.completedContractsCount}`,
+          `Successful Disclosures: ${rep.successfulDisclosuresCount}`,
+          `Total Settled Earnings: ₦${(rep.totalEarningsKobo / 100).toLocaleString()}`,
+          `Scope Violations:       ${rep.scopeViolationsCount}`,
+        ],
+      };
+    }
+
+    return {
+      isError: true,
+      stdout: ['Usage: bounty [list | view <id> | accept <id> | status | scope | clarify <optionId> | rep]'],
+    };
+  },
+};
+
 /**
  * Creates and initializes a TerminalCommandRegistry with the standard command set.
  */
@@ -1197,6 +2006,16 @@ export function createDefaultCommandRegistry(): TerminalCommandRegistry {
   registry.register(webproxyCommand);
   registry.register(pretextCommand);
 
+  // M17 Authorized Red Team Assessment & Scope CLI tool
+  registry.register(redteamCommand);
+
+  // M18 Blue Team & Purple Team Defensive Operations tools
+  registry.register(blueopsCommand);
+  registry.register(purpleteamCommand);
+
+  // M19 Bounty Hunting & Freelance Contracts CLI tool
+  registry.register(bountyCommand);
+
   // M5 simulated cybersecurity tools
   for (const tool of createDefaultCyberTools()) {
     registry.register(createToolCommandHandler(tool));
@@ -1204,4 +2023,5 @@ export function createDefaultCommandRegistry(): TerminalCommandRegistry {
 
   return registry;
 }
+
 

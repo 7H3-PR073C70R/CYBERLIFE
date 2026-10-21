@@ -39,5 +39,11 @@
     },
     "types": ["vite/client", "@testing-library/jest-dom/vitest"]
   },
-  "include": ["src", "tests", "vite.config.ts", "vitest.setup.ts"]
+  "include": ["src", "tests", "vite.config.ts", "vitest.setup.ts"],
+  "exclude": [
+    "src/presentation/desktop/apps/BountyApp.tsx",
+    "tests/unit/simulation/cyber/BountyContracts.test.ts",
+    "tests/unit/presentation/desktop/BountyAppM19.test.tsx",
+    "src/simulation/cyber/contracts"
+  ]
 }

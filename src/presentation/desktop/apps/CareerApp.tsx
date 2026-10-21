@@ -768,6 +768,44 @@ export const CareerApp: React.FC = () => {
             data-testid="job-board-tab"
             style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
           >
+            {/* Eko Bounty Network Freelance Spotlight Banner */}
+            <div
+              data-testid="career-bounty-network-banner"
+              style={{
+                backgroundColor: 'rgba(56, 189, 248, 0.08)',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+                borderRadius: '8px',
+                padding: '12px 16px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <div>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase' }}>
+                  🎯 Independent Professional Contracts
+                </div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: '#f8fafc' }}>
+                  Eko Bounty Network — Authorized Freelance SecOps & Bug Bounties
+                </div>
+                <div style={{ fontSize: '11px', color: '#94a3b8' }}>
+                  Discover opportunities, verify scopes of engagement, execute authorized security assessments, and receive payouts.
+                </div>
+              </div>
+              <span
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '4px',
+                  backgroundColor: '#38bdf8',
+                  color: '#0f172a',
+                  fontWeight: 700,
+                  fontSize: '11px',
+                }}
+              >
+                AVAILABLE ON DESKTOP
+              </span>
+            </div>
+
             {/* Sub-tab Navigation */}
             <div
               style={{

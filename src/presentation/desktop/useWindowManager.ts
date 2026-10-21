@@ -38,6 +38,9 @@ export function createInitialWindows(
     exploitLab: { x: 85, y: 35 },
     webProxy: { x: 110, y: 45 },
     socialPretext: { x: 125, y: 55 },
+    defensiveOps: { x: 100, y: 50 },
+    redTeam: { x: 90, y: 40 },
+    bountyHub: { x: 95, y: 45 },
   };
 
   const windows: Partial<Record<AppId, WindowState>> = {};
