@@ -682,13 +682,20 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 
 ## M21 — Social Engineering, Physical Security & Human-Centered Missions
 
-- **Purpose**: Deepen the human and physical attack surface with interactive access control, physical reconnaissance, and social pretexting.
-- **Scope**:
-  - Integrate existing `SocialPretextEngine` and `HumanPhysicalEngine` into live physical missions.
-  - Physical facility security: RFID badge cloning, tailgating timing mechanics, visitor escort procedures, and security guard interaction.
-  - High-stakes human-centered missions: dumpster diving behind financial chambers, hardware drop deployment, and executive interview deception.
+- **Purpose**: Expand Cyberlife beyond computer-based security into human intelligence — interviewing witnesses, weighing testimony against technical evidence, recognising social-engineering attempts, and running authorized physical-security assessments.
+- **Scope (implemented)**:
+  - **HumanIntel Domain Slice** (`src/simulation/humanIntel/`): observations, interview sessions, witness statements with reliability ratings, evidence comparisons, graded conclusions, social-engineering evaluations, assessment findings and reports.
+  - **10 Commands**: `StartInterview`, `AskInterviewQuestion`, `PresentEvidenceToNpc`, `ConcludeInterview`, `InspectWorldObject`, `CompareEvidenceWithTestimony`, `SubmitM21Conclusion`, `EvaluateSocEngDecision`, `RaiseAssessmentFinding`, `SubmitPhysicalAssessmentReport`, all routed through the main command handler.
+  - **3 Authored Activities**: *The Server Room Discrepancy* (HUMINT investigation), *Unusual Vendor Access Request* (social-engineering awareness), *Cedarline Visitor Management Audit* (authorized physical assessment).
+  - **Activity Integration**: `M21HumanIntelAdapter` syncs objectives with the M20 Activity Director; unlocked by completing the Aster Incident.
+  - **Persistence**: `humanIntel` slice backfilled on load for older saves.
+- **Scope (outstanding)**:
+  - `HumanIntelApp` desktop application so players can actually run the scenarios.
+  - Headless screenshot verification (`docs/graphics/milestone21/`).
+  - Align scenario character names with NPC profiles.
+- **Report**: [`milestone-21-human-intelligence-report.md`](./milestone-21-human-intelligence-report.md)
 - **Dependencies**: M14, M17, M20.
-- **Status**: **PLANNED** (Leverages existing M14 social pretexting work).
+- **Status**: **IN PROGRESS** — simulation layer complete (57 tests, 1011/1011 suite passing); player-facing UI pending.
 
 ---
 

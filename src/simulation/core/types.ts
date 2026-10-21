@@ -77,6 +77,7 @@ import type { RedTeamAssessmentState } from '../cyber/redteam/types';
 import type { DefensiveOpsState } from '../cyber/defensive/types';
 import type { BountyHubState } from '../cyber/contracts/types';
 import type { ActivityDirectorState } from '../activities/types';
+import type { HumanIntelState } from '../humanIntel/types';
 
 export interface SimulationState {
   readonly metadata: SimulationMetadata;
@@ -101,6 +102,8 @@ export interface SimulationState {
   readonly defensiveOps?: DefensiveOpsState;
   readonly bountyHub?: BountyHubState;
   readonly activityDirector?: ActivityDirectorState;
+  /** M21: Human Intelligence, social investigation and physical security state. */
+  readonly humanIntel?: HumanIntelState;
 }
 
 

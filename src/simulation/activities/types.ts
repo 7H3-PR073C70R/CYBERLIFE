@@ -50,7 +50,11 @@ export type ActivityObjectiveType =
   | 'RESOLVE_INCIDENT'
   | 'TALK_TO_NPC'
   | 'VISIT_LOCATION'
-  | 'TUNE_RULE';
+  | 'TUNE_RULE'
+  | 'INTERVIEW_NPC'
+  | 'INSPECT_OBJECT'
+  | 'COMPARE_EVIDENCE'
+  | 'REACH_CONCLUSION';
 
 export interface ActivityObjective {
   readonly id: string;

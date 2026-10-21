@@ -24,6 +24,7 @@ import { BountyHubState } from '../cyber/contracts/types';
 import { createInitialBountyHubState } from '../cyber/contracts/contractCatalogue';
 import { ActivityDirectorState } from '../activities/types';
 import { createInitialActivityDirectorState } from '../activities/activityCatalogue';
+import { HumanIntelState, createInitialHumanIntelState } from '../humanIntel/types';
 
 export interface InitialStateOverrides {
   readonly schemaVersion?: number;
@@ -53,6 +54,7 @@ export interface InitialStateOverrides {
   readonly defensiveOps?: DefensiveOpsState;
   readonly bountyHub?: BountyHubState;
   readonly activityDirector?: ActivityDirectorState;
+  readonly humanIntel?: HumanIntelState;
 }
 
 
@@ -174,6 +176,8 @@ export function createInitialSimulationState(
       overrides?.bountyHub ?? createInitialBountyHubState(),
     activityDirector:
       overrides?.activityDirector ?? createInitialActivityDirectorState(simulationTimeSeconds),
+    humanIntel:
+      overrides?.humanIntel ?? createInitialHumanIntelState(),
   };
 
 

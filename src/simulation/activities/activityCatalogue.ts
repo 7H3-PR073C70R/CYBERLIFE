@@ -84,7 +84,8 @@ export const AUTHORED_ACTIVITIES: Readonly<Record<string, ActivityDefinition>> =
       reputationPoints: 45,
       factionStanding: { factionId: 'cedarline_secops', delta: 15 },
       unlockedActivityIds: ['act_blue_broad_street_triage', 'act_story_broad_street_intel'],
-      flagsToSet: { mission_aster_completed: true },
+      // M21: completing Aster opens the human-intelligence follow-up investigations
+      flagsToSet: { mission_aster_completed: true, m21_humint_unlocked: true },
     },
     consequences: {
       reputationPenalty: 10,
@@ -517,6 +518,224 @@ export const AUTHORED_ACTIVITIES: Readonly<Record<string, ActivityDefinition>> =
     isRepeatable: true,
     whyRecommended: 'Expands your professional network across Lagos Island.',
     relatedEntityId: 'npc_contact_event_01',
+  },
+
+  // ── M21: Human Intelligence, Social Investigation & Physical Security ────
+
+  // M21 Scenario A — Conflicting Accounts (HUMINT Investigation)
+  act_m21_conflicting_accounts: {
+    id: 'act_m21_conflicting_accounts',
+    type: 'INVESTIGATION',
+    title: 'The Server Room Discrepancy',
+    shortTitle: 'Conflicting Accounts',
+    description:
+      'Two staff members have given contradictory accounts about who accessed the restricted server room on the night of the Aster Incident. Badge logs and testimonies conflict. Interview both witnesses, compare their statements against the physical access record, and reach a defensible investigative conclusion.',
+    narrativeContext:
+      'Following the Aster containment, physical access logs reveal that badge credential CED-2026-B-0247 (assigned to Tobi A.) was used to enter Room 4B at 19:47 — over an hour after Tobi claims to have left for the day. Blessing confirms seeing Tobi depart around 18:15. The discrepancy requires face-to-face investigation.',
+    source: 'Cedarline Security Office (Internal Review)',
+    priority: 'RECOMMENDED',
+    locationId: 'cedarline_interior',
+    prerequisites: {
+      requiredFlags: { m21_humint_unlocked: true },
+    },
+    objectives: [
+      {
+        id: 'obj_m21a_review_badge_log',
+        title: 'Review the Physical Access Log',
+        description: 'Examine the badge access log evidence for Room 4B on Tuesday evening.',
+        type: 'RECORD_FINDING',
+        isCompleted: false,
+        hint: 'The badge log evidence is added to your vault when you start the first interview.',
+        actionPrompt: 'Start your first interview to unlock the badge log evidence.',
+      },
+      {
+        id: 'obj_m21a_interview_marcus',
+        title: 'Interview Tobi (Infra Admin)',
+        description: 'Conduct a formal interview with Tobi regarding his whereabouts on Tuesday evening.',
+        type: 'TALK_TO_NPC',
+        target: 'npc_marcus',
+        isCompleted: false,
+        hint: 'Use StartInterview → AskInterviewQuestion → ConcludeInterview.',
+        actionPrompt: 'Locate Tobi in Cedarline and begin the interview.',
+      },
+      {
+        id: 'obj_m21a_interview_amina',
+        title: 'Interview Blessing (Lead Analyst)',
+        description: 'Gather corroborating or conflicting testimony from Blessing regarding the same evening.',
+        type: 'TALK_TO_NPC',
+        target: 'npc_amina',
+        isCompleted: false,
+        hint: 'Ask Blessing about what she observed on Tuesday evening.',
+        actionPrompt: 'Speak with Blessing after interviewing Tobi.',
+      },
+      {
+        id: 'obj_m21a_compare_testimony',
+        title: 'Compare Testimony vs Badge Log',
+        description: "Use the CompareEvidenceWithTestimony command to formally compare Tobi's initial statement against the physical badge access log.",
+        type: 'RECORD_FINDING',
+        isCompleted: false,
+        hint: 'Statement ID: q_a_marcus_whereabouts | Evidence ID: ev_phys_badge_log_tuesday',
+        actionPrompt: 'Compare the conflicting claim with the physical record.',
+      },
+      {
+        id: 'obj_m21a_submit_conclusion',
+        title: 'Submit Investigative Conclusion',
+        description: 'Formulate and submit your conclusion about what actually happened on Tuesday evening.',
+        type: 'RECORD_FINDING',
+        isCompleted: false,
+        hint: "Use SubmitM21Conclusion. Consider: does the evidence support a policy breach, an insider threat, or something else?",
+        actionPrompt: 'Submit your investigative conclusion to the Security Office.',
+      },
+    ],
+    reward: {
+      payoutKobo: 350_000,
+      careerXp: 180,
+      skillRewards: {
+        attack_simulation: 80,
+        security_fundamentals: 60,
+      },
+      reputationPoints: 40,
+      flagsToSet: { m21a_investigation_complete: true },
+      unlockedActivityIds: ['act_m21_facility_audit'],
+    },
+    consequences: {
+      recoveryGuidance:
+        'Return to Cedarline to locate the available witnesses. Review the badge log evidence before forming a conclusion.',
+    },
+    isRepeatable: false,
+    whyRecommended:
+      'Develops human intelligence and interview skills that are essential for insider threat investigations.',
+  },
+
+  // M21 Scenario B — Suspicious Vendor Access Request (SocEng Awareness)
+  act_m21_vendor_request: {
+    id: 'act_m21_vendor_request',
+    type: 'INVESTIGATION',
+    title: 'Unusual Vendor Access Request',
+    shortTitle: 'Vendor Request',
+    description:
+      'An urgent email arrives from a supposed third-party vendor claiming emergency access to the restricted server room. The message contains multiple social-engineering red flags. Analyse the request, identify the deceptive indicators, and decide how to respond — your professional judgment and Cedarline\'s physical security are on the line.',
+    narrativeContext:
+      'A message has arrived in your Cedarline secure mailbox from "Kolade Adeniyi <k.adeniyi@telekron-ng.example.sim>" claiming to be a power-systems engineer requiring unescorted access to Room 4B and administrator credentials — today, within four hours. No maintenance is scheduled in the facilities calendar.',
+    source: 'Cedarline Incoming Mail',
+    priority: 'RECOMMENDED',
+    prerequisites: {
+      requiredFlags: { m21_humint_unlocked: true },
+    },
+    objectives: [
+      {
+        id: 'obj_m21b_review_message',
+        title: 'Analyse the Vendor Message',
+        description: 'Read the vendor email and identify the social-engineering indicators present.',
+        type: 'RECORD_FINDING',
+        isCompleted: false,
+        hint: 'Look for: domain anomalies, unusual access requests, artificial urgency, and credential demands.',
+        actionPrompt: 'Open the Human Intel panel and review the vendor message.',
+      },
+      {
+        id: 'obj_m21b_make_decision',
+        title: 'Make an Access Decision',
+        description: 'Use EvaluateSocEngDecision to formally record your response to the vendor request.',
+        type: 'EXECUTE_ACTION',
+        isCompleted: false,
+        hint: 'Choose the response that best protects physical security while maintaining professional conduct.',
+        actionPrompt: 'Submit your access decision.',
+      },
+      {
+        id: 'obj_m21b_report_soc',
+        title: 'Report to Security Operations',
+        description: 'Escalate the suspicious request to the SOC for threat intelligence logging.',
+        type: 'EXECUTE_ACTION',
+        isOptional: true,
+        isCompleted: false,
+        hint: 'Choose a decision that includes SOC notification for maximum outcome rating.',
+        actionPrompt: 'Report to SOC (optional bonus).',
+      },
+    ],
+    reward: {
+      payoutKobo: 200_000,
+      careerXp: 120,
+      skillRewards: {
+        attack_simulation: 120,
+      },
+      reputationPoints: 30,
+      flagsToSet: { m21b_scenario_complete: true },
+    },
+    consequences: {
+      recoveryGuidance:
+        'Review the vendor message indicators carefully. If you approved access without verification, escalate immediately to the SOC and document the incident.',
+    },
+    isRepeatable: false,
+    whyRecommended:
+      'Builds critical social engineering awareness and physical access control judgment — essential for any security role.',
+  },
+
+  // M21 Scenario C — Authorized Facility Security Assessment
+  act_m21_facility_audit: {
+    id: 'act_m21_facility_audit',
+    type: 'RED_TEAM_ASSESSMENT',
+    title: 'Cedarline Visitor Management Audit',
+    shortTitle: 'Facility Audit',
+    description:
+      'Conduct an authorized inspection of Cedarline\'s visitor check-in, badge issuance, and escort procedures. Walk through the lobby and restricted corridor, record your observations of physical controls, identify policy gaps, raise formal findings, and submit a risk-rated assessment report.',
+    narrativeContext:
+      'Cedarline\'s Facilities Director has granted formal authorization for a physical security assessment following concerns raised during the Aster Incident investigation. Your rules of engagement require you to remain within the lobby and approved corridors, produce written findings for each control weakness, and submit a report before end-of-business.',
+    source: 'Cedarline Facilities Director (Authorized Assessment)',
+    priority: 'OPTIONAL',
+    locationId: 'cedarline_interior',
+    prerequisites: {
+      completedActivityIds: ['act_m21_conflicting_accounts'],
+    },
+    objectives: [
+      {
+        id: 'obj_m21c_inspect_objects',
+        title: 'Inspect Physical Controls (≥ 3)',
+        description:
+          'Use InspectWorldObject to examine at least three physical security controls in the Cedarline lobby and corridor.',
+        type: 'VISIT_LOCATION',
+        isCompleted: false,
+        hint: 'Examine: visitor sign-in sheet, badge printer, corridor door, CCTV camera, policy poster.',
+        actionPrompt: 'Inspect physical security controls in the Cedarline lobby.',
+      },
+      {
+        id: 'obj_m21c_raise_findings',
+        title: 'Raise At Least 2 Findings',
+        description:
+          'Use RaiseAssessmentFinding to formally document at least two distinct control weaknesses, each linked to a recorded observation.',
+        type: 'RECORD_FINDING',
+        isCompleted: false,
+        hint: 'Each finding must reference at least one observation and include a policy reference and remediation recommendation.',
+        actionPrompt: 'Raise formal security findings.',
+      },
+      {
+        id: 'obj_m21c_submit_report',
+        title: 'Submit Assessment Report',
+        description:
+          'Compile your observations and findings into a Physical Assessment Report using SubmitPhysicalAssessmentReport.',
+        type: 'SUBMIT_REPORT',
+        isCompleted: false,
+        hint: 'Include an executive summary and authorization reference. More findings = better client rating.',
+        actionPrompt: 'Submit the assessment report to Facilities Director.',
+      },
+    ],
+    reward: {
+      payoutKobo: 500_000,
+      careerXp: 250,
+      skillRewards: {
+        attack_simulation: 60,
+        security_fundamentals: 100,
+      },
+      reputationPoints: 60,
+      flagsToSet: { m21c_audit_complete: true },
+    },
+    consequences: {
+      recoveryGuidance:
+        'Return to the Cedarline lobby. Inspect objects in the lobby and corridor before raising findings. Each finding must link to at least one observation.',
+    },
+    isRepeatable: false,
+    deadlineDurationSeconds: 14400, // 4 in-game hours
+    whyRecommended:
+      'Authorized physical security assessments are a highly valued specialist skill. Completing this unlocks advanced physical pen-testing contracts.',
   },
 };
 

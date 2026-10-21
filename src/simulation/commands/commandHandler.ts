@@ -110,6 +110,18 @@ import {
   handleSetActivityGuidanceFilter,
 } from '../activities/activityCommandHandler';
 import { clampFactionStanding, getFactionStandingBand } from '../narrative/narrativeEvaluator';
+import {
+  handleStartInterview,
+  handleAskInterviewQuestion,
+  handlePresentEvidenceToNpc,
+  handleConcludeInterview,
+  handleInspectWorldObject,
+  handleCompareEvidenceWithTestimony,
+  handleSubmitM21Conclusion,
+  handleEvaluateSocEngDecision,
+  handleRaiseAssessmentFinding,
+  handleSubmitPhysicalAssessmentReport,
+} from '../humanIntel/humanIntelCommandHandler';
 
 
 function makeFailure(
@@ -2517,6 +2529,46 @@ export function handleCommand(
 
       case 'SetActivityGuidanceFilter': {
         return handleSetActivityGuidanceFilter(currentState, command.filter);
+      }
+
+      case 'StartInterview': {
+        return handleStartInterview(currentState, command);
+      }
+
+      case 'AskInterviewQuestion': {
+        return handleAskInterviewQuestion(currentState, command);
+      }
+
+      case 'PresentEvidenceToNpc': {
+        return handlePresentEvidenceToNpc(currentState, command);
+      }
+
+      case 'ConcludeInterview': {
+        return handleConcludeInterview(currentState, command);
+      }
+
+      case 'InspectWorldObject': {
+        return handleInspectWorldObject(currentState, command);
+      }
+
+      case 'CompareEvidenceWithTestimony': {
+        return handleCompareEvidenceWithTestimony(currentState, command);
+      }
+
+      case 'SubmitM21Conclusion': {
+        return handleSubmitM21Conclusion(currentState, command);
+      }
+
+      case 'EvaluateSocEngDecision': {
+        return handleEvaluateSocEngDecision(currentState, command);
+      }
+
+      case 'RaiseAssessmentFinding': {
+        return handleRaiseAssessmentFinding(currentState, command);
+      }
+
+      case 'SubmitPhysicalAssessmentReport': {
+        return handleSubmitPhysicalAssessmentReport(currentState, command);
       }
 
       default: {

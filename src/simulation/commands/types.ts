@@ -403,7 +403,17 @@ export type SimulationCommand =
   | AbandonActivityCommand
   | ResolveActivityCommand
   | SetPrimaryActivityCommand
-  | SetActivityGuidanceFilterCommand;
+  | SetActivityGuidanceFilterCommand
+  | StartInterviewCommand
+  | AskInterviewQuestionCommand
+  | PresentEvidenceToNpcCommand
+  | ConcludeInterviewCommand
+  | InspectWorldObjectCommand
+  | CompareEvidenceWithTestimonyCommand
+  | SubmitM21ConclusionCommand
+  | EvaluateSocEngDecisionCommand
+  | RaiseAssessmentFindingCommand
+  | SubmitPhysicalAssessmentReportCommand;
 
 import type { ThreatReviewStatus } from '../cyber/threatintel/types';
 import type { InvestigationConclusionSubmission } from '../cyber/investigation/types';
@@ -648,3 +658,28 @@ export interface CommandResult {
   readonly isNoOp?: boolean;
 }
 
+import type {
+  StartInterviewCommand,
+  AskInterviewQuestionCommand,
+  PresentEvidenceToNpcCommand,
+  ConcludeInterviewCommand,
+  InspectWorldObjectCommand,
+  CompareEvidenceWithTestimonyCommand,
+  SubmitM21ConclusionCommand,
+  EvaluateSocEngDecisionCommand,
+  RaiseAssessmentFindingCommand,
+  SubmitPhysicalAssessmentReportCommand,
+} from '../humanIntel/humanIntelCommandHandler';
+
+export type {
+  StartInterviewCommand,
+  AskInterviewQuestionCommand,
+  PresentEvidenceToNpcCommand,
+  ConcludeInterviewCommand,
+  InspectWorldObjectCommand,
+  CompareEvidenceWithTestimonyCommand,
+  SubmitM21ConclusionCommand,
+  EvaluateSocEngDecisionCommand,
+  RaiseAssessmentFindingCommand,
+  SubmitPhysicalAssessmentReportCommand,
+};

@@ -23,6 +23,7 @@ import { createInitialCatalogueState } from '../../simulation/catalogue/catalogu
 import { createInitialDefensiveOpsState } from '../../simulation/cyber/defensive/defensiveScenarioData';
 import { createInitialRedTeamAssessmentState } from '../../simulation/cyber/redteam/scenarioFixtures';
 import { createInitialBountyHubState } from '../../simulation/cyber/contracts/contractCatalogue';
+import { createInitialHumanIntelState } from '../../simulation/humanIntel/types';
 import { createInitialActivityDirectorState } from '../../simulation/activities/activityCatalogue';
 
 
@@ -327,6 +328,7 @@ export class SaveManager {
       activityDirector:
         state.activityDirector ??
         createInitialActivityDirectorState(state.time?.simulationTimeSeconds ?? 0),
+      humanIntel: state.humanIntel ?? createInitialHumanIntelState(),
     };
 
   }

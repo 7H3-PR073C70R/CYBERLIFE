@@ -220,3 +220,24 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 - [x] **TypeScript Strict**: `tsc --noEmit` exits 0; zero type errors.
 - [x] **Headless Browser Verification**: 6 screenshots captured via `scripts/capture-m20-screenshots.mjs` at 1440×900 resolution and saved to `docs/graphics/milestone20/`.
 - [x] **Simulation Safety Boundary**: Zero host OS commands, zero external network calls, zero hardcoded secrets; all targets are fictional Lagos Island entities.
+
+---
+
+### Milestone M21: Human Intelligence, Social Investigation & Physical Security *(In Progress)*
+- [x] **Domain Slice**: `HumanIntelState` and all M21 contracts defined in `src/simulation/humanIntel/types.ts`; slice initialised in `createInitialSimulationState()`.
+- [x] **Command Set**: 10 M21 commands added to the `SimulationCommand` union and dispatched by the main `commandHandler`.
+- [x] **Pure Handlers**: All handlers return a new frozen state plus typed failures (`NPC_NOT_FOUND`, `DIALOGUE_CONDITION_NOT_MET`, `ITEM_NOT_FOUND`, `INVALID_COMMAND`); no exceptions for invalid input.
+- [x] **Scenario A — Conflicting Accounts**: Two-witness interview with gated questions, evidence injection, testimony-vs-badge-log comparison, graded conclusion with consequences.
+- [x] **Scenario B — Vendor Access Request**: Spoofed vendor message with 4 red flags; 5 graded decisions with reputation and consequence flags.
+- [x] **Scenario C — Facility Audit**: 5 inspectable objects, observation-linked findings, risk-rated report scored against 4 expected findings.
+- [x] **Activity Director Integration**: 3 authored activities; `M21HumanIntelAdapter` syncs objectives from real `humanIntel` state.
+- [x] **Reachable from Normal Play**: Aster Incident completion sets `m21_humint_unlocked`; every interview-question gate flag is set by an M21 code path (verified by tests).
+- [x] **Persistence Backfill**: `SaveManager` backfills `humanIntel` for saves made before M21.
+- [ ] **Persistence Roundtrip Test**: Dedicated save → load test for `humanIntel`.
+- [ ] **Player-Facing UI**: `HumanIntelApp` mounted in `DesktopShell`, with every control dispatching real M21 commands.
+- [ ] **Character Name Consistency**: Scenario text names match `npc_marcus` / `npc_amina` profiles.
+- [x] **Domain Tests**: 57 tests in `tests/unit/simulation/humanIntel/M21HumanIntel.test.ts`.
+- [x] **No Regressions**: 1011/1011 total tests passing across 124 test files.
+- [x] **TypeScript Strict**: `tsc --noEmit` exits 0.
+- [ ] **Headless Browser Verification**: Screenshots in `docs/graphics/milestone21/` (blocked on UI).
+- [x] **Simulation Safety Boundary**: Fictional people, organisations and `*.example.sim` domains only; assessment is explicitly authorized; social-engineering content trains recognition and response only.

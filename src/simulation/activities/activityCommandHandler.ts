@@ -29,6 +29,7 @@ import {
   M17RedTeamAdapter,
   M18DefensiveOpsAdapter,
   M19BountyAdapter,
+  M21HumanIntelAdapter,
 } from './adapters';
 
 function makeFailure(
@@ -69,6 +70,12 @@ export function syncAllActivitiesWithAdapters(
       synced = M18DefensiveOpsAdapter.syncDefensiveActivity(state, synced);
     } else if (id === 'act_bounty_atm_audit') {
       synced = M19BountyAdapter.syncBountyActivity(state, synced);
+    } else if (
+      id === 'act_m21_conflicting_accounts' ||
+      id === 'act_m21_vendor_request' ||
+      id === 'act_m21_facility_audit'
+    ) {
+      synced = M21HumanIntelAdapter.syncHumanIntelActivity(state, synced);
     }
     nextActivities[id] = synced;
   }
