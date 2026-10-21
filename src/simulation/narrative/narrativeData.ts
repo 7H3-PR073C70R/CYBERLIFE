@@ -1,5 +1,5 @@
 /**
- * Cyberlife — Milestone 14: Authored Narrative Data
+ * Cyberlife: Milestone 14: Authored Narrative Data
  *
  * Authored definitions for Factions, Story Arcs, Chapters, Missions, and Investigative Conclusions.
  */
@@ -124,7 +124,7 @@ export const STORY_ARCS: readonly StoryArcDefinition[] = [
     id: 'arc_aster_incident',
     title: 'The Aster Anomaly',
     description:
-      'Investigate the over-privileged autonomous assistant breach at Cedarline Services, uncover the prompt injection vector, and decide the fate of junior administrator Marcus Adebayo.',
+      'Investigate the over-privileged autonomous assistant breach at Cedarline Services, uncover the prompt injection vector, and decide the fate of junior administrator Tobi.',
     category: 'CORE_MYSTERY',
     chapterIds: ['ch_triage_broad_street', 'ch_infrastructure_dilemma', 'ch_containment_remediation'],
     completionRewards: {
@@ -191,7 +191,7 @@ export const STORY_CHAPTERS: readonly StoryChapterDefinition[] = [
     arcId: 'arc_aster_incident',
     chapterNumber: 1,
     title: 'Triage on Broad Street',
-    synopsis: 'Meet Lead Analyst Amina in the Cedarline SOC, scan the local corporate subnet, and review SIEM alert telemetry.',
+    synopsis: 'Meet Lead Analyst Blessing in the Cedarline SOC, scan the local corporate subnet, and review SIEM alert telemetry.',
     missionIds: ['miss_triage_alert'],
   },
   {
@@ -199,18 +199,18 @@ export const STORY_CHAPTERS: readonly StoryChapterDefinition[] = [
     arcId: 'arc_aster_incident',
     chapterNumber: 2,
     title: 'The Infrastructure Dilemma',
-    synopsis: 'Interview Marcus Adebayo and Dr. Elena Chen to discover how svc-aster received wildcard permissions and who crafted the prompt injection.',
+    synopsis: 'Interview Tobi and Dr. Elizabeth to discover how svc-aster received wildcard permissions and who crafted the prompt injection.',
     missionIds: ['miss_audit_credentials'],
     branchingPaths: [
       {
         conditionFlags: ['flag_marcus_protected'],
         nextChapterId: 'ch_containment_remediation',
-        description: 'Collaborate with Marcus to remediate credentials without corporate exposure.',
+        description: 'Collaborate with Tobi to remediate credentials without corporate exposure.',
       },
       {
         conditionFlags: ['flag_marcus_exposed'],
         nextChapterId: 'ch_containment_remediation',
-        description: 'Formally cite Marcus Adebayo in the incident report to executive management.',
+        description: 'Formally cite Tobi in the incident report to executive management.',
       },
     ],
   },
@@ -237,7 +237,7 @@ export const STORY_CHAPTERS: readonly StoryChapterDefinition[] = [
     arcId: 'arc_eko_nexus',
     chapterNumber: 5,
     title: 'Whispers in Balogun Market',
-    synopsis: 'Help Mama Nkechi triage suspicious POS merchant terminals and meet Tunde Bakare along the Marina Seawall.',
+    synopsis: 'Help Mama Esther triage suspicious POS merchant terminals and meet Tsharp along the Marina Seawall.',
     missionIds: ['miss_balogun_pos_audit'],
   },
   {
@@ -278,9 +278,9 @@ export const NARRATIVE_MISSIONS: readonly NarrativeMissionDefinition[] = [
     id: 'miss_triage_alert',
     chapterId: 'ch_triage_broad_street',
     title: 'Triage the Aster Anomaly',
-    summary: 'Receive initial briefing from Amina and inspect Cedarline subnet hosts and authentication alerts.',
+    summary: 'Receive initial briefing from Blessing and inspect Cedarline subnet hosts and authentication alerts.',
     briefing:
-      'Lead Security Analyst Temitope Blessing flagged an anomalous SMB query originating from app-portal-01 targeting filesrv-01. Initiate triage and locate active hosts.',
+      'Lead Security Analyst Blessing flagged an anomalous SMB query originating from app-portal-01 targeting filesrv-01. Initiate triage and locate active hosts.',
     assignedFactionId: 'faction_cedarline',
     investigativeRole: 'BLUE_DEFENDER',
     clearanceLevelRequired: 1,
@@ -289,9 +289,9 @@ export const NARRATIVE_MISSIONS: readonly NarrativeMissionDefinition[] = [
       {
         id: 'obj_triage_speak_amina',
         type: 'INTERVIEW_WITNESS',
-        title: 'Speak with Lead Analyst Amina',
-        description: 'Meet Temitope Blessing in the Cedarline SOC or open the Incident Portal app on your workstation.',
-        hint: 'Amina is at the main SOC console near the office entrance.',
+        title: 'Speak with Lead Analyst Blessing',
+        description: 'Meet Blessing in the Cedarline SOC or open the Incident Portal app on your workstation.',
+        hint: 'Blessing is at the main SOC console near the office entrance.',
         targetId: 'npc_amina',
       },
       {
@@ -323,7 +323,7 @@ export const NARRATIVE_MISSIONS: readonly NarrativeMissionDefinition[] = [
     id: 'miss_audit_credentials',
     chapterId: 'ch_infrastructure_dilemma',
     title: 'Audit the Over-Scoped Credentials',
-    summary: 'Confront junior administrator Marcus Adebayo and AI Engineer Elena Chen regarding svc-aster permissions.',
+    summary: 'Confront junior administrator Tobi and AI Engineer Elizabeth regarding svc-aster permissions.',
     briefing:
       'The service account svc-aster possesses wildcard corporate-admin scopes. Determine who assigned this policy and whether prompt injection bypassed boundary controls.',
     assignedFactionId: 'faction_cedarline',
@@ -332,26 +332,26 @@ export const NARRATIVE_MISSIONS: readonly NarrativeMissionDefinition[] = [
       {
         id: 'obj_audit_speak_marcus',
         type: 'INTERVIEW_WITNESS',
-        title: 'Interview Junior Administrator Marcus',
-        description: 'Locate Marcus Adebayo near the server rack room or Broad Street to question his role assignment.',
-        hint: 'Marcus is pacing nervously near the rack enclosures.',
+        title: 'Interview Junior Administrator Tobi',
+        description: 'Locate Tobi near the server rack room or Broad Street to question his role assignment.',
+        hint: 'Tobi is pacing nervously near the rack enclosures.',
         targetId: 'npc_marcus',
         alternativeObjectiveId: 'obj_audit_marcus_phone_call',
-        failureRecoveryDescription: 'If Marcus refuses to speak, inspect his discarded terminal commit notes.',
+        failureRecoveryDescription: 'If Tobi refuses to speak, inspect his discarded terminal commit notes.',
       },
       {
         id: 'obj_audit_marcus_phone_call',
         type: 'INTERVIEW_WITNESS',
-        title: 'Examine Marcus’s Infrastructure Commit History',
-        description: 'Recover Marcus’s staging notes regarding the emergency deployment deadline.',
+        title: 'Examine Tobi’s Infrastructure Commit History',
+        description: 'Recover Tobi’s staging notes regarding the emergency deployment deadline.',
         isOptional: true,
         targetId: 'marcus_commit_logs',
       },
       {
         id: 'obj_audit_speak_elena',
         type: 'INTERVIEW_WITNESS',
-        title: 'Consult Lead AI Engineer Dr. Elena Chen',
-        description: 'Review the Aster agent tool-calling loop and system prompt guardrails with Dr. Elena Chen.',
+        title: 'Consult Lead AI Engineer Dr. Elizabeth',
+        description: 'Review the Aster agent tool-calling loop and system prompt guardrails with Dr. Elizabeth.',
         targetId: 'npc_elena',
       },
     ],
@@ -456,7 +456,7 @@ export const NARRATIVE_MISSIONS: readonly NarrativeMissionDefinition[] = [
     id: 'miss_balogun_pos_audit',
     chapterId: 'ch_balogun_whispers',
     title: 'Balogun Market POS Terminal Audit',
-    summary: 'Assist Mama Nkechi by analyzing counterfeit firmware and SMS phishing patterns affecting market merchants.',
+    summary: 'Assist Mama Esther by analyzing counterfeit firmware and SMS phishing patterns affecting market merchants.',
     briefing:
       'Balogun electronics traders are being hit by fraudulent POS firmware that intercepts customer debit cards. Inspect the terminal dumps for connections to Eko Nexus.',
     assignedFactionId: 'faction_balogun_traders',
@@ -465,8 +465,8 @@ export const NARRATIVE_MISSIONS: readonly NarrativeMissionDefinition[] = [
       {
         id: 'obj_pos_speak_nkechi',
         type: 'INTERVIEW_WITNESS',
-        title: 'Meet with Mama Nkechi',
-        description: 'Visit Mama Nkechi’s electronics stall in Balogun Market to collect the suspect POS unit.',
+        title: 'Meet with Mama Esther',
+        description: 'Visit Mama Esther’s electronics stall in Balogun Market to collect the suspect POS unit.',
         targetId: 'npc_nkechi',
       },
       {
@@ -543,7 +543,7 @@ export const NARRATIVE_MISSIONS: readonly NarrativeMissionDefinition[] = [
         id: 'obj_whistleblower_consult_authority',
         type: 'INTERVIEW_WITNESS',
         title: 'Consult Independent Stakeholder',
-        description: 'Meet Kemi Adeyemi at Tinubu Square or Tunde Bakare at Marina Seawall.',
+        description: 'Meet Kemi Adeyemi at Tinubu Square or Tsharp at Marina Seawall.',
         targetId: 'npc_tunde',
       },
     ],
@@ -596,7 +596,7 @@ export const INVESTIGATIVE_CONCLUSIONS: readonly InvestigativeConclusion[] = [
     arcId: 'arc_aster_incident',
     title: 'Theory A: Corporate Cover-Up & Scapegoating',
     hypothesis:
-      'Cedarline executive management intentionally bypassed mandatory security reviews ahead of a foreign acquisition audit, coercing junior admin Marcus Adebayo into assigning wildcard IAM permissions and subsequently attempting to position him as the sole responsible party.',
+      'Cedarline executive management intentionally bypassed mandatory security reviews ahead of a foreign acquisition audit, coercing junior admin Tobi into assigning wildcard IAM permissions and subsequently attempting to position him as the sole responsible party.',
     requiredEvidenceIds: ['EVD-2026-001', 'EVD-2026-002', 'EVD-2026-004'],
     corroboratingLogIds: ['LOG-2026-103B', 'LOG-2026-107B'],
     validatingRole: 'INDEPENDENT_INVESTIGATOR',

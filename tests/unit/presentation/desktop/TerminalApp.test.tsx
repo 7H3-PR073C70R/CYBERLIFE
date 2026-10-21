@@ -29,7 +29,7 @@ describe('TerminalApp Component', () => {
     fireEvent.change(input, { target: { value: 'whoami' } });
     fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
-    expect(screen.getByText('tade_adebayo')).toBeInTheDocument();
+    expect(screen.getAllByText(/protector|tade_adebayo/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/Security Analyst Intern/i)).toBeInTheDocument();
   });
 

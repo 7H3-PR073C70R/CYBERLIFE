@@ -100,7 +100,7 @@ export const INITIAL_PROXY_TRANSACTIONS: readonly ProxyTransaction[] = [
           email: 'biodun.ade@cedarline.corp.local',
           grade: 'L3',
           salaryNaira: '₦4,800,000 / year',
-          manager: 'Temitope Blessing',
+          manager: 'Blessing',
         },
         null,
         2

@@ -24,7 +24,7 @@ describe('TerminalCommandParser & Registry', () => {
     },
     currentUser: {
       username: 'tade_adebayo',
-      displayName: 'Tade Adebayo',
+      displayName: 'Protector',
       role: 'Security Analyst Intern',
       organization: 'Cedarline Services',
     },

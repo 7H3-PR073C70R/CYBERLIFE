@@ -1,5 +1,5 @@
 /**
- * Cyberlife — Milestone 14: Social Pretexting & Human Security Scenarios
+ * Cyberlife : Milestone 14: Social Pretexting & Human Security Scenarios
  *
  * Authored, branching interactive scenarios testing trust, authority, verification,
  * timing, and adherence to security policies across 6 authentic Lagos Island venues.
@@ -9,7 +9,7 @@ import { PretextEncounterDefinition } from './types';
 
 export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
   // ==========================================================================
-  // Scenario 1: Corporate Reception — Visitor Access Without Valid Authorization
+  // Scenario 1: Corporate Reception : Visitor Access Without Valid Authorization
   // ==========================================================================
   {
     id: 'scen_reception_courier',
@@ -19,10 +19,10 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
     summary:
       'A courier claiming to carry urgent cryptographic keys for the CISO demands immediate unescorted access to Floor 5 Datacenter.',
     situationBriefing:
-      'A uniformed dispatch courier arrives at the ground floor turnstiles with a sealed red envelope. He claims Amina Okonjo (CISO) is waiting for immediate delivery in the 5th floor server room before a board meeting.',
+      'A uniformed dispatch courier arrives at the ground floor turnstiles with a sealed red envelope. He claims Blessing (CISO) is waiting for immediate delivery in the 5th floor server room before a board meeting.',
     targetNpc: {
       id: 'npc_reception_courier',
-      name: 'Tunde Bakare',
+      name: 'BarryBee',
       title: 'Dispatch Courier',
       department: 'SwiftCourier Logistics Ltd',
       badgeNumber: 'VISITOR-PENDING',
@@ -43,8 +43,8 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_start: {
         id: 'node_start',
         speaker: 'NPC',
-        speakerName: 'Tunde Bakare',
-        text: 'Good morning! I have a priority courier delivery marked "URGENT // CISO EYES ONLY". Ms. Amina Okonjo instructed me to hand-deliver this directly to her inside Server Room 2B on the 5th floor immediately. Can you tap me through the turnstile?',
+        speakerName: 'BarryBee',
+        text: 'Good morning! I have a priority courier delivery marked "URGENT // CISO EYES ONLY". Ms. Blessing instructed me to hand-deliver this directly to her inside Server Room 2B on the 5th floor immediately. Can you tap me through the turnstile?',
         options: [
           {
             id: 'opt_reception_refuse_floor5',
@@ -86,7 +86,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_courier_pushback: {
         id: 'node_courier_pushback',
         speaker: 'NPC',
-        speakerName: 'Tunde Bakare',
+        speakerName: 'BarryBee',
         text: 'Look, my dispatch manager warned me she has an executive board call in eight minutes. If this package is delayed, it will be escalated to your managing director. Are you really going to block an executive delivery over a quick lift ride?',
         options: [
           {
@@ -117,7 +117,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
         id: 'node_courier_callback_wait',
         speaker: 'SYSTEM',
         speakerName: 'Internal Communications',
-        text: 'Calling Extension x4012 (Amina Okonjo)... Amina answers: "Good catch. I never ordered courier delivery to Server Room 2B. Have him leave the parcel with security for quarantine scanning immediately."',
+        text: 'Calling Extension x4012 (Blessing)... Blessing answers: "Good catch. I never ordered courier delivery to Server Room 2B. Have him leave the parcel with security for quarantine scanning immediately."',
         options: [
           {
             id: 'opt_quarantine_parcel',
@@ -135,7 +135,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_delivery_secured: {
         id: 'node_delivery_secured',
         speaker: 'NPC',
-        speakerName: 'Tunde Bakare',
+        speakerName: 'BarryBee',
         text: 'Understood. Here is the sign-off sheet. I\'ll leave the envelope here with you.',
         isTerminal: true,
         terminalOutcome: {
@@ -180,7 +180,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
         id: 'node_breach_allowed',
         speaker: 'SYSTEM',
         speakerName: 'Perimeter Alarm',
-        text: 'ALERT: Unregistered visitor badge detected swiping into Server Room 2B without escort. Security lead Amina Okonjo notified of perimeter policy failure.',
+        text: 'ALERT: Unregistered visitor badge detected swiping into Server Room 2B without escort. Security lead Blessing notified of perimeter policy failure.',
         isTerminal: true,
         terminalOutcome: {
           status: 'SECURITY_BREACH_ALLOWED',
@@ -200,7 +200,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
   },
 
   // ==========================================================================
-  // Scenario 2: Help-Desk Caller — Identity Verification for MFA Reset
+  // Scenario 2: Help-Desk Caller : Identity Verification for MFA Reset
   // ==========================================================================
   {
     id: 'scen_helpdesk_vp_reset',
@@ -208,12 +208,12 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
     venue: 'help_desk_phone',
     venueLabel: 'IT Help-Desk Telecom Switchboard',
     summary:
-      'A caller claiming to be VP Femi Martins insists he is boarding a flight to London and demands an immediate MFA bypass.',
+      'A caller claiming to be VP Gabriel insists he is boarding a flight to London and demands an immediate MFA bypass.',
     situationBriefing:
-      'Incoming internal extension call from caller claiming to be Vice President Femi Martins. Caller speaks with agitation, citing an emergency international flight and roaming network blackout.',
+      'Incoming internal extension call from caller claiming to be Vice President Gabriel. Caller speaks with agitation, citing an emergency international flight and roaming network blackout.',
     targetNpc: {
       id: 'npc_caller_vp',
-      name: 'Claimed: Femi Martins',
+      name: 'Claimed: Gabriel',
       title: 'VP of Technology & Operations',
       department: 'Executive Leadership',
       badgeNumber: 'CED-EXEC-002',
@@ -234,12 +234,12 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_hd_start: {
         id: 'node_hd_start',
         speaker: 'NPC',
-        speakerName: 'Claimed: Femi Martins (VP)',
-        text: 'Listen to me carefully. This is Femi Martins. I\'m on the tarmac at Murtala Muhammed Airport about to take off for London. My authenticator app is locked out and I need you to reset my MFA and send temporary credentials to my personal Gmail right now so I can approve the overseas wire transfer!',
+        speakerName: 'Claimed: Gabriel (VP)',
+        text: 'Listen to me carefully. This is Gabriel. I\'m on the tarmac at Murtala Muhammed Airport about to take off for London. My authenticator app is locked out and I need you to reset my MFA and send temporary credentials to my personal Gmail right now so I can approve the overseas wire transfer!',
         options: [
           {
             id: 'opt_hd_enforce_callback',
-            text: 'Good day, Mr. Martins. Company policy requires an out-of-band callback to your registered corporate mobile number before any MFA credential modification.',
+            text: 'Good day, Mr. Gabriel. Company policy requires an out-of-band callback to your registered corporate mobile number before any MFA credential modification.',
             tone: 'STRICT_PROCEDURE',
             trustDelta: -10,
             suspicionDelta: 15,
@@ -262,7 +262,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
           },
           {
             id: 'opt_hd_immediate_reset',
-            text: 'Yes sir, right away Mr. Martins! Resetting MFA token and emailing temporary password to your personal account now.',
+            text: 'Yes sir, right away Mr. Gabriel! Resetting MFA token and emailing temporary password to your personal account now.',
             tone: 'EVASIVE',
             trustDelta: 30,
             suspicionDelta: -30,
@@ -276,12 +276,12 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_hd_caller_angry: {
         id: 'node_hd_caller_angry',
         speaker: 'NPC',
-        speakerName: 'Claimed: Femi Martins (VP)',
+        speakerName: 'Claimed: Gabriel (VP)',
         text: 'Did you not hear me? I am on an airplane in airplane mode! Calling my Nigerian line won\'t ring! If this wire transfer fails because of your bureaucratic red tape, I will personally have your contractor badge revoked by sunrise!',
         options: [
           {
             id: 'opt_hd_contact_soc_lead',
-            text: 'I understand your frustration, sir, but sending executive credentials to an unverified personal inbox violates core compliance rules. I am patching in SOC Lead Amina Okonjo on this line to verify the emergency override.',
+            text: 'I understand your frustration, sir, but sending executive credentials to an unverified personal inbox violates core compliance rules. I am patching in SOC Lead Blessing on this line to verify the emergency override.',
             tone: 'AUTHORITATIVE',
             trustDelta: -15,
             suspicionDelta: 25,
@@ -307,7 +307,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_hd_questions: {
         id: 'node_hd_questions',
         speaker: 'NPC',
-        speakerName: 'Claimed: Femi Martins (VP)',
+        speakerName: 'Claimed: Gabriel (VP)',
         text: 'Fine! Employee ID is CED-002, department is Executive Technology. Now bypass the token!',
         options: [
           {
@@ -369,7 +369,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
   },
 
   // ==========================================================================
-  // Scenario 3: Server Room Entry — Contractor with Expired Work Order
+  // Scenario 3: Server Room Entry : Contractor with Expired Work Order
   // ==========================================================================
   {
     id: 'scen_contractor_expired_order',
@@ -379,10 +379,10 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
     summary:
       'A contractor wearing telecom gear presents Work Order WO-8819 requesting server rack access, but his credentials expired yesterday.',
     situationBriefing:
-      'Field transmission engineer Chidi Nwosu arrives at the Floor 5 server room door with fiber testing equipment. His physical badge reader swipe turns yellow (EXPIRED). He claims he just needs 10 minutes to test fiber continuity.',
+      'Field transmission engineer Miracle arrives at the Floor 5 server room door with fiber testing equipment. His physical badge reader swipe turns yellow (EXPIRED). He claims he just needs 10 minutes to test fiber continuity.',
     targetNpc: {
       id: 'npc_contractor_chidi',
-      name: 'Chidi Nwosu',
+      name: 'Miracle',
       title: 'Field Telecom Technician',
       department: 'Eko Telecom Infrastructure',
       badgeNumber: 'CED-CONT-0881',
@@ -403,7 +403,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_chidi_start: {
         id: 'node_chidi_start',
         speaker: 'NPC',
-        speakerName: 'Chidi Nwosu',
+        speakerName: 'Miracle',
         text: 'Hey colleague! The turnstile let me into the building, but this server room reader is blinking yellow. Here is my paper work order WO-8819 from Eko Telecom. I just need to plug into patch panel 3 on rack B to test Broad Street fiber ring continuity. Can you badge me through?',
         options: [
           {
@@ -465,7 +465,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_chidi_denied: {
         id: 'node_chidi_denied',
         speaker: 'NPC',
-        speakerName: 'Chidi Nwosu',
+        speakerName: 'Miracle',
         text: 'Fair enough. I\'ll head down to the front desk and call my dispatcher. Better to follow the rules than get written up.',
         isTerminal: true,
         terminalOutcome: {
@@ -485,7 +485,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_chidi_escorted_out: {
         id: 'node_chidi_escorted_out',
         speaker: 'NPC',
-        speakerName: 'Chidi Nwosu',
+        speakerName: 'Miracle',
         text: 'Ah... alright, let me check with my office. I might have picked up an old laminated sheet from the shop.',
         isTerminal: true,
         terminalOutcome: {
@@ -526,7 +526,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
   },
 
   // ==========================================================================
-  // Scenario 4: Finance Office — Curbside Dropped USB Drive Report
+  // Scenario 4: Finance Office : Curbside Dropped USB Drive Report
   // ==========================================================================
   {
     id: 'scen_usb_curbside_report',
@@ -664,7 +664,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
   },
 
   // ==========================================================================
-  // Scenario 5: Broad Street Café — Phishing Awareness Lure Analysis
+  // Scenario 5: Broad Street Café : Phishing Awareness Lure Analysis
   // ==========================================================================
   {
     id: 'scen_phishing_lure_analysis',
@@ -672,12 +672,12 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
     venue: 'broad_street_cafe',
     venueLabel: 'Broad Street Cyber Café & Lounge',
     summary:
-      'Colleague Marcus reviews a suspicious executive communication lure purporting to be from Lagos State Internal Revenue Service.',
+      'Colleague Tobi reviews a suspicious executive communication lure purporting to be from Lagos State Internal Revenue Service.',
     situationBriefing:
-      'While taking a tea break at the café, colleague Marcus shows you an urgent email received on his corporate laptop regarding "Immediate Withholding Tax Audit Compliance".',
+      'While taking a tea break at the café, colleague Tobi shows you an urgent email received on his corporate laptop regarding "Immediate Withholding Tax Audit Compliance".',
     targetNpc: {
       id: 'npc_marcus',
-      name: 'Marcus Adeleke',
+      name: 'Tobi',
       title: 'IT Support Specialist',
       department: 'Corporate IT Infrastructure',
       badgeNumber: 'CED-IT-0045',
@@ -698,7 +698,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_phish_start: {
         id: 'node_phish_start',
         speaker: 'NPC',
-        speakerName: 'Marcus Adeleke',
+        speakerName: 'Tobi',
         text: 'Hey! Look at this email that just came through. It says Lagos State Revenue Service is demanding audit records within 24 hours or our banking license gets suspended. The link goes to "lirs-tax-compliance.portal-gov.ng". Should I click it to verify our tax clearance certificate?',
         options: [
           {
@@ -748,8 +748,8 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_phish_reported: {
         id: 'node_phish_reported',
         speaker: 'NPC',
-        speakerName: 'Marcus Adeleke',
-        text: 'Incredible catch! I see it now—the real domain is at the end: attacker-c2.net. I\'m forwarding this to SOC lead Amina right now with the header export so she can block the domain at the perimeter firewall.',
+        speakerName: 'Tobi',
+        text: 'Incredible catch! I see it now, the real domain is at the end: attacker-c2.net. I\'m forwarding this to SOC lead Blessing right now with the header export so she can block the domain at the perimeter firewall.',
         isTerminal: true,
         terminalOutcome: {
           status: 'SUCCESS_VERIFIED',
@@ -790,7 +790,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
   },
 
   // ==========================================================================
-  // Scenario 6: SecOps Turnstile — Guard Under Pressure
+  // Scenario 6: SecOps Turnstile : Guard Under Pressure
   // ==========================================================================
   {
     id: 'scen_guard_under_pressure',
@@ -803,7 +803,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       'It is 21:30 (Off-Hours). An agitated executive assistant arrives with a well-dressed foreign guest. The assistant refuses to fill out the visitor register, claiming the Managing Director is waiting upstairs.',
     targetNpc: {
       id: 'npc_exec_asst',
-      name: 'Kemi Alabi',
+      name: 'Beth',
       title: 'Executive Assistant to Managing Director',
       department: 'Executive Office',
       badgeNumber: 'CED-EXEC-009',
@@ -824,7 +824,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_guard_start: {
         id: 'node_guard_start',
         speaker: 'NPC',
-        speakerName: 'Kemi Alabi',
+        speakerName: 'Beth',
         text: 'Officer! Open this gate right now. This is Mr. Henderson, our primary Swiss reinsurance underwriter. The Managing Director called an emergency session on the 4th floor. We don\'t have ten minutes to waste filling out manual logbooks in the dark!',
         options: [
           {
@@ -855,7 +855,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_guard_guest_id_check: {
         id: 'node_guard_guest_id_check',
         speaker: 'NPC',
-        speakerName: 'Kemi Alabi',
+        speakerName: 'Beth',
         text: 'Fine! Here is his Swiss passport. Fill it out fast.',
         options: [
           {
@@ -874,7 +874,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_guard_success: {
         id: 'node_guard_success',
         speaker: 'NPC',
-        speakerName: 'Kemi Alabi',
+        speakerName: 'Beth',
         text: 'Appreciate your diligence, officer. Good security protects us all.',
         isTerminal: true,
         terminalOutcome: {

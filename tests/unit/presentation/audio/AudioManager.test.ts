@@ -298,8 +298,8 @@ describe('AudioManager', () => {
 
       const buffer = await manager.loadAudio('/audio/test-sound');
       expect(buffer).not.toBeNull();
-      expect(fetchSpy).toHaveBeenCalledWith('/audio/test-sound.opus');
-      expect(fetchSpy).toHaveBeenCalledWith('/audio/test-sound.ogg');
+      expect(fetchSpy).toHaveBeenCalledWith(expect.stringContaining('/audio/test-sound.opus'));
+      expect(fetchSpy).toHaveBeenCalledWith(expect.stringContaining('/audio/test-sound.ogg'));
     });
 
     it('supports looping sounds with crossfade and stop handles', async () => {

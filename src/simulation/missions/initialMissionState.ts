@@ -1,5 +1,5 @@
 /**
- * Cyberlife — Initial State Factory for The Aster Incident Mission
+ * Cyberlife : Initial State Factory for The Aster Incident Mission
  */
 
 import { AsterIncidentMissionState } from './types';

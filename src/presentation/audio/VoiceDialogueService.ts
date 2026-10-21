@@ -40,6 +40,13 @@ export interface CharacterVoiceProfile {
 
 export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> = {
   // Lead SecOps / Mentor
+  'Blessing': {
+    preferredGender: 'female',
+    pitch: 1.05,
+    rate: 0.98,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena', 'samantha'],
+  },
   'Temitope Blessing': {
     preferredGender: 'female',
     pitch: 1.05,
@@ -56,6 +63,13 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
   },
 
   // Junior Sysadmin
+  'Tobi': {
+    preferredGender: 'male',
+    pitch: 1.02,
+    rate: 1.03,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'oliver', 'george'],
+  },
   'Marcus Adebayo': {
     preferredGender: 'male',
     pitch: 1.02,
@@ -65,6 +79,20 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
   },
 
   // Lead AI Engineer
+  'Dr. Elizabeth': {
+    preferredGender: 'female',
+    pitch: 1.02,
+    rate: 1.0,
+    volume: 1.0,
+    voiceHints: ['female', 'en-gb', 'en-us', 'karen', 'serena'],
+  },
+  'Elizabeth': {
+    preferredGender: 'female',
+    pitch: 1.02,
+    rate: 1.0,
+    volume: 1.0,
+    voiceHints: ['female', 'en-gb', 'en-us', 'karen', 'serena'],
+  },
   'Dr. Elena Chen': {
     preferredGender: 'female',
     pitch: 1.02,
@@ -74,6 +102,20 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
   },
 
   // VP / Enterprise Executive
+  'Gabriel': {
+    preferredGender: 'male',
+    pitch: 0.94,
+    rate: 0.96,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'george'],
+  },
+  'VP Gabriel': {
+    preferredGender: 'male',
+    pitch: 0.94,
+    rate: 0.96,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'george'],
+  },
   'Femi Martins': {
     preferredGender: 'male',
     pitch: 0.94,
@@ -83,6 +125,20 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
   },
 
   // Merchant / Vendor
+  'Mama Esther': {
+    preferredGender: 'female',
+    pitch: 1.08,
+    rate: 0.98,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'female', 'serena'],
+  },
+  'Esther': {
+    preferredGender: 'female',
+    pitch: 1.08,
+    rate: 0.98,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'female', 'serena'],
+  },
   'Mama Nkechi': {
     preferredGender: 'female',
     pitch: 1.08,
@@ -92,6 +148,20 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
   },
 
   // Community Elder & Historian
+  'Uncle Ola': {
+    preferredGender: 'male',
+    pitch: 0.92,
+    rate: 0.92,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'george', 'daniel'],
+  },
+  'Ola': {
+    preferredGender: 'male',
+    pitch: 0.92,
+    rate: 0.92,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'george', 'daniel'],
+  },
   'Uncle Segun': {
     preferredGender: 'male',
     pitch: 0.92,
@@ -101,6 +171,13 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
   },
 
   // Talent Liaison
+  'Anjola': {
+    preferredGender: 'female',
+    pitch: 1.06,
+    rate: 1.02,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena'],
+  },
   'Folake Davies': {
     preferredGender: 'female',
     pitch: 1.06,
@@ -110,6 +187,13 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
   },
 
   // Security Researcher
+  'Tsharp': {
+    preferredGender: 'male',
+    pitch: 0.96,
+    rate: 1.02,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'oliver', 'alex'],
+  },
   'Tunde "ZeroDay" Bakare': {
     preferredGender: 'male',
     pitch: 0.96,
@@ -126,6 +210,13 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
   },
 
   // Underground Broker / Hacker Phone Calls
+  'BarryBee': {
+    preferredGender: 'male',
+    pitch: 0.92,
+    rate: 0.94,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'daniel'],
+  },
   'Cipher': {
     preferredGender: 'male',
     pitch: 0.92,
@@ -139,6 +230,45 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
     rate: 0.94,
     volume: 1.0,
     voiceHints: ['en-ng', 'nigeria', 'male', 'daniel'],
+  },
+
+  // Protagonist / Intern Analyst
+  'Protector': {
+    preferredGender: 'male',
+    pitch: 1.0,
+    rate: 1.0,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'daniel'],
+  },
+
+  // Additional Cast Members
+  'Choker': {
+    preferredGender: 'male',
+    pitch: 0.90,
+    rate: 0.95,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'daniel'],
+  },
+  'Miracle': {
+    preferredGender: 'male',
+    pitch: 0.98,
+    rate: 1.0,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'oliver'],
+  },
+  'Michael': {
+    preferredGender: 'male',
+    pitch: 0.95,
+    rate: 0.98,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'george', 'daniel'],
+  },
+  'Beth': {
+    preferredGender: 'female',
+    pitch: 1.04,
+    rate: 1.0,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'female', 'serena', 'victoria'],
   },
 
   // Autonomous IDS Telemetry Engine (synthetic, flat voice)
@@ -604,7 +734,7 @@ export class VoiceDialogueService {
         };
 
         window.speechSynthesis.speak(utterance);
-      } catch (err) {
+      } catch {
         if (sessionToken !== this.currentToken) return;
         this.warnAutoplayBlocked();
         this.notifySpeaking(false);

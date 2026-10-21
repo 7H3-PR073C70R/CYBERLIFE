@@ -24,6 +24,7 @@ export interface HUDShellProps {
   onToggleCamera?: () => void;
   onInteract?: () => void;
   onSettingsChanged?: (settings: WorkstationSettings) => void;
+  onOpenMainMenu?: () => void;
 }
 
 export const HUDShell: React.FC<HUDShellProps> = ({
@@ -37,6 +38,7 @@ export const HUDShell: React.FC<HUDShellProps> = ({
   onToggleCamera,
   onInteract,
   onSettingsChanged,
+  onOpenMainMenu,
 }) => {
   const sim = useOptionalSimulation();
   const onboarding = sim?.state.onboarding;
@@ -118,6 +120,7 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         onToggleControls={() => setIsControlsModalOpen(true)}
         onToggleSettings={() => setIsSettingsOpen(prev => !prev)}
         onToggleIncidentChecklist={() => setIsObjectiveExpanded(prev => !prev)}
+        onOpenMainMenu={onOpenMainMenu}
         isHelpOpen={isMovementHelpOpen}
         isDevDrawerOpen={isDevDrawerOpen}
         isControlsOpen={isControlsModalOpen}

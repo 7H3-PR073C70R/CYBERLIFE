@@ -18,6 +18,7 @@ export interface StatusOverlayProps {
   onToggleControls?: () => void;
   onToggleSettings?: () => void;
   onToggleIncidentChecklist?: () => void;
+  onOpenMainMenu?: () => void;
   isHelpOpen?: boolean;
   isDevDrawerOpen?: boolean;
   isControlsOpen?: boolean;
@@ -39,6 +40,7 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
   onToggleControls,
   onToggleSettings,
   onToggleIncidentChecklist,
+  onOpenMainMenu,
   isHelpOpen = false,
   isDevDrawerOpen = false,
   isControlsOpen = false,
@@ -213,6 +215,35 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({
                 ✕
               </button>
             </div>
+
+            {/* Return to Title / Main Menu */}
+            {onOpenMainMenu && (
+              <button
+                type="button"
+                className="hud-drawer-item-btn"
+                data-testid="hud-menu-main-title-btn"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  onOpenMainMenu();
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.45rem 0.6rem',
+                  background: 'rgba(0, 229, 255, 0.08)',
+                  border: '1px solid rgba(0, 229, 255, 0.25)',
+                  borderRadius: '6px',
+                  color: '#00e5ff',
+                  cursor: 'pointer',
+                  fontSize: '0.8rem',
+                  textAlign: 'left',
+                }}
+              >
+                <span>⚡</span>
+                <span>Title & Main Menu</span>
+              </button>
+            )}
 
             {/* Camera Switch Mode */}
             <button

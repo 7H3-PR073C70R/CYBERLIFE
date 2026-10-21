@@ -239,7 +239,7 @@ export class WebProxyEngine {
               salaryNaira: '₦28,500,000 / year',
               clearanceLevel: 'RESTRICTED_TIER_2',
               privatePhone: '+234 803 555 0199',
-              manager: 'Femi Martins (VP)',
+              manager: 'Gabriel (VP)',
             },
             null,
             2

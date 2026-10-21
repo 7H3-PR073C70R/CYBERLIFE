@@ -29,13 +29,13 @@ export interface NarrativeStoryFlag {
 export const PERSISTENT_NARRATIVE_FLAGS: readonly NarrativeStoryFlag[] = [
   {
     flagKey: 'flag_marcus_protected',
-    description: 'Player collaborated with Marcus to remediate Aster IAM credentials without reporting him to VP Femi Martins.',
+    description: 'Player collaborated with Marcus to remediate Aster IAM credentials without reporting him to VP Gabriel.',
     category: 'RELATIONSHIP_CONSEQUENCE',
     defaultValue: false,
   },
   {
     flagKey: 'flag_marcus_exposed',
-    description: 'Player formally cited Marcus Adebayo as the root cause in the executive audit report.',
+    description: 'Player formally cited Tobi as the root cause in the executive audit report.',
     category: 'RELATIONSHIP_CONSEQUENCE',
     defaultValue: false,
   },
@@ -47,7 +47,7 @@ export const PERSISTENT_NARRATIVE_FLAGS: readonly NarrativeStoryFlag[] = [
   },
   {
     flagKey: 'flag_femi_audit_passed',
-    description: 'VP Femi Martins accepted the compliance report, unlocking enterprise consulting referrals.',
+    description: 'VP Gabriel accepted the compliance report, unlocking enterprise consulting referrals.',
     category: 'INCIDENT_OUTCOME',
     defaultValue: false,
   },

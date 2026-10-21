@@ -12,6 +12,10 @@ import { DialogueOverlay } from '../dialogue/DialogueOverlay';
 import { AppId } from '../desktop/types';
 import { WorkstationCameraState } from './camera/WorkstationCameraStates';
 import { getStoredWorkstationSettings, WorkstationSettings } from '../hud/WorkstationSettingsModal';
+import { MainMenuOverlay } from '../onboarding/MainMenuOverlay';
+import { musicController } from '../audio/MusicController';
+import { ambienceController } from '../audio/AmbienceController';
+import { sfxController } from '../audio/SfxController';
 
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { Money } from '@/domain/common/Money';
@@ -73,6 +77,61 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
       : 'interact_cedarline_workstation'
   );
 
+  // M15 Main Menu & Audio State
+  const initialMenuParam = initialParams?.get('menu');
+  const skipMenuParam = initialParams?.get('skipMenu');
+  const isTestEnv =
+    typeof process !== 'undefined' && process.env?.NODE_ENV === 'test';
+  const hasDirectTestingParams = Boolean(
+    initialLocParam || initialWsParam || initialNpcParam || initialAppParam
+  );
+
+  const [isMainMenuOpen, setIsMainMenuOpen] = useState<boolean>(() => {
+    if (initialMenuParam === 'true') return true;
+    if (skipMenuParam === 'true' || hasDirectTestingParams || isTestEnv) return false;
+    if (typeof window !== 'undefined' && localStorage.getItem('cyberlife_menu_entered')) return false;
+    return true;
+  });
+
+  const startInGameAudio = useCallback((locId?: string) => {
+    const targetLoc = locId ?? currentLocation.id;
+    ambienceController.setLocation(targetLoc);
+    if (targetLoc === 'apartment_interior') {
+      musicController.setContext('APARTMENT_DOWNTIME');
+    } else {
+      musicController.setContext('WORLD_EXPLORATION');
+    }
+  }, [currentLocation.id]);
+
+  useEffect(() => {
+    if (!isMainMenuOpen) {
+      startInGameAudio();
+    }
+  }, [isMainMenuOpen, startInGameAudio]);
+
+  // Synchronize audio ambient intensity with simulation time of day
+  useEffect(() => {
+    const hour = sim?.state.time.calendar.hour;
+    if (typeof hour === 'number') {
+      const isNight = hour >= 22 || hour < 6;
+      ambienceController.setTimeOfDayFactor(isNight ? 0.65 : 1.0);
+    }
+  }, [sim?.state.time.calendar.hour]);
+
+  // Audio cues for narrative evidence preservation
+  const prevEvidenceCountRef = useRef<number>(0);
+  useEffect(() => {
+    const vault = sim?.state.narrative?.evidenceVault;
+    if (vault) {
+      const count = Object.keys(vault).length;
+      if (count > prevEvidenceCountRef.current && prevEvidenceCountRef.current > 0) {
+        sfxController.playEvidenceAcquired();
+        musicController.playStinger('music_discovery_revelation');
+      }
+      prevEvidenceCountRef.current = count;
+    }
+  }, [sim?.state.narrative?.evidenceVault]);
+
   const initializeScene = useCallback(() => {
     if (!containerRef.current) return;
 
@@ -91,6 +150,12 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
         initialLocationId: initialLocParam ?? 'neighborhood',
         onLocationChanged: loc => {
           setCurrentLocation(loc);
+          ambienceController.setLocation(loc.id);
+          if (loc.id === 'apartment_interior') {
+            musicController.setContext('APARTMENT_DOWNTIME');
+          } else {
+            musicController.setContext('WORLD_EXPLORATION');
+          }
           if (loc.id === 'apartment_interior') {
             setPlayerPosition({ x: -12.0, z: -14.0 });
           } else if (loc.id === 'cedarline_interior') {
@@ -122,6 +187,9 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
           setActiveWorkstationId(wsId);
           setIsDesktopOpen(true);
           manager.setInputDisabled(true);
+          ambienceController.setWorkstationFocus(true);
+          musicController.setContext('WORKSTATION_FOCUS');
+          sfxController.playWorkstationEnter();
           if (simRef.current) {
             simRef.current.dispatch({
               type: 'SetWorldFlag',
@@ -134,6 +202,13 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
           setWorkstationState(state);
           if (state === 'WALKING') {
             setIsDesktopOpen(false);
+            ambienceController.setWorkstationFocus(false);
+            const loc = managerRef.current?.getCurrentLocation()?.id ?? 'neighborhood';
+            if (loc === 'apartment_interior') {
+              musicController.setContext('APARTMENT_DOWNTIME');
+            } else {
+              musicController.setContext('WORLD_EXPLORATION');
+            }
           }
         },
         onNpcInteract: npcId => {
@@ -153,6 +228,8 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
           }
         },
         onBedSleep: () => {
+          sfxController.play('workstation_exit');
+          musicController.playStinger('music_mission_resolved');
           if (simRef.current) {
             simRef.current.dispatch({
               type: 'AdvanceSimulationTime',
@@ -261,13 +338,21 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   };
 
   const handleCloseDesktop = useCallback(() => {
+    sfxController.playWorkstationExit();
     if (managerRef.current) {
       managerRef.current.exitWorkstationSession();
     } else {
       setIsDesktopOpen(false);
       setWorkstationState('WALKING');
     }
-  }, []);
+    ambienceController.setWorkstationFocus(false);
+    const loc = managerRef.current?.getCurrentLocation()?.id ?? currentLocation.id;
+    if (loc === 'apartment_interior') {
+      musicController.setContext('APARTMENT_DOWNTIME');
+    } else {
+      musicController.setContext('WORLD_EXPLORATION');
+    }
+  }, [currentLocation.id]);
 
   const handleSettingsChanged = useCallback((settings: WorkstationSettings) => {
     setWorkstationSettings(settings);
@@ -441,6 +526,10 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
           onToggleCamera={handleToggleCamera}
           onInteract={handleInteract}
           onSettingsChanged={handleSettingsChanged}
+          onOpenMainMenu={() => {
+            setIsMainMenuOpen(true);
+            musicController.setContext('MAIN_MENU');
+          }}
         />
       )}
 
@@ -490,13 +579,34 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
             onExitDesktop={handleCloseDesktop}
             onPeekOut={() => managerRef.current?.peekOutWorkstation()}
             showKeyHints={workstationSettings.showKeyHints}
-            onTyping={() => managerRef.current?.triggerTypingAnimation()}
+            onTyping={() => {
+              managerRef.current?.triggerTypingAnimation();
+              sfxController.playKeystroke();
+            }}
             onMouseUse={() => managerRef.current?.triggerMouseAnimation()}
             onTerminalOutput={lines => managerRef.current?.updateWorkstationTerminal(lines)}
             onDesktopStateChange={state => managerRef.current?.updateWorkstationDesktopState(state)}
           />
         </div>
       )}
+
+      {/* M15 Atmospheric Main Menu / Title Screen Overlay */}
+      <MainMenuOverlay
+        isOpen={isMainMenuOpen}
+        onStartGame={() => {
+          try {
+            localStorage.setItem('cyberlife_menu_entered', 'true');
+          } catch {
+            // Storage unavailable in private browsing
+          }
+          setIsMainMenuOpen(false);
+          startInGameAudio();
+        }}
+        onOpenSettings={() => {}}
+        onOpenControls={() => {
+          setIsMainMenuOpen(false);
+        }}
+      />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 /**
- * Cyberlife — The Aster Incident Ground Truth & Assessment Validators
+ * Cyberlife : The Aster Incident Ground Truth & Assessment Validators
  *
  * Authoritative ground truth data for the incident at Cedarline Services.
  *
@@ -47,11 +47,11 @@ export const DEFAULT_MISSION_OBJECTIVES: readonly MissionObjective[] = [
   {
     id: 'obj-briefing-01',
     phase: 'briefing',
-    title: 'Review Incident Briefing with Lead Analyst Amina',
+    title: 'Review Incident Briefing with Lead Analyst Blessing',
     description:
-      'Meet with Lead Security Analyst Temitope Blessing in the Cedarline office or review the initial alert in the Incident Portal.',
+      'Meet with Lead Security Analyst Blessing in the Cedarline office or review the initial alert in the Incident Portal.',
     isCompleted: false,
-    hint: 'Amina is standing near the office console. Speak with her [E] or open the Incident Portal app on your workstation.',
+    hint: 'Blessing is standing near the office console. Speak with her [E] or open the Incident Portal app on your workstation.',
     requiredAction: 'speak_amina_or_open_portal',
   },
 

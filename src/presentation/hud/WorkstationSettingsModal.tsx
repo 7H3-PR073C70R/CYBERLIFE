@@ -326,6 +326,72 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
             ))}
           </div>
 
+          {/* Audio Action Buttons: Test Audio and Reset Defaults */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '0.6rem',
+              marginTop: '0.2rem',
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => audioManager.testAudioPlayback()}
+              data-testid="setting-audio-test"
+              aria-label="Test audio playback"
+              style={{
+                flex: 1,
+                padding: '0.45rem 0.8rem',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                borderRadius: '6px',
+                border: '1px solid rgba(0, 229, 255, 0.3)',
+                backgroundColor: 'rgba(0, 229, 255, 0.08)',
+                color: '#00e5ff',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <span>🔔</span>
+              <span>Test Audio Output</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                audioManager.resetToDefaults();
+                setAudioVolumes(audioManager.getAllVolumes());
+                setIsMuted(audioManager.isMasterMuted());
+              }}
+              data-testid="setting-audio-reset"
+              aria-label="Reset audio settings to defaults"
+              style={{
+                flex: 1,
+                padding: '0.45rem 0.8rem',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                borderRadius: '6px',
+                border: '1px solid rgba(148, 163, 184, 0.3)',
+                backgroundColor: 'rgba(148, 163, 184, 0.08)',
+                color: '#94a3b8',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <span>↺</span>
+              <span>Reset Audio Defaults</span>
+            </button>
+          </div>
+
           {/* Camera & Interaction Section Header */}
           <div
             style={{

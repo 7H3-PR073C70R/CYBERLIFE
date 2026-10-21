@@ -43,10 +43,10 @@ export const NotesApp: React.FC<NotesAppProps> = ({
         </div>
         <div className="memo-fields">
           <div>
-            <strong>To:</strong> Tade Adebayo (Security Analyst Intern)
+            <strong>To:</strong> Protector (Security Analyst Intern)
           </div>
           <div>
-            <strong>From:</strong> Chidi Okafor (Lead Incident Response, Cedarline)
+            <strong>From:</strong> Michael (Lead Incident Response, Cedarline)
           </div>
           <div>
             <strong>Subject:</strong> Workstation Onboarding &amp; Toolset Reference
@@ -114,7 +114,7 @@ export const NotesApp: React.FC<NotesAppProps> = ({
               className="btn-scratchpad-action"
               onClick={() =>
                 insertTemplate(
-                  '### Evidence Record\n- Evidence ID: EVD-2026-001\n- Integrity: VERIFIED (SHA-256 match)\n- Chain of Custody: Handled by Chidi Okafor'
+                  '### Evidence Record\n- Evidence ID: EVD-2026-001\n- Integrity: VERIFIED (SHA-256 match)\n- Chain of Custody: Handled by Michael'
                 )
               }
               title="Add Evidence Finding Template"

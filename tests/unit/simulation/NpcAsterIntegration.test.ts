@@ -27,7 +27,7 @@ describe('Milestone 7: NPC Integration with The Aster Incident (M6)', () => {
     expect(startResult.state.mission!.preservedEvidenceIds).toHaveLength(0);
   });
 
-  describe('Temitope Blessing (Lead Security Analyst & SOC Mentor)', () => {
+  describe('Blessing (Lead Security Analyst & SOC Mentor)', () => {
     it('provides SOC briefing context without revealing root cause prematurely', () => {
       const graph = getDialogueGraph('npc_amina');
       expect(graph).toBeDefined();
@@ -47,7 +47,7 @@ describe('Milestone 7: NPC Integration with The Aster Incident (M6)', () => {
     });
   });
 
-  describe('Marcus Adebayo (Junior Systems Administrator)', () => {
+  describe('Tobi (Junior Systems Administrator)', () => {
     it('provides emotional and operational context regarding svc-aster', () => {
       const graph = getDialogueGraph('npc_marcus');
       expect(graph).toBeDefined();
@@ -110,7 +110,7 @@ describe('Milestone 7: NPC Integration with The Aster Incident (M6)', () => {
     });
   });
 
-  describe('Dr. Elena Chen (Lead AI Engineer)', () => {
+  describe('Dr. Elizabeth (Lead AI Engineer)', () => {
     it('explains Aster autonomous tool-calling architecture without fabricating evidence', () => {
       const graph = getDialogueGraph('npc_elena');
       expect(graph).toBeDefined();
@@ -128,7 +128,7 @@ describe('Milestone 7: NPC Integration with The Aster Incident (M6)', () => {
     });
   });
 
-  describe('Femi Martins (VP of Technology)', () => {
+  describe('Gabriel (VP of Technology)', () => {
     it('reflects high-level business concerns and stakeholder pressure', () => {
       const graph = getDialogueGraph('npc_femi');
       expect(graph).toBeDefined();

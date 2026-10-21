@@ -22,7 +22,7 @@ describe('Milestone 14 — Playable Narrative Story Slice: The Aster Anomaly', (
     const initialMoney = state.player.moneyKobo;
 
     // ------------------------------------------------------------------------
-    // Step 2: Dialogue with Mentor Amina (Temitope Blessing)
+    // Step 2: Dialogue with Mentor Amina (Blessing)
     // ------------------------------------------------------------------------
     const startAminaDiag = engine.dispatch({
       type: 'StartNpcDialogue',
@@ -115,7 +115,7 @@ describe('Milestone 14 — Playable Narrative Story Slice: The Aster Anomaly', (
     expect(state.narrative!.completedChapterIds).toContain('ch_triage_broad_street');
 
     // ------------------------------------------------------------------------
-    // Step 5: Interpersonal Consequence: Protecting Marcus Adebayo
+    // Step 5: Interpersonal Consequence: Protecting Tobi
     // ------------------------------------------------------------------------
     // Player meets Marcus and collaborates quietly, setting narrative flag
     engine.dispatch({
@@ -141,7 +141,7 @@ describe('Milestone 14 — Playable Narrative Story Slice: The Aster Anomaly', (
       evidenceId: 'EVD-2026-004',
       source: 'marcus_private_notes',
       title: 'Executive Emergency Deployment Memo',
-      description: 'Chat log proving VP Femi Martins ordered bypass of security testing',
+      description: 'Chat log proving VP Gabriel ordered bypass of security testing',
       hash: 'sha256-evd004-9a8b7c6d5e4f',
       tags: ['whistleblower', 'executive_memo'],
     });

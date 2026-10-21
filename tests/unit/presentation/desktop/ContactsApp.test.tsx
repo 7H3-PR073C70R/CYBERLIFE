@@ -49,10 +49,10 @@ describe('ContactsApp Component', () => {
       </SimulationProvider>
     );
 
-    // Select Uncle Segun
+    // Select Uncle Ola
     fireEvent.click(screen.getByTestId('contact-item-npc_segun'));
 
-    expect(screen.getByTestId('contact-detail-name')).toHaveTextContent('Uncle Segun');
+    expect(screen.getByTestId('contact-detail-name')).toHaveTextContent('Uncle Ola');
     expect(screen.getByTestId('contact-detail-role')).toHaveTextContent('Community Elder');
     expect(screen.getByTestId('relationship-value-display')).toBeInTheDocument();
     expect(screen.getByTestId('current-activity-display')).toBeInTheDocument();

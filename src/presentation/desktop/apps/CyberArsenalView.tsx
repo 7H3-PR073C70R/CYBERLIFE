@@ -11,7 +11,7 @@
  * - 'planned': Scoped for future milestones (M14–M18).
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
   GLOBAL_CYBER_ARSENAL_REGISTRY,
   CyberToolDefinition,
@@ -73,9 +73,18 @@ export const CyberArsenalView: React.FC<CyberArsenalViewProps> = ({ onOpenApp })
     return GLOBAL_CYBER_ARSENAL_REGISTRY.getRelatedTools(selectedTool.id);
   }, [selectedTool.id]);
 
+  const noticeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (noticeTimerRef.current) clearTimeout(noticeTimerRef.current);
+    };
+  }, []);
+
   const showNotification = (msg: string) => {
     setActionNotice(msg);
-    setTimeout(() => setActionNotice(null), 5000);
+    if (noticeTimerRef.current) clearTimeout(noticeTimerRef.current);
+    noticeTimerRef.current = setTimeout(() => setActionNotice(null), 5000);
   };
 
   const getTeamBadgeColor = (team: TeamTrack) => {

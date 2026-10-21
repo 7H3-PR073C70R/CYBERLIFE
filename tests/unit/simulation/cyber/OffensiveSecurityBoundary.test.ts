@@ -102,7 +102,7 @@ describe('Offensive Security Boundary Isolation Invariants', () => {
       },
       currentUser: {
         username: 'tade_adebayo',
-        displayName: 'Tade Adebayo',
+        displayName: 'Protector',
         role: 'Security Analyst Intern',
         organization: 'Cedarline Services',
         accessTier: 1,

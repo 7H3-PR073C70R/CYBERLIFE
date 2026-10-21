@@ -427,7 +427,7 @@ export class VoicePlayer {
   public getWaveformData(outputArray: Uint8Array): void {
     if (this.analyserNode && this.isCurrentlySpeaking) {
       try {
-        this.analyserNode.getByteTimeDomainData(outputArray as any);
+        (this.analyserNode.getByteTimeDomainData as unknown as (arr: Uint8Array) => void)(outputArray);
         return;
       } catch {
         // Fall through

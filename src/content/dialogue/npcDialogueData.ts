@@ -19,7 +19,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
     amina_greeting: {
       id: 'amina_greeting',
       speakerId: 'npc_amina',
-      text: 'Tade, welcome to the SOC. We have an active incident underway. Our telemetry flagged unauthorized SMB file queries originating from app-portal-01 targeting filesrv-01 at 07:42. The queries came from svc-aster, our AI assistant service account. We need you on this immediately.',
+      text: 'Protector, welcome to the SOC. We have an active incident underway. Our telemetry flagged unauthorized SMB file queries originating from app-portal-01 targeting filesrv-01 at 07:42. The queries came from svc-aster, our AI assistant service account. We need you on this immediately.',
       choices: [
         {
           id: 'amina_greet_procedure',
@@ -29,7 +29,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 5,
-              reason: 'Amina approves of your focus on formal protocol.',
+              reason: 'Blessing approves of your focus on formal protocol.',
             },
             {
               type: 'CHANGE_FACTION_STANDING',
@@ -40,7 +40,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'RECORD_MEMORY',
               topic: 'incident_priorities',
-              fact: 'Amina stressed following the formal lifecycle: triage, evidence preservation, containment, remediation, and verification.',
+              fact: 'Blessing stressed following the formal lifecycle: triage, evidence preservation, containment, remediation, and verification.',
             },
           ],
         },
@@ -52,7 +52,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'RECORD_MEMORY',
               topic: 'marcus_role',
-              fact: 'Amina pointed out Marcus Adebayo configured the credentials under extreme pressure.',
+              fact: 'Blessing pointed out Tobi configured the credentials under extreme pressure.',
             },
           ],
         },
@@ -66,11 +66,11 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
     amina_returning: {
       id: 'amina_returning',
       speakerId: 'npc_amina',
-      text: 'Good to see you back, Tade. How is the investigation progressing on app-portal-01?',
+      text: 'Good to see you back, Protector. How is the investigation progressing on app-portal-01?',
       choices: [
         {
           id: 'amina_return_evidence_branch',
-          text: 'Amina, I preserved forensic evidence EVD-2026-001 proving svc-aster was assigned wildcard permissions.',
+          text: 'Blessing, I preserved forensic evidence EVD-2026-001 proving svc-aster was assigned wildcard permissions.',
           nextNodeId: 'amina_evidence_dilemma',
           condition: {
             requiredEvidenceIds: ['EVD-2026-001'],
@@ -83,7 +83,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
         },
         {
           id: 'amina_return_marcus',
-          text: 'Have you spoken with Marcus recently? He seemed anxious when I walked past his rack.',
+          text: 'Have you spoken with Tobi recently? He seemed anxious when I walked past his rack.',
           nextNodeId: 'amina_marcus_hint',
         },
         {
@@ -93,7 +93,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
         },
         {
           id: 'amina_ask_career',
-          text: 'Amina, what are Cedarline’s expectations for advancing to Junior SOC Analyst?',
+          text: 'Blessing, what are Cedarline’s expectations for advancing to Junior SOC Analyst?',
           nextNodeId: 'amina_career_guidance',
         },
         {
@@ -114,7 +114,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
     amina_evidence_dilemma: {
       id: 'amina_evidence_dilemma',
       speakerId: 'npc_amina',
-      text: 'Let me review the SHA-256 hash... Incredible forensic work, Tade. This configuration snapshot is irrefutable: svc-aster was given corporate-admin with wildcard scopes ["*"]. This wasn\'t a bug; someone intentionally bypassed policy. We have two ways to handle this. We can contain it quietly to protect Cedarline\'s commercial standing, or escalate it formally to CRCII regulators.',
+      text: 'Let me review the SHA-256 hash... Incredible forensic work, Protector. This configuration snapshot is irrefutable: svc-aster was given corporate-admin with wildcard scopes ["*"]. This wasn\'t a bug; someone intentionally bypassed policy. We have two ways to handle this. We can contain it quietly to protect Cedarline\'s commercial standing, or escalate it formally to CRCII regulators.',
       choices: [
         {
           id: 'amina_choice_quiet_containment',
@@ -124,7 +124,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 10,
-              reason: 'Amina appreciates your loyalty to Cedarline corporate stability.',
+              reason: 'Blessing appreciates your loyalty to Cedarline corporate stability.',
             },
             {
               type: 'CHANGE_FACTION_STANDING',
@@ -156,7 +156,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 5,
-              reason: 'Amina respects your unyielding ethical principles despite executive pushback.',
+              reason: 'Blessing respects your unyielding ethical principles despite executive pushback.',
             },
             {
               type: 'CHANGE_FACTION_STANDING',
@@ -195,7 +195,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'amina_quiet_exit',
-          text: 'On it, Amina. Returning to workstation.',
+          text: 'On it, Blessing. Returning to workstation.',
           nextNodeId: 'amina_exit_workstation',
         },
       ],
@@ -203,7 +203,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
     amina_regulatory_disclosure_ack: {
       id: 'amina_regulatory_disclosure_ack',
       speakerId: 'npc_amina',
-      text: 'You have courage, Tade. Broad Street executives won\'t like it, but CRCII and the traders union will back us up with this cryptographic proof in hand. Prepare your findings report; we will submit it through official channels.',
+      text: 'You have courage, Protector. Broad Street executives won\'t like it, but CRCII and the traders union will back us up with this cryptographic proof in hand. Prepare your findings report; we will submit it through official channels.',
       choices: [
         {
           id: 'amina_regulatory_exit',
@@ -219,13 +219,13 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'amina_guidance_ack',
-          text: 'Understood, Amina. I will review active listings on the Career dashboard.',
+          text: 'Understood, Blessing. I will review active listings on the Career dashboard.',
           nextNodeId: 'amina_exit_workstation',
           actions: [
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 5,
-              reason: 'Amina appreciates your career ambition and disciplined approach.',
+              reason: 'Blessing appreciates your career ambition and disciplined approach.',
             },
           ],
         },
@@ -248,7 +248,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 5,
-              reason: 'Amina is pleased with your readiness to take on internal tickets.',
+              reason: 'Blessing is pleased with your readiness to take on internal tickets.',
             },
           ],
         },
@@ -262,11 +262,11 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
     amina_job_triage_feedback: {
       id: 'amina_job_triage_feedback',
       speakerId: 'npc_amina',
-      text: 'Outstanding work on that ticket, Tade. Your log analysis was clean and the findings matched our authoritative telemetry. Keep this up and a promotion to Junior SOC Analyst will be well within reach.',
+      text: 'Outstanding work on that ticket, Protector. Your log analysis was clean and the findings matched our authoritative telemetry. Keep this up and a promotion to Junior SOC Analyst will be well within reach.',
       choices: [
         {
           id: 'amina_triage_ack',
-          text: 'Thank you, Amina. On to the next challenge.',
+          text: 'Thank you, Blessing. On to the next challenge.',
           nextNodeId: 'amina_exit_workstation',
           actions: [
             {
@@ -291,7 +291,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 5,
-              reason: 'Amina values your commitment to forensic integrity.',
+              reason: 'Blessing values your commitment to forensic integrity.',
             },
           ],
         },
@@ -305,7 +305,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
     amina_marcus_hint: {
       id: 'amina_marcus_hint',
       speakerId: 'npc_amina',
-      text: 'Marcus configured the svc-aster credentials three weeks ago during our sprint crunch. Be gentle with him, Tade. He is terrified management will make him the scapegoat. If you approach him constructively, he will tell you the truth.',
+      text: 'Tobi configured the svc-aster credentials three weeks ago during our sprint crunch. Be gentle with him, Protector. He is terrified management will make him the scapegoat. If you approach him constructively, he will tell you the truth.',
       choices: [
         {
           id: 'amina_marcus_promise',
@@ -315,12 +315,12 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 5,
-              reason: 'Amina appreciates your blameless post-mortem mindset.',
+              reason: 'Blessing appreciates your blameless post-mortem mindset.',
             },
             {
               type: 'RECORD_MEMORY',
               topic: 'blameless_culture_commitment',
-              fact: 'You promised Amina to treat Marcus with empathy and focus on root cause.',
+              fact: 'You promised Blessing to treat Tobi with empathy and focus on root cause.',
             },
           ],
         },
@@ -333,7 +333,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'amina_tools_ack',
-          text: 'Thank you, Amina. Returning to the workstation now.',
+          text: 'Thank you, Blessing. Returning to the workstation now.',
           nextNodeId: 'amina_exit_workstation',
         },
       ],
@@ -351,7 +351,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 5,
-              reason: 'Amina is impressed with your swift incident handling.',
+              reason: 'Blessing is impressed with your swift incident handling.',
             },
           ],
         },
@@ -360,11 +360,11 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
     amina_mission_completed: {
       id: 'amina_mission_completed',
       speakerId: 'npc_amina',
-      text: 'Outstanding work on the Aster Incident, Tade! Your formal report was approved by executive leadership, and the bounty payout was credited to your account. You handled both the technical investigation and team communication with distinction.',
+      text: 'Outstanding work on the Aster Incident, Protector! Your formal report was approved by executive leadership, and the bounty payout was credited to your account. You handled both the technical investigation and team communication with distinction.',
       choices: [
         {
           id: 'amina_comp_what_next',
-          text: 'Amina, what should I focus on next now that Case AST-01 is officially resolved?',
+          text: 'Blessing, what should I focus on next now that Case AST-01 is officially resolved?',
           nextNodeId: 'amina_next_steps_briefing',
         },
         {
@@ -374,7 +374,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
         },
         {
           id: 'amina_comp_ack',
-          text: 'Thank you for your guidance throughout the incident, Amina.',
+          text: 'Thank you for your guidance throughout the incident, Blessing.',
           nextNodeId: 'amina_exit_workstation',
           actions: [
             {
@@ -389,7 +389,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
     amina_next_steps_briefing: {
       id: 'amina_next_steps_briefing',
       speakerId: 'npc_amina',
-      text: 'You have proven yourself under real enterprise pressure, Tade. Here is what I recommend for your next play:\n\n1. 🌊 Marina Seawall: Tunde Bakare from the 0xLagos syndicate is out by the railings. He researches emerging attack vectors and has independent bug bounties.\n2. 🛒 Balogun Market: Mama Nkechi runs the electronics union stall. She is a vital source of street-level intelligence and hardware adapters.\n3. ☕ Broad Street: Folake Davies from Eko Tech Partners scouts senior talent at the sidewalk cafe. She has lucrative fintech consulting referrals.\n4. 💼 Workstation Desktop: Launch the Career & Market app to claim newly unlocked junior SOC tickets and certifications.\n\nTake time to explore Lagos Island and build your network.',
+      text: 'You have proven yourself under real enterprise pressure, Protector. Here is what I recommend for your next play:\n\n1. 🌊 Marina Seawall: Tsharp from the 0xLagos syndicate is out by the railings. He researches emerging attack vectors and has independent bug bounties.\n2. 🛒 Balogun Market: Mama Esther runs the electronics union stall. She is a vital source of street-level intelligence and hardware adapters.\n3. ☕ Broad Street: Anjola from Eko Tech Partners scouts senior talent at the sidewalk cafe. She has lucrative fintech consulting referrals.\n4. 💼 Workstation Desktop: Launch the Career & Market app to claim newly unlocked junior SOC tickets and certifications.\n\nTake time to explore Lagos Island and build your network.',
       choices: [
         {
           id: 'amina_next_steps_thanks',
@@ -399,7 +399,7 @@ export const AMINA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'RECORD_MEMORY',
               topic: 'lagos_island_roadmap',
-              fact: 'Amina advised Tade to visit Tunde Bakare at Marina Seawall, Mama Nkechi at Balogun Market, Folake Davies on Broad Street, and check Career & Market on the workstation.',
+              fact: 'Blessing advised Protector to visit Tsharp at Marina Seawall, Mama Esther at Balogun Market, Anjola on Broad Street, and check Career & Market on the workstation.',
             },
           ],
         },
@@ -436,17 +436,17 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
     marcus_greeting: {
       id: 'marcus_greeting',
       speakerId: 'npc_marcus',
-      text: 'Tade! Hey... are you here about the alert? Look, I... I’ve just been doing routine storage maintenance on filesrv-01. Everything is fine here! Why is everyone looking over at my server rack?',
+      text: 'Protector! Hey... are you here about the alert? Look, I... I’ve just been doing routine storage maintenance on filesrv-01. Everything is fine here! Why is everyone looking over at my server rack?',
       choices: [
         {
           id: 'marcus_empathy',
-          text: 'Marcus, breathe. I am investigating anomalous queries from svc-aster. I am here to fix the system configuration, not hunt for a scapegoat.',
+          text: 'Tobi, breathe. I am investigating anomalous queries from svc-aster. I am here to fix the system configuration, not hunt for a scapegoat.',
           nextNodeId: 'marcus_relief',
           actions: [
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 15,
-              reason: 'Marcus feels immense relief that you are not blaming him.',
+              reason: 'Tobi feels immense relief that you are not blaming him.',
             },
             {
               type: 'CHANGE_FACTION_STANDING',
@@ -462,7 +462,7 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'RECORD_MEMORY',
               topic: 'marcus_confession',
-              fact: 'Marcus confessed he assigned corporate-admin wildcard permissions under extreme launch deadline pressure.',
+              fact: 'Tobi confessed he assigned corporate-admin wildcard permissions under extreme launch deadline pressure.',
             },
           ],
         },
@@ -474,7 +474,7 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: -20,
-              reason: 'Marcus feels attacked and retreats into defensive secrecy.',
+              reason: 'Tobi feels attacked and retreats into defensive secrecy.',
             },
             {
               type: 'CHANGE_FACTION_STANDING',
@@ -490,7 +490,7 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'RECORD_MEMORY',
               topic: 'marcus_defensive',
-              fact: 'Marcus clammed up after feeling threatened regarding policy violations.',
+              fact: 'Tobi clammed up after feeling threatened regarding policy violations.',
             },
           ],
         },
@@ -504,17 +504,17 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
     marcus_relief: {
       id: 'marcus_relief',
       speakerId: 'npc_marcus',
-      text: 'God... thank you, Tade. You don’t know what kind of pressure executive management put on us. Aster kept throwing 403 permission errors on search indexes three nights before launch. I... I gave svc-aster the corporate-admin role just so the demo would work. I swear I meant to revoke it the next Monday, but then the Lagos fiber outage happened and I forgot!',
+      text: 'God... thank you, Protector. You don’t know what kind of pressure executive management put on us. Aster kept throwing 403 permission errors on search indexes three nights before launch. I... I gave svc-aster the corporate-admin role just so the demo would work. I swear I meant to revoke it the next Monday, but then the Lagos fiber outage happened and I forgot!',
       choices: [
         {
           id: 'marcus_request_memo',
-          text: 'Marcus, do you have any documentation of VP Martins ordering this bypass? I need proof so you aren\'t scapegoated.',
+          text: 'Tobi, do you have any documentation of VP Gabriel ordering this bypass? I need proof so you aren\'t scapegoated.',
           nextNodeId: 'marcus_memo_revealed',
           actions: [
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 10,
-              reason: 'Marcus trusts you enough to share confidential internal records.',
+              reason: 'Tobi trusts you enough to share confidential internal records.',
             },
             {
               type: 'CHANGE_FACTION_STANDING',
@@ -532,7 +532,7 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
               evidenceId: 'EVD-2026-004',
               source: 'marcus_private_notes',
               title: 'Executive Emergency Deployment Memo',
-              description: 'Chat log proving VP Femi Martins ordered bypass of security testing',
+              description: 'Chat log proving VP Gabriel ordered bypass of security testing',
               hash: 'sha256-evd004-9a8b7c6d5e4f',
               tags: ['whistleblower', 'executive_memo'],
             },
@@ -546,7 +546,7 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 5,
-              reason: 'Marcus appreciates your calm, constructive follow-up.',
+              reason: 'Tobi appreciates your calm, constructive follow-up.',
             },
           ],
         },
@@ -558,7 +558,7 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 10,
-              reason: 'Marcus deeply respects your integrity and support.',
+              reason: 'Tobi deeply respects your integrity and support.',
             },
           ],
         },
@@ -567,11 +567,11 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
     marcus_memo_revealed: {
       id: 'marcus_memo_revealed',
       speakerId: 'npc_marcus',
-      text: 'Yes! I archived the internal emergency order chat export into my private notes under artifact EVD-2026-004. VP Femi Martins explicitly said: "Grant Aster whatever permissions it needs to complete the investor demo by 09:00, or clean out your desk." Take this hash—use it when you submit your investigation so truth prevails.',
+      text: 'Yes! I archived the internal emergency order chat export into my private notes under artifact EVD-2026-004. VP Gabriel explicitly said: "Grant Aster whatever permissions it needs to complete the investor demo by 09:00, or clean out your desk." Take this hash, use it when you submit your investigation so truth will prevail.',
       choices: [
         {
           id: 'marcus_memo_ack',
-          text: 'Thank you, Marcus. I have this documented. You are protected.',
+          text: 'Thank you, Tobi. I have this documented. You are protected.',
           nextNodeId: 'marcus_exit_friendly',
         },
       ],
@@ -583,7 +583,7 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'marcus_log_ack',
-          text: 'That is exactly the forensic clue I needed. Thank you, Marcus.',
+          text: 'That is exactly the forensic clue I needed. Thank you, Tobi.',
           nextNodeId: 'marcus_exit_friendly',
         },
       ],
@@ -591,7 +591,7 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
     marcus_defensive_node: {
       id: 'marcus_defensive_node',
       speakerId: 'npc_marcus',
-      text: 'I followed the deployment checklist signed off by the engineering lead! If there’s an issue, talk to Dr. Chen or Femi Martins. I don’t have time to answer interrogations when my servers need maintenance.',
+      text: 'I followed the deployment checklist signed off by the engineering lead! If there’s an issue, talk to Dr. Elizabeth or Gabriel. I don’t have time to answer interrogations when my servers need maintenance.',
       choices: [
         {
           id: 'marcus_def_backoff',
@@ -615,7 +615,7 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
     marcus_post_confession: {
       id: 'marcus_post_confession',
       speakerId: 'npc_marcus',
-      text: 'Hey Tade. I’m monitoring the container restart. Thanks again for not throwing me under the bus earlier. Did you manage to revoke that wildcard policy on app-portal-01?',
+      text: 'Hey Protector. I’m monitoring the container restart. Thanks again for not throwing me under the bus earlier. Did you manage to revoke that wildcard policy on app-portal-01?',
       choices: [
         {
           id: 'marcus_post_ack',
@@ -627,7 +627,7 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
     marcus_guarded: {
       id: 'marcus_guarded',
       speakerId: 'npc_marcus',
-      text: 'I told you, Tade, speak to management if you have questions. I’m doing my job here.',
+      text: 'I told you, Protector, speak to management if you have questions. I’m doing my job here.',
       choices: [
         {
           id: 'marcus_guarded_leave',
@@ -639,7 +639,7 @@ export const MARCUS_DIALOGUE_GRAPH: DialogueGraph = {
     marcus_exit_friendly: {
       id: 'marcus_exit_friendly',
       speakerId: 'npc_marcus',
-      text: 'I owe you one, Tade. If you need any server logs exported, just let me know.',
+      text: 'I owe you one, Protector. If you need any server logs exported, just let me know.',
       choices: [],
       isTerminal: true,
     },
@@ -683,12 +683,12 @@ export const ELENA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 10,
-              reason: 'Dr. Chen appreciates your interest in the AI system architecture.',
+              reason: 'Dr. Elizabeth appreciates your interest in the AI system architecture.',
             },
             {
               type: 'RECORD_MEMORY',
               topic: 'aster_agent_architecture',
-              fact: 'Dr. Chen explained Aster uses an autonomous tool-calling loop that executes tools based on prompt semantic matching.',
+              fact: 'Dr. Elizabeth explained Aster uses an autonomous tool-calling loop that executes tools based on prompt semantic matching.',
             },
           ],
         },
@@ -700,7 +700,7 @@ export const ELENA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'RECORD_MEMORY',
               topic: 'prompt_injection_hypothesis',
-              fact: 'Dr. Chen confirmed prompt injection or loose prompting could cause Aster to search out-of-scope resources.',
+              fact: 'Dr. Elizabeth confirmed prompt injection or loose prompting could cause Aster to search out-of-scope resources.',
             },
           ],
         },
@@ -712,7 +712,7 @@ export const ELENA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: -15,
-              reason: 'Dr. Chen bristles at dismissive attitudes toward AI engineering.',
+              reason: 'Dr. Elizabeth bristles at dismissive attitudes toward AI engineering.',
             },
           ],
         },
@@ -721,7 +721,7 @@ export const ELENA_DIALOGUE_GRAPH: DialogueGraph = {
     elena_returning: {
       id: 'elena_returning',
       speakerId: 'npc_elena',
-      text: 'Back again, Tade. Have you had a chance to inspect Aster’s tool permissions in the terminal?',
+      text: 'Back again, Protector. Have you had a chance to inspect Aster’s tool permissions in the terminal?',
       choices: [
         {
           id: 'elena_ret_remediation',
@@ -738,7 +738,7 @@ export const ELENA_DIALOGUE_GRAPH: DialogueGraph = {
     elena_explain_tools: {
       id: 'elena_explain_tools',
       speakerId: 'npc_elena',
-      text: 'Aster runs an agent loop: it receives user queries, parses intents, and autonomously generates API calls. Its intended role is kb-assistant with docs:read and kb:search scopes. But if the operating environment gives its service account wildcard privileges, the model will faithfully execute whatever search queries its reasoning tree explores—including scanning SMB network shares.',
+      text: 'Aster runs an agent loop: it receives user queries, parses intents, and autonomously generates API calls. Its intended role is kb-assistant with docs:read and kb:search scopes. But if the operating environment gives its service account wildcard privileges, the model will faithfully execute whatever search queries its reasoning tree explores, including scanning SMB network shares.',
       choices: [
         {
           id: 'elena_tools_remediation',
@@ -748,7 +748,7 @@ export const ELENA_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 5,
-              reason: 'Dr. Chen is glad you understand least-privilege containment.',
+              reason: 'Dr. Elizabeth is glad you understand least-privilege containment.',
             },
           ],
         },
@@ -757,7 +757,7 @@ export const ELENA_DIALOGUE_GRAPH: DialogueGraph = {
     elena_explain_injection: {
       id: 'elena_explain_injection',
       speakerId: 'npc_elena',
-      text: 'Precisely. An ambiguous prompt like "find all Q3 financial compensation reports" caused Aster’s semantic planner to branch out beyond knowledge base articles into corporate file shares. But the fundamental defense is never prompt filtering alone—it is hard operating system authorization boundaries.',
+      text: 'Precisely. An ambiguous prompt like "find all Q3 financial compensation reports" caused Aster’s semantic planner to branch out beyond knowledge base articles into corporate file shares. But the fundamental defense is never prompt filtering alone; it is hard operating system authorization boundaries.',
       choices: [
         {
           id: 'elena_inj_defense',
@@ -776,7 +776,7 @@ export const ELENA_DIALOGUE_GRAPH: DialogueGraph = {
     elena_defensive: {
       id: 'elena_defensive',
       speakerId: 'npc_elena',
-      text: 'Every technology poses risk when operational controls are neglected. A database administrator with root access can drop tables—we don’t ban databases, we implement access control. The same applies to autonomous agents.',
+      text: 'Every technology poses risk when operational controls are neglected. A database administrator with root access can drop tables, but we don’t ban databases; we implement access control. The same applies to autonomous agents.',
       choices: [
         {
           id: 'elena_def_pivot',
@@ -792,7 +792,7 @@ export const ELENA_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'elena_rem_ack',
-          text: 'Clear and actionable advice. Thank you, Dr. Chen.',
+          text: 'Clear and actionable advice. Thank you, Dr. Elizabeth.',
           nextNodeId: 'elena_exit',
         },
       ],
@@ -833,12 +833,12 @@ export const FEMI_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 15,
-              reason: 'Femi values crisp, professional executive updates.',
+              reason: 'Gabriel values crisp, professional executive updates.',
             },
             {
               type: 'RECORD_MEMORY',
               topic: 'femi_briefed',
-              fact: 'Briefed VP Femi Martins with a structured executive summary.',
+              fact: 'Briefed VP Gabriel with a structured executive summary.',
             },
           ],
         },
@@ -850,7 +850,7 @@ export const FEMI_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: -20,
-              reason: 'Femi is furious at unsupported panic and business disruption threats.',
+              reason: 'Gabriel is furious at unsupported panic and business disruption threats.',
             },
           ],
         },
@@ -873,7 +873,7 @@ export const FEMI_DIALOGUE_GRAPH: DialogueGraph = {
         },
         {
           id: 'femi_ask_contract',
-          text: 'Mr. Martins, does Marina Logistics have any active security audit contracts available?',
+          text: 'Mr. Gabriel, does Marina Logistics have any active security audit contracts available?',
           nextNodeId: 'femi_job_offer_port_audit',
         },
         {
@@ -903,7 +903,7 @@ export const FEMI_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 5,
-              reason: 'Femi appreciates your proactive willingness to take on corporate contracts.',
+              reason: 'Gabriel appreciates your proactive willingness to take on corporate contracts.',
             },
           ],
         },
@@ -921,13 +921,13 @@ export const FEMI_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'femi_audit_ack',
-          text: 'Thank you, Mr. Martins. Always ready for high-stakes audits.',
+          text: 'Thank you, Mr. Gabriel. Always ready for high-stakes audits.',
           nextNodeId: 'femi_exit',
           actions: [
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 10,
-              reason: 'Femi is impressed with your validated contract delivery.',
+              reason: 'Gabriel is impressed with your validated contract delivery.',
             },
           ],
         },
@@ -940,13 +940,13 @@ export const FEMI_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'femi_commit',
-          text: 'Understood, Mr. Martins. Delivering verified results is my priority.',
+          text: 'Understood, Mr. Gabriel. Delivering verified results is my priority.',
           nextNodeId: 'femi_exit',
           actions: [
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 5,
-              reason: 'Femi appreciates high-ownership professionalism.',
+              reason: 'Gabriel appreciates high-ownership professionalism.',
             },
           ],
         },
@@ -971,13 +971,13 @@ export const FEMI_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'femi_comp_ack',
-          text: 'Thank you, Mr. Martins. Cedarline’s systems are secure.',
+          text: 'Thank you, Mr. Gabriel. Cedarline’s systems are secure.',
           nextNodeId: 'femi_exit',
           actions: [
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 10,
-              reason: 'Earned the lasting respect of VP Femi Martins.',
+              reason: 'Earned the lasting respect of VP Gabriel.',
             },
           ],
         },
@@ -1010,13 +1010,13 @@ export const NKECHI_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'nkechi_greet_friendly',
-          text: 'Haha, Mama Nkechi, good morning. Just taking a walk between security analysis shifts.',
+          text: 'Haha, Mama Esther, good morning. Just taking a walk between security analysis shifts.',
           nextNodeId: 'nkechi_chat',
           actions: [
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 10,
-              reason: 'Mama Nkechi enjoys your warm, respectful greeting.',
+              reason: 'Mama Esther enjoys your warm, respectful greeting.',
             },
           ],
         },
@@ -1034,14 +1034,14 @@ export const NKECHI_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'nkechi_explain_phishing',
-          text: 'Mama Nkechi, that is 100% a phishing scam! Banks never request BVN or PIN over SMS links. Tell everyone in the market to ignore and delete it.',
+          text: 'Mama Esther, that is 100% a phishing scam! Banks never request BVN or PIN over SMS links. Tell everyone in the market to ignore and delete it.',
           nextNodeId: 'nkechi_grateful',
           actions: [
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 15,
               reason:
-                'Mama Nkechi is deeply grateful for your life-saving cyber advice for market traders.',
+                'Mama Esther is deeply grateful for your life-saving cyber advice for market traders.',
             },
             {
               type: 'CHANGE_FACTION_STANDING',
@@ -1052,7 +1052,7 @@ export const NKECHI_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'RECORD_MEMORY',
               topic: 'phishing_advice_given',
-              fact: 'Warned Mama Nkechi and Balogun market traders about SMS phishing attacks targeting commercial bank accounts.',
+              fact: 'Warned Mama Esther and Balogun market traders about SMS phishing attacks targeting commercial bank accounts.',
             },
           ],
         },
@@ -1064,7 +1064,7 @@ export const NKECHI_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: -10,
-              reason: 'Mama Nkechi felt you looked down on local market traders.',
+              reason: 'Mama Esther felt you looked down on local market traders.',
             },
             {
               type: 'CHANGE_FACTION_STANDING',
@@ -1079,11 +1079,11 @@ export const NKECHI_DIALOGUE_GRAPH: DialogueGraph = {
     nkechi_grateful: {
       id: 'nkechi_grateful',
       speakerId: 'npc_nkechi',
-      text: 'I knew it! Ah, thank you so much, Tade! I will tell the market security committee right now. You see why education is good? Anytime you need anything from my stall, you have a friend in Balogun market!',
+      text: 'I knew it! Ah, thank you so much, Protector! I will tell the market security committee right now. You see why education is good? Anytime you need anything from my stall, you have a friend in Balogun market!',
       choices: [
         {
           id: 'nkechi_grat_ack',
-          text: 'Always happy to protect our community, Mama Nkechi. Take care!',
+          text: 'Always happy to protect our community, Mama Esther. Take care!',
           nextNodeId: 'nkechi_exit',
         },
       ],
@@ -1095,7 +1095,7 @@ export const NKECHI_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'nkechi_dis_exit',
-          text: 'Goodbye, Mama Nkechi.',
+          text: 'Goodbye, Mama Esther.',
           nextNodeId: 'nkechi_exit',
         },
       ],
@@ -1103,17 +1103,17 @@ export const NKECHI_DIALOGUE_GRAPH: DialogueGraph = {
     nkechi_street_news: {
       id: 'nkechi_street_news',
       speakerId: 'npc_nkechi',
-      text: 'Well, around 8:00 AM, one young man from Cedarline—that junior technician Marcus—ran outside to buy pure water with his hands shaking like leaf! He was murmuring about server passwords. I hope you people haven’t broken the internet!',
+      text: 'Well, around 8:00 AM, one young man from Cedarline, that junior technician Tobi, ran outside to buy pure water with his hands shaking like leaf! He was murmuring about server passwords. I hope you people haven’t broken the internet!',
       choices: [
         {
           id: 'nkechi_news_ack',
-          text: 'Thank you for the tip, Mama Nkechi. We are taking good care of the network.',
+          text: 'Thank you for the tip, Mama Esther. We are taking good care of the network.',
           nextNodeId: 'nkechi_exit',
           actions: [
             {
               type: 'RECORD_MEMORY',
               topic: 'marcus_spotted_outside',
-              fact: 'Mama Nkechi saw Marcus Adebayo looking visibly distressed on Broad Street earlier.',
+              fact: 'Mama Esther saw Tobi looking visibly distressed on Broad Street earlier.',
             },
           ],
         },
@@ -1126,7 +1126,7 @@ export const NKECHI_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'nkechi_ret_warm',
-          text: 'I am so glad to hear that, Mama Nkechi. Stay vigilant!',
+          text: 'I am so glad to hear that, Mama Esther. Stay vigilant!',
           nextNodeId: 'nkechi_exit',
           actions: [
             {
@@ -1159,18 +1159,18 @@ export const SEGUN_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'segun_listen',
-          text: 'Good day, Uncle Segun. How long have you lived on Lagos Island?',
+          text: 'Good day, Uncle Ola. How long have you lived on Lagos Island?',
           nextNodeId: 'segun_history',
           actions: [
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 10,
-              reason: 'Uncle Segun appreciates the respect shown to an elder.',
+              reason: 'Uncle Ola appreciates the respect shown to an elder.',
             },
             {
               type: 'RECORD_MEMORY',
               topic: 'lagos_island_history',
-              fact: 'Uncle Segun shared how Broad Street transitioned from British colonial banks to modern high-frequency cyber networks.',
+              fact: 'Uncle Ola shared how Broad Street transitioned from British colonial banks to modern high-frequency cyber networks.',
             },
           ],
         },
@@ -1194,7 +1194,7 @@ export const SEGUN_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 10,
-              reason: 'Uncle Segun nods with deep approval at your insight.',
+              reason: 'Uncle Ola nods with deep approval at your insight.',
             },
           ],
         },
@@ -1207,7 +1207,7 @@ export const SEGUN_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'segun_wis_ack',
-          text: 'Thank you for the wisdom, Uncle Segun. I will carry it with me.',
+          text: 'Thank you for the wisdom, Uncle Ola. I will carry it with me.',
           nextNodeId: 'segun_exit',
         },
       ],
@@ -1227,7 +1227,7 @@ export const SEGUN_DIALOGUE_GRAPH: DialogueGraph = {
     segun_exit: {
       id: 'segun_exit',
       speakerId: 'npc_segun',
-      text: 'Walk gently on Lagos Island, Tade.',
+      text: 'Walk gently on Lagos Island, Protector.',
       choices: [],
       isTerminal: true,
     },
@@ -1247,7 +1247,7 @@ export const FOLAKE_DIALOGUE_GRAPH: DialogueGraph = {
     folake_post_incident: {
       id: 'folake_post_incident',
       speakerId: 'npc_folake',
-      text: 'Tade! Broad Street is buzzing. Word is you just contained and resolved the Aster incident at Cedarline without a single data leak or PR fallout! That kind of incident response composure is exactly what high-growth fintechs pay top dollar for.',
+      text: 'Protector! Broad Street is buzzing. Word is you just contained and resolved the Aster incident at Cedarline without a single data leak or PR fallout! That kind of incident response composure is exactly what high-growth fintechs pay top dollar for.',
       choices: [
         {
           id: 'folake_post_contracts',
@@ -1257,13 +1257,13 @@ export const FOLAKE_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 15,
-              reason: 'Folake is thrilled by your proven forensic track record.',
+              reason: 'Anjola is thrilled by your proven forensic track record.',
             },
           ],
         },
         {
           id: 'folake_post_thanks',
-          text: 'Thank you, Folake. I will keep in touch as I explore further assignments.',
+          text: 'Thank you, Anjola. I will keep in touch as I explore further assignments.',
           nextNodeId: 'folake_exit',
         },
       ],
@@ -1271,22 +1271,22 @@ export const FOLAKE_DIALOGUE_GRAPH: DialogueGraph = {
     folake_greeting: {
       id: 'folake_greeting',
       speakerId: 'npc_folake',
-      text: 'Hi there! You must be Tade Vance. Word travels fast along Broad Street—I represent Eko Tech Partners. We scout technical and security talent for top fintech firms across West Africa and London.',
+      text: 'Hello! You must be Protector. Word travels very fast along Broad Street. I represent Eko Tech Partners. We scout technical and security talent for top fintech firms across West Africa and London.',
       choices: [
         {
           id: 'folake_career_interest',
-          text: 'Nice to meet you, Folake. What kind of cybersecurity skills are firms looking for right now?',
+          text: 'Nice to meet you, Anjola. What kind of cybersecurity skills are firms looking for right now?',
           nextNodeId: 'folake_market_info',
           actions: [
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 10,
-              reason: 'Folake is impressed by your professional market curiosity.',
+              reason: 'Anjola is impressed by your professional market curiosity.',
             },
             {
               type: 'RECORD_MEMORY',
               topic: 'lagos_cyber_job_market',
-              fact: 'Folake explained that AI agent sandboxing and IAM least-privilege skills command top consulting rates in Lagos.',
+              fact: 'Anjola explained that AI agent sandboxing and IAM least-privilege skills command top consulting rates in Lagos.',
             },
           ],
         },
@@ -1298,7 +1298,7 @@ export const FOLAKE_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 5,
-              reason: 'Folake respects focused dedication to live incident response.',
+              reason: 'Anjola respects focused dedication to live incident response.',
             },
           ],
         },
@@ -1330,7 +1330,7 @@ export const FOLAKE_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'folake_imp_exit',
-          text: 'Will do, Folake. Thanks!',
+          text: 'Will do, Anjola. Thanks!',
           nextNodeId: 'folake_exit',
         },
       ],
@@ -1338,7 +1338,7 @@ export const FOLAKE_DIALOGUE_GRAPH: DialogueGraph = {
     folake_exit: {
       id: 'folake_exit',
       speakerId: 'npc_folake',
-      text: 'Good luck with the triage, Tade. Keep your standards high!',
+      text: 'Good luck with the triage, Protector. Keep your standards high!',
       choices: [],
       isTerminal: true,
     },
@@ -1356,18 +1356,18 @@ export const TUNDE_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'tunde_spot_on',
-          text: 'You have sharp eyes, Tunde. That is exactly what happened.',
+          text: 'You have sharp eyes, Tsharp. That is exactly what happened.',
           nextNodeId: 'tunde_discussion',
           actions: [
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 15,
-              reason: 'Tunde appreciates honesty over corporate PR spin.',
+              reason: 'Tsharp appreciates honesty over corporate PR spin.',
             },
             {
               type: 'RECORD_MEMORY',
               topic: 'tunde_zero_day_insight',
-              fact: 'Tunde confirmed that excessive IAM roles on autonomous LLM agents are the most common vulnerability vector in Lagos enterprise rollouts.',
+              fact: 'Tsharp confirmed that excessive IAM roles on autonomous LLM agents are the most common vulnerability vector in Lagos enterprise rollouts.',
             },
           ],
         },
@@ -1379,7 +1379,7 @@ export const TUNDE_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: -10,
-              reason: 'Tunde dislikes generic corporate secrecy.',
+              reason: 'Tsharp dislikes generic corporate secrecy.',
             },
           ],
         },
@@ -1388,7 +1388,7 @@ export const TUNDE_DIALOGUE_GRAPH: DialogueGraph = {
     tunde_discussion: {
       id: 'tunde_discussion',
       speakerId: 'npc_tunde',
-      text: 'Classic rookie blunder! The devs get tired of 403 errors during testing, slap corporate-admin on svc-aster, and promise to "fix it in sprint 4". Then someone prompts the agent for payroll and boom—unauthorized SMB exfiltration. Did you guys revoke the token or isolate the subnet yet?',
+      text: 'Classic rookie blunder! The devs get tired of 403 errors during testing, slap corporate-admin on svc-aster, and promise to "fix it in sprint 4". Then someone prompts the agent for payroll and boom, unauthorized SMB exfiltration. Did you guys revoke the token or isolate the subnet yet?',
       choices: [
         {
           id: 'tunde_disc_method',
@@ -1398,7 +1398,7 @@ export const TUNDE_DIALOGUE_GRAPH: DialogueGraph = {
             {
               type: 'CHANGE_RELATIONSHIP',
               delta: 10,
-              reason: 'Tunde respects textbook forensic discipline.',
+              reason: 'Tsharp respects textbook forensic discipline.',
             },
           ],
         },
@@ -1423,7 +1423,7 @@ export const TUNDE_DIALOGUE_GRAPH: DialogueGraph = {
       choices: [
         {
           id: 'tunde_resp_exit',
-          text: 'Count on it, Tunde. See you around the Marina.',
+          text: 'Count on it, Tsharp. See you around the Marina.',
           nextNodeId: 'tunde_exit',
         },
       ],
@@ -1431,7 +1431,7 @@ export const TUNDE_DIALOGUE_GRAPH: DialogueGraph = {
     tunde_exit: {
       id: 'tunde_exit',
       speakerId: 'npc_tunde',
-      text: 'Stay frosty, Tade. Watch those IAM scopes.',
+      text: 'Stay frosty, Protector. Watch those IAM scopes.',
       choices: [],
       isTerminal: true,
     },

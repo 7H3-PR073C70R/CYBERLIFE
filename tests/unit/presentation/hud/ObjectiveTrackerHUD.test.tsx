@@ -59,7 +59,7 @@ describe('ObjectiveTrackerHUD Component', () => {
     // Initial state: Step 1 of 9
     expect(screen.getByTestId('objective-status-badge')).toHaveTextContent('0/9 Done');
     expect(screen.getByText(/Step 1 of 9/i)).toBeInTheDocument();
-    expect(screen.getByText(/Review Incident Briefing with Lead Analyst Amina/i)).toBeInTheDocument();
+    expect(screen.getByText(/Review Incident Briefing with Lead Analyst Blessing/i)).toBeInTheDocument();
     expect(screen.getByText(/Where to Go:/i)).toBeInTheDocument();
     expect(screen.getByText(/What to Do:/i)).toBeInTheDocument();
   });
@@ -95,10 +95,10 @@ describe('ObjectiveTrackerHUD Component', () => {
 
     // Directives list places and contacts
     expect(screen.getByText(/Where to Go Next/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/Lead Analyst Amina/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(/Tunde 'ZeroDay' Bakare/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(/Mama Nkechi/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(/Folake Davies/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Lead Analyst Blessing/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Tsharp 'ZeroDay' Bakare/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Mama Esther/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Anjola/i).length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText(/Career & Market App/i).length).toBeGreaterThanOrEqual(1);
 
     // Collapsed header verification

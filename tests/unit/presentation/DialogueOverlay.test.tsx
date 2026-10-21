@@ -16,7 +16,7 @@ describe('DialogueOverlay Component', () => {
     );
 
     expect(screen.getByTestId('dialogue-overlay')).toBeInTheDocument();
-    expect(screen.getByTestId('dialogue-npc-name')).toHaveTextContent('Temitope Blessing');
+    expect(screen.getByTestId('dialogue-npc-name')).toHaveTextContent('Blessing');
     expect(screen.getByText('Lead Security Analyst')).toBeInTheDocument();
     expect(screen.getByTestId('dialogue-speech-text')).toBeInTheDocument();
     expect(screen.getByTestId('npc-relationship-badge')).toBeInTheDocument();

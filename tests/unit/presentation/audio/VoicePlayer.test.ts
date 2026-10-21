@@ -16,7 +16,7 @@ describe('VoicePlayer', () => {
       hash_amina_greet: {
         file: '/assets/audio/voice/hash_amina_greet.mp3',
         fileName: 'hash_amina_greet.mp3',
-        speaker: 'Temitope Blessing',
+        speaker: 'Blessing',
         speakerId: 'npc_amina',
         nodeId: 'amina_greeting',
         text: 'Tade, welcome to the SOC. We have an active incident underway.',
@@ -52,7 +52,7 @@ describe('VoicePlayer', () => {
       'npc_amina:texthash_amina_1': {
         file: '/assets/audio/voice/hash_amina_greet.mp3',
         fileName: 'hash_amina_greet.mp3',
-        speaker: 'Temitope Blessing',
+        speaker: 'Blessing',
         speakerId: 'npc_amina',
         nodeId: 'amina_greeting',
         text: 'Tade, welcome to the SOC. We have an active incident underway.',
@@ -161,7 +161,7 @@ describe('VoicePlayer', () => {
       const unrenderedText = 'This line has no pre-rendered audio file.';
 
       const handle = player.playVoice(unrenderedText, {
-        speaker: 'Marcus Adebayo',
+        speaker: 'Tobi',
         speakerId: 'npc_marcus',
       });
 
@@ -169,7 +169,7 @@ describe('VoicePlayer', () => {
       expect(handle.durationMs).toBeGreaterThan(0);
       expect(speakSpy).toHaveBeenCalledWith(
         unrenderedText,
-        expect.objectContaining({ speaker: 'Marcus Adebayo' })
+        expect.objectContaining({ speaker: 'Tobi' })
       );
     });
 
@@ -188,7 +188,7 @@ describe('VoicePlayer', () => {
       const noiseStartSpy = vi.spyOn(phoneFilterChain, 'startCallNoise');
 
       player.playVoice('Tade, can you hear me? Secure line established.', {
-        speaker: 'Temitope Blessing',
+        speaker: 'Blessing',
         speakerId: 'amina-okonjo',
         isPhoneCall: true,
       });

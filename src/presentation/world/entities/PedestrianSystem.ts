@@ -77,10 +77,10 @@ export const PEDESTRIAN_ARCHETYPES: PedestrianArchetype[] = [
     role: 'Managing Partner, Private Equity',
     bodyType: 'female_2',
   },
-  // 9. Tunde - Lagos Tech Entrepreneur (Smart Casual)
+  // 9. Tsharp - Lagos Tech Entrepreneur (Smart Casual)
   {
     id: 'lagos_tech_entrepreneur',
-    name: 'Tunde Bakare',
+    name: 'Tsharp',
     role: 'Lagos Tech Entrepreneur',
     bodyType: 'male_1',
   },

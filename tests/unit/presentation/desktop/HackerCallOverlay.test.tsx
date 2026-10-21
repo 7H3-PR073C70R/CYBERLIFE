@@ -136,10 +136,10 @@ describe('HackerCallOverlay', () => {
   it('sequences dialogue lines on voice completion (onEnd + delayMs), never on typewriter timer alone', async () => {
     vi.useFakeTimers();
 
-    let capturedOptions: any = null;
+    let capturedOptions: { onEnd?: () => void; isPhoneCall?: boolean } | null = null;
     const { voiceDialogueService } = await import('@/presentation/audio/VoiceDialogueService');
     const speakSpy = vi.spyOn(voiceDialogueService, 'speak').mockImplementation((_text, opts) => {
-      capturedOptions = opts;
+      capturedOptions = opts ?? null;
     });
 
     const multiLineThread: ChatThread = {
@@ -193,9 +193,10 @@ describe('HackerCallOverlay', () => {
     expect(screen.getByText('Line One: Keep your voice down.')).toBeInTheDocument();
 
     // Now voice completes and invokes onEnd callback
-    expect(capturedOptions?.onEnd).toBeDefined();
+    const opts: any = capturedOptions;
+    expect(opts?.onEnd).toBeDefined();
     act(() => {
-      capturedOptions.onEnd();
+      opts?.onEnd?.();
     });
 
     // Immediately after onEnd, it still waits for delayMs (500ms) before advancing

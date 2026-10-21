@@ -32,8 +32,8 @@ export const SystemInfoApp: React.FC<SystemInfoAppProps> = ({
   const hostname = isCedarline ? `${HOSTNAMES.office}.corp.local` : `${HOSTNAMES.home}.local`;
 
   const user = isCedarline
-    ? 'tade_adebayo (Security Analyst Intern — Cedarline Services)'
-    : 'player (Independent Security Researcher)';
+    ? 'protector (Security Analyst Intern, Cedarline Services)'
+    : 'protector (Independent Security Researcher)';
 
   const subnet = isCedarline
     ? '10.0.4.15 / 24 (Marina Tower Corporate Subnet)'

@@ -19,6 +19,7 @@ import { createDefaultTerminalParser, TerminalExecutionContext } from '@/simulat
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { OS_NAME, OS_VERSION, OS_BRANDING, HOSTNAMES, KERNEL_STRING } from '../osBranding';
 import { OsIcon } from '../icons/OsIcons';
+import { sfxController } from '../../audio/SfxController';
 
 export interface TerminalEntry {
   id: string;
@@ -173,16 +174,16 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
         currentDirectory: dir,
         currentUser: isCedarline
           ? {
-            username: 'tade_adebayo',
-            displayName: 'Tade Adebayo',
+            username: 'protector',
+            displayName: 'Protector',
             role: 'Security Analyst Intern',
-            organization: 'Cedarline Services — Marina Tower',
+            organization: 'Cedarline Services: Marina Tower',
           }
           : {
-            username: 'player',
-            displayName: 'Tade Adebayo',
+            username: 'protector',
+            displayName: 'Protector',
             role: 'Independent Security Researcher',
-            organization: 'Home Rig — Broad Street 14',
+            organization: 'Home Rig: Broad Street 14',
           },
         workstation: isCedarline
           ? {
@@ -251,6 +252,8 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
   const handleExecute = (cmdText: string) => {
     const trimmed = cmdText.trim();
     if (!trimmed) return;
+
+    sfxController.playTerminalEnter();
 
     const ctx = buildContext(activeTab.currentDirectory, activeTab.history);
     const result = parser.parseAndExecute(trimmed, ctx);
@@ -327,6 +330,12 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
       isError: result.isError,
       timestamp: ctx.simulationTime.timeString,
     };
+
+    if (result.isError) {
+      sfxController.playTerminalError();
+    } else {
+      sfxController.playTerminalSuccess();
+    }
 
     // Update active tab entries & state
     setTabs(prev =>

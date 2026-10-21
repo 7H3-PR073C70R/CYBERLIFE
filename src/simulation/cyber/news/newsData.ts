@@ -46,7 +46,7 @@ export const ALL_THREAT_ARTICLES: readonly ThreatNewsArticle[] = [
     category: 'CEDARLINE_INTERNAL',
     severity: 'HIGH',
     publishedDate: 'Monday, Oct 12, 2026',
-    author: 'Temitope Blessing, Senior SOC Analyst',
+    author: 'Blessing, Senior SOC Analyst',
     source: 'Cedarline Security Operations Centre',
     summary:
       'Internal auditor bot Aster flagged for excessive privilege delegation and lateral directory queries across staging servers.',

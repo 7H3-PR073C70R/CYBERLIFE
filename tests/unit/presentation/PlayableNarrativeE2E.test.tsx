@@ -3,7 +3,7 @@
  *
  * Comprehensive end-to-end presentation and simulation integration test suite verifying:
  * 1. Narrative entry point, character dialogue display, and real UI selection.
- * 2. Meaningful branching: Marcus Adebayo (Empathy vs Accusation) producing divergent
+ * 2. Meaningful branching: Tobi (Empathy vs Accusation) producing divergent
  *    relationship, faction, flag, and evidence consequences.
  * 3. Evidence-dependent investigation: Amina dialogue gating choices based on preserved vault evidence.
  * 4. Faction standing and UI consequence verification in ContactsApp.
@@ -33,7 +33,7 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
       </SimulationProvider>
     );    // Initial dialogue UI elements
     expect(screen.getByTestId('dialogue-overlay')).toBeInTheDocument();
-    expect(screen.getByTestId('dialogue-npc-name')).toHaveTextContent('Temitope Blessing');
+    expect(screen.getByTestId('dialogue-npc-name')).toHaveTextContent('Blessing');
     expect(screen.getByTestId('npc-relationship-badge')).toHaveTextContent('Friendly (+20)');
     expect(screen.getByTestId('dialogue-speech-text')).toBeInTheDocument();
 
@@ -74,7 +74,7 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
   });
 
   // --------------------------------------------------------------------------
-  // 2. Meaningful Branching: Marcus Adebayo (Empathy vs Accusation)
+  // 2. Meaningful Branching: Tobi (Empathy vs Accusation)
   // --------------------------------------------------------------------------
   it('Branch 1: Marcus Empathy path grants trust, Cedarline standing, whistleblower memo, and 0xLagos rep', () => {
     const engine = createSimulationEngine();
@@ -93,12 +93,12 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
     );
 
     // Marcus initial state
-    expect(screen.getByTestId('dialogue-npc-name')).toHaveTextContent('Marcus Adebayo');
+    expect(screen.getByTestId('dialogue-npc-name')).toHaveTextContent('Tobi');
     expect(screen.getByTestId('npc-relationship-badge')).toHaveTextContent('Neutral (0)');
 
     // Choose Branch 1: Empathy / De-escalation ("Take a breath, Marcus...")
     const choiceEmpathy = screen.getByTestId('dialogue-choice-0');
-    expect(choiceEmpathy).toHaveTextContent(/Marcus, breathe/i);
+    expect(choiceEmpathy).toHaveTextContent(/Tobi, breathe/i);
     fireEvent.click(choiceEmpathy);
 
     rerender(
@@ -115,7 +115,7 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
 
     // Now Marcus offers the memo request option
     const choiceRequestMemo = screen.getByTestId('dialogue-choice-0');
-    expect(choiceRequestMemo).toHaveTextContent(/documentation of VP Martins ordering this bypass/i);
+    expect(choiceRequestMemo).toHaveTextContent(/documentation of VP Gabriel ordering this bypass/i);
     fireEvent.click(choiceRequestMemo);
 
     rerender(
@@ -352,7 +352,7 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
       evidenceId: 'EVD-2026-004',
       source: 'marcus_private_notes',
       title: 'Executive Emergency Deployment Memo',
-      description: 'VP Femi Martins deployment authorization',
+      description: 'VP Gabriel deployment authorization',
       hash: 'sha256-memo-test',
       tags: ['whistleblower'],
     });

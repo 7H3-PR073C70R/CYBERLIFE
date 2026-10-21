@@ -43,8 +43,8 @@ export const OnionChatApp: React.FC<OnionChatAppProps> = ({ onStartCall }) => {
 
     const newMsg: ChatMessage = {
       id: `msg-${Date.now()}`,
-      senderId: 'tade_adebayo',
-      senderName: 'Tade Adebayo (You)',
+      senderId: 'protector',
+      senderName: 'Protector (You)',
       senderRole: 'Security Analyst',
       text: trimmed,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -152,7 +152,7 @@ export const OnionChatApp: React.FC<OnionChatAppProps> = ({ onStartCall }) => {
               }}
             />
             <span style={{ fontWeight: 700, fontSize: '13px', color: '#f8fafc' }}>
-              Tade Adebayo
+              Protector
             </span>
           </div>
           <div

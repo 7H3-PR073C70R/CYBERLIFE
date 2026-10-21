@@ -25,8 +25,8 @@ export interface ObjectiveActionGuide {
 export const OBJECTIVE_ACTION_GUIDES: Record<string, ObjectiveActionGuide> = {
   'obj-briefing-01': {
     whereToGo: 'Cedarline Office Floor 14 (Console) or Workstation Desk',
-    whatToDo: 'Speak with Lead Analyst Amina or open the Incident Portal app on your workstation to review Case #2026-AST-01.',
-    tip: 'Press [E] to talk to Amina, or sit at the workstation desk to use the computer.',
+    whatToDo: 'Speak with Lead Analyst Blessing or open the Incident Portal app on your workstation to review Case #2026-AST-01.',
+    tip: 'Press [E] to talk to Blessing, or sit at the workstation desk to use the computer.',
   },
   'obj-assess-01': {
     whereToGo: 'Workstation Desktop -> Terminal App',
@@ -81,26 +81,26 @@ export const POST_INCIDENT_DIRECTIVES = [
   {
     icon: '🏢',
     location: 'Cedarline SOC Floor 14',
-    contact: 'Lead Analyst Amina',
-    action: 'Speak with Amina for closing remarks, performance debrief, and career mentorship.',
+    contact: 'Lead Analyst Blessing',
+    action: 'Speak with Blessing for closing remarks, performance debrief, and career mentorship.',
   },
   {
     icon: '🌊',
     location: 'Marina Seawall Promenade',
-    contact: "Tunde 'ZeroDay' Bakare",
-    action: 'Meet independent researcher Tunde for bug bounty collaborations and threat intelligence.',
+    contact: "Tsharp 'ZeroDay' Bakare",
+    action: 'Meet independent researcher Tsharp for bug bounty collaborations and threat intelligence.',
   },
   {
     icon: '🛒',
     location: 'Balogun Market Electronics Stall',
-    contact: 'Mama Nkechi',
-    action: 'Visit Mama Nkechi to source hardware adapters, burner devices, and street telemetry.',
+    contact: 'Mama Esther',
+    action: 'Visit Mama Esther to source hardware adapters, burner devices, and street telemetry.',
   },
   {
     icon: '☕',
     location: 'Broad Street Sidewalk Café',
-    contact: 'Folake Davies',
-    action: 'Meet tech talent scout Folake to review high-paying fintech contracts and salary benchmarks.',
+    contact: 'Anjola',
+    action: 'Meet tech talent scout Anjola to review high-paying fintech contracts and salary benchmarks.',
   },
   {
     icon: '💼',

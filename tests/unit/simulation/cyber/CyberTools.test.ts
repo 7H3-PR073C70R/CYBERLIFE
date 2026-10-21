@@ -18,7 +18,7 @@ describe('Milestone 5 Cybersecurity Tools', () => {
     },
     currentUser: {
       username: 'tade_adebayo',
-      displayName: 'Tade Adebayo',
+      displayName: 'Protector',
       role: 'Security Analyst Intern',
       organization: 'Cedarline Services',
       accessTier: 1, // Tier 1 Clearance
@@ -224,7 +224,7 @@ describe('Milestone 5 Cybersecurity Tools', () => {
         )
       ).toBe(true);
       expect(result.stdout.some(l => l.includes('Simulated Chain of Custody Ledger'))).toBe(true);
-      expect(result.stdout.some(l => l.includes('Chidi Okafor'))).toBe(true);
+      expect(result.stdout.some(l => l.includes('Michael'))).toBe(true);
       expect(result.stdout.some(l => l.includes('EDUCATIONAL TAKEAWAYS'))).toBe(true);
     });
 

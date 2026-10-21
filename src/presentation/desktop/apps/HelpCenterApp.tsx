@@ -102,7 +102,7 @@ const HELP_TOPICS: readonly HelpTopic[] = [
     keywords: ['aster', 'mission', 'incident', 'investigation', 'containment'],
     summary: 'Structured 6-phase incident response process.',
     details:
-      '1. Briefing: Interview Lead Investigator Amina. 2. Assessment: Inventory hosts and services. 3. Evidence: Snapshot memory dumps and auth logs. 4. Containment: Sever SMB port 445 network paths. 5. Remediation: Apply role:kb-assistant. 6. Verification & Report: Run automated tests and submit structured post-mortem.',
+      '1. Briefing: Interview Lead Investigator Blessing. 2. Assessment: Inventory hosts and services. 3. Evidence: Snapshot memory dumps and auth logs. 4. Containment: Sever SMB port 445 network paths. 5. Remediation: Apply role:kb-assistant. 6. Verification & Report: Run automated tests and submit structured post-mortem.',
   },
   {
     id: 'help_career_advancement',

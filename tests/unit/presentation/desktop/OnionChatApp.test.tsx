@@ -7,17 +7,17 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { OnionChatApp } from '@/presentation/desktop/apps/OnionChatApp';
 
 describe('OnionChatApp', () => {
-  it('renders contacts list with Temitope Blessing and Cipher', () => {
+  it('renders contacts list with Blessing and BarryBee', () => {
     render(<OnionChatApp />);
     expect(screen.getByTestId('onion-chat-app')).toBeInTheDocument();
-    expect(screen.getAllByText('Temitope Blessing').length).toBeGreaterThan(0);
-    expect(screen.getByText('Cipher')).toBeInTheDocument();
+    expect(screen.getAllByText('Blessing').length).toBeGreaterThan(0);
+    expect(screen.getByText('BarryBee')).toBeInTheDocument();
     expect(screen.getByText('Aster SIEM Bot')).toBeInTheDocument();
   });
 
   it('switches thread when contact is clicked', () => {
     render(<OnionChatApp />);
-    const cipherBtn = screen.getByText('Cipher');
+    const cipherBtn = screen.getByText('BarryBee');
     fireEvent.click(cipherBtn);
 
     expect(

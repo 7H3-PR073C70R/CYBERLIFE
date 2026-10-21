@@ -1,14 +1,24 @@
 #!/usr/bin/env node
 /**
- * Cyberlife — Pre-rendered Dialogue Voice Generator
+ * Cyberlife — Dynamic Pre-rendered Dialogue Voice Generator
  *
  * Scans all spoken dialogue lines from npcDialogueData.ts and chatData.ts,
- * normalises text, builds SSML with per-character Nigerian/specialized prosody,
+ * dynamically loads NPC profiles from npcProfiles.ts and chat threads from chatData.ts,
+ * normalises text, applies character-appropriate Nigerian/specialized prosody,
  * computes deterministic SHA-256 hashes, and renders .mp3 audio clips via:
- *   1. Azure Cognitive Services Speech REST API (backend: azure)
- *   2. Microsoft Edge TTS Python wrapper (backend: edge, for dev/testing)
+ *   1. Azure Cognitive Services Speech REST API (--backend azure)
+ *   2. Microsoft Edge TTS Python wrapper (--backend edge, for dev/testing)
  *
  * Outputs to public/assets/audio/voice/ and writes manifest.json.
+ *
+ * Features:
+ * - Dynamic character profile syncing: names, roles, pitch, rate, and gender
+ *   are automatically loaded from npcProfiles.ts and chatData.ts.
+ * - Incremental caching: SHA-256 hashes mean existing audio files are never re-rendered.
+ * - Nigerian Pidgin guard: lines in Nigerian Pidgin are flagged 'needsHumanRecording'.
+ * - Clean unused mode: `--clean-unused` removes orphaned .mp3 files when lines are deleted.
+ * - Filter mode: `--filter=<speakerId>` generates for a single character only.
+ * - Ad-hoc mode: `--text="<phrase>" --speaker="<id>"` synthesizes a single custom line.
  */
 
 import fs from 'node:fs';
@@ -27,13 +37,28 @@ const args = process.argv.slice(2);
 const isDryRun = args.includes('--dry-run');
 const isForce = args.includes('--force');
 const isYes = args.includes('--yes') || args.includes('-y');
-let backend = 'edge';
+const isCleanUnused = args.includes('--clean-unused');
 
+let backend = 'edge';
 const backendArgIdx = args.findIndex(a => a === '--backend');
 if (backendArgIdx !== -1 && args[backendArgIdx + 1]) {
   backend = args[backendArgIdx + 1].toLowerCase();
 } else if (args.some(a => a.startsWith('--backend='))) {
   backend = args.find(a => a.startsWith('--backend=')).split('=')[1].toLowerCase();
+}
+
+// Optional filter by speaker ID
+let speakerFilter = null;
+const filterArg = args.find(a => a.startsWith('--filter=') || a.startsWith('--speaker='));
+if (filterArg) {
+  speakerFilter = filterArg.split('=')[1].trim();
+}
+
+// Optional ad-hoc text generation
+let adHocText = null;
+const textArg = args.find(a => a.startsWith('--text='));
+if (textArg) {
+  adHocText = textArg.split('=').slice(1).join('=').replace(/^['"]|['"]$/g, '').trim();
 }
 
 // 2. Load .env.local if present (Never print secrets!)
@@ -55,7 +80,6 @@ if (fs.existsSync(ENV_LOCAL_PATH)) {
   }
 }
 
-// Default to Azure if keys exist and backend wasn't explicitly set to edge
 if (backend === 'azure' && (!azureKey || !azureRegion)) {
   console.error('[Error] Azure backend requested but AZURE_SPEECH_KEY or AZURE_SPEECH_REGION not found in .env.local or environment.');
   console.error('Add your Azure credentials to .env.local or run with --backend edge.');
@@ -109,101 +133,10 @@ function cleanTextForSpeech(rawText, isPidgin = false) {
   return text.replace(/\s+/g, ' ').trim();
 }
 
-// 4. Per-Character Voice Profiles & Prosody Settings
-const CHARACTER_VOICE_CONFIGS = {
-  // Temitope Blessing (Lead Security Analyst - measured, authoritative female Nigerian)
-  npc_amina: {
-    speaker: 'Temitope Blessing',
-    voice: 'en-NG-EzinneNeural',
-    rate: '+0%',
-    pitch: '+2Hz',
-    isPidgin: false,
-  },
-  'amina-okonjo': {
-    speaker: 'Temitope Blessing',
-    voice: 'en-NG-EzinneNeural',
-    rate: '+0%',
-    pitch: '+2Hz',
-    isPidgin: false,
-  },
-  // Marcus Adebayo (Junior Sysadmin - nervous, slightly hurried male Nigerian)
-  npc_marcus: {
-    speaker: 'Marcus Adebayo',
-    voice: 'en-NG-AbeoNeural',
-    rate: '+4%',
-    pitch: '+3Hz',
-    isPidgin: false,
-  },
-  // Dr. Elena Chen (External Forensic Auditor - deliberate non-Nigerian English accent)
-  npc_elena: {
-    speaker: 'Dr. Elena Chen',
-    voice: 'en-US-JennyNeural',
-    rate: '-2%',
-    pitch: '-1Hz',
-    isPidgin: false,
-  },
-  // Femi Sowande (Underground Security Researcher - firm, decisive male Nigerian)
-  npc_femi: {
-    speaker: 'Femi Sowande',
-    voice: 'en-NG-AbeoNeural',
-    rate: '+2%',
-    pitch: '-3Hz',
-    isPidgin: false,
-  },
-  // Mama Nkechi (Local Canteen & Provision Shop Owner - lively Nigerian Pidgin)
-  npc_nkechi: {
-    speaker: 'Mama Nkechi',
-    voice: 'en-NG-EzinneNeural',
-    rate: '+3%',
-    pitch: '+4Hz',
-    isPidgin: true,
-    needsHumanRecording: true,
-  },
-  // Segun Adebayo (Network Operations Elder - calm, slower contemplative male Nigerian)
-  npc_segun: {
-    speaker: 'Segun Adebayo',
-    voice: 'en-NG-AbeoNeural',
-    rate: '-7%',
-    pitch: '-5Hz',
-    isPidgin: false,
-  },
-  // Folake Coker (SOC Incident Lead - analytical, forensic investigator)
-  npc_folake: {
-    speaker: 'Folake Coker',
-    voice: 'en-NG-EzinneNeural',
-    rate: '+0%',
-    pitch: '-1Hz',
-    isPidgin: false,
-  },
-  // Tunde Ojo (Hardware & Field Engineering Specialist - brisk, tech-savvy male Nigerian)
-  npc_tunde: {
-    speaker: 'Tunde Ojo',
-    voice: 'en-NG-AbeoNeural',
-    rate: '+5%',
-    pitch: '+1Hz',
-    isPidgin: false,
-  },
-  // Cipher (Underground Broker - secretive, low pitch male Nigerian)
-  cipher: {
-    speaker: 'Cipher',
-    voice: 'en-NG-AbeoNeural',
-    rate: '-6%',
-    pitch: '-7Hz',
-    isPidgin: false,
-  },
-  // Aster SIEM Bot (Autonomous IDS Daemon - flat, synthetic monotone)
-  'aster-watchdog': {
-    speaker: 'Aster SIEM Bot',
-    voice: 'en-US-ChristopherNeural',
-    rate: '+5%',
-    pitch: '-4Hz',
-    isPidgin: false,
-  },
-};
-
-// 5. Load TypeScript Content Data in-memory
+// 4. In-Memory TypeScript Module Transpiler & Loader
 function loadTsModule(relativeFilePath) {
   const fullPath = path.join(PROJECT_ROOT, relativeFilePath);
+  if (!fs.existsSync(fullPath)) return {};
   let code = fs.readFileSync(fullPath, 'utf8');
   code = code.replace(/import\s+type\s+[^;]+;/g, '');
   code = code.replace(/import\s+\{[^}]+\}\s+from\s+[^;]+;/g, '');
@@ -217,6 +150,168 @@ function loadTsModule(relativeFilePath) {
   return moduleObj.exports;
 }
 
+// 5. Load Real Character Data from Simulation Models
+console.log('Synchronizing character profiles and chat contacts...');
+const npcProfilesModule = loadTsModule('src/simulation/actors/npcProfiles.ts');
+const npcProfilesMap = new Map();
+if (npcProfilesModule.NPC_PROFILES && Array.isArray(npcProfilesModule.NPC_PROFILES)) {
+  for (const p of npcProfilesModule.NPC_PROFILES) {
+    npcProfilesMap.set(p.id, p);
+  }
+}
+
+const chatDataModule = loadTsModule('src/simulation/cyber/chat/chatData.ts');
+const chatThreadsMap = new Map();
+if (chatDataModule.INITIAL_CHAT_THREADS && Array.isArray(chatDataModule.INITIAL_CHAT_THREADS)) {
+  for (const t of chatDataModule.INITIAL_CHAT_THREADS) {
+    chatThreadsMap.set(t.contactId, t);
+  }
+}
+
+// Tuned character voice & prosody presets (within 0.9 - 1.1x / -7Hz to +4Hz)
+const DEFAULT_CHARACTER_VOICE_PROSODY = {
+  npc_amina: {
+    voice: 'en-NG-EzinneNeural',
+    rate: '+0%',
+    pitch: '+2Hz',
+    isPidgin: false,
+  },
+  'amina-okonjo': {
+    voice: 'en-NG-EzinneNeural',
+    rate: '+0%',
+    pitch: '+2Hz',
+    isPidgin: false,
+  },
+  npc_marcus: {
+    voice: 'en-NG-AbeoNeural',
+    rate: '+4%',
+    pitch: '+3Hz',
+    isPidgin: false,
+  },
+  npc_elena: {
+    voice: 'en-US-JennyNeural',
+    rate: '-2%',
+    pitch: '-1Hz',
+    isPidgin: false,
+  },
+  npc_femi: {
+    voice: 'en-NG-AbeoNeural',
+    rate: '+2%',
+    pitch: '-3Hz',
+    isPidgin: false,
+  },
+  npc_nkechi: {
+    voice: 'en-NG-EzinneNeural',
+    rate: '+3%',
+    pitch: '+4Hz',
+    isPidgin: true,
+    needsHumanRecording: true,
+  },
+  npc_segun: {
+    voice: 'en-NG-AbeoNeural',
+    rate: '-7%',
+    pitch: '-5Hz',
+    isPidgin: false,
+  },
+  npc_folake: {
+    voice: 'en-NG-EzinneNeural',
+    rate: '+0%',
+    pitch: '-1Hz',
+    isPidgin: false,
+  },
+  npc_tunde: {
+    voice: 'en-NG-AbeoNeural',
+    rate: '+5%',
+    pitch: '+1Hz',
+    isPidgin: false,
+  },
+  cipher: {
+    voice: 'en-NG-AbeoNeural',
+    rate: '-6%',
+    pitch: '-7Hz',
+    isPidgin: false,
+  },
+  'aster-watchdog': {
+    voice: 'en-US-ChristopherNeural',
+    rate: '+5%',
+    pitch: '-4Hz',
+    isPidgin: false,
+  },
+};
+
+/**
+ * Resolves character voice settings dynamically.
+ * If names change in npcProfiles.ts or chatData.ts, or new characters are added,
+ * this automatically detects their profile, gender, pitch, and rate.
+ */
+function resolveVoiceConfig(speakerId) {
+  const profile = npcProfilesMap.get(speakerId);
+  const thread = chatThreadsMap.get(speakerId);
+  const preset = DEFAULT_CHARACTER_VOICE_PROSODY[speakerId] || {};
+
+  // Resolve Speaker Display Name dynamically from real simulation models
+  const speakerName =
+    profile?.name ||
+    thread?.contactName ||
+    (speakerId === 'cipher' ? 'Cipher' : speakerId);
+
+  // Resolve Gender dynamically
+  const gender =
+    preset.gender ||
+    profile?.voice?.gender ||
+    thread?.voice?.gender ||
+    (speakerId === 'npc_amina' || speakerId === 'amina-okonjo' || speakerId === 'npc_folake' || speakerId === 'npc_nkechi' || speakerId === 'npc_elena' ? 'female' : 'male');
+
+  // Resolve Voice Identifier (defaulting to Nigerian voices unless specialized)
+  let voice = preset.voice;
+  if (!voice) {
+    if (profile?.voice?.voiceHints?.some(h => h.includes('us') || h.includes('jenny'))) {
+      voice = 'en-US-JennyNeural';
+    } else if (profile?.voice?.voiceHints?.some(h => h.includes('christopher') || h.includes('synthetic'))) {
+      voice = 'en-US-ChristopherNeural';
+    } else {
+      voice = gender === 'female' ? 'en-NG-EzinneNeural' : 'en-NG-AbeoNeural';
+    }
+  }
+
+  // Resolve Prosody Rate
+  let rate = preset.rate;
+  if (!rate) {
+    const rawRate = profile?.voice?.rate ?? thread?.voice?.rate ?? 1.0;
+    const diff = Math.round((rawRate - 1.0) * 100);
+    rate = diff >= 0 ? `+${diff}%` : `${diff}%`;
+  }
+
+  // Resolve Prosody Pitch
+  let pitch = preset.pitch;
+  if (!pitch) {
+    const rawPitch = profile?.voice?.pitch ?? thread?.voice?.pitch ?? 1.0;
+    const diff = Math.round((rawPitch - 1.0) * 100);
+    pitch = diff >= 0 ? `+${diff}Hz` : `${diff}Hz`;
+  }
+
+  // Detect Pidgin lines
+  const isPidgin = Boolean(
+    preset.isPidgin ||
+    speakerId === 'npc_nkechi' ||
+    profile?.voiceTone?.toLowerCase().includes('pidgin')
+  );
+
+  const needsHumanRecording = Boolean(
+    preset.needsHumanRecording ||
+    isPidgin
+  );
+
+  return {
+    speaker: speakerName,
+    voice,
+    rate,
+    pitch,
+    isPidgin,
+    needsHumanRecording,
+  };
+}
+
 // 6. Audio Duration Helper (Uses ffprobe / afinfo)
 function probeAudioDuration(filePath) {
   try {
@@ -226,9 +321,7 @@ function probeAudioDuration(filePath) {
     );
     const dur = parseFloat(out.trim());
     if (!isNaN(dur) && dur > 0) return Math.round(dur * 1000) / 1000;
-  } catch {
-    // ffprobe unavailable
-  }
+  } catch {}
 
   try {
     const out = execSync(`afinfo "${filePath}"`, {
@@ -239,11 +332,8 @@ function probeAudioDuration(filePath) {
     if (match && match[1]) {
       return Math.round(parseFloat(match[1]) * 1000) / 1000;
     }
-  } catch {
-    // afinfo unavailable
-  }
+  } catch {}
 
-  // Fallback: estimate from mp3 byte size (48kbps mono ~ 6000 bytes/sec)
   try {
     const stats = fs.statSync(filePath);
     return Math.round((stats.size / 6000) * 10) / 10;
@@ -255,65 +345,81 @@ function probeAudioDuration(filePath) {
 // 7. Extract Spoken Dialogue Items
 console.log('Collecting spoken dialogue items...');
 const npcDialogueModule = loadTsModule('src/content/dialogue/npcDialogueData.ts');
-const chatDataModule = loadTsModule('src/simulation/cyber/chat/chatData.ts');
 
 const dialogueItems = [];
 
-// From NPC Dialogue graphs
-if (npcDialogueModule.ALL_DIALOGUE_GRAPHS) {
-  for (const graph of npcDialogueModule.ALL_DIALOGUE_GRAPHS) {
-    for (const [nodeId, node] of Object.entries(graph.nodes)) {
-      if (node.text && typeof node.text === 'string') {
-        const speakerId = node.speakerId || graph.npcId;
-        const config = CHARACTER_VOICE_CONFIGS[speakerId] || CHARACTER_VOICE_CONFIGS.npc_amina;
-        const isPidgin = Boolean(config.isPidgin);
-        const cleanText = cleanTextForSpeech(node.text, isPidgin);
+// Ad-hoc single text mode
+if (adHocText) {
+  const speakerId = speakerFilter || 'npc_amina';
+  const config = resolveVoiceConfig(speakerId);
+  const cleanText = cleanTextForSpeech(adHocText, config.isPidgin);
+  dialogueItems.push({
+    id: `${speakerId}:adhoc`,
+    nodeId: 'adhoc',
+    speakerId,
+    speakerName: config.speaker,
+    rawText: adHocText,
+    cleanText,
+    config,
+  });
+} else {
+  // From NPC Dialogue graphs
+  if (npcDialogueModule.ALL_DIALOGUE_GRAPHS) {
+    for (const graph of npcDialogueModule.ALL_DIALOGUE_GRAPHS) {
+      for (const [nodeId, node] of Object.entries(graph.nodes)) {
+        if (node.text && typeof node.text === 'string') {
+          const speakerId = node.speakerId || graph.npcId;
+          if (speakerFilter && speakerId !== speakerFilter) continue;
 
-        if (cleanText.length > 0) {
-          dialogueItems.push({
-            id: `${speakerId}:${nodeId}`,
-            nodeId,
-            speakerId,
-            speakerName: config.speaker,
-            rawText: node.text,
-            cleanText,
-            config,
-          });
+          const config = resolveVoiceConfig(speakerId);
+          const cleanText = cleanTextForSpeech(node.text, config.isPidgin);
+
+          if (cleanText.length > 0) {
+            dialogueItems.push({
+              id: `${speakerId}:${nodeId}`,
+              nodeId,
+              speakerId,
+              speakerName: config.speaker,
+              rawText: node.text,
+              cleanText,
+              config,
+            });
+          }
         }
+      }
+    }
+  }
+
+  // From Phone Call Dialogue
+  if (chatDataModule.INITIAL_CHAT_THREADS) {
+    for (const thread of chatDataModule.INITIAL_CHAT_THREADS) {
+      if (thread.callDialogue && Array.isArray(thread.callDialogue)) {
+        const speakerId = thread.contactId;
+        if (speakerFilter && speakerId !== speakerFilter) continue;
+
+        const config = resolveVoiceConfig(speakerId);
+
+        thread.callDialogue.forEach((cd, idx) => {
+          const cleanText = cleanTextForSpeech(cd.text, config.isPidgin);
+          if (cleanText.length > 0) {
+            dialogueItems.push({
+              id: `${speakerId}:call_${idx}`,
+              nodeId: `call_${idx}`,
+              speakerId,
+              speakerName: config.speaker,
+              rawText: cd.text,
+              cleanText,
+              config,
+            });
+          }
+        });
       }
     }
   }
 }
 
-// From Phone Call Dialogue
-if (chatDataModule.INITIAL_CHAT_THREADS) {
-  for (const thread of chatDataModule.INITIAL_CHAT_THREADS) {
-    if (thread.callDialogue && Array.isArray(thread.callDialogue)) {
-      thread.callDialogue.forEach((cd, idx) => {
-        const speakerId = thread.contactId;
-        const config = CHARACTER_VOICE_CONFIGS[speakerId] || CHARACTER_VOICE_CONFIGS['amina-okonjo'];
-        const isPidgin = Boolean(config.isPidgin);
-        const cleanText = cleanTextForSpeech(cd.text, isPidgin);
+console.log(`Discovered ${dialogueItems.length} spoken dialogue lines.`);
 
-        if (cleanText.length > 0) {
-          dialogueItems.push({
-            id: `${speakerId}:call_${idx}`,
-            nodeId: `call_${idx}`,
-            speakerId,
-            speakerName: config.speaker,
-            rawText: cd.text,
-            cleanText,
-            config,
-          });
-        }
-      });
-    }
-  }
-}
-
-console.log(`Discovered ${dialogueItems.length} spoken dialogue lines across all characters.`);
-
-// Ensure output folder exists
 if (!fs.existsSync(VOICE_OUTPUT_DIR)) {
   fs.mkdirSync(VOICE_OUTPUT_DIR, { recursive: true });
 }
@@ -362,7 +468,7 @@ const existingCount = processedItems.filter(i => i.exists).length;
 const toGenerateCount = processedItems.filter(i => !i.exists).length;
 
 console.log(`\nSummary:`);
-console.log(`  Total lines: ${processedItems.length}`);
+console.log(`  Total lines in scope: ${processedItems.length}`);
 console.log(`  Already generated (cached on disk): ${existingCount}`);
 console.log(`  Lines to generate: ${toGenerateCount}`);
 console.log(`  Total characters to send: ${totalCharsToSend}`);
@@ -375,7 +481,7 @@ if (totalCharsToSend > 100000 && !isYes) {
   process.exit(1);
 }
 
-if (isDryRun) {
+if (isDryRun && !isCleanUnused) {
   console.log('[Dry Run] Exiting without generating audio.');
   process.exit(0);
 }
@@ -428,9 +534,15 @@ function generateEdgeBatch(itemsToGenerate) {
   const helperScript = path.join(PROJECT_ROOT, 'scripts/edge_tts_batch.py');
 
   try {
-    execSync(`UV_CACHE_DIR=/tmp/uv-cache uv run --with edge-tts python3 "${helperScript}" "${tmpBatchFile}"`, {
-      stdio: 'inherit',
-    });
+    try {
+      execSync(`UV_CACHE_DIR=/tmp/uv-cache uv run --with edge-tts python3 "${helperScript}" "${tmpBatchFile}"`, {
+        stdio: 'inherit',
+      });
+    } catch {
+      execSync(`python3 "${helperScript}" "${tmpBatchFile}"`, {
+        stdio: 'inherit',
+      });
+    }
   } finally {
     try {
       fs.unlinkSync(tmpBatchFile);
@@ -439,7 +551,7 @@ function generateEdgeBatch(itemsToGenerate) {
 }
 
 // 10. Run Generation Loop
-if (toGenerateCount > 0) {
+if (toGenerateCount > 0 && !isDryRun) {
   console.log(`Generating ${toGenerateCount} clips via backend '${backend}'...`);
 
   const ungenerated = processedItems.filter(i => !i.exists);
@@ -462,62 +574,85 @@ if (toGenerateCount > 0) {
     }
   }
   console.log('\nGeneration complete!');
-} else {
+} else if (!isDryRun) {
   console.log('All audio clips already exist on disk. Skipping generation.');
 }
 
-// 11. Compile Manifest
-console.log('Building public/assets/audio/voice/manifest.json...');
-const manifestClips = {};
-const bySpeakerAndHash = {};
+// 11. Compile & Write Manifest
+if (!adHocText) {
+  console.log('Building public/assets/audio/voice/manifest.json...');
+  const manifestClips = {};
+  const bySpeakerAndHash = {};
 
-let totalSizeBytes = 0;
+  let totalSizeBytes = 0;
 
-for (const item of processedItems) {
-  let duration = 2.5;
-  let fileSize = 0;
+  for (const item of processedItems) {
+    let duration = 2.5;
+    let fileSize = 0;
 
-  if (fs.existsSync(item.filePath)) {
-    duration = probeAudioDuration(item.filePath);
-    fileSize = fs.statSync(item.filePath).size;
-    totalSizeBytes += fileSize;
+    if (fs.existsSync(item.filePath)) {
+      duration = probeAudioDuration(item.filePath);
+      fileSize = fs.statSync(item.filePath).size;
+      totalSizeBytes += fileSize;
+    }
+
+    const entry = {
+      file: `/assets/audio/voice/${item.fileName}`,
+      fileName: item.fileName,
+      speaker: item.speakerName,
+      speakerId: item.speakerId,
+      nodeId: item.nodeId,
+      text: item.rawText,
+      cleanText: item.cleanText,
+      textHash: item.textHash,
+      fileHash: item.fileHash,
+      duration,
+      sizeBytes: fileSize,
+      voice: item.config.voice,
+      prosody: {
+        rate: item.config.rate,
+        pitch: item.config.pitch,
+      },
+      isPidgin: Boolean(item.config.isPidgin),
+      needsHumanRecording: Boolean(item.config.needsHumanRecording),
+    };
+
+    manifestClips[item.fileHash] = entry;
+    bySpeakerAndHash[`${item.speakerId}:${item.textHash}`] = entry;
   }
 
-  const entry = {
-    file: `/assets/audio/voice/${item.fileName}`,
-    fileName: item.fileName,
-    speaker: item.speakerName,
-    speakerId: item.speakerId,
-    nodeId: item.nodeId,
-    text: item.rawText,
-    cleanText: item.cleanText,
-    textHash: item.textHash,
-    fileHash: item.fileHash,
-    duration,
-    sizeBytes: fileSize,
-    voice: item.config.voice,
-    prosody: {
-      rate: item.config.rate,
-      pitch: item.config.pitch,
-    },
-    isPidgin: Boolean(item.config.isPidgin),
-    needsHumanRecording: Boolean(item.config.needsHumanRecording),
+  const manifest = {
+    version: '1.0',
+    generatedAt: new Date().toISOString(),
+    backend,
+    totalClips: processedItems.length,
+    totalSizeBytes,
+    clips: manifestClips,
+    bySpeakerAndHash,
   };
 
-  manifestClips[item.fileHash] = entry;
-  bySpeakerAndHash[`${item.speakerId}:${item.textHash}`] = entry;
+  fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2), 'utf8');
+  console.log(`Manifest saved to ${MANIFEST_PATH} with ${processedItems.length} clips (${(totalSizeBytes / (1024 * 1024)).toFixed(2)} MB).`);
+
+  // 12. Clean Unused Audio Files if requested
+  if (isCleanUnused) {
+    console.log('\nScanning for orphaned audio clips not referenced in active dialogue...');
+    const allDiskFiles = fs.readdirSync(VOICE_OUTPUT_DIR);
+    const activeFiles = new Set(Object.values(manifestClips).map(c => c.fileName));
+    let removed = 0;
+
+    for (const f of allDiskFiles) {
+      if (f.endsWith('.mp3') && !activeFiles.has(f)) {
+        const orphanPath = path.join(VOICE_OUTPUT_DIR, f);
+        if (isDryRun) {
+          console.log(`[Dry Run Clean] Would remove orphaned file: ${f}`);
+        } else {
+          fs.unlinkSync(orphanPath);
+          console.log(`[Clean] Removed orphaned file: ${f}`);
+        }
+        removed++;
+      }
+    }
+    console.log(isDryRun ? `[Dry Run] ${removed} orphaned file(s) identified.` : `Clean complete: ${removed} orphaned file(s) pruned.`);
+  }
 }
-
-const manifest = {
-  version: '1.0',
-  generatedAt: new Date().toISOString(),
-  backend,
-  totalClips: processedItems.length,
-  totalSizeBytes,
-  clips: manifestClips,
-  bySpeakerAndHash,
-};
-
-fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2), 'utf8');
-console.log(`Manifest written to ${MANIFEST_PATH}`);
-console.log(`Total audio footprint: ${(totalSizeBytes / 1024 / 1024).toFixed(2)} MB across ${processedItems.length} files.`);

@@ -352,7 +352,7 @@ export class WorldEnvironment {
       id: 'interact_cedarline_entrance',
       name: 'Cedarline Services HQ',
       promptAction: 'enter Cedarline Services corporate lobby [E]',
-      description: 'Headquarters of Cedarline Services — origin of the Aster incident.',
+      description: 'Headquarters of Cedarline Services, origin of the Aster incident.',
       position: [10.5, 0, 6],
       radius: 2.8,
       targetLocationId: 'cedarline_interior',
@@ -723,7 +723,7 @@ export class WorldEnvironment {
 
     // 3. Four Colorful Market Stalls along Balogun Market Lane
     const stallsConfig = [
-      { x: 10, z: -8, color1: 0x15803d, color2: 0xfef3c7, name: 'Mama Nkechi Provisions' },
+      { x: 10, z: -8, color1: 0x15803d, color2: 0xfef3c7, name: 'Mama Esther Provisions' },
       { x: 16, z: -8, color1: 0x0284c7, color2: 0xfacc15, name: 'Danfo Mobile Accessories' },
       { x: 22, z: -8, color1: 0xe11d48, color2: 0xfef3c7, name: 'Iya Basira Textiles' },
       { x: 28, z: -8, color1: 0xd97706, color2: 0x15803d, name: 'Lagos Fresh Citrus & Yams' },
@@ -996,7 +996,7 @@ export class WorldEnvironment {
     this.group.add(this.interiorLight);
 
     if (isCedarline) {
-      // Warm downlight over Amina's desk and reception
+      // Warm downlight over Blessing's desk and reception
       const aminaDownlight = new THREE.PointLight(0xffedd5, 1.4, 7.0);
       aminaDownlight.position.set(3.2, 3.8, 0);
       this.group.add(aminaDownlight);
@@ -1144,7 +1144,7 @@ export class WorldEnvironment {
     });
 
     if (isCedarline) {
-      // Workstation desk for Amina
+      // Workstation desk for Blessing
       const aminaDeskGeo = new THREE.BoxGeometry(1.6, 0.75, 0.8);
       const aminaDeskMat = new THREE.MeshStandardMaterial({
         color: 0x334155,
@@ -1160,9 +1160,9 @@ export class WorldEnvironment {
       const aminaLaptop = new THREE.Mesh(aminaLaptopGeo, aminaLaptopMat);
       aminaLaptop.position.set(3.2, 0.76, 0);
       this.group.add(aminaLaptop);
-      this.collisionWorld.addObstacle(2.3, 4.1, -0.5, 0.5, 'Temitope Blessing Desk');
+      this.collisionWorld.addObstacle(2.3, 4.1, -0.5, 0.5, 'Blessing Desk');
 
-      // Server infrastructure rack for Marcus
+      // Server infrastructure rack for Tobi
       const serverRackGeo = new THREE.BoxGeometry(1.2, 2.2, 0.9);
       const serverRackMat = new THREE.MeshStandardMaterial({
         color: 0x1e293b,
@@ -1179,7 +1179,7 @@ export class WorldEnvironment {
       this.loadApartmentProps();
     }
 
-    // Rebuild interior NPCs (Amina, Marcus, Dr. Elena Chen) with articulated models & markers
+    // Rebuild interior NPCs (Blessing, Tobi, Dr. Elizabeth) with articulated models & markers
     this.npcManager.rebuildForLocation(locationId);
     if (!this.group.children.includes(this.npcManager.getMesh())) {
       this.group.add(this.npcManager.getMesh());

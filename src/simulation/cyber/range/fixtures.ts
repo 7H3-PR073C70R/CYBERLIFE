@@ -1,5 +1,5 @@
 /**
- * Cyberlife — Shared Fictional Cyber Range Fixtures
+ * Cyberlife : Shared Fictional Cyber Range Fixtures
  *
  * Provides a unified, deterministic representation of the Cedarline Services
  * enterprise infrastructure on Lagos Island (Marina Tower).
@@ -102,7 +102,7 @@ export const FICTIONAL_IDENTITIES: readonly FictionalUserIdentity[] = [
   {
     id: 'usr-adebayo',
     username: 'analyst',
-    displayName: 'Tade Adebayo',
+    displayName: 'Protector',
     email: 'tade.adebayo@cedarline.corp.local',
     role: 'Tier 1 SOC Analyst (Intern)',
     department: 'Security Operations',
@@ -115,7 +115,7 @@ export const FICTIONAL_IDENTITIES: readonly FictionalUserIdentity[] = [
   {
     id: 'usr-okafor',
     username: 'chidi.okafor',
-    displayName: 'Chidi Okafor',
+    displayName: 'Michael',
     email: 'chidi.okafor@cedarline.corp.local',
     role: 'Lead Incident Responder & SecOps Commander',
     department: 'Security Operations',
@@ -128,7 +128,7 @@ export const FICTIONAL_IDENTITIES: readonly FictionalUserIdentity[] = [
   {
     id: 'usr-alabi',
     username: 'folake.alabi',
-    displayName: 'Folake Alabi',
+    displayName: 'Anjola',
     email: 'folake.alabi@cedarline.corp.local',
     role: 'Director of Accounting & Treasury',
     department: 'Finance & Treasury',

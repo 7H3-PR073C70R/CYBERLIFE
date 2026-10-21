@@ -382,6 +382,40 @@ export class AudioManager {
   }
 
   /**
+   * Reset all audio bus volumes and mute state to defaults.
+   */
+  public resetToDefaults(): void {
+    this.volumes = { ...DEFAULT_AUDIO_VOLUMES };
+    this.isMuted = false;
+    this.isVoiceMutedExplicitly = false;
+    if (this.ctx) {
+      const now = this.ctx.currentTime;
+      (Object.keys(DEFAULT_AUDIO_VOLUMES) as AudioBusName[]).forEach(bus => {
+        const gainNode = this.getBus(bus);
+        if (gainNode) {
+          gainNode.gain.cancelScheduledValues(now);
+          gainNode.gain.setValueAtTime(DEFAULT_AUDIO_VOLUMES[bus], now);
+        }
+      });
+    }
+    this.saveSettings();
+  }
+
+  /**
+   * Play an audible test chime through the sfx bus to verify browser output.
+   */
+  public testAudioPlayback(): void {
+    if (this.isMuted) {
+      this.setMuted(false);
+    }
+    this.playOneShot('/assets/audio/sfx/audio_test', {
+      bus: 'sfx',
+      volume: 0.8,
+      priority: 'high',
+    });
+  }
+
+  /**
    * Ducking: lowers ambience and music by about 7.5 dB (0.42 gain) with a smooth ramp.
    */
   public setDucking(active: boolean): void {
@@ -422,18 +456,23 @@ export class AudioManager {
     if (!ctx) return null;
 
     const candidates = this.resolveUrlCandidates(urlWithoutExtOrWithExt);
+    const origin =
+      typeof window !== 'undefined' && window.location?.origin && window.location.origin !== 'null'
+        ? window.location.origin
+        : 'http://localhost';
 
-    for (const url of candidates) {
+    for (const rawUrl of candidates) {
       try {
-        const response = await fetch(url);
+        const fullUrl = rawUrl.startsWith('/') ? `${origin}${rawUrl}` : rawUrl;
+        const response = await fetch(fullUrl);
         if (!response.ok) continue;
         const arrayBuffer = await response.arrayBuffer();
         const decoded = await ctx.decodeAudioData(arrayBuffer);
         this.bufferCache.set(urlWithoutExtOrWithExt, decoded);
-        this.bufferCache.set(url, decoded);
+        this.bufferCache.set(rawUrl, decoded);
         return decoded;
       } catch {
-        // Try next fallback candidate
+        // Fallback or ignore fetch errors in environments without active HTTP server
       }
     }
 

@@ -4,7 +4,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 1. Cybersecurity mentor / experienced professional
   {
     id: 'npc_amina',
-    name: 'Temitope Blessing',
+    name: 'Blessing',
     role: 'Lead Security Analyst',
     organization: 'Cedarline Services Ltd.',
     bio: 'Veteran incident responder with over a decade defending critical financial and logistics networks across West Africa. Calm, exacting, and deeply committed to rigorous forensic standards.',
@@ -69,7 +69,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 2. Cedarline employee (sysadmin who provisioned Aster)
   {
     id: 'npc_marcus',
-    name: 'Marcus Adebayo',
+    name: 'Tobi',
     role: 'Junior Infrastructure Administrator',
     organization: 'Cedarline Services Ltd.',
     bio: 'Second-year systems administrator at Cedarline. Capable and hardworking, but frequently overwhelmed by overlapping executive deadlines and conflicting architectural demands.',
@@ -101,7 +101,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
         'Failed to roll back the corporate-admin role before going on leave.',
       ],
       suspectedFacts: [
-        'Fears he will be terminated if Femi Martins or the audit committee discovers the role assignment.',
+        'Fears he will be terminated if Gabriel or the audit committee discovers the role assignment.',
       ],
       unknownFacts: [
         'Does not understand the AI prompt injection vector or how the model interpreted user requests.',
@@ -151,7 +151,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 3. Technical colleague (lead AI engineer)
   {
     id: 'npc_elena',
-    name: 'Dr. Elena Chen',
+    name: 'Dr. Elizabeth',
     role: 'Lead AI Engineer',
     organization: 'Cedarline Services Ltd.',
     bio: 'Applied machine learning specialist formerly with an international research lab. She architected Aster’s autonomous retrieval and tool-calling agent loop.',
@@ -212,7 +212,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 4. Manager / business stakeholder
   {
     id: 'npc_femi',
-    name: 'Femi Martins',
+    name: 'Gabriel',
     role: 'VP of Technology & Operations',
     organization: 'Cedarline Services Ltd.',
     bio: 'Seasoned enterprise technology executive responsible for Cedarline’s operational P&L, client SLA commitments, and regulatory compliance.',
@@ -270,9 +270,9 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 5. Local shopkeeper / business owner
   {
     id: 'npc_nkechi',
-    name: 'Mama Nkechi',
+    name: 'Mama Esther',
     role: 'Merchant & Electronics Vendor',
-    organization: 'Mama Nkechi Provisions & Electronics',
+    organization: 'Mama Esther Provisions & Electronics',
     bio: 'Respected Balogun Market trade leader who sells electronics, adapters, mobile airtime, and provisions. Sharp business sense and beloved community matriarch.',
     personality:
       'Warm, shrewd, observant, protective of young people in the neighborhood, deeply suspicious of online scams and fake SMS alerts.',
@@ -333,7 +333,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 6. Neighborhood resident / community elder
   {
     id: 'npc_segun',
-    name: 'Uncle Segun',
+    name: 'Uncle Ola',
     role: 'Community Elder & Historian',
     organization: 'Tinubu Square Civic Association',
     bio: 'Retired Lagos civil servant and neighborhood elder. Spends his days around Tinubu Square observing the transformation of Lagos Island from colonial trading post to modern digital hub.',
@@ -396,7 +396,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 7. Recruiter / client / professional contact
   {
     id: 'npc_folake',
-    name: 'Folake Davies',
+    name: 'Anjola',
     role: 'Technology Talent Liaison',
     organization: 'Eko Tech Partners',
     bio: 'Headhunter and talent partner connecting cybersecurity analysts, developers, and infrastructure specialists with African fintech unicorns and international cyber firms.',
@@ -456,7 +456,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 8. Security researcher / ethical hacker with a different perspective
   {
     id: 'npc_tunde',
-    name: 'Tunde "ZeroDay" Bakare',
+    name: 'Tsharp',
     role: 'Independent Security Researcher',
     organization: 'Self-employed / Cyber Defense Freelance',
     bio: 'Brilliant white-hat researcher and veteran bug bounty hunter. Known in the local community for finding zero-day flaws before cyber syndicates can weaponize them.',

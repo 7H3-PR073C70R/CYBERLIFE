@@ -7,6 +7,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { AppId, APP_REGISTRY, WindowState } from './types';
+import { sfxController } from '../audio/SfxController';
 
 export interface UseWindowManagerOptions {
   initialOpenApp?: AppId;
@@ -73,6 +74,7 @@ export function useWindowManager(options: UseWindowManagerOptions = {}) {
 
   const openApp = useCallback(
     (appId: AppId) => {
+      sfxController.playAppOpen();
       setWindows(prev => {
         const target = prev[appId];
         if (!target) return prev;
@@ -93,6 +95,7 @@ export function useWindowManager(options: UseWindowManagerOptions = {}) {
   );
 
   const closeWindow = useCallback((appId: AppId) => {
+    sfxController.playAppClose();
     setWindows(prev => {
       const target = prev[appId];
       if (!target) return prev;
@@ -110,6 +113,7 @@ export function useWindowManager(options: UseWindowManagerOptions = {}) {
   }, []);
 
   const minimizeWindow = useCallback((appId: AppId) => {
+    sfxController.playAppClose();
     setWindows(prev => {
       const target = prev[appId];
       if (!target) return prev;
@@ -126,6 +130,7 @@ export function useWindowManager(options: UseWindowManagerOptions = {}) {
 
   const restoreWindow = useCallback(
     (appId: AppId) => {
+      sfxController.playAppOpen();
       setWindows(prev => {
         const target = prev[appId];
         if (!target) return prev;

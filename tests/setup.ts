@@ -40,6 +40,62 @@ if (typeof window !== 'undefined') {
   window.cancelAnimationFrame = vi.fn((_id: number) => {
     // cancelled
   });
+
+  // Mock Web Audio API
+  class MockAudioParam {
+    value = 1.0;
+    setValueAtTime = vi.fn((val: number) => {
+      this.value = val;
+    });
+    cancelScheduledValues = vi.fn();
+    linearRampToValueAtTime = vi.fn((val: number) => {
+      this.value = val;
+    });
+  }
+
+  class MockAudioNode {
+    connect = vi.fn();
+    disconnect = vi.fn();
+  }
+
+  class MockGainNode extends MockAudioNode {
+    gain = new MockAudioParam();
+  }
+
+  class MockAudioBufferSourceNode extends MockAudioNode {
+    buffer: unknown = null;
+    loop = false;
+    playbackRate = new MockAudioParam();
+    onended: (() => void) | null = null;
+    start = vi.fn();
+    stop = vi.fn();
+  }
+
+  class MockAudioContext {
+    currentTime = 0;
+    state = 'suspended';
+    destination = new MockAudioNode();
+
+    resume = vi.fn(async () => {
+      this.state = 'running';
+    });
+    suspend = vi.fn(async () => {
+      this.state = 'suspended';
+    });
+    createGain = vi.fn(() => new MockGainNode());
+    createBufferSource = vi.fn(() => new MockAudioBufferSourceNode());
+    decodeAudioData = vi.fn(async (_buffer: ArrayBuffer) => ({
+      duration: 1.0,
+      length: 44100,
+      numberOfChannels: 2,
+      sampleRate: 44100,
+    }));
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).AudioContext = MockAudioContext;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).webkitAudioContext = MockAudioContext;
 }
 
 // Mock Three.js WebGLRenderer for headless unit tests

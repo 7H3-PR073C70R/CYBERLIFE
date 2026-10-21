@@ -1,5 +1,5 @@
 /**
- * Cyberlife — Milestone 6: The Aster Incident Mission Types
+ * Cyberlife : Milestone 6: The Aster Incident Mission Types
  *
  * Defines the authoritative state shape, phases, objectives, containment,
  * remediation, verification, and incident report data models.

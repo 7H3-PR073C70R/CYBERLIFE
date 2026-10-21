@@ -1,5 +1,5 @@
 /**
- * Cyberlife — Meaningful Interior Venues & Access Policies
+ * Cyberlife : Meaningful Interior Venues & Access Policies
  *
  * Defines explicit interior destinations across Lagos Island with realistic
  * operating hours, access restrictions (badges, escorts), available services,
@@ -12,7 +12,7 @@ export const LAGOS_ISLAND_VENUES: readonly InteriorVenueDefinition[] = [
   // 1. Player Apartment
   {
     venueId: 'venue-player-apartment',
-    name: 'Player Apartment — Broad Street 14',
+    name: 'Player Apartment : Broad Street 14',
     address: '14 Broad Street, 2nd Floor, Lagos Island',
     environmentType: 'residential_neighborhood',
     correspondingLocationId: 'apartment_interior',
@@ -34,7 +34,7 @@ export const LAGOS_ISLAND_VENUES: readonly InteriorVenueDefinition[] = [
   // 2. Cedarline Marina Tower Lobby & Reception
   {
     venueId: 'venue-cedarline-reception',
-    name: 'Cedarline Services — Marina Tower Ground Reception',
+    name: 'Cedarline Services : Marina Tower Ground Reception',
     address: '14–18 Marina Boulevard, Ground Floor',
     environmentType: 'corporate_office_reception',
     correspondingLocationId: 'cedarline_interior',
@@ -56,7 +56,7 @@ export const LAGOS_ISLAND_VENUES: readonly InteriorVenueDefinition[] = [
   // 3. Cedarline Level 4 SOC
   {
     venueId: 'venue-cedarline-soc',
-    name: 'Cedarline Services — Security Operations Center (Floor 4)',
+    name: 'Cedarline Services : Security Operations Center (Floor 4)',
     address: '14–18 Marina Boulevard, Floor 4',
     environmentType: 'soc_technical_lab',
     correspondingLocationId: 'cedarline_interior',
@@ -73,13 +73,13 @@ export const LAGOS_ISLAND_VENUES: readonly InteriorVenueDefinition[] = [
     residentNpcIds: ['npc_amina', 'npc_marcus', 'npc_elena'],
     ambientSoundscape: 'Server chiller hum, keyboard mechanical chatter, low-volume phone alerts.',
     description:
-      'Restricted corporate SOC console room where Amina and the incident response team triage network telemetry.',
+      'Restricted corporate SOC console room where Blessing and the incident response team triage network telemetry.',
   },
 
   // 4. Balogun Electronics & Hardware Stall
   {
     venueId: 'venue-mama-nkechi-market',
-    name: 'Mama Nkechi Electronics & Provisions Stall',
+    name: 'Mama Esther Electronics & Provisions Stall',
     address: 'Corner of Balogun Street & Broad Street',
     environmentType: 'commercial_street_market',
     correspondingLocationId: 'neighborhood',

@@ -175,7 +175,7 @@ export class WorldSceneManager {
       const canvas = this.renderer.domElement;
       canvas.className = 'world-viewport-canvas';
       canvas.setAttribute('role', 'region');
-      canvas.setAttribute('aria-label', '3D World Viewport — Explorable Lagos Island Environment');
+      canvas.setAttribute('aria-label', '3D World Viewport: Explorable Lagos Island Environment');
       this.container.appendChild(canvas);
     } catch (err) {
       this.dispose();
@@ -340,7 +340,7 @@ export class WorldSceneManager {
         role: '',
         dialogue:
           target.id === 'interact_npc_amina'
-            ? 'Tade, welcome to the SOC. We have an active incident: Aster AI was flagged for unauthorized SMB queries on filesrv-01. Head to your workstation, open the Terminal and Incident Portal, preserve the evidence, and investigate why Aster has excessive permissions. Good luck!'
+            ? 'Protector, welcome to the SOC. We have an active incident: Aster AI was flagged for unauthorized SMB queries on filesrv-01. Head to your workstation, open the Terminal and Incident Portal, preserve the evidence, and investigate why Aster has excessive permissions. Good luck!'
             : '',
       });
     }

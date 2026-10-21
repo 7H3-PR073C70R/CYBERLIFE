@@ -1,5 +1,5 @@
 /**
- * Cyberlife — Nine Urban Environment Population Profiles
+ * Cyberlife : Nine Urban Environment Population Profiles
  *
  * Provides authoritative definitions for the 9 distinct urban environments across
  * the Lagos Island district, capturing time-of-day crowd dynamics, attire, and activities.
@@ -83,13 +83,13 @@ export const URBAN_ENVIRONMENT_PROFILES: readonly UrbanEnvironmentProfile[] = [
       'Taking phone calls on outdoor patio',
     ],
     conversationalContext:
-      'Talent recruitment interviews with Folake, independent bug bounty collaborations, discreet laptop screen peeking.',
+      'Talent recruitment interviews with Anjola, independent bug bounty collaborations, discreet laptop screen peeking.',
   },
 
   // 4. Restaurants & Food Venues
   {
     id: 'restaurant_food_venue',
-    name: 'Mama Nkechi Buka & Marina Dining',
+    name: 'Mama Esther Buka & Marina Dining',
     districtName: 'Broad Street Eateries',
     description:
       'Bustling lunchtime dining venue serving smoky jollof rice, pounded yam, pepper soup, and cold malt drinks.',
@@ -134,7 +134,7 @@ export const URBAN_ENVIRONMENT_PROFILES: readonly UrbanEnvironmentProfile[] = [
       'Relaxing after intense incident response shifts',
     ],
     conversationalContext:
-      'Underground hacker alibis, high-stakes freelance contracts, unrecorded conversations with Tunde "ZeroDay" Bakare.',
+      'Underground hacker alibis, high-stakes freelance contracts, unrecorded conversations with Tsharp "ZeroDay" Bakare.',
   },
 
   // 6. Corporate Offices & Reception Areas
@@ -212,7 +212,7 @@ export const URBAN_ENVIRONMENT_PROFILES: readonly UrbanEnvironmentProfile[] = [
       'Conducting formal incident triage meetings',
     ],
     conversationalContext:
-      'High-stakes incident investigations with Amina, root cause technical debriefs with Dr. Elena Chen, formal evidence handover.',
+      'High-stakes incident investigations with Blessing, root cause technical debriefs with Dr. Elizabeth, formal evidence handover.',
   },
 
   // 9. Transit Areas & Public Streets

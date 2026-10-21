@@ -121,7 +121,7 @@ def parse_args():
         default="en-NG-EzinneNeural",
         help="Voice identifier (e.g. en-NG-EzinneNeural, en-NG-AbeoNeural, en-US-JennyNeural).",
     )
-    parser.add_argument("--rate", default="+0%", help="Prosody rate modification (e.g. +3%, -5%).")
+    parser.add_argument("--rate", default="+0%", help="Prosody rate modification (e.g. +3%%, -5%%).")
     parser.add_argument("--pitch", default="+0Hz", help="Prosody pitch modification (e.g. +2Hz, -4Hz).")
     parser.add_argument("--out", "-o", help="Output file path for single text synthesis.")
     parser.add_argument(

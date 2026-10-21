@@ -1,5 +1,5 @@
 /**
- * Cyberlife — Human & Physical Security Fixtures and Realistic Scenarios
+ * Cyberlife : Human & Physical Security Fixtures and Realistic Scenarios
  *
  * Ground-truth deterministic data structures representing Marina Tower physical security,
  * visitor controls, badges, synthetic removable media, and multi-role investigation incidents.
@@ -76,7 +76,7 @@ export const MARINA_TOWER_FACILITY: PhysicalFacility = {
     {
       id: 'room-floor5-server',
       facilityId: 'fac-marina-tower',
-      name: '5th Floor Core Datacenter — Server Room 2B',
+      name: '5th Floor Core Datacenter : Server Room 2B',
       floor: 5,
       requiredClearance: 'SECURE_VAULT',
       requiresEscortForGuests: true,
@@ -95,7 +95,7 @@ export const MARINA_TOWER_FACILITY: PhysicalFacility = {
       badgeReaderId: 'reader-fl6-exec-suite',
       containsEndpoints: ['ws-exec-femi', 'ws-boardroom-conf'],
       containsPhysicalEvidence: ['evd-board-minutes-confidential'],
-      description: 'Executive offices of Femi Martins, corporate legal counsel, and confidential records.',
+      description: 'Executive offices of Gabriel, corporate legal counsel, and confidential records.',
     },
   ],
 };
@@ -136,7 +136,7 @@ export const PHYSICAL_BADGES: readonly PhysicalBadge[] = [
     badgeId: 'badge-amina-01',
     badgeNumber: 'CED-2026-B-0101',
     assignedUserId: 'ident-amina',
-    holderName: 'Temitope Blessing',
+    holderName: 'Blessing',
     holderOrganization: 'Cedarline Services Ltd',
     badgeType: 'SECURITY_SECOPS',
     clearanceLevel: 'SECURE_VAULT',
@@ -148,7 +148,7 @@ export const PHYSICAL_BADGES: readonly PhysicalBadge[] = [
     badgeId: 'badge-marcus-02',
     badgeNumber: 'CED-2026-B-0244',
     assignedUserId: 'ident-marcus',
-    holderName: 'Marcus Adebayo',
+    holderName: 'Tobi',
     holderOrganization: 'Cedarline Services Ltd',
     badgeType: 'IT_INFRASTRUCTURE',
     clearanceLevel: 'RESTRICTED',
@@ -160,7 +160,7 @@ export const PHYSICAL_BADGES: readonly PhysicalBadge[] = [
     badgeId: 'badge-femi-03',
     badgeNumber: 'CED-2026-B-0004',
     assignedUserId: 'ident-femi',
-    holderName: 'Femi Martins',
+    holderName: 'Gabriel',
     holderOrganization: 'Cedarline Services Ltd',
     badgeType: 'EXECUTIVE_LEADERSHIP',
     clearanceLevel: 'SECURE_VAULT',
@@ -172,7 +172,7 @@ export const PHYSICAL_BADGES: readonly PhysicalBadge[] = [
     badgeId: 'badge-contractor-chidi',
     badgeNumber: 'CED-2026-V-8821',
     assignedUserId: 'ident-ext-chidi',
-    holderName: 'Chidi Nwosu (Eko Fiber Tech)',
+    holderName: 'Miracle (Eko Fiber Tech)',
     holderOrganization: 'Eko Telecom Infrastructure Ltd',
     badgeType: 'CONTRACTOR_TEMPORARY',
     clearanceLevel: 'GUEST',
@@ -205,7 +205,7 @@ export const PHYSICAL_ACCESS_LOGS: readonly PhysicalAccessLogEntry[] = [
     facilityId: 'fac-marina-tower',
     roomId: 'room-ground-lobby',
     badgeId: 'badge-amina-01',
-    holderName: 'Temitope Blessing',
+    holderName: 'Blessing',
     accessGranted: true,
     tailgatingAlert: false,
     doorHeldOpenSeconds: 3,
@@ -216,7 +216,7 @@ export const PHYSICAL_ACCESS_LOGS: readonly PhysicalAccessLogEntry[] = [
     facilityId: 'fac-marina-tower',
     roomId: 'room-floor4-soc',
     badgeId: 'badge-amina-01',
-    holderName: 'Temitope Blessing',
+    holderName: 'Blessing',
     accessGranted: true,
     tailgatingAlert: false,
     doorHeldOpenSeconds: 4,
@@ -227,7 +227,7 @@ export const PHYSICAL_ACCESS_LOGS: readonly PhysicalAccessLogEntry[] = [
     facilityId: 'fac-marina-tower',
     roomId: 'room-floor3-finance',
     badgeId: 'badge-marcus-02',
-    holderName: 'Marcus Adebayo',
+    holderName: 'Tobi',
     accessGranted: true,
     tailgatingAlert: false,
     doorHeldOpenSeconds: 5,
@@ -238,7 +238,7 @@ export const PHYSICAL_ACCESS_LOGS: readonly PhysicalAccessLogEntry[] = [
     facilityId: 'fac-marina-tower',
     roomId: 'room-floor5-server',
     badgeId: 'badge-marcus-02',
-    holderName: 'Marcus Adebayo',
+    holderName: 'Tobi',
     accessGranted: false,
     denialReason: 'INSUFFICIENT_CLEARANCE',
     tailgatingAlert: false,
@@ -384,7 +384,7 @@ export const REMOVABLE_MEDIA_TELEMETRY: readonly RemovableMediaTelemetryEvent[] 
 export const PRETEXT_PERSONAS: readonly PretextPersona[] = [
   {
     personaId: 'pretext-telecom-tech',
-    claimedName: 'Chidi Nwosu',
+    claimedName: 'Miracle',
     claimedTitle: 'Senior Field Transmission Engineer',
     claimedOrganization: 'Eko Telecom Infrastructure Ltd',
     targetNpcId: 'npc_marcus',
@@ -397,11 +397,11 @@ export const PRETEXT_PERSONAS: readonly PretextPersona[] = [
       'High-visibility orange vest with Eko Telecom logo',
     ],
     flawOrTell:
-      'Work order references obsolete fiber ring topology decommissioned two months ago by Amina.',
+      'Work order references obsolete fiber ring topology decommissioned two months ago by Blessing.',
   },
   {
     personaId: 'pretext-vp-password-reset',
-    claimedName: 'Femi Martins',
+    claimedName: 'Gabriel',
     claimedTitle: 'VP of Technology & Operations',
     claimedOrganization: 'Cedarline Services Ltd',
     targetNpcId: 'npc_marcus',
@@ -455,7 +455,7 @@ export const EMPLOYEE_SECURITY_REPORTS: readonly EmployeeSecurityReportEvent[] =
   {
     reportId: 'sec-report-001',
     reporterNpcId: 'npc_marcus',
-    reporterName: 'Marcus Adebayo',
+    reporterName: 'Tobi',
     timestamp: '2026-10-20T10:35:00Z',
     incidentCategory: 'UNATTENDED_USB',
     subjectSummary: 'Unattended USB drive found in 3rd floor kitchenette',
@@ -508,7 +508,7 @@ export const AUTHORIZED_ROE_CEDARLINE: RulesOfEngagement = {
       description: 'Datacenter server room 2B physical access controls',
     },
   ],
-  emergencyContactPhone: '+234 1 234 5678 (Temitope Blessing / SOC Lead)',
+  emergencyContactPhone: '+234 1 234 5678 (Blessing / SOC Lead)',
   signatureSha256: 'abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
   isSignedAndActive: true,
 };

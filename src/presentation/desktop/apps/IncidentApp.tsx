@@ -495,10 +495,10 @@ ${reportForm.recommendations}
               </div>
               <div className="memo-meta">
                 <div>
-                  <strong>From:</strong> Temitope Blessing (Lead Security Analyst, Cedarline Services)
+                  <strong>From:</strong> Blessing (Lead Security Analyst, Cedarline Services)
                 </div>
                 <div>
-                  <strong>To:</strong> Tade Adebayo (Junior Incident Responder)
+                  <strong>To:</strong> Protector (Junior Incident Responder)
                 </div>
                 <div>
                   <strong>Case:</strong> The Aster Incident // Unauthorized Data Access
@@ -986,7 +986,7 @@ ${reportForm.recommendations}
                   <h3 className="panel-card-title">Official Incident Report &amp; Post-Mortem</h3>
                   <p>
                     Document your findings across all 7 essential sections. The report will be
-                    reviewed by Lead Analyst Temitope Blessing and Cedarline management.
+                    reviewed by Lead Analyst Blessing and Cedarline management.
                   </p>
                 </div>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>

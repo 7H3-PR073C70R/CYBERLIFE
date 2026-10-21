@@ -1,5 +1,5 @@
 /**
- * Cyberlife — OnionChat & Hacker VoIP Call Datasets
+ * Cyberlife: OnionChat & Hacker VoIP Call Datasets
  * Authentic hacker messaging threads and voice call dialogue streams.
  */
 
@@ -9,7 +9,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
   {
     id: 'thread-amina',
     contactId: 'amina-okonjo',
-    contactName: 'Temitope Blessing',
+    contactName: 'Blessing',
     contactRole: 'Lead SecOps Architect',
     contactOrg: 'Cedarline Corp Cyber Defense',
     contactAvatarColor: '#00e5ff',
@@ -19,7 +19,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
     canCall: true,
     callDialogue: [
       {
-        text: 'Tade, can you hear me? Secure line established via ZRTP 256-bit AES.',
+        text: 'Protector, can you hear me? Secure line established via ZRTP 256-bit AES.',
         delayMs: 2500,
       },
       {
@@ -47,9 +47,9 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
       {
         id: 'msg-am-1',
         senderId: 'amina-okonjo',
-        senderName: 'Temitope Blessing',
+        senderName: 'Blessing',
         senderRole: 'Lead SecOps Architect',
-        text: 'Tade, glad you got into the terminal. Broad Street perimeter traffic spiked 300% 20 minutes ago.',
+        text: 'Protector, glad you got into the terminal. Broad Street perimeter traffic spiked 300% 20 minutes ago.',
         timestamp: '10:14 AM',
         isEncrypted: true,
         isFromPlayer: false,
@@ -58,7 +58,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
       {
         id: 'msg-am-2',
         senderId: 'amina-okonjo',
-        senderName: 'Temitope Blessing',
+        senderName: 'Blessing',
         senderRole: 'Lead SecOps Architect',
         text: 'Run nmap or netstat against 10.42.0.0/24 subnet. We need eyes on port 8080 and unlisted egress.',
         timestamp: '10:16 AM',
@@ -76,7 +76,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
   {
     id: 'thread-cipher',
     contactId: 'cipher',
-    contactName: 'Cipher',
+    contactName: 'BarryBee',
     contactRole: 'Underground Broker & Whistleblower',
     contactOrg: '0xBoard Syndicate',
     contactAvatarColor: '#a855f7',
@@ -92,7 +92,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
     },
     callDialogue: [
       {
-        text: '*electronic audio static* ... Tade, keep your voice down. Relay is 3 hops deep.',
+        text: '*electronic audio static* ... Protector, keep your voice down. Relay is 3 hops deep.',
         delayMs: 2800,
       },
       {
@@ -117,7 +117,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
       {
         id: 'msg-cp-1',
         senderId: 'cipher',
-        senderName: 'Cipher',
+        senderName: 'BarryBee',
         senderRole: 'Underground Broker',
         text: 'Greetings, analyst. Heard Cedarline had a little surprise on their Broad Street cluster.',
         timestamp: '09:42 AM',
@@ -128,7 +128,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
       {
         id: 'msg-cp-2',
         senderId: 'cipher',
-        senderName: 'Cipher',
+        senderName: 'BarryBee',
         senderRole: 'Underground Broker',
         text: 'If you want the unredacted Aster AI telemetry, open Tor Browser and visit deepleaks.onion. It was dumped 2 hours ago.',
         timestamp: '09:45 AM',
@@ -199,7 +199,7 @@ export const CONTACT_AUTO_RESPONSES: Record<string, Record<string, string>> = {
     'Checking the firewall rules in Rule Tuner.':
       'Make sure Rule #200491 is set to DROP or REJECT. We cannot afford a lateral spread.',
     default:
-      'Message acknowledged, Tade. Stay vigilant on the terminal and keep telemetry logs saved in /var/log.',
+      'Message acknowledged, Protector. Stay vigilant on the terminal and keep telemetry logs saved in /var/log.',
   },
   cipher: {
     'Who are you and what do you want?':

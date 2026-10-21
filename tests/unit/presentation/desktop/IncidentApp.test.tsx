@@ -35,7 +35,7 @@ describe('IncidentApp Component', () => {
     fireEvent.click(screen.getByTestId('incident-tab-briefing'));
     expect(screen.getByTestId('incident-panel-briefing')).toBeInTheDocument();
     expect(screen.getByText(/OFFICIAL IR BRIEFING/i)).toBeInTheDocument();
-    expect(screen.getByText(/Temitope Blessing/i)).toBeInTheDocument();
+    expect(screen.getByText(/Blessing/i)).toBeInTheDocument();
 
     // Switch to Root-Cause tab
     fireEvent.click(screen.getByTestId('incident-tab-rootcause'));

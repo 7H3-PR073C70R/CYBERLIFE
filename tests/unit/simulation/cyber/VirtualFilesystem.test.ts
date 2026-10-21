@@ -22,7 +22,7 @@ describe('VirtualFilesystem & Terminal File Commands', () => {
     },
     currentUser: {
       username: 'tade_adebayo',
-      displayName: 'Tade Adebayo',
+      displayName: 'Protector',
       role: 'Security Analyst Intern',
       organization: 'Cedarline Services',
     },

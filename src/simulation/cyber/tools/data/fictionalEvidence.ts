@@ -1,5 +1,5 @@
 /**
- * Cyberlife — Fictional Evidence Objects Dataset
+ * Cyberlife : Fictional Evidence Objects Dataset
  *
  * Deterministic catalog of digital evidence records preserved in the
  * Cedarline Security Operations Center vault.
@@ -29,7 +29,7 @@ export const FICTIONAL_EVIDENCE: readonly FictionalEvidenceItem[] = [
     chainOfCustody: [
       {
         time: '07:55:10 WAT',
-        handler: 'Chidi Okafor (Lead Incident Response)',
+        handler: 'Michael (Lead Incident Response)',
         action: 'Acquired read-only snapshot via SIEM cryptographic export API.',
         signature: 'SIG-IR-99120',
       },
@@ -41,7 +41,7 @@ export const FICTIONAL_EVIDENCE: readonly FictionalEvidenceItem[] = [
       },
       {
         time: '07:59:00 WAT',
-        handler: 'Tade Adebayo (Security Analyst Intern)',
+        handler: 'Protector (Security Analyst Intern)',
         action: 'Assigned for initial morning baseline inspection.',
         signature: 'SIG-ANALYST-READ',
       },
@@ -74,7 +74,7 @@ export const FICTIONAL_EVIDENCE: readonly FictionalEvidenceItem[] = [
       },
       {
         time: '07:52:00 WAT',
-        handler: 'Folake Alabi (IT Systems Admin)',
+        handler: 'Anjola (IT Systems Admin)',
         action: 'Preserved pcap slice and notified SecOps team.',
         signature: 'SIG-ADMIN-HANDOFF',
       },
@@ -107,7 +107,7 @@ export const FICTIONAL_EVIDENCE: readonly FictionalEvidenceItem[] = [
       },
       {
         time: '07:56:00 WAT',
-        handler: 'Chidi Okafor (Lead Incident Response)',
+        handler: 'Michael (Lead Incident Response)',
         action: 'Archived trace dump into incident investigation evidence locker.',
         signature: 'SIG-IR-ARCHIVE',
       },
@@ -134,7 +134,7 @@ export const FICTIONAL_EVIDENCE: readonly FictionalEvidenceItem[] = [
     chainOfCustody: [
       {
         time: '07:56:10 WAT',
-        handler: 'Temitope Blessing (Lead Security Analyst)',
+        handler: 'Blessing (Lead Security Analyst)',
         action: 'Extracted active service descriptor from app-portal-01 memory snapshot.',
         signature: 'SIG-LEAD-SEC-EXTRACT',
       },
@@ -177,7 +177,7 @@ export const FICTIONAL_EVIDENCE: readonly FictionalEvidenceItem[] = [
         signature: 'SIG-EXEC-RESTRICTED',
       },
     ],
-    artifactSnippet: ['[RESTRICTED CONTENT — CLEARANCE TIER 2 REQUIRED TO VIEW]'],
+    artifactSnippet: ['[RESTRICTED CONTENT : CLEARANCE TIER 2 REQUIRED TO VIEW]'],
   },
 ];
 
