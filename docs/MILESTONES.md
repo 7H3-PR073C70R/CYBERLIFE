@@ -661,15 +661,22 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 
 ---
 
-## M20 — Flexible Career Progression
+## M20 — Gameplay Loop, Player Progression, Career Structure & Activity Director
 
-- **Purpose**: Expand non-linear cybersecurity career advancement across multiple distinct tracks and independent paths.
+- **Purpose**: Establish the shared gameplay foundation that transforms Cyberlife into a continuously playable cybersecurity career and life simulation — connecting every prior milestone system into a coherent, player-facing loop.
 - **Scope**:
-  - Non-linear career switching between Corporate SOC Analyst, Red Team Consultant, Purple Team Architect, Independent Bounty Hunter, and Digital Forensics Specialist.
-  - Dynamic certification exams, portfolio reviews, and senior stakeholder interviews.
-  - Workplace politics, performance reviews, and employer switching across Lagos Island firms.
-- **Dependencies**: M19.
-- **Status**: **PLANNED**.
+  - **Shared Activity & Objective Framework**: Domain interfaces (`ActivityDefinition`, `ActivityInstance`, `ActivityDirectorState`, `CareerSkillMatrix`) and command lifecycle (`StartActivity`, `ResolveActivity`, `AbandonActivity`, `RefreshOpportunities`) with full persistence integration.
+  - **Activity Director Engine**: Transparent, testable multi-factor scoring and prioritization across urgency, career level, skill alignment, recency, and time-sensitivity. Safeguards against duplicates, invalid prerequisites, endless regeneration, and settled-activity resurrection.
+  - **Integration Adapters**: Five adapters (M14 Story, M16 Investigation, M17 Red Team, M18 Defensive Ops, M19 Bounty) bridge the shared framework with each completed milestone's real domain state.
+  - **Authored Activity Catalogue**: 9 authored activities spanning all career paths plus a procedural contract generator with variation guards.
+  - **Career Skill Matrix**: 9 gameplay-connected skills (`networkAnalysis`, `threatIntelligence`, `defensiveOps`, `offensiveSecurity`, `forensicInvestigation`, `incidentResponse`, `contractManagement`, `technicalAnalysis`, `professionalCommunication`) influencing eligibility and displayed progression.
+  - **ActivityApp Desktop Workspace**: 4-tab virtual desktop application (Active Mission, Opportunities, Career & Goals, Audit Log) with deep URL linking.
+  - **ObjectiveTrackerHUD Integration**: Real-time synchronization of active activity objectives, title, and technical rationale in the gameplay HUD.
+  - **Idempotent Settlement**: Rewards, reputation deltas, and skill progression applied exactly once — guarded against double application across reload cycles.
+  - **Immutable Audit Ledger**: Timestamped settlement records visible in the Audit Log tab.
+  - **Persistence Integration**: `activityDirector` state fully persists and restores via the existing `SaveManager` with roundtrip test coverage.
+- **Dependencies**: M14, M16, M17, M18, M19.
+- **Status**: **COMPLETED & VERIFIED**.
 
 ---
 

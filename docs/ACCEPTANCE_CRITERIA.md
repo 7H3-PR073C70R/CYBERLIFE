@@ -196,3 +196,27 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 - [ ] WCAG 2.1 AA contrast compliance across terminal and desktop UI.
 - [ ] Lighthouse Performance score $\ge 90$ on desktop.
 - [ ] Release documentation, changelog, and static deployment build verified.
+
+---
+
+### Milestone M20: Gameplay Loop, Player Progression, Career Structure & Activity Director *(Completed)*
+- [x] **Shared Activity Framework**: `ActivityDefinition`, `ActivityInstance`, `ActivityDirectorState`, and `CareerSkillMatrix` types implemented in `src/simulation/activities/types.ts`.
+- [x] **Command Lifecycle**: `StartActivity`, `UpdateActivityObjective`, `ResolveActivity`, `AbandonActivity`, `RefreshOpportunities`, `SetActivityDirectorTab` commands all dispatch and mutate state correctly.
+- [x] **Activity Director Engine**: `evaluateCandidateActivities()`, `scoreAndRankOpportunities()`, `assessObjectiveSatisfaction()`, `settleActivity()`, `abandonActivity()`, `generateFollowUpOpportunities()` all implemented with clean domain separation.
+- [x] **Transparent Prioritization**: Multi-factor weighted scoring (urgency 40, career level 25, skill alignment 20, recency 10, time-sensitivity 5) is deterministic and fully testable.
+- [x] **Duplicate/Invalid Prevention**: Director deduplicates against `completedHistory` and active activity; enforces prerequisite gating before surfacing any opportunity.
+- [x] **Idempotent Settlement**: `settleActivity()` checks `completedHistory` before applying rewards; duplicate invocation on an already-completed activity is a safe no-op.
+- [x] **Integration Adapters**: Five adapters (M14 Story, M16 Investigation, M17 Red Team, M18 Defensive Ops, M19 Bounty) bridge real milestone domain state — no fabricated integration.
+- [x] **Authored Activity Catalogue**: 9 authored activities across all career paths (`act_aster_m14_initial`, `act_aster_m14_forensic_follow`, `act_m16_marina_nexus`, `act_m17_cedarline_assessment`, `act_m18_broad_street_defense`, `act_blue_broad_street_triage`, `act_m19_balogun_pos_audit`, `act_skill_network_fundamentals`, `act_skill_threat_intel`) plus procedural contract generator.
+- [x] **9 Career Skills**: All skills connected to existing gameplay systems; skills influence activity eligibility thresholds.
+- [x] **ActivityApp Desktop**: 4-tab workspace (Active Mission, Opportunities, Career & Goals, Audit Log) mounted in `DesktopShell`, deep-linkable via URL search params.
+- [x] **ObjectiveTrackerHUD**: Synced to active `ActivityInstance` in real-time — renders activity title, objective checklist (complete/pending/failed), and technical rationale.
+- [x] **No Decorative Controls**: All buttons, tabs, and action controls dispatch real commands and reflect real simulation state.
+- [x] **Persistence Roundtrip**: `activityDirector` state (active activity, completed history, skill matrix, audit ledger) survives full `saveGame` → `loadGame` cycle without data loss or duplicate rewards.
+- [x] **Domain Tests**: 8 unit tests covering eligibility, state transitions, objective evaluation, idempotent settlement, abandonment, follow-up generation, duplicate prevention, and dependency-unavailable recovery.
+- [x] **UI Tests**: 8 component tests covering render states, activity lifecycle flows, skill matrix, audit log, tab persistence, and URL deep-linking.
+- [x] **HUD Tests**: 7 tests including active-activity sync, objective state rendering, and null-activity graceful handling.
+- [x] **No Regressions**: 954/954 total tests passing across 123 test files; 0 failures.
+- [x] **TypeScript Strict**: `tsc --noEmit` exits 0; zero type errors.
+- [x] **Headless Browser Verification**: 6 screenshots captured via `scripts/capture-m20-screenshots.mjs` at 1440×900 resolution and saved to `docs/graphics/milestone20/`.
+- [x] **Simulation Safety Boundary**: Zero host OS commands, zero external network calls, zero hardcoded secrets; all targets are fictional Lagos Island entities.
