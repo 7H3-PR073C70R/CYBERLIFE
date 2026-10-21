@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { audioManager, AudioBusName, AudioVolumes } from '@/presentation/audio/AudioManager';
 
 export interface WorkstationSettings {
   reduceMotion: boolean;
@@ -51,11 +52,26 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
   const [settings, setSettings] = useState<WorkstationSettings>(() =>
     getStoredWorkstationSettings()
   );
+  const [audioVolumes, setAudioVolumes] = useState<AudioVolumes>(() =>
+    audioManager.getAllVolumes()
+  );
+  const [isMuted, setIsMuted] = useState<boolean>(() => audioManager.isMasterMuted());
 
   useEffect(() => {
     if (isOpen) {
       setSettings(getStoredWorkstationSettings());
+      setAudioVolumes(audioManager.getAllVolumes());
+      setIsMuted(audioManager.isMasterMuted());
     }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const unsubscribe = audioManager.onStateChange(() => {
+      setAudioVolumes(audioManager.getAllVolumes());
+      setIsMuted(audioManager.isMasterMuted());
+    });
+    return unsubscribe;
   }, [isOpen]);
 
   const updateSetting = <K extends keyof WorkstationSettings>(
@@ -66,6 +82,16 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
     setSettings(updated);
     saveStoredWorkstationSettings(updated);
     onSettingsChanged?.(updated);
+  };
+
+  const handleVolumeChange = (bus: AudioBusName, val: number) => {
+    audioManager.setBusVolume(bus, val);
+    setAudioVolumes(audioManager.getAllVolumes());
+  };
+
+  const handleToggleMute = () => {
+    const next = audioManager.toggleMute();
+    setIsMuted(next);
   };
 
   // Escape key listener
@@ -86,6 +112,45 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
 
   if (!isOpen) return null;
 
+  const audioSliders: { bus: AudioBusName; label: string; desc: string; testId: string }[] = [
+    {
+      bus: 'master',
+      label: 'Master Volume',
+      desc: 'Overall audio level',
+      testId: 'setting-audio-master',
+    },
+    {
+      bus: 'voice',
+      label: 'Voice Volume',
+      desc: 'Character speech & dialogue',
+      testId: 'setting-audio-voice',
+    },
+    {
+      bus: 'sfx',
+      label: 'SFX Volume',
+      desc: 'Terminal beeps, clicks & alerts',
+      testId: 'setting-audio-sfx',
+    },
+    {
+      bus: 'ambience',
+      label: 'Ambience Volume',
+      desc: 'Workstation hum & room tone',
+      testId: 'setting-audio-ambience',
+    },
+    {
+      bus: 'music',
+      label: 'Music Volume',
+      desc: 'Atmospheric score & soundtrack',
+      testId: 'setting-audio-music',
+    },
+    {
+      bus: 'ui',
+      label: 'UI Volume',
+      desc: 'Button clicks & system pings',
+      testId: 'setting-audio-ui',
+    },
+  ];
+
   return (
     <div
       role="dialog"
@@ -98,15 +163,21 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
     >
       <div
         className="controls-modal-card hud-interactive"
-        style={{ maxWidth: '520px', pointerEvents: 'auto' }}
+        style={{
+          maxWidth: '540px',
+          maxHeight: '90vh',
+          display: 'flex',
+          flexDirection: 'column',
+          pointerEvents: 'auto',
+        }}
         onClick={e => e.stopPropagation()}
       >
-        <div className="controls-modal-header">
+        <div className="controls-modal-header" style={{ flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <span style={{ fontSize: '1.4rem' }}>⚙️</span>
             <div>
               <h2 id="settings-modal-title" style={{ margin: 0, fontSize: '1.15rem' }}>
-                Workstation & Camera Settings
+                Settings & Preferences
               </h2>
               <p
                 style={{
@@ -115,7 +186,7 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
                   color: 'var(--color-text-secondary)',
                 }}
               >
-                Customize cinematic camera transitions and interaction preferences.
+                Customize audio buses, camera transitions, and interaction cues.
               </p>
             </div>
           </div>
@@ -145,8 +216,133 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
         </div>
 
         <div
-          style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', padding: '1.25rem 0' }}
+          className="controls-modal-body"
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.25rem 1.4rem',
+          }}
         >
+          {/* Audio Section Header */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              borderBottom: '1px solid rgba(0, 229, 255, 0.25)',
+              paddingBottom: '0.45rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontSize: '1rem' }}>🔊</span>
+              <span style={{ fontWeight: 700, color: '#00e5ff', fontSize: '0.92rem' }}>
+                Audio & Volume Buses
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={handleToggleMute}
+              data-testid="setting-audio-mute"
+              style={{
+                padding: '0.3rem 0.75rem',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                borderRadius: '6px',
+                border: isMuted ? '1px solid #ef4444' : '1px solid rgba(0, 229, 255, 0.4)',
+                backgroundColor: isMuted ? 'rgba(239, 68, 68, 0.2)' : 'rgba(0, 229, 255, 0.1)',
+                color: isMuted ? '#fca5a5' : '#00e5ff',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <span>{isMuted ? '🔇' : '🔊'}</span>
+              <span>{isMuted ? 'Muted' : 'Mute All'}</span>
+            </button>
+          </div>
+
+          {/* Audio Sliders Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.6rem' }}>
+            {audioSliders.map(({ bus, label, desc, testId }) => (
+              <div
+                key={bus}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.35rem',
+                  padding: '0.6rem 0.85rem',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(15, 23, 42, 0.6)',
+                  border: '1px solid rgba(148, 163, 184, 0.2)',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <div>
+                    <div style={{ fontWeight: 600, color: '#f8fafc', fontSize: '0.85rem' }}>
+                      {label}
+                    </div>
+                    <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{desc}</div>
+                  </div>
+                  <span
+                    style={{
+                      fontFamily: 'monospace',
+                      fontSize: '0.82rem',
+                      fontWeight: 600,
+                      color: isMuted ? '#64748b' : '#00e5ff',
+                      minWidth: '42px',
+                      textAlign: 'right',
+                    }}
+                  >
+                    {Math.round(audioVolumes[bus] * 100)}%
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={audioVolumes[bus]}
+                  onChange={e => handleVolumeChange(bus, parseFloat(e.target.value))}
+                  data-testid={testId}
+                  aria-label={label}
+                  style={{
+                    width: '100%',
+                    accentColor: '#00e5ff',
+                    cursor: 'pointer',
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Camera & Interaction Section Header */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              borderBottom: '1px solid rgba(148, 163, 184, 0.2)',
+              paddingBottom: '0.45rem',
+              marginTop: '0.5rem',
+            }}
+          >
+            <span style={{ fontSize: '1rem' }}>🎥</span>
+            <span style={{ fontWeight: 700, color: '#94a3b8', fontSize: '0.92rem' }}>
+              Camera & Controls
+            </span>
+          </div>
+
           {/* Reduce camera motion */}
           <label
             style={{
@@ -257,7 +453,15 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
           </label>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            padding: '1rem 1.4rem',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            flexShrink: 0,
+          }}
+        >
           <button
             type="button"
             className="btn-primary"
@@ -271,3 +475,4 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
     </div>
   );
 };
+

@@ -84,6 +84,12 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
     securityClearance: 'UNKNOWN // ONION ROUTED',
     unreadCount: 1,
     canCall: true,
+    voice: {
+      gender: 'male',
+      pitch: 0.92,
+      rate: 0.94,
+      voiceHints: ['en-ng', 'nigeria', 'male', 'daniel'],
+    },
     callDialogue: [
       {
         text: '*electronic audio static* ... Tade, keep your voice down. Relay is 3 hops deep.',
@@ -148,6 +154,12 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
     securityClearance: 'SYSTEM DAEMON // PID 1024',
     unreadCount: 0,
     canCall: false,
+    voice: {
+      gender: 'male',
+      pitch: 1.0,
+      rate: 1.0,
+      voiceHints: ['synth', 'robot', 'bad news', 'cellos', 'whisper', 'albert', 'fred'],
+    },
     callDialogue: [],
     messages: [
       {

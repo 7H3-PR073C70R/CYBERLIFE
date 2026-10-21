@@ -12,6 +12,12 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
       'Methodical, protective of her team, patient with learners who show genuine discipline, intolerant of reckless shortcuts or fabricated claims.',
     voiceTone:
       'Measured, authoritative, supportive, professional Nigerian English with occasional Lagos colloquialisms when relieved.',
+    voice: {
+      gender: 'female',
+      pitch: 1.05,
+      rate: 0.98,
+      voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena', 'samantha'],
+    },
     palette: {
       skin: 0x5c3826,
       hair: 0x111111,
@@ -71,6 +77,12 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
       'Nervous, defensive under accusation, deeply relieved when treated fairly, eager to do the right thing once assured he will not be scapegoated.',
     voiceTone:
       'Hasty, slightly strained, speaks quickly when nervous, drops into earnest candor when trust is established.',
+    voice: {
+      gender: 'male',
+      pitch: 1.02,
+      rate: 1.03,
+      voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'oliver', 'george'],
+    },
     palette: {
       skin: 0x4a2a1a,
       hair: 0x17120e,
@@ -146,6 +158,12 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
     personality:
       'Intellectually formidable, passionate about agentic systems, sensitive to simplistic "AI is evil" tropes, but rigorously honest when shown hard log traces.',
     voiceTone: 'Crisp, articulate, analytical, punctuated by technical precision.',
+    voice: {
+      gender: 'female',
+      pitch: 1.02,
+      rate: 1.0,
+      voiceHints: ['female', 'en-gb', 'en-us', 'karen', 'serena'],
+    },
     palette: {
       skin: 0x8d5b4c,
       hair: 0x1f1f1f,
@@ -201,6 +219,12 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
     personality:
       'Pragmatic, demanding, numbers-driven, hyper-aware of reputation and liability, but respects professionals who bring solutions rather than panic.',
     voiceTone: 'Direct, commanding, polished executive cadence with an urgent undertone.',
+    voice: {
+      gender: 'male',
+      pitch: 0.94,
+      rate: 0.96,
+      voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'george'],
+    },
     palette: {
       skin: 0x3d2012,
       hair: 0x111111,
@@ -254,6 +278,12 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
       'Warm, shrewd, observant, protective of young people in the neighborhood, deeply suspicious of online scams and fake SMS alerts.',
     voiceTone:
       'Vibrant, warm, maternal yet no-nonsense, speaks with colorful Nigerian Pidgin and animated rhythm.',
+    voice: {
+      gender: 'female',
+      pitch: 1.08,
+      rate: 0.98,
+      voiceHints: ['en-ng', 'nigeria', 'female', 'serena'],
+    },
     palette: {
       skin: 0x543220,
       hair: 0x0a0a0a,
@@ -311,6 +341,12 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
       'Philosophical, calm, patient, possesses profound memory of Broad Street history and human nature.',
     voiceTone:
       'Gentle, resonant, unhurried, offering reflective parables and historical perspective.',
+    voice: {
+      gender: 'male',
+      pitch: 0.92,
+      rate: 0.92,
+      voiceHints: ['en-ng', 'nigeria', 'male', 'george', 'daniel'],
+    },
     palette: {
       skin: 0x3d2012,
       hair: 0x9ca3af, // Silver-grey hair
@@ -367,6 +403,12 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
     personality:
       'Energetic, observant, networking-driven, highly appreciates talent that combines technical rigor with ethical clarity.',
     voiceTone: 'Crisp, enthusiastic, polished modern Lagos corporate professional.',
+    voice: {
+      gender: 'female',
+      pitch: 1.06,
+      rate: 1.02,
+      voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena'],
+    },
     palette: {
       skin: 0x5c3826,
       hair: 0x171717,
@@ -421,6 +463,12 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
     personality:
       'Cynical, witty, fiercely independent, unimpressed by corporate buzzwords, values proof-of-concept demonstrations above corporate assurances.',
     voiceTone: 'Dry, sarcastic, quick-witted, peppered with hacker jargon and sharp humor.',
+    voice: {
+      gender: 'male',
+      pitch: 0.96,
+      rate: 1.02,
+      voiceHints: ['en-ng', 'nigeria', 'male', 'oliver', 'alex'],
+    },
     palette: {
       skin: 0x3b2219,
       hair: 0x0a0a0a,

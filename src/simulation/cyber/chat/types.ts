@@ -15,6 +15,8 @@ export interface ChatMessage {
   suggestedReplies?: string[];
 }
 
+import { NpcVoiceConfig } from '../../actors/types';
+
 export interface ChatThread {
   id: string;
   contactId: string;
@@ -28,6 +30,7 @@ export interface ChatThread {
   messages: ChatMessage[];
   canCall: boolean;
   callDialogue: Array<{ text: string; delayMs: number }>;
+  voice?: NpcVoiceConfig;
 }
 
 export interface HackerCallState {

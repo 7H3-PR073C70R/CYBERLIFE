@@ -67,6 +67,16 @@ export interface NpcScheduleEntry {
 }
 
 /**
+ * NPC Voice configuration for browser Web Speech synthesis.
+ */
+export interface NpcVoiceConfig {
+  readonly gender: 'female' | 'male';
+  readonly rate: number;
+  readonly pitch: number;
+  readonly voiceHints?: readonly string[];
+}
+
+/**
  * Static NPC profile specification.
  */
 export interface NpcProfile {
@@ -77,6 +87,7 @@ export interface NpcProfile {
   readonly bio: string;
   readonly personality: string;
   readonly voiceTone: string;
+  readonly voice?: NpcVoiceConfig;
   readonly palette: HumanoidPalette;
   readonly initialRelationship: number;
   readonly knowledgeBoundaries: NpcKnowledgeBoundaries;

@@ -102,18 +102,12 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
   // Trigger natural Nigerian English voice stream when NPC speaks
   useEffect(() => {
     if (!currentNode?.text || !profile) return;
-    const isFemale =
-      ['npc_amina', 'npc_elena', 'npc_nkechi'].includes(profile.id) ||
-      profile.name.toLowerCase().includes('amina') ||
-      profile.name.toLowerCase().includes('temitope') ||
-      profile.name.toLowerCase().includes('elena') ||
-      profile.name.toLowerCase().includes('nkechi') ||
-      profile.name.toLowerCase().includes('blessing');
 
     voiceDialogueService.speak(currentNode.text, {
       speaker: profile.name,
       role: profile.role,
-      gender: isFemale ? 'female' : 'male',
+      voice: profile.voice,
+      gender: profile.voice?.gender ?? 'female',
     });
 
     return () => {

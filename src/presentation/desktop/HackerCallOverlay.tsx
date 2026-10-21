@@ -11,7 +11,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { ChatThread, HackerCallState } from '@/simulation/cyber/chat/types';
-import { audioSfx } from '@/simulation/cyber/chat/audioSfx';
+import { audioSfx } from '../audio/audioSfx';
 import { voiceDialogueService } from '../audio/VoiceDialogueService';
 import { OsIcon } from './icons/OsIcons';
 
@@ -31,7 +31,7 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
   onEndCall,
 }) => {
   const [duration, setDuration] = useState<number>(0);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(() => voiceDialogueService.getIsMuted());
   const [currentSubtitle, setCurrentSubtitle] = useState<string>('');
   const [dialogueIndex, setDialogueIndex] = useState<number>(0);
 
@@ -92,9 +92,29 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
 
     let isCancelled = false;
     let currentIdx = 0;
+    let typeInterval: ReturnType<typeof setInterval> | null = null;
+    let advanceTimeout: ReturnType<typeof setTimeout> | null = null;
+    let fallbackTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const clearTimers = () => {
+      if (typeInterval) {
+        clearInterval(typeInterval);
+        typeInterval = null;
+      }
+      if (advanceTimeout) {
+        clearTimeout(advanceTimeout);
+        advanceTimeout = null;
+      }
+      if (fallbackTimeout) {
+        clearTimeout(fallbackTimeout);
+        fallbackTimeout = null;
+      }
+    };
 
     const playNextLine = () => {
+      clearTimers();
       if (isCancelled || !activeThread) return;
+
       if (currentIdx >= activeThread.callDialogue.length) {
         // Dialogue ended, wrap up
         setCurrentSubtitle('[Call encrypted line silent... connection remains active]');
@@ -104,20 +124,32 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
       const item = activeThread.callDialogue[currentIdx]!;
       setDialogueIndex(currentIdx);
 
-      // Trigger natural Nigerian English voice stream
-      voiceDialogueService.speak(item.text, {
-        speaker: activeThread.contactName,
-        role: activeThread.contactRole,
-        isPhoneCall: true,
-      });
+      // Estimate speech duration for pacing (14.5 chars/sec baseline)
+      const cleanLen = item.text.replace(/\*[^*]+\*/g, '').replace(/\[[^\]]+\]/g, '').trim().length;
+      const rate = activeThread.voice?.rate ?? 0.98;
+      const estimatedDurationMs = Math.max(1200, Math.round(((Math.max(1, cleanLen) / 14.5) * 1000) / rate));
 
-      // Typewriter effect for speech
+      let lineAdvanced = false;
+      const scheduleNext = () => {
+        if (lineAdvanced || isCancelled) return;
+        lineAdvanced = true;
+        clearTimers();
+        advanceTimeout = setTimeout(() => {
+          if (!isCancelled) {
+            currentIdx++;
+            playNextLine();
+          }
+        }, item.delayMs);
+      };
+
+      // Typewriter pacing: spread characters evenly across estimated speech duration
       let charIdx = 0;
       setCurrentSubtitle('');
+      const charStepMs = Math.max(20, Math.min(80, Math.floor(estimatedDurationMs / Math.max(1, item.text.length))));
 
-      const typeInterval = setInterval(() => {
+      typeInterval = setInterval(() => {
         if (isCancelled) {
-          clearInterval(typeInterval);
+          if (typeInterval) clearInterval(typeInterval);
           return;
         }
 
@@ -125,24 +157,48 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
           setCurrentSubtitle(item.text.slice(0, charIdx));
           charIdx++;
         } else {
-          clearInterval(typeInterval);
-          // Wait for delayMs before next line
-          setTimeout(() => {
-            currentIdx++;
-            playNextLine();
-          }, item.delayMs);
+          if (typeInterval) clearInterval(typeInterval);
+          setCurrentSubtitle(item.text);
+
+          // If voice is muted or speech is unavailable, typewriter completion triggers line advance
+          if (voiceDialogueService.getIsMuted() || typeof window === 'undefined' || !('speechSynthesis' in window)) {
+            scheduleNext();
+          }
         }
-      }, 25);
+      }, charStepMs);
+
+      // Trigger natural voice stream with voice-synchronized onEnd callback
+      voiceDialogueService.speak(item.text, {
+        speaker: activeThread.contactName,
+        role: activeThread.contactRole,
+        voice: activeThread.voice,
+        isPhoneCall: true,
+        onEnd: () => {
+          if (isCancelled) return;
+          // Ensure subtitle is fully revealed when speech finishes
+          setCurrentSubtitle(item.text);
+          scheduleNext();
+        },
+      });
+
+      // Fallback timer: if browser speech synthesis drops/hangs without onEnd, advance safely
+      fallbackTimeout = setTimeout(() => {
+        if (!lineAdvanced && !isCancelled) {
+          setCurrentSubtitle(item.text);
+          scheduleNext();
+        }
+      }, estimatedDurationMs + item.delayMs + 3500);
     };
 
     // Initial brief pause before first dialogue line
     const startTimeout = setTimeout(() => {
       playNextLine();
-    }, 600);
+    }, 500);
 
     return () => {
       isCancelled = true;
       clearTimeout(startTimeout);
+      clearTimers();
       voiceDialogueService.stop();
     };
   }, [callState?.status, activeThread]);

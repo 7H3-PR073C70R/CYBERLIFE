@@ -18,6 +18,7 @@ import {
   WorkstationCameraStateOptions,
 } from './camera/WorkstationCameraStates';
 import { ScreenDesktopState } from './ScreenRenderer';
+import { audioManager } from '../audio/AudioManager';
 
 export interface NpcDialogueData {
   npcId: string;
@@ -153,6 +154,7 @@ export class WorldSceneManager {
       WORLD_CONFIG.camera.near,
       WORLD_CONFIG.camera.far
     );
+    audioManager.attachCamera(this.camera);
 
     // 3. Renderer Setup (ACESFilmicToneMapping, SRGBColorSpace, PCFSoftShadowMap)
     try {

@@ -32,59 +32,56 @@ async function runTest(port, modeName) {
     ws.send(JSON.stringify({ id: 1, method: 'Runtime.enable' }));
     ws.send(JSON.stringify({ id: 2, method: 'Page.enable' }));
 
-    // Inject interceptor into the page
-    const injected = await new Promise(res => {
+    // Instrument speechSynthesis before page load via addScriptToEvaluateOnNewDocument
+    const interceptorCode = `
+      (() => {
+        window.__speechLog = [];
+        const origSpeak = window.speechSynthesis.speak.bind(window.speechSynthesis);
+        const origCancel = window.speechSynthesis.cancel.bind(window.speechSynthesis);
+        let uttCount = 0;
+
+        window.speechSynthesis.speak = function(utt) {
+          const id = ++uttCount;
+          window.__speechLog.push({ type: 'speak_called', id, text: utt.text.slice(0, 40), voice: utt.voice?.name, lang: utt.voice?.lang });
+          const origOnStart = utt.onstart;
+          const origOnEnd = utt.onend;
+          const origOnError = utt.onerror;
+
+          utt.onstart = function(e) {
+            window.__speechLog.push({ type: 'onstart', id });
+            if (origOnStart) origOnStart.call(this, e);
+          };
+          utt.onend = function(e) {
+            window.__speechLog.push({ type: 'onend', id });
+            if (origOnEnd) origOnEnd.call(this, e);
+          };
+          utt.onerror = function(e) {
+            window.__speechLog.push({ type: 'onerror', id, error: e.error });
+            if (origOnError) origOnError.call(this, e);
+          };
+
+          return origSpeak(utt);
+        };
+
+        window.speechSynthesis.cancel = function() {
+          window.__speechLog.push({ type: 'cancel_called' });
+          return origCancel();
+        };
+      })()
+    `;
+
+    await new Promise(res => {
       const id = 10;
       ws.send(JSON.stringify({
         id,
-        method: 'Runtime.evaluate',
-        params: {
-          expression: `
-            (() => {
-              window.__speechLog = [];
-              const origSpeak = window.speechSynthesis.speak.bind(window.speechSynthesis);
-              const origCancel = window.speechSynthesis.cancel.bind(window.speechSynthesis);
-              let uttCount = 0;
-
-              window.speechSynthesis.speak = function(utt) {
-                const id = ++uttCount;
-                window.__speechLog.push({ type: 'speak_called', id, text: utt.text, voice: utt.voice?.name, lang: utt.voice?.lang });
-                const origOnStart = utt.onstart;
-                const origOnEnd = utt.onend;
-                const origOnError = utt.onerror;
-
-                utt.onstart = function(e) {
-                  window.__speechLog.push({ type: 'onstart', id });
-                  if (origOnStart) origOnStart.call(this, e);
-                };
-                utt.onend = function(e) {
-                  window.__speechLog.push({ type: 'onend', id });
-                  if (origOnEnd) origOnEnd.call(this, e);
-                };
-                utt.onerror = function(e) {
-                  window.__speechLog.push({ type: 'onerror', id, error: e.error });
-                  if (origOnError) origOnError.call(this, e);
-                };
-
-                return origSpeak(utt);
-              };
-
-              window.speechSynthesis.cancel = function() {
-                window.__speechLog.push({ type: 'cancel_called' });
-                return origCancel();
-              };
-
-              return true;
-            })()
-          `,
-          returnByValue: true
-        }
+        method: 'Page.addScriptToEvaluateOnNewDocument',
+        params: { source: interceptorCode }
       }));
       const handler = evt => {
         const d = JSON.parse(evt.data);
         if (d.id === id) {
           ws.removeEventListener('message', handler);
-          res(d.result?.result?.value);
+          res(d.result);
         }
       };
       ws.addEventListener('message', handler);
@@ -93,10 +90,8 @@ async function runTest(port, modeName) {
     // Reload page to catch all mount events with instrumentation
     ws.send(JSON.stringify({ id: 20, method: 'Page.reload' }));
 
-    // Re-inject early on navigation
-    await sleep(200);
     // Wait for dialogue overlay and speech synthesis
-    await sleep(2500);
+    await sleep(3500);
 
     const speechLog = await new Promise(res => {
       const id = 30;

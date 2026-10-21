@@ -227,6 +227,122 @@ async function run() {
     console.log('\n[+] Old Voice Selection Per Character:');
     console.table(characterSelection);
 
+    // 2b. Test new selectVoice logic against all characters
+    const newCharacterSelection = await client.evaluate(`
+      (() => {
+        const voices = window.speechSynthesis.getVoices();
+
+        const KNOWN_FEMALE_NAMES = new Set([
+          'victoria', 'serena', 'samantha', 'karen', 'moira', 'fiona',
+          'tessa', 'hazel', 'susan', 'heera', 'zira', 'jenny', 'aria',
+          'sonia', 'natasha', 'libby', 'clara', 'neerja', 'ava', 'emma',
+          'mia', 'ana', 'stephanie', 'amelia', 'alice', 'anna', 'alva',
+          'amira', 'ezinne', 'carmit', 'damayanti'
+        ]);
+
+        const KNOWN_MALE_NAMES = new Set([
+          'daniel', 'oliver', 'george', 'rishi', 'alex', 'david', 'mark',
+          'guy', 'ryan', 'tom', 'james', 'richard', 'brian', 'arthur',
+          'prabhat', 'ravi', 'albert', 'fred', 'abeo'
+        ]);
+
+        function isVoiceFemale(v) {
+          const name = v.name.toLowerCase();
+          const tokens = name.split(/[\\s\\-()_,.]+/);
+          if (tokens.includes('female') || tokens.includes('woman') || tokens.includes('girl')) return true;
+          return tokens.some(t => KNOWN_FEMALE_NAMES.has(t));
+        }
+
+        function isVoiceMale(v) {
+          const name = v.name.toLowerCase();
+          const tokens = name.split(/[\\s\\-()_,.]+/);
+          if (tokens.includes('male') || tokens.includes('man') || tokens.includes('boy')) return true;
+          return tokens.some(t => KNOWN_MALE_NAMES.has(t));
+        }
+
+        function isNigerianVoice(v) {
+          const lang = v.lang.trim().toLowerCase();
+          const name = v.name.toLowerCase();
+          const isEnNg = lang === 'en-ng' || lang === 'en_ng' || lang.startsWith('en-ng-') || lang.startsWith('en_ng-');
+          const hasNigeriaName = name.includes('nigeria') || name.includes('nigerian');
+          return isEnNg || hasNigeriaName;
+        }
+
+        function isNaturalVoice(v) {
+          return v.name.includes('Natural') || v.name.includes('Online');
+        }
+
+        function selectVoiceNew(profile) {
+          if (voices.length === 0) return null;
+          let bestVoice = null;
+          let highestScore = -Infinity;
+
+          for (const v of voices) {
+            const female = isVoiceFemale(v);
+            const male = isVoiceMale(v);
+
+            if (profile.preferredGender === 'male' && female) continue;
+            if (profile.preferredGender === 'female' && male) continue;
+
+            let score = 0;
+            const lang = v.lang.toLowerCase();
+
+            if (isNigerianVoice(v)) score += 1000;
+            else if (lang.startsWith('en-gh') || lang.startsWith('en-za')) score += 500;
+            else if (lang.startsWith('en-gb')) score += 300;
+            else if (lang.startsWith('en')) score += 100;
+            else score -= 200;
+
+            if (isNaturalVoice(v)) score += 250;
+            if (profile.preferredGender === 'male' && male) score += 100;
+            else if (profile.preferredGender === 'female' && female) score += 100;
+
+            const lowerName = v.name.toLowerCase();
+            for (const hint of profile.voiceHints) {
+              if (lowerName.includes(hint.toLowerCase())) score += 60;
+            }
+
+            if (score > highestScore && score > 0) {
+              highestScore = score;
+              bestVoice = v;
+            }
+          }
+
+          if (!bestVoice) {
+            bestVoice = voices.find(v => {
+              if (profile.preferredGender === 'male' && isVoiceFemale(v)) return false;
+              if (profile.preferredGender === 'female' && isVoiceMale(v)) return false;
+              return v.lang.toLowerCase().startsWith('en');
+            }) || null;
+          }
+
+          return { voice: bestVoice?.name, lang: bestVoice?.lang, isFemale: bestVoice ? isVoiceFemale(bestVoice) : false, isMale: bestVoice ? isVoiceMale(bestVoice) : false };
+        }
+
+        const characters = [
+          { name: 'Temitope Blessing', preferredGender: 'female', voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena', 'samantha'] },
+          { name: 'Marcus Adebayo', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'oliver', 'george'] },
+          { name: 'Dr. Elena Chen', preferredGender: 'female', voiceHints: ['female', 'en-gb', 'en-us', 'karen', 'serena'] },
+          { name: 'Femi Martins', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'george'] },
+          { name: 'Mama Nkechi', preferredGender: 'female', voiceHints: ['en-ng', 'nigeria', 'female', 'serena'] },
+          { name: 'Uncle Segun', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'george', 'daniel'] },
+          { name: 'Folake Davies', preferredGender: 'female', voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena'] },
+          { name: 'Tunde Bakare', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'oliver', 'alex'] },
+          { name: 'Cipher', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'daniel'] },
+          { name: 'Aster SIEM Bot', preferredGender: 'male', voiceHints: ['synth', 'robot', 'bad news', 'cellos', 'whisper', 'albert', 'fred'] },
+        ];
+
+        return characters.map(c => ({
+          character: c.name,
+          requestedGender: c.preferredGender,
+          ...selectVoiceNew(c)
+        }));
+      })()
+    `);
+
+    console.log('\n[+] New Voice Selection Per Character:');
+    console.table(newCharacterSelection);
+
     // 3. Test (a) and (b): StrictMode double-run behavior & cancelled utterance clobbering
     const strictModeAndClobberTest = await client.evaluate(`
       new Promise(resolve => {
