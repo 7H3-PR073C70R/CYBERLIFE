@@ -1,0 +1,676 @@
+/**
+ * Cyberlife — Milestone 20: Authored Activity Catalogue & Procedural Contract Generator
+ *
+ * Provides a rich set of cybersecurity activities across the Lagos Island tech landscape:
+ * - High-stakes Broad Street banking hubs & merchant networks
+ * - Incident investigation & forensics
+ * - Authorized Red Team assessments
+ * - Blue Team & Purple Team defense operations
+ * - Freelance bug bounty contracts
+ * - Career progression and continuous life simulation goals
+ *
+ * STRICT SAFETY BOUNDARY:
+ * 100% simulated in-memory activities.
+ */
+
+import type {
+  ActivityDefinition,
+  ActivityRuntimeState,
+  ActivityDirectorState,
+  LongTermCareerGoal,
+} from './types';
+import type { CareerPathId } from '../career/types';
+
+export const AUTHORED_ACTIVITIES: Readonly<Record<string, ActivityDefinition>> = {
+  // 1. Primary Story Mission — The Aster Incident
+  act_story_aster_investigation: {
+    id: 'act_story_aster_investigation',
+    type: 'STORY_MISSION',
+    title: 'The Aster Incident: Containment & Remediation',
+    shortTitle: 'Aster Incident',
+    description:
+      'Investigate the over-privileged svc-aster knowledgebase agent at Cedarline InfoSec, contain unauthorized SMB/DB traversal, and submit an executive remediation report.',
+    narrativeContext:
+      'A late-night telemetry anomaly indicates Cedarline internal systems were probed by an AI service account with administrative delegation.',
+    source: 'SecOps Dispatch',
+    priority: 'PRIMARY_OBJECTIVE',
+    locationId: 'cedarline_interior',
+    prerequisites: {
+      minCareerLevel: 1,
+    },
+    objectives: [
+      {
+        id: 'obj_aster_inspect_logs',
+        title: 'Analyze Ingestion Logs',
+        description: 'Examine suspicious authentication logs from 10.0.4.15 and 10.0.4.20.',
+        type: 'RUN_TOOL',
+        target: 'logview',
+        isCompleted: false,
+        hint: 'Use the LogView tool or Terminal command `logview --inspect` to review security logs.',
+        actionPrompt: 'Inspect authentication and query logs in LogView.',
+        explanation: 'Auditing access logs reveals token abuse and query injection patterns.',
+      },
+      {
+        id: 'obj_aster_contain_service',
+        title: 'Apply Least-Privilege Containment',
+        description: 'Constrain the svc-aster service role to kb-assistant and revoke database access.',
+        type: 'EXECUTE_ACTION',
+        target: 'containment_policy',
+        isCompleted: false,
+        hint: 'Adjust operational policy role from corporate-admin to kb-assistant in Policy Manager.',
+        actionPrompt: 'Update service role in Incident Portal or Terminal.',
+        explanation: 'Restricting service account permissions immediately isolates compromised credentials.',
+      },
+      {
+        id: 'obj_aster_submit_report',
+        title: 'Submit Incident Closure Report',
+        description: 'Formulate findings, verify SMB isolation, and submit approved incident debrief.',
+        type: 'SUBMIT_REPORT',
+        target: 'incident_report',
+        isCompleted: false,
+        hint: 'Review verification telemetry and submit the incident report in Incident Portal.',
+        actionPrompt: 'Submit completed report for SecOps approval.',
+        explanation: 'Documenting root cause and remediation prevents systemic recurrence.',
+      },
+    ],
+    reward: {
+      payoutKobo: 250_000, // ₦2,500.00
+      careerXp: 180,
+      skillRewards: {
+        incident_response: 120,
+        log_analysis: 100,
+        evidence_handling: 80,
+      },
+      reputationPoints: 45,
+      factionStanding: { factionId: 'cedarline_secops', delta: 15 },
+      unlockedActivityIds: ['act_blue_broad_street_triage', 'act_story_broad_street_intel'],
+      flagsToSet: { mission_aster_completed: true },
+    },
+    consequences: {
+      reputationPenalty: 10,
+      recoveryGuidance: 'Review log indicators again and ensure service policy is reverted before resubmitting.',
+    },
+    isRepeatable: false,
+    whyRecommended: 'Initial orientation and central investigation at Cedarline Security.',
+    relatedEntityId: 'the_aster_incident',
+  },
+
+  // 2. Threat Intelligence & Network Investigation — Broad Street Syndicate
+  act_story_broad_street_intel: {
+    id: 'act_story_broad_street_intel',
+    type: 'INVESTIGATION',
+    title: 'Broad Street Syndicate: Traffic Analysis & Correlation',
+    shortTitle: 'Syndicate Intel',
+    description:
+      'Inspect suspicious encrypted command-and-control beacons crossing the Marina gateway into the commercial banking district.',
+    narrativeContext:
+      'Uncorrelated network spikes on port 8443 match known adversary infrastructure observed during the Aster investigation.',
+    source: 'Threat Intelligence Desk',
+    priority: 'RECOMMENDED',
+    locationId: 'cedarline_interior',
+    prerequisites: {
+      minCareerLevel: 1,
+      requiredSkills: { log_analysis: 1, network_fundamentals: 1 },
+    },
+    objectives: [
+      {
+        id: 'obj_intel_analyze_pcap',
+        title: 'Analyze Packet Capture Streams',
+        description: 'Filter pcap traces for beaconing intervals and TLS fingerprint anomalies.',
+        type: 'ANALYZE_TRAFFIC',
+        target: 'packet_lens',
+        isCompleted: false,
+        hint: 'Open PacketLens and apply beacon detection filter on external gateway telemetry.',
+        actionPrompt: 'Analyze TLS stream patterns in PacketLens.',
+      },
+      {
+        id: 'obj_intel_correlate_ioc',
+        title: 'Correlate Threat Indicators',
+        description: 'Correlate domain registrars, autonomous system numbers, and staging IPs.',
+        type: 'RECORD_FINDING',
+        target: 'threat_correlation',
+        isCompleted: false,
+        hint: 'Use the Threat Correlation panel to link C2 node signatures.',
+        actionPrompt: 'Tag and preserve correlated threat indicator finding.',
+      },
+    ],
+    reward: {
+      payoutKobo: 320_000, // ₦3,200.00
+      careerXp: 140,
+      skillRewards: {
+        network_fundamentals: 110,
+        evidence_handling: 90,
+      },
+      reputationPoints: 35,
+      unlockedActivityIds: ['act_bounty_atm_audit'],
+      flagsToSet: { broad_street_intel_verified: true },
+    },
+    consequences: {
+      reputationPenalty: 5,
+      recoveryGuidance: 'Filter specifically for TLS JA3 hashes matching adversary beacons.',
+    },
+    isRepeatable: false,
+    whyRecommended: 'Direct follow-up to the Aster Incident network anomalies.',
+    relatedEntityId: 'net-inv-broad-street-01',
+  },
+
+  // 3. Blue Team Defensive Operations — Balogun Merchant Security
+  act_blue_broad_street_triage: {
+    id: 'act_blue_broad_street_triage',
+    type: 'DEFENSIVE_OPERATION',
+    title: 'Balogun Cooperative: Alert Triage & Sigma Tuning',
+    shortTitle: 'Alert Triage',
+    description:
+      'Review pending security alerts from Balogun market payment terminals, tune high-fidelity Sigma detection rules, and isolate rogue terminals.',
+    narrativeContext:
+      'Multiple merchant terminals reported unexpected PowerShell invocations masquerading as inventory updates.',
+    source: 'Balogun Market Security Cooperative',
+    priority: 'RECOMMENDED',
+    locationId: 'neighborhood',
+    prerequisites: {
+      minCareerLevel: 1,
+      requiredSkills: { security_fundamentals: 1 },
+    },
+    objectives: [
+      {
+        id: 'obj_triage_alerts',
+        title: 'Triage Pending Alerts',
+        description: 'Inspect alert queue in Defensive Operations and classify false positives.',
+        type: 'RESOLVE_INCIDENT',
+        target: 'alert_triage',
+        isCompleted: false,
+        hint: 'Navigate to Alert Queue in DefensiveOps app and review terminal telemetry.',
+        actionPrompt: 'Classify and prioritize incoming security alerts.',
+      },
+      {
+        id: 'obj_tune_detection_rule',
+        title: 'Tune Sigma Detection Rule',
+        description: 'Enable and tune detection rule for suspicious encoded terminal commands.',
+        type: 'TUNE_RULE',
+        target: 'detection_tune',
+        isCompleted: false,
+        hint: 'Open RuleTuner or DefensiveOps Detection Studio and activate the high-confidence rule.',
+        actionPrompt: 'Deploy tuned Sigma detection rule.',
+      },
+    ],
+    reward: {
+      payoutKobo: 280_000, // ₦2,800.00
+      careerXp: 150,
+      skillRewards: {
+        incident_response: 100,
+        detection_engineering: 120,
+      },
+      reputationPoints: 30,
+      flagsToSet: { balogun_defense_verified: true },
+    },
+    consequences: {
+      reputationPenalty: 8,
+      recoveryGuidance: 'Ensure alert severity thresholds match the merchant payment gateway profile.',
+    },
+    isRepeatable: true,
+    whyRecommended: 'Valuable practice for Blue Team analysts building detection engineering skills.',
+    relatedEntityId: 'def-ops-balogun-coop',
+  },
+
+  // 4. Red Team Assessment — Balogun Merchant Gateway Audit
+  act_red_balogun_assessment: {
+    id: 'act_red_balogun_assessment',
+    type: 'RED_TEAM_ASSESSMENT',
+    title: 'Authorized Assessment: Balogun Merchant Gateway',
+    shortTitle: 'Gateway PenTest',
+    description:
+      'Perform scoped penetration testing against the Balogun Merchant API gateway. Respect Rules of Engagement and validate vulnerabilities.',
+    narrativeContext:
+      'The merchants council commissioned an authorized assessment before launching a new multi-bank settlement interface.',
+    source: 'Balogun Chamber of Commerce',
+    priority: 'OPTIONAL',
+    locationId: 'neighborhood',
+    prerequisites: {
+      minCareerLevel: 1,
+      requiredSkills: { security_fundamentals: 1, troubleshooting: 1 },
+    },
+    objectives: [
+      {
+        id: 'obj_red_accept_roe',
+        title: 'Review & Accept Rules of Engagement',
+        description: 'Review in-scope subnets (10.0.12.0/24) and explicitly accept non-destructive testing conditions.',
+        type: 'EXECUTE_ACTION',
+        target: 'accept_roe',
+        isCompleted: false,
+        hint: 'Open RedTeam app and review the Scope of Engagement charter before proceeding.',
+        actionPrompt: 'Accept Rules of Engagement.',
+      },
+      {
+        id: 'obj_red_validate_vuln',
+        title: 'Validate Vulnerability Finding',
+        description: 'Execute authorized simulated port scan and record finding with CVSS rating.',
+        type: 'RECORD_FINDING',
+        target: 'red_finding',
+        isCompleted: false,
+        hint: 'Run authorized scanner in RedTeam Console against designated target 10.0.12.45.',
+        actionPrompt: 'Record validated finding with technical evidence.',
+      },
+      {
+        id: 'obj_red_submit_findings',
+        title: 'Submit Scoped Assessment Report',
+        description: 'Deliver executive summary and remediation roadmap to the merchant council.',
+        type: 'SUBMIT_REPORT',
+        target: 'red_team_report',
+        isCompleted: false,
+        hint: 'Compile report and submit for client sign-off in RedTeam app.',
+        actionPrompt: 'Submit assessment deliverables.',
+      },
+    ],
+    reward: {
+      payoutKobo: 450_000, // ₦4,500.00
+      careerXp: 200,
+      skillRewards: {
+        attack_simulation: 140,
+        reporting: 110,
+      },
+      reputationPoints: 50,
+      flagsToSet: { red_balogun_audit_passed: true },
+    },
+    consequences: {
+      penaltyKobo: 50_000,
+      reputationPenalty: 20,
+      recoveryGuidance: 'Strictly avoid targeting out-of-scope payment switches outside 10.0.12.0/24.',
+    },
+    isRepeatable: false,
+    whyRecommended: 'Hands-on Red Team workflow testing authorized methodologies and reporting.',
+    relatedEntityId: 'red-balogun-gateway-01',
+  },
+
+  // 5. Purple Team Emulation — Lagos Shield Cyber Defense
+  act_purple_eko_emulation: {
+    id: 'act_purple_eko_emulation',
+    type: 'DEFENSIVE_OPERATION',
+    title: 'Operation Lagos Shield: Purple Team Emulation Studio',
+    shortTitle: 'Purple Emulation',
+    description:
+      'Emulate adversary lateral movement techniques and verify that defensive detection rules trigger with under 2-minute alert latency.',
+    narrativeContext:
+      'Collaborative exercise between internal red assessors and defensive monitoring teams to close detection gaps.',
+    source: 'Cedarline Purple Team Lead',
+    priority: 'OPTIONAL',
+    locationId: 'cedarline_interior',
+    prerequisites: {
+      minCareerLevel: 2,
+      requiredSkills: { attack_simulation: 1, detection_engineering: 1 },
+    },
+    objectives: [
+      {
+        id: 'obj_purple_run_scenario',
+        title: 'Execute Emulation Run',
+        description: 'Run automated emulation scenario mimicking credential dumping across staging hosts.',
+        type: 'EXECUTE_ACTION',
+        target: 'purple_scenario',
+        isCompleted: false,
+        hint: 'Select credential dumping scenario in Purple Team Studio and start execution.',
+        actionPrompt: 'Execute Purple Team emulation scenario.',
+      },
+      {
+        id: 'obj_purple_verify_detection',
+        title: 'Verify Detection Coverage',
+        description: 'Confirm SIEM collector logs detection alert and records valid timeline.',
+        type: 'VERIFY_SERVICE',
+        target: 'purple_replay',
+        isCompleted: false,
+        hint: 'Review replay results and ensure detection status reads DETECTED.',
+        actionPrompt: 'Verify detection telemetry.',
+      },
+    ],
+    reward: {
+      payoutKobo: 400_000, // ₦4,000.00
+      careerXp: 180,
+      skillRewards: {
+        attack_simulation: 100,
+        detection_engineering: 150,
+      },
+      reputationPoints: 40,
+      flagsToSet: { purple_emulation_certified: true },
+    },
+    consequences: {
+      reputationPenalty: 5,
+      recoveryGuidance: 'Adjust Sigma rule query syntax to match the process creation parameters.',
+    },
+    isRepeatable: true,
+    whyRecommended: 'Bridges offensive attack knowledge with defensive engineering.',
+    relatedEntityId: 'scen-purple-lagos-shield',
+  },
+
+  // 6. Bug Bounty Contract — Eko Atlantic ATM Network
+  act_bounty_atm_audit: {
+    id: 'act_bounty_atm_audit',
+    type: 'CYBER_CONTRACT',
+    title: 'Eko Bounty Network: Broad Street ATM Telemetry Investigation',
+    shortTitle: 'ATM Bounty',
+    description:
+      'Investigate intermittent heartbeat dropouts on Broad Street commercial ATM gateways without disrupting live cash dispensaries.',
+    narrativeContext:
+      'Commercial bank consortium posted a private bounty following unverified reports of man-in-the-middle transaction anomalies.',
+    source: 'Eko Bounty Network',
+    priority: 'RECOMMENDED',
+    locationId: 'neighborhood',
+    prerequisites: {
+      minCareerLevel: 1,
+      minReputationPoints: 100,
+    },
+    objectives: [
+      {
+        id: 'obj_bounty_accept_contract',
+        title: 'Accept Bounty Contract',
+        description: 'Accept the contract on Eko Bounty Network and review client deliverables rubric.',
+        type: 'EXECUTE_ACTION',
+        target: 'accept_contract',
+        isCompleted: false,
+        hint: 'Open BountyApp from Orion OS desktop or top panel and click Accept Contract.',
+        actionPrompt: 'Accept contract in Bounty Marketplace.',
+      },
+      {
+        id: 'obj_bounty_run_tool',
+        title: 'Execute Simulated Non-Destructive Action',
+        description: 'Perform diagnostic packet inspection on authorized ATM subnet 10.0.8.0/24.',
+        type: 'RUN_TOOL',
+        target: 'bounty_action',
+        isCompleted: false,
+        hint: 'In Active Workspace, run simulated network audit against 10.0.8.12.',
+        actionPrompt: 'Execute diagnostic scan on authorized target.',
+      },
+      {
+        id: 'obj_bounty_submit_findings',
+        title: 'Package Deliverables & Submit',
+        description: 'Package findings with SHA-256 evidence link in Submission Studio and submit for client review.',
+        type: 'SUBMIT_REPORT',
+        target: 'bounty_submission',
+        isCompleted: false,
+        hint: 'Navigate to Submission Studio, verify evidence hash, and submit deliverables.',
+        actionPrompt: 'Submit bounty deliverables for evaluation.',
+      },
+    ],
+    reward: {
+      payoutKobo: 750_000, // ₦7,500.00
+      careerXp: 220,
+      skillRewards: {
+        network_fundamentals: 130,
+        reporting: 120,
+      },
+      reputationPoints: 60,
+      flagsToSet: { bounty_atm_completed: true },
+    },
+    consequences: {
+      penaltyKobo: 75_000,
+      reputationPenalty: 25,
+      recoveryGuidance: 'Avoid contacting prohibited subnets outside 10.0.8.0/24.',
+    },
+    isRepeatable: false,
+    whyRecommended: 'High-payout contract with verified client review on the Eko Bounty Network.',
+    relatedEntityId: 'ct-eko-atm-investigation',
+  },
+
+  // 7. Career Development & IT Support — Workstation Hardware Maintenance
+  act_career_junior_support: {
+    id: 'act_career_junior_support',
+    type: 'CAREER_ASSIGNMENT',
+    title: 'Cedarline Workstation: Diagnostics & Hardware Upgrade',
+    shortTitle: 'Workstation Setup',
+    description:
+      'Perform hardware diagnostics, review RAM utilization, and procure memory upgrade modules from the hardware shop.',
+    narrativeContext:
+      'Keeping workstation resources optimized prevents dropped packets during high-speed traffic capture.',
+    source: 'Internal IT Helpdesk',
+    priority: 'OPTIONAL',
+    locationId: 'cedarline_interior',
+    prerequisites: {
+      minCareerLevel: 1,
+    },
+    objectives: [
+      {
+        id: 'obj_support_sysinfo',
+        title: 'Inspect System Specifications',
+        description: 'Open System Information on Orion OS desktop to review kernel and memory stats.',
+        type: 'RUN_TOOL',
+        target: 'sysinfo',
+        isCompleted: false,
+        hint: 'Launch System Information application from Desktop or Applications menu.',
+        actionPrompt: 'Inspect system specifications.',
+      },
+      {
+        id: 'obj_support_study',
+        title: 'Review Cybersecurity Study Guide',
+        description: 'Read the foundational security study guide to build core technical troubleshooting skills.',
+        type: 'EXECUTE_ACTION',
+        target: 'study_guide',
+        isCompleted: false,
+        hint: 'Access Career & Market app and study learning material or purchase study resources.',
+        actionPrompt: 'Complete study session.',
+      },
+    ],
+    reward: {
+      payoutKobo: 150_000, // ₦1,500.00
+      careerXp: 100,
+      skillRewards: {
+        troubleshooting: 100,
+        security_fundamentals: 80,
+      },
+      reputationPoints: 20,
+      flagsToSet: { workstation_optimized: true },
+    },
+    consequences: {
+      recoveryGuidance: 'Ensure all required applications are reviewed in Orion OS.',
+    },
+    isRepeatable: true,
+    whyRecommended: 'Foundational career maintenance and skill building.',
+    relatedEntityId: 'job_ticket_01',
+  },
+
+  // 8. Personal Goal & Life Simulation — Broad Street Coffee & Networking
+  act_social_marina_coffee: {
+    id: 'act_social_marina_coffee',
+    type: 'SOCIAL_COMMITMENT',
+    title: 'Marina Promenade: Networking & Incident Debrief',
+    shortTitle: 'Marina Networking',
+    description:
+      'Meet with local Lagos security practitioners on the Marina waterfront to discuss emerging adversary techniques.',
+    narrativeContext:
+      'Informal intelligence sharing among Broad Street analysts frequently uncovers threats before official CVE bulletins.',
+    source: 'Personal Calendar',
+    priority: 'OPTIONAL',
+    locationId: 'neighborhood',
+    prerequisites: {
+      minCareerLevel: 1,
+    },
+    objectives: [
+      {
+        id: 'obj_social_visit_marina',
+        title: 'Visit Marina Promenade',
+        description: 'Explore the Lagos Island waterfront district near Broad Street and interact with local contacts.',
+        type: 'VISIT_LOCATION',
+        target: 'neighborhood',
+        isCompleted: false,
+        hint: 'Step outside the workstation and walk toward Marina Promenade.',
+        actionPrompt: 'Travel to Marina Promenade.',
+      },
+      {
+        id: 'obj_social_talk_contact',
+        title: 'Consult Professional Contact',
+        description: 'Open the Contacts directory or speak with a colleague regarding local security updates.',
+        type: 'TALK_TO_NPC',
+        target: 'npc_amina',
+        isCompleted: false,
+        hint: 'Open Contacts app on the desktop or initiate dialogue with Amina Bello.',
+        actionPrompt: 'Engage with professional contact.',
+      },
+    ],
+    reward: {
+      payoutKobo: 80_000,
+      careerXp: 80,
+      skillRewards: {
+        security_fundamentals: 60,
+      },
+      reputationPoints: 25,
+      flagsToSet: { marina_networking_completed: true },
+    },
+    consequences: {
+      recoveryGuidance: 'Check the Contacts application for availability hours.',
+    },
+    isRepeatable: true,
+    whyRecommended: 'Expands your professional network across Lagos Island.',
+    relatedEntityId: 'npc_contact_event_01',
+  },
+};
+
+export const ACTIVITY_CATALOGUE = AUTHORED_ACTIVITIES;
+
+export const INITIAL_LONG_TERM_GOALS: ReadonlyArray<LongTermCareerGoal> = [
+  {
+    id: 'goal_career_specialist',
+    title: 'Achieve Tier 2 Specialist Standing',
+    description: 'Advance your career level to Tier 2 (Security Analyst or Penetration Tester) through completed assignments.',
+    currentProgress: 1,
+    maxProgress: 2,
+    isCompleted: false,
+    unlockedReward: 'Unlocks high-value commercial tenders and advanced network simulation targets.',
+    relatedCareerPath: 'career_sec_analyst',
+  },
+  {
+    id: 'goal_reputation_master',
+    title: 'Build 5-Star Freelance Standing',
+    description: 'Earn 300+ reputation points on the Eko Bounty Network with zero unmitigated scope violations.',
+    currentProgress: 120,
+    maxProgress: 300,
+    isCompleted: false,
+    unlockedReward: 'Unlocks Master Tier contracts and VIP security briefings.',
+    relatedCareerPath: 'career_bounty_hunter',
+  },
+  {
+    id: 'goal_master_investigator',
+    title: 'Unmask the Broad Street Threat Actor',
+    description: 'Correlate forensic evidence from the Aster Incident and live network beacons to identify the threat actor.',
+    currentProgress: 1,
+    maxProgress: 4,
+    isCompleted: false,
+    unlockedReward: 'Permanent recognition in Lagos Island cybersecurity history.',
+  },
+];
+
+/**
+ * Creates the initial runtime state for all authored activities.
+ */
+export function createInitialActivityDirectorState(
+  simTimeSeconds = 0
+): ActivityDirectorState {
+  const activities: Record<string, ActivityRuntimeState> = {};
+
+  for (const [id, def] of Object.entries(AUTHORED_ACTIVITIES)) {
+    const isPrimary = def.priority === 'PRIMARY_OBJECTIVE';
+    activities[id] = {
+      definitionId: id,
+      status: isPrimary ? 'ACTIVE' : 'AVAILABLE',
+      discoveredAt: simTimeSeconds,
+      acceptedAt: isPrimary ? simTimeSeconds : undefined,
+      objectives: def.objectives.map(o => ({ ...o })),
+      progressPercentage: 0,
+      rewardClaimed: false,
+    };
+  }
+
+  return {
+    activities,
+    activeActivityId: 'act_story_aster_investigation',
+    primaryObjectiveId: 'act_story_aster_investigation',
+    recommendedActivityIds: [
+      'act_story_broad_street_intel',
+      'act_blue_broad_street_triage',
+      'act_bounty_atm_audit',
+    ],
+    completedHistory: [],
+    longTermGoals: INITIAL_LONG_TERM_GOALS,
+    guidanceFilter: 'ALL',
+    lastEvaluatedSimulationTime: simTimeSeconds,
+  };
+}
+
+/**
+ * Procedural contract generator for ongoing freelance gameplay beyond story completion.
+ */
+export function generateProceduralContract(
+  index: number,
+  playerCareerLevel: number,
+  careerPath?: CareerPathId
+): ActivityDefinition {
+  const targetSubnets = ['10.0.14.0/24', '10.0.18.0/24', '10.0.22.0/24', '10.0.26.0/24'];
+  const targetOrgs = [
+    'Eko Atlantic Cloud Services',
+    'Victoria Island Investment Bank',
+    'Apapa Logistics Port Authority',
+    'Lekki Energy Grid Cooperative',
+  ];
+  const targetTypes: Array<'CYBER_CONTRACT' | 'DEFENSIVE_OPERATION' | 'RED_TEAM_ASSESSMENT'> = [
+    'CYBER_CONTRACT',
+    'DEFENSIVE_OPERATION',
+    'RED_TEAM_ASSESSMENT',
+  ];
+
+  const org = targetOrgs[index % targetOrgs.length]!;
+  const subnet = targetSubnets[index % targetSubnets.length]!;
+  const actType = targetTypes[index % targetTypes.length]!;
+  const baseReward = 300_000 + (playerCareerLevel * 100_000);
+  const baseCareerXp = 120 + (playerCareerLevel * 40);
+
+  const id = `procedural_contract_${Date.now()}_${index}`;
+
+  return {
+    id,
+    type: actType,
+    title: `${org}: Continuous Security Assessment #${index + 1}`,
+    shortTitle: `Assessment #${index + 1}`,
+    description: `Conduct scheduled cybersecurity assessment for ${org} across authorized subnet ${subnet}.`,
+    narrativeContext: `${org} has retained independent security verification as part of their quarterly compliance mandate.`,
+    source: 'Eko Bounty Network — Open Market',
+    priority: 'RECOMMENDED',
+    locationId: 'neighborhood',
+    prerequisites: {
+      minCareerLevel: Math.max(1, Math.min(playerCareerLevel, 3)),
+      careerPath,
+    },
+    objectives: [
+      {
+        id: `${id}_obj_1`,
+        title: 'Inspect Target Perimeter',
+        description: `Execute simulated diagnostic scan against ${subnet}.`,
+        type: 'RUN_TOOL',
+        target: 'procedural_scan',
+        isCompleted: false,
+        hint: `Use authorized testing tools targeting ${subnet}.`,
+        actionPrompt: 'Execute diagnostic scan on target perimeter.',
+      },
+      {
+        id: `${id}_obj_2`,
+        title: 'Compile & Submit Findings',
+        description: 'Document discovered telemetry and submit signed verification report.',
+        type: 'SUBMIT_REPORT',
+        target: 'procedural_report',
+        isCompleted: false,
+        hint: 'Submit verified deliverables for client authorization.',
+        actionPrompt: 'Submit report for review.',
+      },
+    ],
+    reward: {
+      payoutKobo: baseReward,
+      careerXp: baseCareerXp,
+      skillRewards: {
+        security_fundamentals: 90,
+        troubleshooting: 80,
+      },
+      reputationPoints: 30,
+    },
+    consequences: {
+      penaltyKobo: Math.floor(baseReward * 0.1),
+      reputationPenalty: 15,
+      recoveryGuidance: `Ensure only systems in ${subnet} are scanned.`,
+    },
+    isRepeatable: true,
+    whyRecommended: 'Fresh commercial assignment generated by Eko Bounty Network.',
+  };
+}

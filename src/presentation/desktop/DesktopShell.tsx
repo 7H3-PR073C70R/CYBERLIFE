@@ -40,6 +40,7 @@ import { WebProxyApp } from './apps/WebProxyApp';
 import { SocialPretextApp } from './apps/SocialPretextApp';
 import { DefensiveOpsApp } from './apps/DefensiveOpsApp';
 import { RedTeamApp } from './apps/RedTeamApp';
+import { BountyApp } from './apps/BountyApp';
 import { BottomPanel } from './BottomPanel';
 
 import { HackerCallOverlay } from './HackerCallOverlay';
@@ -1082,6 +1083,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 {appId === 'socialPretext' && <SocialPretextApp />}
                 {appId === 'defensiveOps' && <DefensiveOpsApp />}
                 {appId === 'redTeam' && <RedTeamApp />}
+                {appId === 'bountyHub' && <BountyApp />}
               </WindowFrame>
 
             );

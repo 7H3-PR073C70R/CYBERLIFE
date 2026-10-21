@@ -76,6 +76,7 @@ import type { NetworkInvestigationState } from '../cyber/investigation/types';
 import type { RedTeamAssessmentState } from '../cyber/redteam/types';
 import type { DefensiveOpsState } from '../cyber/defensive/types';
 import type { BountyHubState } from '../cyber/contracts/types';
+import type { ActivityDirectorState } from '../activities/types';
 
 export interface SimulationState {
   readonly metadata: SimulationMetadata;
@@ -99,6 +100,7 @@ export interface SimulationState {
   readonly redTeamAssessment?: RedTeamAssessmentState;
   readonly defensiveOps?: DefensiveOpsState;
   readonly bountyHub?: BountyHubState;
+  readonly activityDirector?: ActivityDirectorState;
 }
 
 

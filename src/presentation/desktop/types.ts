@@ -116,13 +116,13 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
   },
   activity: {
     id: 'activity',
-    title: 'Security Activity Log',
-    shortTitle: 'Activity',
+    title: 'Activity Director, Career Progression & Operations Hub',
+    shortTitle: 'Activity Director',
     icon: 'activity',
     description:
-      'Timeline of simulated workstation activities, tool executions, and security events.',
-    defaultSize: { width: 660, height: 460 },
-    minSize: { width: 380, height: 280 },
+      'Discover opportunities, track active objectives, resolve cybersecurity engagements, advance career goals, and inspect audit telemetry.',
+    defaultSize: { width: 880, height: 600 },
+    minSize: { width: 500, height: 400 },
   },
   contacts: {
     id: 'contacts',

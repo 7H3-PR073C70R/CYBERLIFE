@@ -20,6 +20,7 @@ import {
   BountyContract,
   ContractCategoryFilter,
   ContractDifficulty,
+  ActiveContractState,
 } from '@/simulation/cyber/contracts/types';
 import { CONTRACT_CATALOGUE } from '@/simulation/cyber/contracts/contractCatalogue';
 
@@ -100,9 +101,7 @@ export const BountyApp: React.FC = () => {
       acceptedAtSimTime: 28800,
       acceptedScopeVersion: 1,
       objectives: posContract.initialObjectives.map((o, idx) => ({
-        id: o.id,
-        title: o.title,
-        description: o.description,
+        ...o,
         isCompleted: idx < 2 || activeTab === 'reviewDebrief' || activeTab === 'submissionStudio',
       })),
       scopeClarified: true,
@@ -1240,7 +1239,7 @@ export const BountyApp: React.FC = () => {
                     </h3>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-                      {activeContractState.objectives.map(obj => {
+                      {activeContractState.objectives.map((obj: any) => {
                         const isDone = obj.isCompleted;
                         return (
                           <div
@@ -2158,7 +2157,7 @@ export const BountyApp: React.FC = () => {
                   </h3>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
-                    {activeContractState.latestReviewResult.itemizedChecks.map((crit, idx) => (
+                    {activeContractState.latestReviewResult.itemizedChecks.map((crit: any, idx: number) => (
                       <div
                         key={idx}
                         style={{

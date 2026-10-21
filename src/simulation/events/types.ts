@@ -73,7 +73,11 @@ export type SimulationEventType =
   | 'BOUNTY_SCOPE_CLARIFIED'
   | 'BOUNTY_SIMULATED_ACTION_EXECUTED'
   | 'BOUNTY_SCOPE_VIOLATION_ATTEMPTED'
-  | 'BOUNTY_CONTRACT_EVALUATED';
+  | 'BOUNTY_CONTRACT_EVALUATED'
+  | 'ACTIVITY_ACCEPTED'
+  | 'ACTIVITY_COMPLETED'
+  | 'ACTIVITY_ABANDONED'
+  | 'ACTIVITY_REWARD_CLAIMED';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -485,7 +489,11 @@ export type SimulationEvent =
   | BountyScopeClarifiedEvent
   | BountySimulatedActionExecutedEvent
   | BountyScopeViolationAttemptedEvent
-  | BountyContractEvaluatedEvent;
+  | BountyContractEvaluatedEvent
+  | ActivityAcceptedEvent
+  | ActivityCompletedEvent
+  | ActivityAbandonedEvent
+  | ActivityRewardClaimedEvent;
 
 
 export type ThreatIndicatorCorrelatedEvent = BaseSimulationEvent<
@@ -834,6 +842,46 @@ export type BountyContractEvaluatedEvent = BaseSimulationEvent<
     readonly payoutKobo: number;
   }
 >;
+
+export type ActivityAcceptedEvent = BaseSimulationEvent<
+  'ACTIVITY_ACCEPTED',
+  {
+    readonly activityId: string;
+    readonly title: string;
+    readonly type: string;
+    readonly priority: string;
+  }
+>;
+
+export type ActivityCompletedEvent = BaseSimulationEvent<
+  'ACTIVITY_COMPLETED',
+  {
+    readonly activityId: string;
+    readonly title: string;
+    readonly payoutKobo: number;
+    readonly careerXpEarned: number;
+    readonly score: number;
+  }
+>;
+
+export type ActivityAbandonedEvent = BaseSimulationEvent<
+  'ACTIVITY_ABANDONED',
+  {
+    readonly activityId: string;
+    readonly title: string;
+    readonly recoveryGuidance: string;
+  }
+>;
+
+export type ActivityRewardClaimedEvent = BaseSimulationEvent<
+  'ACTIVITY_REWARD_CLAIMED',
+  {
+    readonly activityId: string;
+    readonly payoutKobo: number;
+    readonly careerXpEarned: number;
+  }
+>;
+
 
 
 

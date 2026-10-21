@@ -729,6 +729,23 @@ export function validateSimulationState(state: SimulationState): void {
       }
     }
   }
+
+  // 20. Activity Director & Shared Activity Framework invariants
+  const { activityDirector } = state;
+  if (activityDirector) {
+    if (!activityDirector.activities || typeof activityDirector.activities !== 'object') {
+      throw new InvariantViolationError('activityDirector.activities must be a valid object');
+    }
+    if (!Array.isArray(activityDirector.recommendedActivityIds)) {
+      throw new InvariantViolationError('activityDirector.recommendedActivityIds must be an array');
+    }
+    if (!Array.isArray(activityDirector.completedHistory)) {
+      throw new InvariantViolationError('activityDirector.completedHistory must be an array');
+    }
+    if (!Array.isArray(activityDirector.longTermGoals)) {
+      throw new InvariantViolationError('activityDirector.longTermGoals must be an array');
+    }
+  }
 }
 
 export function checkSimulationInvariants(state: SimulationState): string[] {

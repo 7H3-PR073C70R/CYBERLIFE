@@ -106,4 +106,36 @@ describe('ObjectiveTrackerHUD Component', () => {
     fireEvent.click(toggleButton);
     expect(screen.getByText(/Incident Solved \(9\/9\) \/\/ Next: Explore Lagos Island/i)).toBeInTheDocument();
   });
+
+  it('tracks an active cybersecurity activity from the Activity Director when activated', () => {
+    const engine = createSimulationEngine();
+    const baseState = engine.getState();
+
+    // Activate the ATM audit bounty activity
+    engine.loadState({
+      ...baseState,
+      activityDirector: {
+        ...baseState.activityDirector!,
+        activeActivityId: 'act_bounty_atm_audit',
+        activities: {
+          ...baseState.activityDirector!.activities,
+          act_bounty_atm_audit: {
+            ...baseState.activityDirector!.activities['act_bounty_atm_audit']!,
+            status: 'ACTIVE',
+          },
+        },
+      },
+    });
+
+    render(
+      <SimulationProvider engine={engine}>
+        <ObjectiveTrackerHUD forceExpanded={true} />
+      </SimulationProvider>
+    );
+
+    // Verifies ATM Audit bounty is tracked
+    expect(screen.getByText(/Broad Street ATM Telemetry/i)).toBeInTheDocument();
+    expect(screen.getByTestId('objective-status-badge')).toHaveTextContent('0/3 Done');
+    expect(screen.getByText(/Step 1 of 3: Accept Bounty Contract/i)).toBeInTheDocument();
+  });
 });

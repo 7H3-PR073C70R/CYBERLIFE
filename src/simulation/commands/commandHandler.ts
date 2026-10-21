@@ -102,6 +102,13 @@ import {
   handleSetBountyCategoryFilter,
   handleSetBountyTab,
 } from '../cyber/contracts/bountyCommandHandler';
+import {
+  handleAcceptActivity,
+  handleAbandonActivity,
+  handleResolveActivity,
+  handleSetPrimaryActivity,
+  handleSetActivityGuidanceFilter,
+} from '../activities/activityCommandHandler';
 import { clampFactionStanding, getFactionStandingBand } from '../narrative/narrativeEvaluator';
 
 
@@ -2490,6 +2497,26 @@ export function handleCommand(
 
       case 'SetBountyTab': {
         return handleSetBountyTab(currentState, command);
+      }
+
+      case 'AcceptActivity': {
+        return handleAcceptActivity(currentState, command.activityId);
+      }
+
+      case 'AbandonActivity': {
+        return handleAbandonActivity(currentState, command.activityId);
+      }
+
+      case 'ResolveActivity': {
+        return handleResolveActivity(currentState, command.activityId);
+      }
+
+      case 'SetPrimaryActivity': {
+        return handleSetPrimaryActivity(currentState, command.activityId);
+      }
+
+      case 'SetActivityGuidanceFilter': {
+        return handleSetActivityGuidanceFilter(currentState, command.filter);
       }
 
       default: {

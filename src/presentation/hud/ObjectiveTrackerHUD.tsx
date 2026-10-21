@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
+import { ACTIVITY_CATALOGUE } from '@/simulation/activities/activityCatalogue';
 
 export interface ObjectiveTrackerHUDProps {
   missionTitle?: string;
@@ -78,6 +79,12 @@ export const OBJECTIVE_ACTION_GUIDES: Record<string, ObjectiveActionGuide> = {
 };
 
 export const POST_INCIDENT_DIRECTIVES = [
+  {
+    icon: '🎯',
+    location: 'Workstation Desktop -> Activity Director',
+    contact: 'Career & Activity Hub',
+    action: 'Launch Activity Director to browse prioritized bug bounties, purple team exercises, and corporate threat gigs.',
+  },
   {
     icon: '🏢',
     location: 'Cedarline SOC Floor 14',
@@ -184,62 +191,102 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
   const hasLiveMission = Boolean(mission);
   const isMissionComplete = Boolean(hasLiveMission && (mission!.isCompleted || sim?.state.flags?.mission_aster_completed));
 
-  const totalCount = hasLiveMission ? mission!.objectives.length : 1;
-  const rawCompletedCount = hasLiveMission ? mission!.objectives.filter(o => o.isCompleted).length : 0;
-  const completedCount = isMissionComplete ? totalCount : rawCompletedCount;
+  const activityDirector = sim?.state.activityDirector;
+  const activeActivity = (activityDirector?.activeActivityId && activityDirector.activities)
+    ? activityDirector.activities[activityDirector.activeActivityId]
+    : undefined;
+  const activeDefinition = activeActivity ? ACTIVITY_CATALOGUE[activeActivity.definitionId] : undefined;
+
+  // Track activity if player has selected a non-story activity
+  const isTrackingActivity = Boolean(
+    activeActivity &&
+    activeDefinition &&
+    (activeActivity.status === 'ACTIVE' || activeActivity.status === 'IN_PROGRESS') &&
+    activeActivity.definitionId !== 'act_story_aster_investigation' &&
+    activeActivity.definitionId !== 'act-story-aster-01'
+  );
+
+  const totalCount = isTrackingActivity
+    ? activeActivity!.objectives.length
+    : hasLiveMission
+      ? mission!.objectives.length
+      : 1;
+
+  const rawCompletedCount = isTrackingActivity
+    ? activeActivity!.objectives.filter(o => o.isCompleted).length
+    : hasLiveMission
+      ? mission!.objectives.filter(o => o.isCompleted).length
+      : 0;
+
+  const completedCount = !isTrackingActivity && isMissionComplete ? totalCount : rawCompletedCount;
 
   // Find the active objective sequentially
-  const currentObjectiveIndex = hasLiveMission
-    ? mission!.objectives.findIndex(o => !o.isCompleted)
-    : -1;
-  const currentObjective = hasLiveMission
+  const currentObjectiveIndex = isTrackingActivity
+    ? activeActivity!.objectives.findIndex(o => !o.isCompleted)
+    : hasLiveMission
+      ? mission!.objectives.findIndex(o => !o.isCompleted)
+      : -1;
+
+  const currentObjective = isTrackingActivity
     ? currentObjectiveIndex >= 0
-      ? mission!.objectives[currentObjectiveIndex]
-      : mission!.objectives[mission!.objectives.length - 1]
-    : null;
+      ? activeActivity!.objectives[currentObjectiveIndex]
+      : activeActivity!.objectives[activeActivity!.objectives.length - 1]
+    : hasLiveMission
+      ? currentObjectiveIndex >= 0
+        ? mission!.objectives[currentObjectiveIndex]
+        : mission!.objectives[mission!.objectives.length - 1]
+      : null;
 
   // Correct step number: 1-indexed position of active objective, or totalCount when complete
-  const currentStepNumber = isMissionComplete
+  const currentStepNumber = (!isTrackingActivity && isMissionComplete)
     ? totalCount
     : currentObjectiveIndex >= 0
       ? currentObjectiveIndex + 1
       : totalCount;
 
-  const activeMissionTitle = isMissionComplete
-    ? 'The Aster Incident // Case #2026-AST-01 (Closed)'
-    : hasLiveMission
-      ? mission!.title
-      : missionTitle;
+  const activeMissionTitle = isTrackingActivity
+    ? activeDefinition!.title
+    : isMissionComplete
+      ? 'The Aster Incident // Case #2026-AST-01 (Closed)'
+      : hasLiveMission
+        ? mission!.title
+        : missionTitle;
 
-  const activePhase = isMissionComplete
-    ? 'PHASE: INCIDENT RESOLVED // EXECUTIVE SIGN-OFF APPROVED'
-    : hasLiveMission
-      ? `PHASE: ${mission!.phase.toUpperCase().replace('_', ' ')}`
-      : stageTitle;
+  const activePhase = isTrackingActivity
+    ? `ACTIVITY: ${activeDefinition!.type.toUpperCase().replace('_', ' ')} // ${activeDefinition!.priority.toUpperCase().replace('_', ' ')}`
+    : isMissionComplete
+      ? 'PHASE: INCIDENT RESOLVED // EXECUTIVE SIGN-OFF APPROVED'
+      : hasLiveMission
+        ? `PHASE: ${mission!.phase.toUpperCase().replace('_', ' ')}`
+        : stageTitle;
 
-  const currentGuide = currentObjective ? OBJECTIVE_ACTION_GUIDES[currentObjective.id] : undefined;
+  const currentGuide = (!isTrackingActivity && currentObjective)
+    ? OBJECTIVE_ACTION_GUIDES[currentObjective.id]
+    : undefined;
 
-  const displayGoal = isMissionComplete
+  const displayGoal = (!isTrackingActivity && isMissionComplete)
     ? 'Next Play: Expand Career & Explore Lagos Island'
     : currentObjective
       ? currentObjective.title
       : goal;
 
-  const displayDesc = isMissionComplete
+  const displayDesc = (!isTrackingActivity && isMissionComplete)
     ? 'The Aster Incident has been completely contained, remediated, verified, and reported! Your corporate stipend has been credited. You can now explore Lagos Island, tackle independent bug bounties, or take on active SOC triage jobs.'
     : currentObjective
       ? currentObjective.description
-      : whyItMatters;
+      : (activeDefinition ? activeDefinition.description : whyItMatters);
 
   const displayHint = currentObjective?.hint ?? whatToDo;
 
-  const statusBadgeText = hasLiveMission
-    ? isMissionComplete
-      ? '✓ 9/9 Completed'
-      : `${completedCount}/${totalCount} Done`
-    : isActive
-      ? 'Active'
-      : 'Inactive in M1';
+  const statusBadgeText = isTrackingActivity
+    ? `${completedCount}/${totalCount} Done`
+    : hasLiveMission
+      ? isMissionComplete
+        ? '✓ 9/9 Completed'
+        : `${completedCount}/${totalCount} Done`
+      : isActive
+        ? 'Active'
+        : 'Inactive in M1';
 
   return (
     <aside
@@ -502,11 +549,13 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
 
           <div className="objective-guidance-box">
             <div className="guidance-field-label">
-              {isMissionComplete
-                ? '📋 Full Incident Checklist (All Complete)'
-                : hasLiveMission
-                  ? '💡 Analyst Guidance & Steps'
-                  : 'Guided Guidance Standard'}
+              {isTrackingActivity
+                ? `📋 Activity Objectives (${activeDefinition!.shortTitle})`
+                : isMissionComplete
+                  ? '📋 Full Incident Checklist (All Complete)'
+                  : hasLiveMission
+                    ? '💡 Analyst Guidance & Steps'
+                    : 'Guided Guidance Standard'}
             </div>
 
             <button
@@ -515,16 +564,58 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
               onClick={handleRepeat}
               aria-expanded={isExpanded}
               aria-label={
-                hasLiveMission ? 'Toggle mission checklist' : 'Repeat or toggle instructions'
+                isTrackingActivity
+                  ? 'Toggle activity checklist'
+                  : hasLiveMission
+                    ? 'Toggle mission checklist'
+                    : 'Repeat or toggle instructions'
               }
               data-testid="btn-repeat-instructions"
             >
-              {hasLiveMission
-                ? `📋 ${isExpanded ? 'Hide Full 9-Step Checklist' : 'View Full 9-Step Checklist'}`
-                : '🔄 [Repeat Instructions]'}
+              {isTrackingActivity
+                ? `📋 ${isExpanded ? `Hide ${totalCount}-Step Checklist` : `View ${totalCount}-Step Checklist`}`
+                : hasLiveMission
+                  ? `📋 ${isExpanded ? 'Hide Full 9-Step Checklist' : 'View Full 9-Step Checklist'}`
+                  : '🔄 [Repeat Instructions]'}
             </button>
 
-            {isExpanded && hasLiveMission && (
+            {isExpanded && isTrackingActivity && (
+              <div
+                className="objective-expanded-guidance"
+                data-testid="objective-expanded-guidance"
+                style={{ marginTop: '0.5rem' }}
+              >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                  {activeActivity!.objectives.map((obj, i) => {
+                    const isObjDone = obj.isCompleted;
+                    return (
+                      <div
+                        key={obj.id}
+                        style={{
+                          fontSize: '0.74rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                          color: isObjDone
+                            ? 'var(--color-accent-emerald)'
+                            : i === currentObjectiveIndex
+                              ? 'var(--color-accent-amber)'
+                              : 'var(--color-accent-cyan)',
+                          fontWeight: i === currentObjectiveIndex ? 700 : 400,
+                        }}
+                      >
+                        <span>{isObjDone ? '✓' : i === currentObjectiveIndex ? '▶' : '○'}</span>
+                        <span>
+                          {i + 1}. {obj.title}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {isExpanded && !isTrackingActivity && hasLiveMission && (
               <div
                 className="objective-expanded-guidance"
                 data-testid="objective-expanded-guidance"
@@ -564,11 +655,13 @@ export const ObjectiveTrackerHUD: React.FC<ObjectiveTrackerHUDProps> = ({
           <div className="objective-status-tag">
             <span aria-hidden="true">{isMissionComplete ? '🎉' : 'ℹ️'}</span>
             <span>
-              {isMissionComplete
-                ? 'Incident Closed // All Systems Operational'
-                : hasLiveMission
-                  ? 'Cedarline SOC // Authoritative Simulation'
-                  : 'Simulation Engine: Headless architecture reserved'}
+              {isTrackingActivity
+                ? `${activeDefinition!.source} // Activity Director`
+                : isMissionComplete
+                  ? 'Incident Closed // All Systems Operational'
+                  : hasLiveMission
+                    ? 'Cedarline SOC // Authoritative Simulation'
+                    : 'Simulation Engine: Headless architecture reserved'}
             </span>
           </div>
         </div>

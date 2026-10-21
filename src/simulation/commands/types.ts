@@ -45,6 +45,12 @@ export type SimulationErrorCode =
   | 'RULE_NOT_FOUND'
   | 'INVALID_DEFENSIVE_ACTION'
   | 'SCENARIO_NOT_FOUND'
+  | 'ACTIVITY_NOT_FOUND'
+  | 'ACTIVITY_ALREADY_ACTIVE'
+  | 'ACTIVITY_NOT_ACTIVE'
+  | 'ACTIVITY_ALREADY_COMPLETED'
+  | 'ACTIVITY_PREREQUISITES_NOT_MET'
+  | 'ACTIVITY_OBJECTIVES_INCOMPLETE'
   | 'INVARIANT_VIOLATION';
 
 
@@ -392,7 +398,12 @@ export type SimulationCommand =
   | ResubmitContractRevisionCommand
   | SelectBountyContractCommand
   | SetBountyCategoryFilterCommand
-  | SetBountyTabCommand;
+  | SetBountyTabCommand
+  | AcceptActivityCommand
+  | AbandonActivityCommand
+  | ResolveActivityCommand
+  | SetPrimaryActivityCommand
+  | SetActivityGuidanceFilterCommand;
 
 import type { ThreatReviewStatus } from '../cyber/threatintel/types';
 import type { InvestigationConclusionSubmission } from '../cyber/investigation/types';
@@ -601,6 +612,31 @@ export interface SetBountyCategoryFilterCommand {
 export interface SetBountyTabCommand {
   readonly type: 'SetBountyTab';
   readonly tab: BountyAppTab;
+}
+
+export interface AcceptActivityCommand {
+  readonly type: 'AcceptActivity';
+  readonly activityId: string;
+}
+
+export interface AbandonActivityCommand {
+  readonly type: 'AbandonActivity';
+  readonly activityId: string;
+}
+
+export interface ResolveActivityCommand {
+  readonly type: 'ResolveActivity';
+  readonly activityId: string;
+}
+
+export interface SetPrimaryActivityCommand {
+  readonly type: 'SetPrimaryActivity';
+  readonly activityId: string;
+}
+
+export interface SetActivityGuidanceFilterCommand {
+  readonly type: 'SetActivityGuidanceFilter';
+  readonly filter: 'ALL' | 'PRIMARY' | 'RECOMMENDED' | 'CAREER';
 }
 
 export interface CommandResult {

@@ -22,6 +22,8 @@ import { DefensiveOpsState } from '../cyber/defensive/types';
 import { createInitialDefensiveOpsState } from '../cyber/defensive/defensiveScenarioData';
 import { BountyHubState } from '../cyber/contracts/types';
 import { createInitialBountyHubState } from '../cyber/contracts/contractCatalogue';
+import { ActivityDirectorState } from '../activities/types';
+import { createInitialActivityDirectorState } from '../activities/activityCatalogue';
 
 export interface InitialStateOverrides {
   readonly schemaVersion?: number;
@@ -50,6 +52,7 @@ export interface InitialStateOverrides {
   readonly redTeamAssessment?: RedTeamAssessmentState;
   readonly defensiveOps?: DefensiveOpsState;
   readonly bountyHub?: BountyHubState;
+  readonly activityDirector?: ActivityDirectorState;
 }
 
 
@@ -169,6 +172,8 @@ export function createInitialSimulationState(
       overrides?.defensiveOps ?? createInitialDefensiveOpsState(),
     bountyHub:
       overrides?.bountyHub ?? createInitialBountyHubState(),
+    activityDirector:
+      overrides?.activityDirector ?? createInitialActivityDirectorState(simulationTimeSeconds),
   };
 
 

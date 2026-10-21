@@ -23,6 +23,7 @@ import { createInitialCatalogueState } from '../../simulation/catalogue/catalogu
 import { createInitialDefensiveOpsState } from '../../simulation/cyber/defensive/defensiveScenarioData';
 import { createInitialRedTeamAssessmentState } from '../../simulation/cyber/redteam/scenarioFixtures';
 import { createInitialBountyHubState } from '../../simulation/cyber/contracts/contractCatalogue';
+import { createInitialActivityDirectorState } from '../../simulation/activities/activityCatalogue';
 
 
 export interface SaveManagerOptions {
@@ -323,6 +324,9 @@ export class SaveManager {
       defensiveOps: state.defensiveOps ?? createInitialDefensiveOpsState(),
       redTeamAssessment: state.redTeamAssessment ?? createInitialRedTeamAssessmentState(),
       bountyHub: state.bountyHub ?? createInitialBountyHubState(),
+      activityDirector:
+        state.activityDirector ??
+        createInitialActivityDirectorState(state.time?.simulationTimeSeconds ?? 0),
     };
 
   }
@@ -398,6 +402,8 @@ export class SaveManager {
       'RED_TEAM_ACTION_EXECUTED',
       'RED_TEAM_FINDING_VALIDATED',
       'RED_TEAM_REPORT_SUBMITTED',
+      'ACTIVITY_ACCEPTED',
+      'ACTIVITY_COMPLETED',
     ]);
 
 

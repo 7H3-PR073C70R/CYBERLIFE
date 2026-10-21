@@ -333,4 +333,29 @@ describe('Persistence Full Simulation Round-Trip & Reconciliation', () => {
     expect(restored.bountyHub?.activeContract?.contractId).toBe('ct-balogun-pos-audit');
     expect(restored.bountyHub?.activeContract?.status).toBe('ACTIVE');
   });
+
+  it('saves and restores modified activityDirector state across persistence round-trip', async () => {
+    const engine = new SimulationEngine();
+    const saveManager = new SaveManager({ engine, storage });
+    await saveManager.init();
+
+    // Accept an activity
+    const acceptRes = engine.dispatch({
+      type: 'AcceptActivity',
+      activityId: 'act_blue_broad_street_triage',
+    });
+    expect(acceptRes.success).toBe(true);
+
+    const saveResult = await saveManager.saveGame('slot_activity_test');
+    expect(saveResult.success).toBe(true);
+
+    const loadResult = await saveManager.loadGame('slot_activity_test');
+    expect(loadResult.success).toBe(true);
+    const restored = engine.getState();
+    expect(restored.activityDirector).toBeDefined();
+    expect(restored.activityDirector?.activeActivityId).toBe('act_blue_broad_street_triage');
+    expect(
+      restored.activityDirector?.activities['act_blue_broad_street_triage']?.status
+    ).toBe('ACTIVE');
+  });
 });
