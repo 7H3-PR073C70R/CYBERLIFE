@@ -193,7 +193,7 @@ describe('HackerCallOverlay', () => {
     expect(screen.getByText('Line One: Keep your voice down.')).toBeInTheDocument();
 
     // Now voice completes and invokes onEnd callback
-    const opts: any = capturedOptions;
+    const opts = capturedOptions as { onEnd?: () => void } | null;
     expect(opts?.onEnd).toBeDefined();
     act(() => {
       opts?.onEnd?.();

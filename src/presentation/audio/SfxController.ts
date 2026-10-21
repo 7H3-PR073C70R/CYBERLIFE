@@ -122,3 +122,7 @@ export class SfxController {
 }
 
 export const sfxController = new SfxController();
+
+if (typeof window !== 'undefined') {
+  (window as unknown as Record<string, unknown>).__CYBERLIFE_SFX_CONTROLLER__ = sfxController;
+}

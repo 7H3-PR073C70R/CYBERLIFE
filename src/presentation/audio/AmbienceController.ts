@@ -150,3 +150,7 @@ export class AmbienceController {
 }
 
 export const ambienceController = new AmbienceController();
+
+if (typeof window !== 'undefined') {
+  (window as unknown as Record<string, unknown>).__CYBERLIFE_AMBIENCE_CONTROLLER__ = ambienceController;
+}

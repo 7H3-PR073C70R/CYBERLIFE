@@ -33,50 +33,60 @@ export class MusicController {
       return; // Already playing this track
     }
 
+    this.pendingTrackId = trackId;
+
     if (this.isTransitioning) {
-      this.pendingTrackId = trackId;
+      // Another transition is in progress. Wait for our queued transition to complete.
+      while (this.isTransitioning) {
+        await new Promise(r => setTimeout(r, 20));
+      }
       return;
     }
 
     this.isTransitioning = true;
-    const crossfadeSec = options.crossfadeSeconds ?? def.fadeInSeconds ?? 1.5;
-    const targetVol = options.volume ?? def.defaultVolume;
 
     try {
-      const buffer = await audioManager.loadAudio(def.pathWithoutExt);
-      if (!buffer) {
-        // Fallback or missing audio asset: do not break game loop
-        this.isTransitioning = false;
-        return;
+      while (this.pendingTrackId) {
+        const nextTrackId = this.pendingTrackId;
+        this.pendingTrackId = null;
+
+        const nextDef = MUSIC_TRACKS[nextTrackId];
+        if (!nextDef) continue;
+
+        if (this.currentTrackId === nextTrackId && this.currentLoopHandle && !options.forceRestart) {
+          continue;
+        }
+
+        const crossfadeSec = options.crossfadeSeconds ?? nextDef.fadeInSeconds ?? 1.5;
+        const targetVol = options.volume ?? nextDef.defaultVolume;
+
+        const buffer = await audioManager.loadAudio(nextDef.pathWithoutExt);
+        if (!buffer) {
+          // Fallback or missing audio asset: do not break game loop
+          continue;
+        }
+
+        // If an existing loop is playing, stop it with fade-out
+        if (this.currentLoopHandle) {
+          this.currentLoopHandle.stop(crossfadeSec);
+          this.currentLoopHandle = null;
+        }
+
+        // Start new loop with fade-in
+        const handle = audioManager.playLoop(buffer, {
+          bus: 'music',
+          volume: targetVol,
+          fadeInSeconds: crossfadeSec,
+          priority: 'high',
+        });
+
+        this.currentLoopHandle = handle;
+        this.currentTrackId = nextTrackId;
       }
-
-      // If an existing loop is playing, stop it with fade-out
-      if (this.currentLoopHandle) {
-        this.currentLoopHandle.stop(crossfadeSec);
-        this.currentLoopHandle = null;
-      }
-
-      // Start new loop with fade-in
-      const handle = audioManager.playLoop(buffer, {
-        bus: 'music',
-        volume: targetVol,
-        fadeInSeconds: crossfadeSec,
-        priority: 'high',
-      });
-
-      this.currentLoopHandle = handle;
-      this.currentTrackId = trackId;
     } catch {
       // Audio playback blocked or failed gracefully
     } finally {
       this.isTransitioning = false;
-
-      // Handle queued pending track if requested during transition
-      if (this.pendingTrackId && this.pendingTrackId !== this.currentTrackId) {
-        const next = this.pendingTrackId;
-        this.pendingTrackId = null;
-        await this.playTrack(next);
-      }
     }
   }
 
@@ -164,6 +174,14 @@ export class MusicController {
   public isPlaying(): boolean {
     return this.currentLoopHandle !== null;
   }
+
+  public getIsTransitioning(): boolean {
+    return this.isTransitioning;
+  }
 }
 
 export const musicController = new MusicController();
+
+if (typeof window !== 'undefined') {
+  (window as unknown as Record<string, unknown>).__CYBERLIFE_MUSIC_CONTROLLER__ = musicController;
+}

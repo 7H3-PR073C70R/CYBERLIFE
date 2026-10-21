@@ -96,10 +96,12 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   const startInGameAudio = useCallback((locId?: string) => {
     const targetLoc = locId ?? currentLocation.id;
     ambienceController.setLocation(targetLoc);
-    if (targetLoc === 'apartment_interior') {
-      musicController.setContext('APARTMENT_DOWNTIME');
-    } else {
-      musicController.setContext('WORLD_EXPLORATION');
+    if (musicController.getCurrentContext() !== 'WORKSTATION_FOCUS') {
+      if (targetLoc === 'apartment_interior') {
+        musicController.setContext('APARTMENT_DOWNTIME');
+      } else {
+        musicController.setContext('WORLD_EXPLORATION');
+      }
     }
   }, [currentLocation.id]);
 
@@ -151,10 +153,12 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
         onLocationChanged: loc => {
           setCurrentLocation(loc);
           ambienceController.setLocation(loc.id);
-          if (loc.id === 'apartment_interior') {
-            musicController.setContext('APARTMENT_DOWNTIME');
-          } else {
-            musicController.setContext('WORLD_EXPLORATION');
+          if (musicController.getCurrentContext() !== 'WORKSTATION_FOCUS') {
+            if (loc.id === 'apartment_interior') {
+              musicController.setContext('APARTMENT_DOWNTIME');
+            } else {
+              musicController.setContext('WORLD_EXPLORATION');
+            }
           }
           if (loc.id === 'apartment_interior') {
             setPlayerPosition({ x: -12.0, z: -14.0 });

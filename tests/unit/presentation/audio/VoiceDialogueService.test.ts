@@ -299,7 +299,7 @@ describe('VoiceDialogueService', () => {
       expect(token2).toBeGreaterThan(token1);
 
       // Simulate asynchronous late error event from cancelled utterance 1
-      const u1 = utterance1 as any;
+      const u1 = utterance1 as unknown as { onerror?: (e: unknown) => void };
       u1?.onerror?.({ error: 'canceled' });
       // onEnd1 must NOT be called because utterance 1 has a stale session token!
       expect(onEnd1).not.toHaveBeenCalled();
@@ -307,7 +307,7 @@ describe('VoiceDialogueService', () => {
       // Advance past delay for call 2 to start
       vi.advanceTimersByTime(70);
       expect(speakMock).toHaveBeenCalledTimes(2);
-      const utterance2 = lastCreatedUtterance as any;
+      const utterance2 = lastCreatedUtterance as unknown as { onend?: () => void };
 
       // Active utterance 2 completes
       utterance2?.onend?.();

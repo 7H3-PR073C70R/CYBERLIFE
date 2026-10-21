@@ -1,0 +1,155 @@
+{
+  "timestamp": "2026-10-21T11:00:11.521Z",
+  "tests": [
+    {
+      "name": "Audio Subsystem attached to window",
+      "passed": true,
+      "details": {
+        "hasManager": true,
+        "contextState": "running"
+      }
+    },
+    {
+      "name": "User gesture audio unlock",
+      "passed": true,
+      "details": {
+        "contextState": "running",
+        "activeTrack": "music_main_menu",
+        "isPlaying": true
+      }
+    },
+    {
+      "name": "Main menu theme active (\"music_main_menu\")",
+      "passed": true,
+      "details": {
+        "contextState": "running",
+        "activeTrack": "music_main_menu",
+        "isPlaying": true
+      }
+    },
+    {
+      "name": "Master & Bus volume independent setting",
+      "passed": true,
+      "details": {
+        "master": 0.72,
+        "voice": 0.92,
+        "sfx": 0.82,
+        "ambience": 0.62,
+        "music": 0.52,
+        "ui": 0.42
+      }
+    },
+    {
+      "name": "Mute and Unmute toggle immediately",
+      "passed": true,
+      "details": {
+        "muted": true,
+        "unmuted": false
+      }
+    },
+    {
+      "name": "Reset audio restores default volumes",
+      "passed": true,
+      "details": {
+        "master": 1,
+        "voice": 1,
+        "sfx": 0.8,
+        "ambience": 0.5,
+        "music": 0.35,
+        "ui": 0.6
+      }
+    },
+    {
+      "name": "Settings persist in localStorage",
+      "passed": true,
+      "details": {
+        "master": 1,
+        "voice": 1,
+        "sfx": 0.8,
+        "ambience": 0.5,
+        "music": 0.37,
+        "ui": 0.6,
+        "isMuted": false
+      }
+    },
+    {
+      "name": "Test Audio Output one-shot trigger",
+      "passed": true
+    },
+    {
+      "name": "In-game exploration/apartment music active",
+      "passed": true,
+      "details": {
+        "contextState": "running",
+        "currentMusicTrack": "music_world_exploration",
+        "isMusicPlaying": true,
+        "currentLocationId": "neighborhood",
+        "isAmbiencePlaying": true
+      }
+    },
+    {
+      "name": "Location ambience loop active",
+      "passed": true,
+      "details": {
+        "contextState": "running",
+        "currentMusicTrack": "music_world_exploration",
+        "isMusicPlaying": true,
+        "currentLocationId": "neighborhood",
+        "isAmbiencePlaying": true
+      }
+    },
+    {
+      "name": "Workstation focus transition plays focus music (\"music_workstation_focus\")",
+      "passed": true,
+      "details": {
+        "musicTrack": "music_workstation_focus",
+        "isAmbienceFocus": true
+      }
+    },
+    {
+      "name": "Workstation exit restores apartment/exploration music",
+      "passed": true,
+      "details": {
+        "musicTrack": "music_apartment_ambient"
+      }
+    },
+    {
+      "name": "Tab hidden suspends AudioContext",
+      "passed": true,
+      "details": {
+        "stateWhenHidden": "suspended",
+        "stateWhenVisible": "running"
+      }
+    },
+    {
+      "name": "Tab visible resumes AudioContext",
+      "passed": true,
+      "details": {
+        "stateWhenHidden": "suspended",
+        "stateWhenVisible": "running"
+      }
+    },
+    {
+      "name": "Procedural tactile SFX execute cleanly without errors",
+      "passed": true,
+      "details": {
+        "sfxFired": true
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "headless_title_screen.png",
+      "bytes": 153508
+    },
+    {
+      "name": "headless_audio_settings.png",
+      "bytes": 183886
+    },
+    {
+      "name": "headless_in_game_world.png",
+      "bytes": 234121
+    }
+  ],
+  "allPassed": true
+}

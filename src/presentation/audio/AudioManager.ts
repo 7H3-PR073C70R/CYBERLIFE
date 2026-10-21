@@ -775,3 +775,7 @@ export class AudioManager {
 }
 
 export const audioManager = new AudioManager();
+
+if (typeof window !== 'undefined') {
+  (window as unknown as Record<string, unknown>).__CYBERLIFE_AUDIO_MANAGER__ = audioManager;
+}

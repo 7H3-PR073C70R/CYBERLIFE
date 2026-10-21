@@ -201,6 +201,30 @@ describe('Milestone 15 — Cyberlife Audio Subsystem', () => {
       await musicController.setContext('MAIN_MENU');
       expect(playSpy).not.toHaveBeenCalled();
     });
+
+    it('handles rapid context transitions gracefully without leaving stale tracks', async () => {
+      const dummyBuffer = {} as AudioBuffer;
+      vi.spyOn(audioManager, 'loadAudio').mockResolvedValue(dummyBuffer);
+      const playSpy = vi.spyOn(audioManager, 'playLoop');
+
+      // Rapidly request WORLD_EXPLORATION then immediately WORKSTATION_FOCUS
+      const p1 = musicController.setContext('WORLD_EXPLORATION');
+      const p2 = musicController.setContext('WORKSTATION_FOCUS');
+
+      await Promise.all([p1, p2]);
+
+      // Controller should have settled on the queued context
+      expect(musicController.getCurrentTrackId()).toBe('music_workstation_focus');
+      expect(playSpy).toHaveBeenCalled();
+    });
+
+    it('fails gracefully when audio assets fail to load without throwing errors', async () => {
+      vi.spyOn(audioManager, 'loadAudio').mockResolvedValue(null);
+
+      // Should not throw or crash
+      await expect(musicController.playTrack('music_main_menu')).resolves.not.toThrow();
+      expect(musicController.isPlaying()).toBe(false);
+    });
   });
 
   describe('4. Ambience Controller & Location Awareness', () => {
