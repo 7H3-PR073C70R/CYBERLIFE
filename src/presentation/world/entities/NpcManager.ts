@@ -142,6 +142,35 @@ export class NpcManager {
   public getActiveDialogueNpcId(): string | null {
     return this.activeDialogueNpcId;
   }
+  /**
+   * Updates NPC visibility/positions when the simulation hour changes.
+   * Only triggers a full rebuild if the set of NPCs at the current location
+   * has changed (i.e. a schedule hour boundary was crossed).
+   * Call this from WorldSceneManager.setSimulationTime whenever the hour changes.
+   */
+  public updateForSimulationHour(simulationHour: number): void {
+    if (!this.currentLocationId) return;
+
+    // Determine which NPC profiles should be present at the current location this hour
+    const shouldBePresent = new Set<string>();
+    for (const profile of NPC_PROFILES) {
+      const schedule = getNpcActiveSchedule(profile, simulationHour);
+      if (schedule.locationId === this.currentLocationId) {
+        shouldBePresent.add(profile.id);
+      }
+    }
+
+    // Check if the presence set differs from what is currently spawned
+    const currentIds = new Set(this.npcs.keys());
+    const added = [...shouldBePresent].filter(id => !currentIds.has(id));
+    const removed = [...currentIds].filter(id => !shouldBePresent.has(id));
+
+    if (added.length === 0 && removed.length === 0) return; // No change
+
+    // Rebuild NPC set for this hour
+    this.rebuildForLocation(this.currentLocationId, simulationHour);
+  }
+
 
   public setDialogueActive(
     npcId: string | null,

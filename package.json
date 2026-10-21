@@ -26,6 +26,8 @@
     "screenshots:m18": "node scripts/capture-m18-screenshots.mjs",
     "test:m19": "vitest run tests/unit/simulation/cyber/BountyContracts.test.ts tests/unit/presentation/desktop/BountyAppM19.test.tsx",
     "screenshots:m19": "node scripts/capture-m19-screenshots.mjs",
+    "test:m22": "vitest run tests/unit/simulation/LivingCityAndWorldSim.test.ts",
+    "screenshots:m22": "node scripts/capture-m22-screenshots.mjs",
     "voice:generate": "node scripts/generate-voice.mjs",
     "voice:dry-run": "node scripts/generate-voice.mjs --dry-run",
     "voice:force": "node scripts/generate-voice.mjs --force",

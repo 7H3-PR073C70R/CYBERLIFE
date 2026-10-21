@@ -122,6 +122,11 @@ import {
   handleRaiseAssessmentFinding,
   handleSubmitPhysicalAssessmentReport,
 } from '../humanIntel/humanIntelCommandHandler';
+import {
+  handleClaimExplorationDiscovery,
+  handleRecordLocationVisit,
+} from '../world/worldCommandHandler';
+import { WorldSimulationService } from '../world/WorldSimulationService';
 
 
 function makeFailure(
@@ -690,6 +695,23 @@ export function handleCommand(
           }
         );
 
+        // M22: Record visit & queue discoveries
+        let updatedWorldSim = currentState.worldSim;
+        if (updatedWorldSim) {
+          updatedWorldSim = WorldSimulationService.recordLocationVisit(
+            updatedWorldSim,
+            trimmedLocation,
+            currentState.time.simulationTimeSeconds,
+            currentState.time.calendar.hour
+          );
+          updatedWorldSim = WorldSimulationService.queueNewDiscoveries(
+            updatedWorldSim,
+            trimmedLocation,
+            currentState.time.calendar.hour,
+            currentState.flags
+          );
+        }
+
         const nextState: SimulationState = {
           ...currentState,
           metadata: {
@@ -697,6 +719,7 @@ export function handleCommand(
             revision: nextRevision,
           },
           player: updatedPlayer,
+          worldSim: updatedWorldSim ?? currentState.worldSim,
         };
 
         validateSimulationState(nextState);
@@ -2569,6 +2592,14 @@ export function handleCommand(
 
       case 'SubmitPhysicalAssessmentReport': {
         return handleSubmitPhysicalAssessmentReport(currentState, command);
+      }
+
+      case 'ClaimExplorationDiscovery': {
+        return handleClaimExplorationDiscovery(currentState, command);
+      }
+
+      case 'RecordLocationVisit': {
+        return handleRecordLocationVisit(currentState, command);
       }
 
       default: {

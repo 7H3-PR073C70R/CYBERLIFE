@@ -51,6 +51,9 @@ export type SimulationErrorCode =
   | 'ACTIVITY_ALREADY_COMPLETED'
   | 'ACTIVITY_PREREQUISITES_NOT_MET'
   | 'ACTIVITY_OBJECTIVES_INCOMPLETE'
+  | 'DISCOVERY_NOT_FOUND'
+  | 'DISCOVERY_ALREADY_CLAIMED'
+  | 'DISCOVERY_CONDITIONS_NOT_MET'
   | 'INVARIANT_VIOLATION';
 
 
@@ -413,7 +416,9 @@ export type SimulationCommand =
   | SubmitM21ConclusionCommand
   | EvaluateSocEngDecisionCommand
   | RaiseAssessmentFindingCommand
-  | SubmitPhysicalAssessmentReportCommand;
+  | SubmitPhysicalAssessmentReportCommand
+  | ClaimExplorationDiscoveryCommand
+  | RecordLocationVisitCommand;
 
 import type { ThreatReviewStatus } from '../cyber/threatintel/types';
 import type { InvestigationConclusionSubmission } from '../cyber/investigation/types';
@@ -647,6 +652,16 @@ export interface SetPrimaryActivityCommand {
 export interface SetActivityGuidanceFilterCommand {
   readonly type: 'SetActivityGuidanceFilter';
   readonly filter: 'ALL' | 'PRIMARY' | 'RECOMMENDED' | 'CAREER';
+}
+
+export interface ClaimExplorationDiscoveryCommand {
+  readonly type: 'ClaimExplorationDiscovery';
+  readonly discoveryId: string;
+}
+
+export interface RecordLocationVisitCommand {
+  readonly type: 'RecordLocationVisit';
+  readonly locationId: string;
 }
 
 export interface CommandResult {

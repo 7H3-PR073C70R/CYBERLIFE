@@ -746,6 +746,23 @@ export function validateSimulationState(state: SimulationState): void {
       throw new InvariantViolationError('activityDirector.longTermGoals must be an array');
     }
   }
+
+  // 21. World Simulation invariants (M22)
+  const { worldSim } = state;
+  if (worldSim) {
+    if (!worldSim.locationVisits || typeof worldSim.locationVisits !== 'object') {
+      throw new InvariantViolationError('worldSim.locationVisits must be a valid object');
+    }
+    if (!Array.isArray(worldSim.claimedDiscoveries)) {
+      throw new InvariantViolationError('worldSim.claimedDiscoveries must be an array');
+    }
+    if (!Array.isArray(worldSim.pendingDiscoveryIds)) {
+      throw new InvariantViolationError('worldSim.pendingDiscoveryIds must be an array');
+    }
+    if (!Array.isArray(worldSim.explorationUnlockedActivityIds)) {
+      throw new InvariantViolationError('worldSim.explorationUnlockedActivityIds must be an array');
+    }
+  }
 }
 
 export function checkSimulationInvariants(state: SimulationState): string[] {

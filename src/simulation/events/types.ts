@@ -77,7 +77,9 @@ export type SimulationEventType =
   | 'ACTIVITY_ACCEPTED'
   | 'ACTIVITY_COMPLETED'
   | 'ACTIVITY_ABANDONED'
-  | 'ACTIVITY_REWARD_CLAIMED';
+  | 'ACTIVITY_REWARD_CLAIMED'
+  | 'EXPLORATION_DISCOVERY_CLAIMED'
+  | 'LOCATION_VISIT_RECORDED';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -493,7 +495,9 @@ export type SimulationEvent =
   | ActivityAcceptedEvent
   | ActivityCompletedEvent
   | ActivityAbandonedEvent
-  | ActivityRewardClaimedEvent;
+  | ActivityRewardClaimedEvent
+  | ExplorationDiscoveryClaimedEvent
+  | LocationVisitRecordedEvent;
 
 
 export type ThreatIndicatorCorrelatedEvent = BaseSimulationEvent<
@@ -879,6 +883,26 @@ export type ActivityRewardClaimedEvent = BaseSimulationEvent<
     readonly activityId: string;
     readonly payoutKobo: number;
     readonly careerXpEarned: number;
+  }
+>;
+
+export type ExplorationDiscoveryClaimedEvent = BaseSimulationEvent<
+  'EXPLORATION_DISCOVERY_CLAIMED',
+  {
+    readonly discoveryId: string;
+    readonly category: string;
+    readonly title: string;
+    readonly locationId: string;
+    readonly unlockedActivityId?: string;
+  }
+>;
+
+export type LocationVisitRecordedEvent = BaseSimulationEvent<
+  'LOCATION_VISIT_RECORDED',
+  {
+    readonly locationId: string;
+    readonly totalVisits: number;
+    readonly arrivalHour: number;
   }
 >;
 

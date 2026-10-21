@@ -699,15 +699,25 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 
 ---
 
-## M22 — Living City, Meaningful Interiors, NPC Routines & Social Locations
+## M22 — Living City, Meaningful Locations, NPC Routines & World Simulation
 
-- **Purpose**: Bring the 4-tier population hierarchy and Lagos Island interiors to life with persistent NPC daily schedules and rich social venues.
+- **Purpose**: Transform the 3D environment into a believable, interactive, Lagos-inspired city where locations have purpose, NPCs follow plausible diurnal routines, exploration reveals genuine cybersecurity opportunities, and the living world connects to the player's career and personal progression.
 - **Scope**:
-  - Diurnal NPC schedules (commute, workday desk routines, Balogun Market lunch, evening Marina recreation).
-  - Authentic accessible interiors: bank branches, regulatory offices, press newsrooms, cybercafés, and local canteens.
-  - Dynamic social locations where NPCs gather, share rumors, and react to major breaking news.
-- **Dependencies**: M14, M21.
-- **Status**: **PLANNED**.
+  - **Living Simulation Layer** (`src/simulation/world/`): Pure, headless `WorldSimulationService` querying live NPC routine snapshots, ambient pedestrian/traffic density, venue operating hours, and authored exploration discoveries.
+  - **Authored Exploration Catalogue** (`src/simulation/world/explorationDiscoveries.ts`): 12 authored discoveries across all 3 game locations (Broad Street/Tinubu Square, Cedarline HQ, Player Apartment) and 6 discovery categories (`CONTRACT_LEAD`, `NPC_INTEL`, `ENVIRONMENTAL_CLUE`, `AMBIENT_RUMOR`, `VENUE_UNLOCK`, `SKILL_PRACTICE`).
+  - **Diurnal NPC Routines** (`src/simulation/actors/npcProfiles.ts`, `npcSchedules.ts`): Full 24-hour schedules for all 8 named characters (Blessing, Femi, Mama Esther, Uncle Ola, Anjola, Tsharp, Bank Security Lead, Marcus) with location transitions, animations, and interaction eligibility.
+  - **World Integration & Command Set**: Commands `ClaimExplorationDiscovery` and `RecordLocationVisit`, with automatic visit and discovery queuing upon `SetLogicalPlayerLocation` location changes.
+  - **M20 Shared Activity Framework Integration**: Exploration leads dynamically unlock contracts and story activities (`act_blue_broad_street_triage`, `act_story_broad_street_intel`, `act_freelance_paystack_bounty`) without creating a separate quest system.
+  - **Persistence & Reconciliation**: `worldSim` state (`locationVisits`, `claimedDiscoveries`, `pendingDiscoveryIds`, `explorationUnlockedActivityIds`) persists via `SaveManager` with legacy save backfilling.
+  - **3D World Time Synchronization**: `WorldSceneManager.setSimulationTime` notifies `NpcManager.updateForSimulationHour` to update NPC presence and routines dynamically at schedule boundaries.
+- **Dependencies**: M14, M20, M21.
+- **Status**: **COMPLETED & VERIFIED**.
+- **Evidence**:
+  - 60/60 M22 unit and integration tests passing (`tests/unit/simulation/LivingCityAndWorldSim.test.ts`).
+  - 1071/1071 full test suite passing across 125 test files (zero regressions).
+  - Production build clean (`tsc --noEmit && vite build`).
+  - 6 authentic headless browser screenshots captured (`docs/graphics/milestone22/`).
+  - Full report documented in [`milestone-22-living-city-report.md`](./milestone-22-living-city-report.md).
 
 ---
 

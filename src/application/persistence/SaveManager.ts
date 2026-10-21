@@ -25,6 +25,7 @@ import { createInitialRedTeamAssessmentState } from '../../simulation/cyber/redt
 import { createInitialBountyHubState } from '../../simulation/cyber/contracts/contractCatalogue';
 import { createInitialHumanIntelState } from '../../simulation/humanIntel/types';
 import { createInitialActivityDirectorState } from '../../simulation/activities/activityCatalogue';
+import { createInitialWorldSimulationState } from '../../simulation/world/types';
 
 
 export interface SaveManagerOptions {
@@ -329,6 +330,7 @@ export class SaveManager {
         state.activityDirector ??
         createInitialActivityDirectorState(state.time?.simulationTimeSeconds ?? 0),
       humanIntel: state.humanIntel ?? createInitialHumanIntelState(),
+      worldSim: state.worldSim ?? createInitialWorldSimulationState(),
     };
 
   }

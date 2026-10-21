@@ -438,6 +438,9 @@ export class WorldSceneManager {
         timeStr,
         this.playerController ? this.playerController.getPosition() : undefined
       );
+      // M22: Notify NpcManager of simulation hour change so NPC routines
+      // are reflected in the 3D world (arrivals/departures at schedule boundaries).
+      this.worldEnvironment.getNpcManager()?.updateForSimulationHour(hour);
     }
   }
 
