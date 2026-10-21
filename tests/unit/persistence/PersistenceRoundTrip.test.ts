@@ -275,5 +275,62 @@ describe('Persistence Full Simulation Round-Trip & Reconciliation', () => {
     expect(restored.timers).toHaveLength(1);
     expect(restored.timers[0]?.id).toBe('future_timer_1');
     expect(restored.timers.some(t => t.id === 'expired_timer_1')).toBe(false);
+
+    // Red Team Assessment State Fidelity
+    expect(restored.redTeamAssessment).toBeDefined();
+    expect(restored.redTeamAssessment?.scenarioId).toBe('scen_m17_cedarline_redteam');
+  });
+
+  it('saves and restores modified redTeamAssessment state across persistence round-trip', async () => {
+    const engine = new SimulationEngine();
+    const saveManager = new SaveManager({ engine, storage });
+    await saveManager.init();
+
+    // Accept RoE and validate a finding
+    engine.dispatch({
+      type: 'AcceptRulesOfEngagement',
+      assessmentId: 'ROE-2026-CEDAR-RED-01',
+      assessorSignature: 'Lead PenTester',
+    });
+    engine.dispatch({
+      type: 'ValidateVulnerabilityFinding',
+      findingId: 'VULN-CEDAR-001',
+      decision: 'VALIDATE',
+      rationale: 'Confirmed BOLA flaw',
+    });
+
+    const saveResult = await saveManager.saveGame('slot_redteam_test');
+    expect(saveResult.success).toBe(true);
+
+    const loadResult = await saveManager.loadGame('slot_redteam_test');
+    expect(loadResult.success).toBe(true);
+    const restored = engine.getState();
+    expect(restored.redTeamAssessment?.isAcceptedByPlayer).toBe(true);
+    expect(
+      restored.redTeamAssessment?.findings.find(f => f.id === 'VULN-CEDAR-001')?.status
+    ).toBe('VALIDATED');
+  });
+
+  it('saves and restores modified bountyHub state across persistence round-trip', async () => {
+    const engine = new SimulationEngine();
+    const saveManager = new SaveManager({ engine, storage });
+    await saveManager.init();
+
+    // Accept contract and verify active state
+    const acceptRes = engine.dispatch({
+      type: 'AcceptContract',
+      contractId: 'ct-balogun-pos-audit',
+    });
+    expect(acceptRes.success).toBe(true);
+
+    const saveResult = await saveManager.saveGame('slot_bounty_test');
+    expect(saveResult.success).toBe(true);
+
+    const loadResult = await saveManager.loadGame('slot_bounty_test');
+    expect(loadResult.success).toBe(true);
+    const restored = engine.getState();
+    expect(restored.bountyHub).toBeDefined();
+    expect(restored.bountyHub?.activeContract?.contractId).toBe('ct-balogun-pos-audit');
+    expect(restored.bountyHub?.activeContract?.status).toBe('ACTIVE');
   });
 });

@@ -16,6 +16,12 @@ import { NarrativeState } from '../narrative/narrativeTypes';
 import { createInitialNarrativeState } from '../narrative/initialNarrativeState';
 import { NetworkInvestigationState } from '../cyber/investigation/types';
 import { createInitialNetworkInvestigationState } from '../cyber/investigation/m16ScenarioData';
+import { RedTeamAssessmentState } from '../cyber/redteam/types';
+import { createInitialRedTeamAssessmentState } from '../cyber/redteam/scenarioFixtures';
+import { DefensiveOpsState } from '../cyber/defensive/types';
+import { createInitialDefensiveOpsState } from '../cyber/defensive/defensiveScenarioData';
+import { BountyHubState } from '../cyber/contracts/types';
+import { createInitialBountyHubState } from '../cyber/contracts/contractCatalogue';
 
 export interface InitialStateOverrides {
   readonly schemaVersion?: number;
@@ -41,7 +47,11 @@ export interface InitialStateOverrides {
   readonly catalogue?: CatalogueSimulationState;
   readonly narrative?: NarrativeState;
   readonly networkInvestigation?: NetworkInvestigationState;
+  readonly redTeamAssessment?: RedTeamAssessmentState;
+  readonly defensiveOps?: DefensiveOpsState;
+  readonly bountyHub?: BountyHubState;
 }
+
 
 /**
  * Creates the deterministic initial simulation state for Cyberlife.
@@ -153,7 +163,14 @@ export function createInitialSimulationState(
     narrative: overrides?.narrative ?? createInitialNarrativeState(),
     networkInvestigation:
       overrides?.networkInvestigation ?? createInitialNetworkInvestigationState(),
+    redTeamAssessment:
+      overrides?.redTeamAssessment ?? createInitialRedTeamAssessmentState(),
+    defensiveOps:
+      overrides?.defensiveOps ?? createInitialDefensiveOpsState(),
+    bountyHub:
+      overrides?.bountyHub ?? createInitialBountyHubState(),
   };
+
 
   validateSimulationState(state);
   return deepFreeze(state);

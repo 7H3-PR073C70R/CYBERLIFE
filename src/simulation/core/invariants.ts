@@ -569,6 +569,166 @@ export function validateSimulationState(state: SimulationState): void {
       throw new InvariantViolationError('networkInvestigation.analystNotes must be an array');
     }
   }
+
+  // 17. Red Team assessment domain invariants
+  const { redTeamAssessment } = state;
+  if (redTeamAssessment) {
+    if (!redTeamAssessment.scenarioId || typeof redTeamAssessment.scenarioId !== 'string') {
+      throw new InvariantViolationError('redTeamAssessment.scenarioId must be a non-empty string');
+    }
+    if (!redTeamAssessment.scenarioTitle || typeof redTeamAssessment.scenarioTitle !== 'string') {
+      throw new InvariantViolationError('redTeamAssessment.scenarioTitle must be a non-empty string');
+    }
+    const validPhases = [
+      'BRIEFING_SCOPE',
+      'RECON_DISCOVERY',
+      'TARGET_ASSESSMENT',
+      'FINDING_VALIDATION',
+      'REPORT_GENERATION',
+      'COMPLETED',
+    ];
+    if (!validPhases.includes(redTeamAssessment.activePhase)) {
+      throw new InvariantViolationError(
+        `Invalid redTeamAssessment.activePhase: ${redTeamAssessment.activePhase}`
+      );
+    }
+    if (!redTeamAssessment.roe || typeof redTeamAssessment.roe !== 'object') {
+      throw new InvariantViolationError('redTeamAssessment.roe must be an object');
+    }
+    if (!redTeamAssessment.roe.assessmentId || typeof redTeamAssessment.roe.assessmentId !== 'string') {
+      throw new InvariantViolationError('redTeamAssessment.roe.assessmentId must be a non-empty string');
+    }
+    if (!Array.isArray(redTeamAssessment.targets)) {
+      throw new InvariantViolationError('redTeamAssessment.targets must be an array');
+    }
+    for (const t of redTeamAssessment.targets) {
+      if (!t || typeof t !== 'object' || !t.id || typeof t.hostname !== 'string' || typeof t.inScope !== 'boolean') {
+        throw new InvariantViolationError('redTeamAssessment target is malformed');
+      }
+    }
+    if (!Array.isArray(redTeamAssessment.availableTools)) {
+      throw new InvariantViolationError('redTeamAssessment.availableTools must be an array');
+    }
+    if (!Array.isArray(redTeamAssessment.objectives)) {
+      throw new InvariantViolationError('redTeamAssessment.objectives must be an array');
+    }
+    for (const obj of redTeamAssessment.objectives) {
+      if (!obj || typeof obj !== 'object' || !obj.id || typeof obj.title !== 'string' || typeof obj.isCompleted !== 'boolean') {
+        throw new InvariantViolationError('redTeamAssessment objective is malformed');
+      }
+    }
+    if (!Array.isArray(redTeamAssessment.findings)) {
+      throw new InvariantViolationError('redTeamAssessment.findings must be an array');
+    }
+    for (const f of redTeamAssessment.findings) {
+      if (!f || typeof f !== 'object' || !f.id || typeof f.title !== 'string' || !f.severity || !f.status) {
+        throw new InvariantViolationError('redTeamAssessment finding is malformed');
+      }
+    }
+    if (!Array.isArray(redTeamAssessment.evidenceVault)) {
+      throw new InvariantViolationError('redTeamAssessment.evidenceVault must be an array');
+    }
+    if (!Array.isArray(redTeamAssessment.auditLog)) {
+      throw new InvariantViolationError('redTeamAssessment.auditLog must be an array');
+    }
+    if (!Array.isArray(redTeamAssessment.analystNotes)) {
+      throw new InvariantViolationError('redTeamAssessment.analystNotes must be an array');
+    }
+  }
+
+  // 18. Defensive Ops & Purple Team domain invariants
+  const { defensiveOps } = state;
+  if (defensiveOps) {
+    if (!defensiveOps.scenarioId || typeof defensiveOps.scenarioId !== 'string') {
+      throw new InvariantViolationError('defensiveOps.scenarioId must be a non-empty string');
+    }
+    if (!defensiveOps.title || typeof defensiveOps.title !== 'string') {
+      throw new InvariantViolationError('defensiveOps.title must be a non-empty string');
+    }
+    const validTabs = ['telemetry', 'rules', 'alerts', 'investigation', 'response', 'purple', 'mission'];
+    if (!validTabs.includes(defensiveOps.activeTab)) {
+      throw new InvariantViolationError(`Invalid defensiveOps.activeTab: ${defensiveOps.activeTab}`);
+    }
+    if (!Array.isArray(defensiveOps.telemetryEvents)) {
+      throw new InvariantViolationError('defensiveOps.telemetryEvents must be an array');
+    }
+    if (!Array.isArray(defensiveOps.rules)) {
+      throw new InvariantViolationError('defensiveOps.rules must be an array');
+    }
+    for (const r of defensiveOps.rules) {
+      if (!r || typeof r !== 'object' || !r.id || typeof r.name !== 'string') {
+        throw new InvariantViolationError('defensiveOps rule is malformed');
+      }
+    }
+    if (!Array.isArray(defensiveOps.alerts)) {
+      throw new InvariantViolationError('defensiveOps.alerts must be an array');
+    }
+    for (const a of defensiveOps.alerts) {
+      if (!a || typeof a !== 'object' || !a.id || typeof a.title !== 'string') {
+        throw new InvariantViolationError('defensiveOps alert is malformed');
+      }
+    }
+    if (!Array.isArray(defensiveOps.objectives)) {
+      throw new InvariantViolationError('defensiveOps.objectives must be an array');
+    }
+    for (const obj of defensiveOps.objectives) {
+      if (!obj || typeof obj !== 'object' || !obj.id || typeof obj.title !== 'string') {
+        throw new InvariantViolationError('defensiveOps objective is malformed');
+      }
+    }
+    if (!Array.isArray(defensiveOps.hypotheses)) {
+      throw new InvariantViolationError('defensiveOps.hypotheses must be an array');
+    }
+    if (!Array.isArray(defensiveOps.executedResponses)) {
+      throw new InvariantViolationError('defensiveOps.executedResponses must be an array');
+    }
+    if (!Array.isArray(defensiveOps.blockedIndicators)) {
+      throw new InvariantViolationError('defensiveOps.blockedIndicators must be an array');
+    }
+    if (!Array.isArray(defensiveOps.isolatedHostIds)) {
+      throw new InvariantViolationError('defensiveOps.isolatedHostIds must be an array');
+    }
+    if (!Array.isArray(defensiveOps.lockedUserAccounts)) {
+      throw new InvariantViolationError('defensiveOps.lockedUserAccounts must be an array');
+    }
+    if (!defensiveOps.purpleEmulationResults || typeof defensiveOps.purpleEmulationResults !== 'object') {
+      throw new InvariantViolationError('defensiveOps.purpleEmulationResults must be an object');
+    }
+  }
+
+  // 19. Bounty Hunting & Security Contracts domain invariants
+  const { bountyHub } = state;
+  if (bountyHub) {
+    if (!Array.isArray(bountyHub.contracts)) {
+      throw new InvariantViolationError('bountyHub.contracts must be an array');
+    }
+    for (const c of bountyHub.contracts) {
+      if (!c || typeof c !== 'object' || !c.id || typeof c.title !== 'string') {
+        throw new InvariantViolationError('bountyHub contract is malformed');
+      }
+    }
+    if (!bountyHub.reputation || typeof bountyHub.reputation !== 'object') {
+      throw new InvariantViolationError('bountyHub.reputation must be an object');
+    }
+    if (!Number.isFinite(bountyHub.reputation.score) || bountyHub.reputation.score < 0) {
+      throw new InvariantViolationError('bountyHub.reputation.score must be a non-negative number');
+    }
+    if (!Array.isArray(bountyHub.completedContractHistory)) {
+      throw new InvariantViolationError('bountyHub.completedContractHistory must be an array');
+    }
+    if (bountyHub.activeContract) {
+      const ac = bountyHub.activeContract;
+      if (!ac.contractId || typeof ac.contractId !== 'string') {
+        throw new InvariantViolationError('bountyHub.activeContract.contractId must be a non-empty string');
+      }
+      if (!Array.isArray(ac.objectives)) {
+        throw new InvariantViolationError('bountyHub.activeContract.objectives must be an array');
+      }
+      if (!Array.isArray(ac.auditEvents)) {
+        throw new InvariantViolationError('bountyHub.activeContract.auditEvents must be an array');
+      }
+    }
+  }
 }
 
 export function checkSimulationInvariants(state: SimulationState): string[] {

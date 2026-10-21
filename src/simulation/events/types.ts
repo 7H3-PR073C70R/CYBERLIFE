@@ -56,7 +56,24 @@ export type SimulationEventType =
   | 'INVESTIGATIVE_CONCLUSION_SUBMITTED'
   | 'FACTION_STANDING_CHANGED'
   | 'THREAT_INDICATOR_CORRELATED'
-  | 'NETWORK_INVESTIGATION_CONCLUDED';
+  | 'NETWORK_INVESTIGATION_CONCLUDED'
+  | 'RED_TEAM_ROE_ACCEPTED'
+  | 'RED_TEAM_ACTION_EXECUTED'
+  | 'RED_TEAM_FINDING_VALIDATED'
+  | 'RED_TEAM_EVIDENCE_PRESERVED'
+  | 'RED_TEAM_REPORT_SUBMITTED'
+  | 'SECURITY_ALERT_TRIAGED'
+  | 'DETECTION_RULE_TOGGLED'
+  | 'DEFENSIVE_RESPONSE_EXECUTED'
+  | 'DEFENSIVE_HYPOTHESIS_RECORDED'
+  | 'PURPLE_TEAM_SCENARIO_RUN'
+  | 'DEFENSIVE_MISSION_CONCLUDED'
+  | 'BOUNTY_CONTRACT_ACCEPTED'
+  | 'BOUNTY_CONTRACT_WITHDRAWN'
+  | 'BOUNTY_SCOPE_CLARIFIED'
+  | 'BOUNTY_SIMULATED_ACTION_EXECUTED'
+  | 'BOUNTY_SCOPE_VIOLATION_ATTEMPTED'
+  | 'BOUNTY_CONTRACT_EVALUATED';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -451,7 +468,25 @@ export type SimulationEvent =
   | InvestigativeConclusionSubmittedEvent
   | FactionStandingChangedEvent
   | ThreatIndicatorCorrelatedEvent
-  | NetworkInvestigationConcludedEvent;
+  | NetworkInvestigationConcludedEvent
+  | SecurityAlertTriagedEvent
+  | DetectionRuleToggledEvent
+  | DefensiveResponseExecutedEvent
+  | DefensiveHypothesisRecordedEvent
+  | PurpleTeamScenarioRunEvent
+  | DefensiveMissionConcludedEvent
+  | RedTeamRoeAcceptedEvent
+  | RedTeamActionExecutedEvent
+  | RedTeamFindingValidatedEvent
+  | RedTeamEvidencePreservedEvent
+  | RedTeamReportSubmittedEvent
+  | BountyContractAcceptedEvent
+  | BountyContractWithdrawnEvent
+  | BountyScopeClarifiedEvent
+  | BountySimulatedActionExecutedEvent
+  | BountyScopeViolationAttemptedEvent
+  | BountyContractEvaluatedEvent;
+
 
 export type ThreatIndicatorCorrelatedEvent = BaseSimulationEvent<
   'THREAT_INDICATOR_CORRELATED',
@@ -645,4 +680,160 @@ export type FactionStandingChangedEvent = BaseSimulationEvent<
     readonly band: string;
   }
 >;
+
+export type SecurityAlertTriagedEvent = BaseSimulationEvent<
+  'SECURITY_ALERT_TRIAGED',
+  {
+    readonly alertId: string;
+    readonly status: string;
+    readonly ruleId: string;
+    readonly affectedHostId: string;
+  }
+>;
+
+export type DetectionRuleToggledEvent = BaseSimulationEvent<
+  'DETECTION_RULE_TOGGLED',
+  {
+    readonly ruleId: string;
+    readonly isEnabled: boolean;
+  }
+>;
+
+export type DefensiveResponseExecutedEvent = BaseSimulationEvent<
+  'DEFENSIVE_RESPONSE_EXECUTED',
+  {
+    readonly actionId: string;
+    readonly actionType: string;
+    readonly targetEntityId: string;
+    readonly actor: string;
+    readonly reason: string;
+  }
+>;
+
+export type DefensiveHypothesisRecordedEvent = BaseSimulationEvent<
+  'DEFENSIVE_HYPOTHESIS_RECORDED',
+  {
+    readonly hypothesisId: string;
+    readonly title: string;
+    readonly isConfirmedFact: boolean;
+  }
+>;
+
+export type PurpleTeamScenarioRunEvent = BaseSimulationEvent<
+  'PURPLE_TEAM_SCENARIO_RUN',
+  {
+    readonly scenarioId: string;
+    readonly status: string;
+    readonly matchedRuleIds: readonly string[];
+    readonly coveragePercentage: number;
+  }
+>;
+
+export type DefensiveMissionConcludedEvent = BaseSimulationEvent<
+  'DEFENSIVE_MISSION_CONCLUDED',
+  {
+    readonly isApproved: boolean;
+    readonly scorePercentage: number;
+    readonly suspectedAttacker: string;
+    readonly initialCompromisedHostId: string;
+  }
+>;
+
+export type RedTeamRoeAcceptedEvent = BaseSimulationEvent<
+  'RED_TEAM_ROE_ACCEPTED',
+  {
+    readonly assessmentId: string;
+    readonly acceptedAt: number;
+    readonly assessorSignature: string;
+  }
+>;
+
+export type RedTeamActionExecutedEvent = BaseSimulationEvent<
+  'RED_TEAM_ACTION_EXECUTED',
+  {
+    readonly actionId: string;
+    readonly targetId: string;
+    readonly toolId: string;
+    readonly status: string;
+    readonly decision: string;
+  }
+>;
+
+export type RedTeamFindingValidatedEvent = BaseSimulationEvent<
+  'RED_TEAM_FINDING_VALIDATED',
+  {
+    readonly findingId: string;
+    readonly decision: string;
+    readonly rationale: string;
+  }
+>;
+
+export type RedTeamEvidencePreservedEvent = BaseSimulationEvent<
+  'RED_TEAM_EVIDENCE_PRESERVED',
+  {
+    readonly evidenceId: string;
+    readonly hashSha256: string;
+    readonly targetId: string;
+  }
+>;
+
+export type RedTeamReportSubmittedEvent = BaseSimulationEvent<
+  'RED_TEAM_REPORT_SUBMITTED',
+  {
+    readonly assessmentId: string;
+    readonly isApproved: boolean;
+    readonly scorePercentage: number;
+  }
+>;
+
+export type BountyContractAcceptedEvent = BaseSimulationEvent<
+  'BOUNTY_CONTRACT_ACCEPTED',
+  {
+    readonly contractId: string;
+    readonly rewardKobo: number;
+  }
+>;
+
+export type BountyContractWithdrawnEvent = BaseSimulationEvent<
+  'BOUNTY_CONTRACT_WITHDRAWN',
+  {
+    readonly contractId?: string;
+    readonly penaltyKobo: number;
+  }
+>;
+
+export type BountyScopeClarifiedEvent = BaseSimulationEvent<
+  'BOUNTY_SCOPE_CLARIFIED',
+  {
+    readonly isSafe: boolean;
+    readonly impact: number;
+  }
+>;
+
+export type BountySimulatedActionExecutedEvent = BaseSimulationEvent<
+  'BOUNTY_SIMULATED_ACTION_EXECUTED',
+  {
+    readonly target: string;
+    readonly findingsCount: number;
+  }
+>;
+
+export type BountyScopeViolationAttemptedEvent = BaseSimulationEvent<
+  'BOUNTY_SCOPE_VIOLATION_ATTEMPTED',
+  {
+    readonly target: string;
+    readonly action: string;
+  }
+>;
+
+export type BountyContractEvaluatedEvent = BaseSimulationEvent<
+  'BOUNTY_CONTRACT_EVALUATED',
+  {
+    readonly outcome: string;
+    readonly score: number;
+    readonly payoutKobo: number;
+  }
+>;
+
+
 

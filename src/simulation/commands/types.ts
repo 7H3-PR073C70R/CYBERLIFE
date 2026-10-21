@@ -41,7 +41,12 @@ export type SimulationErrorCode =
   | 'FACTION_NOT_FOUND'
   | 'CONCLUSION_NOT_FOUND'
   | 'INSUFFICIENT_EVIDENCE'
+  | 'ALERT_NOT_FOUND'
+  | 'RULE_NOT_FOUND'
+  | 'INVALID_DEFENSIVE_ACTION'
+  | 'SCENARIO_NOT_FOUND'
   | 'INVARIANT_VIOLATION';
+
 
 export interface AdvanceSimulationTimeCommand {
   readonly type: 'AdvanceSimulationTime';
@@ -364,10 +369,104 @@ export type SimulationCommand =
   | SetIndicatorReviewStatusCommand
   | RecordNetworkAnalystNoteCommand
   | AdvanceNetworkObjectiveCommand
-  | SubmitNetworkInvestigationConclusionCommand;
+  | SubmitNetworkInvestigationConclusionCommand
+  | AcceptRulesOfEngagementCommand
+  | ExecuteRedTeamActionCommand
+  | ValidateVulnerabilityFindingCommand
+  | RecordRedTeamAnalystNoteCommand
+  | PreserveRedTeamEvidenceCommand
+  | SubmitAssessmentReportCommand
+  | TriageSecurityAlertCommand
+  | ToggleDetectionRuleCommand
+  | ExecuteDefensiveResponseCommand
+  | RecordDefensiveHypothesisCommand
+  | AdvanceDefensiveObjectiveCommand
+  | RunPurpleTeamScenarioCommand
+  | SubmitDefensiveIncidentReportCommand
+  | AcceptContractCommand
+  | WithdrawContractCommand
+  | ClarifyContractScopeCommand
+  | ExecuteContractSimulatedActionCommand
+  | UpdateContractSubmissionDraftCommand
+  | SubmitContractDeliverablesCommand
+  | ResubmitContractRevisionCommand
+  | SelectBountyContractCommand
+  | SetBountyCategoryFilterCommand
+  | SetBountyTabCommand;
 
 import type { ThreatReviewStatus } from '../cyber/threatintel/types';
 import type { InvestigationConclusionSubmission } from '../cyber/investigation/types';
+import type {
+  AlertTriageStatus,
+  DefensiveActionType,
+  IncidentReportSubmission,
+} from '../cyber/defensive/types';
+import type {
+  AcceptRulesOfEngagementCommand,
+  ExecuteRedTeamActionCommand,
+  ValidateVulnerabilityFindingCommand,
+  RecordRedTeamAnalystNoteCommand,
+  PreserveRedTeamEvidenceCommand,
+  SubmitAssessmentReportCommand,
+} from '../cyber/redteam/redTeamCommandHandler';
+
+export type {
+  AcceptRulesOfEngagementCommand,
+  ExecuteRedTeamActionCommand,
+  ValidateVulnerabilityFindingCommand,
+  RecordRedTeamAnalystNoteCommand,
+  PreserveRedTeamEvidenceCommand,
+  SubmitAssessmentReportCommand,
+};
+
+export interface TriageSecurityAlertCommand {
+  readonly type: 'TriageSecurityAlert';
+  readonly alertId: string;
+  readonly status: AlertTriageStatus;
+  readonly notes?: string;
+  readonly reason?: string;
+}
+
+export interface ToggleDetectionRuleCommand {
+  readonly type: 'ToggleDetectionRule';
+  readonly ruleId: string;
+  readonly isEnabled: boolean;
+}
+
+export interface ExecuteDefensiveResponseCommand {
+  readonly type: 'ExecuteDefensiveResponse';
+  readonly actionType: DefensiveActionType;
+  readonly targetEntityId: string;
+  readonly reason: string;
+  readonly actor?: string;
+}
+
+export interface RecordDefensiveHypothesisCommand {
+  readonly type: 'RecordDefensiveHypothesis';
+  readonly title: string;
+  readonly hypothesisText: string;
+  readonly isConfirmedFact: boolean;
+  readonly linkedAlertIds?: readonly string[];
+  readonly linkedTelemetryIds?: readonly string[];
+  readonly linkedHostIds?: readonly string[];
+  readonly linkedIndicatorIds?: readonly string[];
+}
+
+export interface AdvanceDefensiveObjectiveCommand {
+  readonly type: 'AdvanceDefensiveObjective';
+  readonly objectiveId: string;
+}
+
+export interface RunPurpleTeamScenarioCommand {
+  readonly type: 'RunPurpleTeamScenario';
+  readonly scenarioId: string;
+}
+
+export interface SubmitDefensiveIncidentReportCommand {
+  readonly type: 'SubmitDefensiveIncidentReport';
+  readonly submission: IncidentReportSubmission;
+}
+
 
 export interface SetIndicatorReviewStatusCommand {
   readonly type: 'SetIndicatorReviewStatus';
@@ -448,6 +547,62 @@ export interface ChangeFactionStandingCommand {
   readonly reason: string;
 }
 
+import type {
+  ContractSubmissionDraft,
+  ContractCategoryFilter,
+  BountyAppTab,
+} from '../cyber/contracts/types';
+
+export interface AcceptContractCommand {
+  readonly type: 'AcceptContract';
+  readonly contractId: string;
+}
+
+export interface WithdrawContractCommand {
+  readonly type: 'WithdrawContract';
+  readonly reason?: string;
+}
+
+export interface ClarifyContractScopeCommand {
+  readonly type: 'ClarifyContractScope';
+  readonly optionId: string;
+}
+
+export interface ExecuteContractSimulatedActionCommand {
+  readonly type: 'ExecuteContractSimulatedAction';
+  readonly targetAssetId: string;
+  readonly actionName: string;
+  readonly actionCategory?: string;
+}
+
+export interface UpdateContractSubmissionDraftCommand {
+  readonly type: 'UpdateContractSubmissionDraft';
+  readonly draftUpdates: Partial<ContractSubmissionDraft>;
+}
+
+export interface SubmitContractDeliverablesCommand {
+  readonly type: 'SubmitContractDeliverables';
+}
+
+export interface ResubmitContractRevisionCommand {
+  readonly type: 'ResubmitContractRevision';
+}
+
+export interface SelectBountyContractCommand {
+  readonly type: 'SelectBountyContract';
+  readonly contractId: string;
+}
+
+export interface SetBountyCategoryFilterCommand {
+  readonly type: 'SetBountyCategoryFilter';
+  readonly filter: ContractCategoryFilter;
+}
+
+export interface SetBountyTabCommand {
+  readonly type: 'SetBountyTab';
+  readonly tab: BountyAppTab;
+}
+
 export interface CommandResult {
   readonly success: boolean;
   readonly state: Readonly<SimulationState>;
@@ -456,3 +611,4 @@ export interface CommandResult {
   readonly message: string;
   readonly isNoOp?: boolean;
 }
+

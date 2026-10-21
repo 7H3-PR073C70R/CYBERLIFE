@@ -102,6 +102,12 @@ const Orion_SECURITY_CATEGORIES: SecuritySubCategory[] = [
         icon: 'ruleTuner',
         desc: 'Detection rule tuning',
       },
+      {
+        id: 'defensiveOps',
+        name: 'Defensive Operations Console',
+        icon: 'defensiveOps',
+        desc: 'Blue & Purple Team SIEM/SOAR/EDR',
+      },
     ],
   },
   {
@@ -822,6 +828,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
           { id: 'onionChat', title: 'OnionChat', icon: 'chat', color: '#00e5ff' },
           { id: 'files', title: 'File Manager', icon: 'files', color: '#38bdf8' },
           { id: 'packetLens', title: 'Packet Lens', icon: 'packetLens', color: '#38bdf8' },
+          { id: 'defensiveOps', title: 'Defensive Ops Console', icon: 'defensiveOps', color: '#00e5ff' },
         ].map(launcher => (
           <button
             key={launcher.id}

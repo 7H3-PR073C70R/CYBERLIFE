@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { DesktopShell } from '@/presentation/desktop/DesktopShell';
 import { SimulationProvider } from '@/application/simulation/SimulationContext';
+import { createSimulationEngine } from '@/simulation';
 
 describe('DesktopShell Component', () => {
   it('renders desktop workspace, shortcuts, taskbar, and initial welcome banner', () => {
@@ -147,5 +148,85 @@ describe('DesktopShell Component', () => {
     const openTerminalBtn = screen.getByTestId('btn-empty-open-terminal');
     fireEvent.click(openTerminalBtn);
     expect(screen.getByTestId('window-frame-terminal')).toBeInTheDocument();
+  });
+
+  it('renders active incident banner and yellow flow on incident icon when incident is active', () => {
+    const engine = createSimulationEngine();
+
+    render(
+      <SimulationProvider engine={engine}>
+        <DesktopShell workstationId="interact_cedarline_workstation" onExitDesktop={() => {}} />
+      </SimulationProvider>
+    );
+
+    // Banner is rendered
+    expect(screen.getByTestId('desktop-incident-banner')).toBeInTheDocument();
+    expect(screen.getByText(/ACTIVE SOC DISPATCH/i)).toBeInTheDocument();
+
+    // Incident shortcut has active yellow flow class
+    const incidentShortcut = screen.getByTestId('desktop-shortcut-incident');
+    expect(incidentShortcut).toHaveClass('shortcut-active-incident');
+
+    // Welcome banner shows active case
+    expect(screen.getByText(/Active SOC Case:/i)).toBeInTheDocument();
+  });
+
+  it('does NOT render incident banner or yellow flow on incident icon when incident is completed', () => {
+    const engine = createSimulationEngine();
+    const baseState = engine.getState();
+    engine.loadState({
+      ...baseState,
+      flags: {
+        ...baseState.flags,
+        mission_aster_completed: true,
+      },
+      mission: {
+        ...baseState.mission!,
+        isCompleted: true,
+        phase: 'completed',
+        objectives: baseState.mission!.objectives.map(o => ({ ...o, isCompleted: true })),
+      },
+    });
+
+    render(
+      <SimulationProvider engine={engine}>
+        <DesktopShell workstationId="interact_cedarline_workstation" onExitDesktop={() => {}} />
+      </SimulationProvider>
+    );
+
+    // Banner is NOT rendered
+    expect(screen.queryByTestId('desktop-incident-banner')).not.toBeInTheDocument();
+
+    // Incident shortcut does NOT have active yellow flow class
+    const incidentShortcut = screen.getByTestId('desktop-shortcut-incident');
+    expect(incidentShortcut).not.toHaveClass('shortcut-active-incident');
+
+    // Welcome banner does NOT show active case
+    expect(screen.queryByText(/Active SOC Case:/i)).not.toBeInTheDocument();
+  });
+
+  it('does NOT render incident banner or yellow flow on incident icon when there is no active incident', () => {
+    const engine = createSimulationEngine();
+    const baseState = engine.getState();
+    engine.loadState({
+      ...baseState,
+      mission: undefined,
+    });
+
+    render(
+      <SimulationProvider engine={engine}>
+        <DesktopShell workstationId="interact_cedarline_workstation" onExitDesktop={() => {}} />
+      </SimulationProvider>
+    );
+
+    // Banner is NOT rendered
+    expect(screen.queryByTestId('desktop-incident-banner')).not.toBeInTheDocument();
+
+    // Incident shortcut does NOT have active yellow flow class
+    const incidentShortcut = screen.getByTestId('desktop-shortcut-incident');
+    expect(incidentShortcut).not.toHaveClass('shortcut-active-incident');
+
+    // Welcome banner does NOT show active case
+    expect(screen.queryByText(/Active SOC Case:/i)).not.toBeInTheDocument();
   });
 });
