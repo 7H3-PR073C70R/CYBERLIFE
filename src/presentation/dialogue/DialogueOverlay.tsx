@@ -10,6 +10,7 @@ import {
   RELATIONSHIP_BANDS,
 } from '@/simulation/actors/types';
 import { voiceDialogueService } from '../audio/VoiceDialogueService';
+import { voicePlayer } from '../audio/VoicePlayer';
 
 export interface DialogueOverlayProps {
   readonly npcId: string;
@@ -19,6 +20,7 @@ export interface DialogueOverlayProps {
 export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose }) => {
   const sim = useOptionalSimulation();
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [displayedText, setDisplayedText] = useState<string>('');
 
   const profile = useMemo(() => getNpcProfile(npcId), [npcId]);
   const graph = useMemo(() => getDialogueGraph(npcId), [npcId]);
@@ -99,25 +101,66 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
 
   const [isVoiceMuted, setIsVoiceMuted] = useState<boolean>(() => voiceDialogueService.getIsMuted());
 
-  // Trigger natural Nigerian English voice stream when NPC speaks
+  // Trigger voice stream via VoicePlayer (pre-rendered with fallback to SpeechSynthesis)
   useEffect(() => {
-    if (!currentNode?.text || !profile) return;
+    if (!currentNode?.text || !profile) {
+      setDisplayedText('');
+      return;
+    }
 
-    voiceDialogueService.speak(currentNode.text, {
+    let isCancelled = false;
+    let charIdx = 0;
+    const fullText = currentNode.text;
+    setDisplayedText('');
+
+    const handle = voicePlayer.playVoice(fullText, {
       speaker: profile.name,
+      speakerId: profile.id,
       role: profile.role,
       voice: profile.voice,
-      gender: profile.voice?.gender ?? 'female',
+      isPhoneCall: false,
+      onEnded: () => {
+        if (!isCancelled) {
+          setDisplayedText(fullText);
+        }
+      },
     });
 
+    // Pacing typewriter to real audio clip duration (with comfortable bounds)
+    const durationMs = handle.durationMs > 0 ? handle.durationMs : 2500;
+    const stepMs = Math.max(12, Math.min(60, Math.floor(durationMs / Math.max(1, fullText.length))));
+
+    const interval = setInterval(() => {
+      if (isCancelled) {
+        clearInterval(interval);
+        return;
+      }
+
+      if (charIdx <= fullText.length) {
+        setDisplayedText(fullText.slice(0, charIdx));
+        charIdx++;
+      } else {
+        clearInterval(interval);
+        setDisplayedText(fullText);
+      }
+    }, stepMs);
+
     return () => {
-      voiceDialogueService.stop();
+      isCancelled = true;
+      clearInterval(interval);
+      voicePlayer.stop();
     };
   }, [currentNode?.id, currentNode?.text, profile]);
 
+  const handleSkipTypewriter = useCallback(() => {
+    if (currentNode?.text) {
+      setDisplayedText(currentNode.text);
+    }
+  }, [currentNode?.text]);
+
   const handleSelectChoice = useCallback(
     (choice: DialogueChoice) => {
-      voiceDialogueService.stop();
+      voicePlayer.stop();
       if (!sim) return;
       const result = sim.dispatch({
         type: 'SelectDialogueChoice',
@@ -134,7 +177,7 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
   );
 
   const handleClose = useCallback(() => {
-    voiceDialogueService.stop();
+    voicePlayer.stop();
     if (sim) {
       sim.dispatch({
         type: 'EndDialogue',
@@ -377,7 +420,16 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
 
             <button
               type="button"
-              onClick={() => voiceDialogueService.replay()}
+              onClick={() => {
+                if (currentNode?.text && profile) {
+                  voicePlayer.playVoice(currentNode.text, {
+                    speaker: profile.name,
+                    speakerId: profile.id,
+                    role: profile.role,
+                    voice: profile.voice,
+                  });
+                }
+              }}
               data-testid="btn-replay-dialogue-voice"
               title="Replay dialogue voice"
               style={{
@@ -485,6 +537,7 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
         {/* Main Dialogue Speech Bubble */}
         <div
           data-testid="dialogue-speech-text"
+          onClick={handleSkipTypewriter}
           style={{
             fontSize: '0.95rem',
             lineHeight: 1.6,
@@ -493,9 +546,11 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
             padding: '1rem 1.15rem',
             borderRadius: '8px',
             borderLeft: '3px solid var(--color-accent-cyan, #38bdf8)',
+            cursor: 'pointer',
           }}
+          title="Click to reveal full text"
         >
-          &quot;{currentNode?.text ?? '...'}&quot;
+          &quot;{displayedText || currentNode?.text || '...'}&quot;
         </div>
 
         {/* Response Choices / Actions Section */}

@@ -13,6 +13,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ChatThread, HackerCallState } from '@/simulation/cyber/chat/types';
 import { audioSfx } from '../audio/audioSfx';
 import { voiceDialogueService } from '../audio/VoiceDialogueService';
+import { voicePlayer } from '../audio/VoicePlayer';
+import { audioManager } from '../audio/AudioManager';
 import { OsIcon } from './icons/OsIcons';
 
 export interface HackerCallOverlayProps {
@@ -73,14 +75,6 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
     return () => clearInterval(timer);
   }, [callState?.status]);
 
-  const [isVoiceActive, setIsVoiceActive] = useState<boolean>(false);
-
-  useEffect(() => {
-    return voiceDialogueService.onSpeakingChange(active => {
-      setIsVoiceActive(active);
-    });
-  }, []);
-
   // Handle dialogue streaming when active
   useEffect(() => {
     if (callState?.status !== 'active' || !activeThread || activeThread.callDialogue.length === 0) {
@@ -124,11 +118,6 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
       const item = activeThread.callDialogue[currentIdx]!;
       setDialogueIndex(currentIdx);
 
-      // Estimate speech duration for pacing (14.5 chars/sec baseline)
-      const cleanLen = item.text.replace(/\*[^*]+\*/g, '').replace(/\[[^\]]+\]/g, '').trim().length;
-      const rate = activeThread.voice?.rate ?? 0.98;
-      const estimatedDurationMs = Math.max(1200, Math.round(((Math.max(1, cleanLen) / 14.5) * 1000) / rate));
-
       let lineAdvanced = false;
       const scheduleNext = () => {
         if (lineAdvanced || isCancelled) return;
@@ -142,10 +131,25 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
         }, item.delayMs);
       };
 
-      // Typewriter pacing: spread characters evenly across estimated speech duration
+      // Play through VoicePlayer (pre-rendered with fallback to SpeechSynthesis)
+      const handle = voicePlayer.playVoice(item.text, {
+        speaker: activeThread.contactName,
+        speakerId: activeThread.contactId,
+        role: activeThread.contactRole,
+        voice: activeThread.voice,
+        isPhoneCall: true,
+        onEnded: () => {
+          if (isCancelled) return;
+          setCurrentSubtitle(item.text);
+          scheduleNext();
+        },
+      });
+
+      // Typewriter pacing: spread characters evenly across real audio clip duration
+      const durationMs = handle.durationMs > 0 ? handle.durationMs : 2500;
       let charIdx = 0;
       setCurrentSubtitle('');
-      const charStepMs = Math.max(20, Math.min(80, Math.floor(estimatedDurationMs / Math.max(1, item.text.length))));
+      const charStepMs = Math.max(15, Math.min(80, Math.floor(durationMs / Math.max(1, item.text.length))));
 
       typeInterval = setInterval(() => {
         if (isCancelled) {
@@ -160,34 +164,20 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
           if (typeInterval) clearInterval(typeInterval);
           setCurrentSubtitle(item.text);
 
-          // If voice is muted or speech is unavailable, typewriter completion triggers line advance
-          if (voiceDialogueService.getIsMuted() || typeof window === 'undefined' || !('speechSynthesis' in window)) {
+          // If voice is muted, typewriter completion triggers line advance
+          if (voiceDialogueService.getIsMuted() || audioManager.isMasterMuted()) {
             scheduleNext();
           }
         }
       }, charStepMs);
 
-      // Trigger natural voice stream with voice-synchronized onEnd callback
-      voiceDialogueService.speak(item.text, {
-        speaker: activeThread.contactName,
-        role: activeThread.contactRole,
-        voice: activeThread.voice,
-        isPhoneCall: true,
-        onEnd: () => {
-          if (isCancelled) return;
-          // Ensure subtitle is fully revealed when speech finishes
-          setCurrentSubtitle(item.text);
-          scheduleNext();
-        },
-      });
-
-      // Fallback timer: if browser speech synthesis drops/hangs without onEnd, advance safely
+      // Fallback timer: ensure call advances if audio stream hangs
       fallbackTimeout = setTimeout(() => {
         if (!lineAdvanced && !isCancelled) {
           setCurrentSubtitle(item.text);
           scheduleNext();
         }
-      }, estimatedDurationMs + item.delayMs + 3500);
+      }, durationMs + item.delayMs + 2500);
     };
 
     // Initial brief pause before first dialogue line
@@ -199,11 +189,11 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
       isCancelled = true;
       clearTimeout(startTimeout);
       clearTimers();
-      voiceDialogueService.stop();
+      voicePlayer.stop();
     };
   }, [callState?.status, activeThread]);
 
-  // Canvas oscilloscope audio wave rendering loop
+  // Canvas oscilloscope audio wave rendering loop driven by real Web Audio AnalyserNode
   useEffect(() => {
     if (callState?.status !== 'active') {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
@@ -216,6 +206,7 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
     if (!ctx) return;
 
     let phase = 0;
+    const waveData = new Uint8Array(128);
 
     const renderWave = () => {
       phase += 0.08;
@@ -226,13 +217,17 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
       ctx.fillStyle = 'rgba(5, 10, 18, 0.4)';
       ctx.fillRect(0, 0, width, height);
 
-      // Draw grid lines
+      // Draw center grid line
       ctx.strokeStyle = 'rgba(0, 229, 255, 0.12)';
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(0, centerY);
       ctx.lineTo(width, centerY);
       ctx.stroke();
+
+      // Fetch real-time waveform data from AnalyserNode
+      voicePlayer.getWaveformData(waveData);
+      const isMutedNow = isMuted || audioManager.isMasterMuted();
 
       // Draw primary green oscilloscope wave
       ctx.strokeStyle = '#00ff66';
@@ -241,14 +236,17 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
       ctx.shadowBlur = 8;
       ctx.beginPath();
 
-      const frequency = 0.04;
-      const isSubtitleActive = currentSubtitle.length > 0 && !currentSubtitle.startsWith('[');
-      const isSpeakingWave = isVoiceActive || isSubtitleActive;
-      const amplitude = isSpeakingWave ? (isMuted ? 4 : 26 + Math.sin(phase * 2) * 10) : 4;
-
       for (let x = 0; x < width; x++) {
-        const y =
-          centerY + Math.sin(x * frequency + phase) * amplitude * Math.sin((x / width) * Math.PI);
+        const sampleIdx = Math.floor((x / width) * waveData.length);
+        const norm = isMutedNow ? 0 : (waveData[sampleIdx]! - 128) / 128;
+        const edgeWindow = Math.sin((x / width) * Math.PI);
+
+        // If audio is active, drive directly from AnalyserNode PCM; else subtle ambient line noise
+        const voiceOffset = Math.abs(norm) > 0.02
+          ? norm * (height * 0.42) * edgeWindow
+          : Math.sin(x * 0.04 + phase) * 3 * edgeWindow;
+
+        const y = centerY + voiceOffset;
         if (x === 0) {
           ctx.moveTo(x, y);
         } else {
@@ -263,11 +261,15 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
       ctx.lineWidth = 1;
       ctx.beginPath();
       for (let x = 0; x < width; x++) {
-        const y =
-          centerY +
-          Math.sin(x * frequency * 1.5 - phase) *
-            (amplitude * 0.5) *
-            Math.sin((x / width) * Math.PI);
+        const sampleIdx = Math.floor((x / width) * waveData.length);
+        const norm = isMutedNow ? 0 : (waveData[sampleIdx]! - 128) / 128;
+        const edgeWindow = Math.sin((x / width) * Math.PI);
+
+        const voiceOffset = Math.abs(norm) > 0.02
+          ? (norm * 0.5) * (height * 0.42) * edgeWindow
+          : Math.sin(x * 0.06 - phase) * 1.5 * edgeWindow;
+
+        const y = centerY + voiceOffset;
         if (x === 0) {
           ctx.moveTo(x, y);
         } else {

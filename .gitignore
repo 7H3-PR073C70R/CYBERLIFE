@@ -19,6 +19,7 @@ out/
 # Environment & Secrets (Zero-Tolerance Policy)
 .env
 .env.*
+.env.local
 !.env.example
 *.pem
 *.key

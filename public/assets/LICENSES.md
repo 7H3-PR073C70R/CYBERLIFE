@@ -67,3 +67,20 @@ Permission to use, copy, modify, and/or distribute this software for any purpose
 
 ### SIL Open Font License 1.1 (Inter, JetBrains Mono)
 This Font Software is licensed under the SIL Open Font License, Version 1.1. The fonts, accompanying code, and documentation may be bundled, redistributed, and/or sold with any software, provided that no individual font may be sold by itself.
+
+---
+
+## Pre-rendered Voice Audio & Neural Voice Synthesis (`public/assets/audio/voice/`)
+
+All NPC spoken dialogue and VoIP call audio lines are pre-rendered into static `.mp3` audio files via build script (`scripts/generate-voice.mjs`) and indexed via `manifest.json`. No dynamic external API calls or network requests are performed during runtime gameplay.
+
+| Voice Model Name | Language / Locale | Accent / Persona | Provider / Engine | License / Terms | Generation Date | Notes / Modifications |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **en-NG-EzinneNeural** | English (Nigeria, `en-NG`) | Female Nigerian (Temitope Blessing, Folake Coker, Mama Nkechi) | Microsoft Azure Cognitive Services Speech | Microsoft Azure Cognitive Services Terms of Service / Neural Voice Usage Terms | 2026-10-21 | Pre-rendered static MP3 dialogue clips; custom prosody (+0% to +3% rate, pitch shifts) |
+| **en-NG-AbeoNeural** | English (Nigeria, `en-NG`) | Male Nigerian (Marcus Adebayo, Femi Sowande, Segun Adebayo, Tunde Ojo, Cipher) | Microsoft Azure Cognitive Services Speech | Microsoft Azure Cognitive Services Terms of Service / Neural Voice Usage Terms | 2026-10-21 | Pre-rendered static MP3 dialogue clips; custom prosody (-7% to +5% rate, pitch shifts) |
+| **en-US-JennyNeural** | English (United States, `en-US`) | Female American (Dr. Elena Chen, External Auditor) | Microsoft Azure Cognitive Services Speech | Microsoft Azure Cognitive Services Terms of Service / Neural Voice Usage Terms | 2026-10-21 | Pre-rendered static MP3 dialogue clips; deliberate non-Nigerian consultant accent |
+| **en-US-ChristopherNeural** | English (United States, `en-US`) | Synthetic / Flat Neutral (Aster SIEM Bot) | Microsoft Azure Cognitive Services Speech | Microsoft Azure Cognitive Services Terms of Service / Neural Voice Usage Terms | 2026-10-21 | Pre-rendered static MP3 dialogue clips; flat rate/pitch for autonomous IDS telemetry engine |
+
+### Microsoft Azure Cognitive Services Speech / Neural Voice Terms Note
+Audio files in `public/assets/audio/voice/` are pre-generated using Microsoft Cognitive Services Speech neural voice models (`en-NG-EzinneNeural`, `en-NG-AbeoNeural`, `en-US-JennyNeural`, `en-US-ChristopherNeural`) under Microsoft Cognitive Services terms. In development environments without Azure API keys, `edge-tts` provides an offline fallback for testing. All output is strictly pre-rendered and distributed as static assets within the game bundle.
+

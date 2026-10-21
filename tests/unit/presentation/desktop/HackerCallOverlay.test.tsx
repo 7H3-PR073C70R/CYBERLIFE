@@ -2,12 +2,19 @@
  * Cyberlife — HackerCallOverlay Unit Tests
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { HackerCallOverlay } from '@/presentation/desktop/HackerCallOverlay';
 import { HackerCallState, ChatThread } from '@/simulation/cyber/chat/types';
+import { voiceDialogueService } from '@/presentation/audio/VoiceDialogueService';
+import { audioManager } from '@/presentation/audio/AudioManager';
 
 describe('HackerCallOverlay', () => {
+  beforeEach(() => {
+    voiceDialogueService.setMuted(false);
+    audioManager.setMuted(false);
+  });
+
   const dummyThread: ChatThread = {
     id: 'thread-test',
     contactId: 'cipher',

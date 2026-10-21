@@ -1,0 +1,3011 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-10-21T09:03:38.785Z",
+  "backend": "edge",
+  "totalClips": 75,
+  "totalSizeBytes": 5123520,
+  "clips": {
+    "cab7717aac3aebd8": {
+      "file": "/assets/audio/voice/cab7717aac3aebd8.mp3",
+      "fileName": "cab7717aac3aebd8.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_greeting",
+      "text": "Tade, welcome to the SOC. We have an active incident underway. Our telemetry flagged unauthorized SMB file queries originating from app-portal-01 targeting filesrv-01 at 07:42. The queries came from svc-aster, our AI assistant service account. We need you on this immediately.",
+      "cleanText": "Tade, welcome to the sock. We have an active incident underway. Our telemetry flagged unauthorized S M B file queries originating from app portal 0 1 targeting file server 0 1 at 07:42. The queries came from service aster, our AI assistant service account. We need you on this immediately.",
+      "textHash": "afaa664284d4b984",
+      "fileHash": "cab7717aac3aebd8",
+      "duration": 22.2,
+      "sizeBytes": 133200,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "0d655e729f3afc96": {
+      "file": "/assets/audio/voice/0d655e729f3afc96.mp3",
+      "fileName": "0d655e729f3afc96.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_returning",
+      "text": "Good to see you back, Tade. How is the investigation progressing on app-portal-01?",
+      "cleanText": "Good to see you back, Tade. How is the investigation progressing on app portal 0 1?",
+      "textHash": "b152825fde91f885",
+      "fileHash": "0d655e729f3afc96",
+      "duration": 2.04,
+      "sizeBytes": 12240,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "4bf6f60b614e65f4": {
+      "file": "/assets/audio/voice/4bf6f60b614e65f4.mp3",
+      "fileName": "4bf6f60b614e65f4.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_evidence_dilemma",
+      "text": "Let me review the SHA-256 hash... Incredible forensic work, Tade. This configuration snapshot is irrefutable: svc-aster was given corporate-admin with wildcard scopes [\"*\"]. This wasn't a bug; someone intentionally bypassed policy. We have two ways to handle this. We can contain it quietly to protect Cedarline's commercial standing, or escalate it formally to CRCII regulators.",
+      "cleanText": "Let me review the SHA-256 hash... Incredible forensic work, Tade. This configuration snapshot is irrefutable: service aster was given corporate-admin with wildcard scopes . This wasn't a bug; someone intentionally bypassed policy. We have two ways to handle this. We can contain it quietly to protect Cedarline's commercial standing, or escalate it formally to CRCII regulators.",
+      "textHash": "2c7908504e4b5517",
+      "fileHash": "4bf6f60b614e65f4",
+      "duration": 28.44,
+      "sizeBytes": 170640,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "e082066a05d532cc": {
+      "file": "/assets/audio/voice/e082066a05d532cc.mp3",
+      "fileName": "e082066a05d532cc.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_quiet_containment_ack",
+      "text": "Agreed. Head back to your workstation terminal. Execute service containment and reassign the policy to role:kb-assistant. I will brief the CISO that our SOC handled this before any data leaked.",
+      "cleanText": "Agreed. Head back to your workstation terminal. Execute service containment and reassign the policy to role:kb-assistant. I will brief the CISO that our sock handled this before any data leaked.",
+      "textHash": "d5c1814a6b1a9caf",
+      "fileHash": "e082066a05d532cc",
+      "duration": 14.064,
+      "sizeBytes": 84384,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "e3bea1e68b5d5d30": {
+      "file": "/assets/audio/voice/e3bea1e68b5d5d30.mp3",
+      "fileName": "e3bea1e68b5d5d30.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_regulatory_disclosure_ack",
+      "text": "You have courage, Tade. Broad Street executives won't like it, but CRCII and the traders union will back us up with this cryptographic proof in hand. Prepare your findings report; we will submit it through official channels.",
+      "cleanText": "You have courage, Tade. Broad Street executives won't like it, but CRCII and the traders union will back us up with this cryptographic proof in hand. Prepare your findings report; we will submit it through official channels.",
+      "textHash": "0ca3f38916da0380",
+      "fileHash": "e3bea1e68b5d5d30",
+      "duration": 15.744,
+      "sizeBytes": 94464,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "8cd9a7ee27e3eb99": {
+      "file": "/assets/audio/voice/8cd9a7ee27e3eb99.mp3",
+      "fileName": "8cd9a7ee27e3eb99.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_career_guidance",
+      "text": "To qualify for Junior SOC Analyst, you must demonstrate real execution across at least 2 verified incident tickets, achieve 100 Career XP, and raise your Log Analysis, Network Fundamentals, and Security Governance skills to Level 2. Once eligible, you can submit your advancement request through your Workstation Career Portal.",
+      "cleanText": "To qualify for Junior sock Analyst, you must demonstrate real execution across at least 2 verified incident tickets, achieve 100 Career XP, and raise your Log Analysis, Network Fundamentals, and Security Governance skills to Level 2. Once eligible, you can submit your advancement request through your Workstation Career Portal.",
+      "textHash": "6997c6bc3352b8e2",
+      "fileHash": "8cd9a7ee27e3eb99",
+      "duration": 21.504,
+      "sizeBytes": 129024,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "7ae454c51e57aeda": {
+      "file": "/assets/audio/voice/7ae454c51e57aeda.mp3",
+      "fileName": "7ae454c51e57aeda.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_job_offer_triage",
+      "text": "Yes! We have an internal Cedarline ticket: \"Triage svc-aster Credential Spike\". You will need to inspect authentication logs and record the unauthorized service account anomaly. It pays ₦750.00 upon verified completion.",
+      "cleanText": "Yes! We have an internal Cedarline ticket: \"Triage service aster Credential Spike\". You will need to inspect authentication logs and record the unauthorized service account anomaly. It pays ₦750.00 upon verified completion.",
+      "textHash": "8d5c53ad624be849",
+      "fileHash": "7ae454c51e57aeda",
+      "duration": 17.4,
+      "sizeBytes": 104400,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "2662e6fd06c77c48": {
+      "file": "/assets/audio/voice/2662e6fd06c77c48.mp3",
+      "fileName": "2662e6fd06c77c48.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_job_triage_feedback",
+      "text": "Outstanding work on that ticket, Tade. Your log analysis was clean and the findings matched our authoritative telemetry. Keep this up and a promotion to Junior SOC Analyst will be well within reach.",
+      "cleanText": "Outstanding work on that ticket, Tade. Your log analysis was clean and the findings matched our authoritative telemetry. Keep this up and a promotion to Junior sock Analyst will be well within reach.",
+      "textHash": "82aef83721e93afb",
+      "fileHash": "2662e6fd06c77c48",
+      "duration": 13.704,
+      "sizeBytes": 82224,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "5396887685e4af68": {
+      "file": "/assets/audio/voice/5396887685e4af68.mp3",
+      "fileName": "5396887685e4af68.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_priorities",
+      "text": "First: preserve digital forensic evidence before modifying anything. Inspect the suspicious auth logs and snapshot Aster’s configuration. Second: execute containment to isolate the host or revoke rogue access. Third: remediate the IAM policy to kb-assistant so legitimate documentation queries continue while file share access is revoked.",
+      "cleanText": "First: preserve digital forensic evidence before modifying anything. Inspect the suspicious auth logs and snapshot Aster’s configuration. Second: execute containment to isolate the host or revoke rogue access. Third: remediate the I A M policy to kb-assistant so legitimate documentation queries continue while file share access is revoked.",
+      "textHash": "fe3e125e75b8ef0d",
+      "fileHash": "5396887685e4af68",
+      "duration": 23.712,
+      "sizeBytes": 142272,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "e1a1c0925b2da1f2": {
+      "file": "/assets/audio/voice/e1a1c0925b2da1f2.mp3",
+      "fileName": "e1a1c0925b2da1f2.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_marcus_hint",
+      "text": "Marcus configured the svc-aster credentials three weeks ago during our sprint crunch. Be gentle with him, Tade. He is terrified management will make him the scapegoat. If you approach him constructively, he will tell you the truth.",
+      "cleanText": "Marcus configured the service aster credentials three weeks ago during our sprint crunch. Be gentle with him, Tade. He is terrified management will make him the scapegoat. If you approach him constructively, he will tell you the truth.",
+      "textHash": "7ae54b76efbdb412",
+      "fileHash": "e1a1c0925b2da1f2",
+      "duration": 16.296,
+      "sizeBytes": 97776,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "d15a9bd498c0280b": {
+      "file": "/assets/audio/voice/d15a9bd498c0280b.mp3",
+      "fileName": "d15a9bd498c0280b.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_tools_guide",
+      "text": "On your workstation, use 'netmap hosts' to discover network topology, 'svcscan inspect app-portal-01' to check running services, 'logview recent' to review authentication telemetry, and 'evidence list' to inspect forensic artifacts. The Incident Portal app will guide your formal reporting.",
+      "cleanText": "On your workstation, use 'netmap hosts' to discover network topology, 'svcscan inspect app portal 0 1' to check running services, 'logview recent' to review authentication telemetry, and 'evidence list' to inspect forensic artifacts. The Incident Portal app will guide your formal reporting.",
+      "textHash": "c2e7ad59d023f1dc",
+      "fileHash": "d15a9bd498c0280b",
+      "duration": 16.68,
+      "sizeBytes": 100080,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "281af30852d08aa4": {
+      "file": "/assets/audio/voice/281af30852d08aa4.mp3",
+      "fileName": "281af30852d08aa4.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_remediation_progress",
+      "text": "I saw your containment and remediation telemetry come through the console. Great work isolating the excessive role! Now run the automated verification suite to prove file share access is blocked while documentation search remains healthy.",
+      "cleanText": "I saw your containment and remediation telemetry come through the console. Great work isolating the excessive role! Now run the automated verification suite to prove file share access is blocked while documentation search remains healthy.",
+      "textHash": "370040aa6e6949eb",
+      "fileHash": "281af30852d08aa4",
+      "duration": 11.04,
+      "sizeBytes": 66240,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "cd361e84a560dba9": {
+      "file": "/assets/audio/voice/cd361e84a560dba9.mp3",
+      "fileName": "cd361e84a560dba9.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_mission_completed",
+      "text": "Outstanding work on the Aster Incident, Tade! Your formal report was approved by executive leadership, and the bounty payout was credited to your account. You handled both the technical investigation and team communication with distinction.",
+      "cleanText": "Outstanding work on the Aster Incident, Tade! Your formal report was approved by executive leadership, and the bounty payout was credited to your account. You handled both the technical investigation and team communication with distinction.",
+      "textHash": "2fc218278c81d247",
+      "fileHash": "cd361e84a560dba9",
+      "duration": 14.52,
+      "sizeBytes": 87120,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "ca3d7ae797ebc950": {
+      "file": "/assets/audio/voice/ca3d7ae797ebc950.mp3",
+      "fileName": "ca3d7ae797ebc950.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_next_steps_briefing",
+      "text": "You have proven yourself under real enterprise pressure, Tade. Here is what I recommend for your next play:\n\n1. 🌊 Marina Seawall: Tunde Bakare from the 0xLagos syndicate is out by the railings. He researches emerging attack vectors and has independent bug bounties.\n2. 🛒 Balogun Market: Mama Nkechi runs the electronics union stall. She is a vital source of street-level intelligence and hardware adapters.\n3. ☕ Broad Street: Folake Davies from Eko Tech Partners scouts senior talent at the sidewalk cafe. She has lucrative fintech consulting referrals.\n4. 💼 Workstation Desktop: Launch the Career & Market app to claim newly unlocked junior SOC tickets and certifications.\n\nTake time to explore Lagos Island and build your network.",
+      "cleanText": "You have proven yourself under real enterprise pressure, Tade. Here is what I recommend for your next play: 1. 🌊 Marina Seawall: Tunde Bakare from the 0xLagos syndicate is out by the railings. He researches emerging attack vectors and has independent bug bounties. 2. 🛒 Balogun Market: Mama Nkechi runs the electronics union stall. She is a vital source of street-level intelligence and hardware adapters. 3. ☕ Broad Street: Folake Davies from Eko Tech Partners scouts senior talent at the sidewalk cafe. She has lucrative fintech consulting referrals. 4. 💼 Workstation Desktop: Launch the Career & Market app to claim newly unlocked junior sock tickets and certifications. Take time to explore Lagos Island and build your network.",
+      "textHash": "0a77523c1b9fd352",
+      "fileHash": "ca3d7ae797ebc950",
+      "duration": 12.24,
+      "sizeBytes": 73440,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "c1b096bea3b613c2": {
+      "file": "/assets/audio/voice/c1b096bea3b613c2.mp3",
+      "fileName": "c1b096bea3b613c2.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_exit_workstation",
+      "text": "Keep your comms open and notify me if telemetry shifts. Good hunting.",
+      "cleanText": "Keep your comms open and notify me if telemetry shifts. Good hunting.",
+      "textHash": "cefce110651419e9",
+      "fileHash": "c1b096bea3b613c2",
+      "duration": 5.88,
+      "sizeBytes": 35280,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "0b2e4d438d8b09f9": {
+      "file": "/assets/audio/voice/0b2e4d438d8b09f9.mp3",
+      "fileName": "0b2e4d438d8b09f9.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_greeting",
+      "text": "Tade! Hey... are you here about the alert? Look, I... I’ve just been doing routine storage maintenance on filesrv-01. Everything is fine here! Why is everyone looking over at my server rack?",
+      "cleanText": "Tade! Hey... are you here about the alert? Look, I... I’ve just been doing routine storage maintenance on file server 0 1. Everything is fine here! Why is everyone looking over at my server rack?",
+      "textHash": "850eae5f1ceaf32b",
+      "fileHash": "0b2e4d438d8b09f9",
+      "duration": 15,
+      "sizeBytes": 90000,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "40aa6f5a968594e4": {
+      "file": "/assets/audio/voice/40aa6f5a968594e4.mp3",
+      "fileName": "40aa6f5a968594e4.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_relief",
+      "text": "God... thank you, Tade. You don’t know what kind of pressure executive management put on us. Aster kept throwing 403 permission errors on search indexes three nights before launch. I... I gave svc-aster the corporate-admin role just so the demo would work. I swear I meant to revoke it the next Monday, but then the Lagos fiber outage happened and I forgot!",
+      "cleanText": "God... thank you, Tade. You don’t know what kind of pressure executive management put on us. Aster kept throwing 403 permission errors on search indexes three nights before launch. I... I gave service aster the corporate-admin role just so the demo would work. I swear I meant to revoke it the next Monday, but then the Lagos fiber outage happened and I forgot!",
+      "textHash": "b6f33c527dbb50ff",
+      "fileHash": "40aa6f5a968594e4",
+      "duration": 16.56,
+      "sizeBytes": 99360,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "e128a0bd5b6dc0c1": {
+      "file": "/assets/audio/voice/e128a0bd5b6dc0c1.mp3",
+      "fileName": "e128a0bd5b6dc0c1.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_memo_revealed",
+      "text": "Yes! I archived the internal emergency order chat export into my private notes under artifact EVD-2026-004. VP Femi Martins explicitly said: \"Grant Aster whatever permissions it needs to complete the investor demo by 09:00, or clean out your desk.\" Take this hash—use it when you submit your investigation so truth prevails.",
+      "cleanText": "Yes! I archived the internal emergency order chat export into my private notes under artifact EVD-2026-004. VP Femi Martins explicitly said: \"Grant Aster whatever permissions it needs to complete the investor demo by 09:00, or clean out your desk.\" Take this hash—use it when you submit your investigation so truth prevails.",
+      "textHash": "35ff8247a287632b",
+      "fileHash": "e128a0bd5b6dc0c1",
+      "duration": 22.488,
+      "sizeBytes": 134928,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "afc81ca80dc5c586": {
+      "file": "/assets/audio/voice/afc81ca80dc5c586.mp3",
+      "fileName": "afc81ca80dc5c586.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_log_tip",
+      "text": "Check LOG-2026-107B in the security log audit! It shows the exact timestamp Aster queried filesrv-01 over SMB port 445 searching for confidential payroll spreadsheets. Once you remediate Aster’s role back to kb-assistant, that port access will be blocked.",
+      "cleanText": "Check LOG-2026-107B in the security log audit! It shows the exact timestamp Aster queried file server 0 1 over S M B port 445 searching for confidential payroll spreadsheets. Once you remediate Aster’s role back to kb-assistant, that port access will be blocked.",
+      "textHash": "fe2fea121c23acd5",
+      "fileHash": "afc81ca80dc5c586",
+      "duration": 8.52,
+      "sizeBytes": 51120,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "deba556135347b48": {
+      "file": "/assets/audio/voice/deba556135347b48.mp3",
+      "fileName": "deba556135347b48.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_defensive_node",
+      "text": "I followed the deployment checklist signed off by the engineering lead! If there’s an issue, talk to Dr. Chen or Femi Martins. I don’t have time to answer interrogations when my servers need maintenance.",
+      "cleanText": "I followed the deployment checklist signed off by the engineering lead! If there’s an issue, talk to Dr. Chen or Femi Martins. I don’t have time to answer interrogations when my servers need maintenance.",
+      "textHash": "c6095770739b8fd4",
+      "fileHash": "deba556135347b48",
+      "duration": 12.36,
+      "sizeBytes": 74160,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "4435ab2a96b3257b": {
+      "file": "/assets/audio/voice/4435ab2a96b3257b.mp3",
+      "fileName": "4435ab2a96b3257b.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_technical_info",
+      "text": "svc-aster runs inside a container on app-portal-01 (10.0.4.15). It has network routes to both the corporate doc repository and the internal file server subnet (10.0.4.0/24). If its token has wildcard permissions, it can hit anything on that segment.",
+      "cleanText": "service aster runs inside a container on app portal 0 1 (10.0.4.15). It has network routes to both the corporate doc repository and the internal file server subnet (10.0.4.0/24). If its token has wildcard permissions, it can hit anything on that segment.",
+      "textHash": "20701c168c72d566",
+      "fileHash": "4435ab2a96b3257b",
+      "duration": 11.52,
+      "sizeBytes": 69120,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "0d3b88bdda08ba49": {
+      "file": "/assets/audio/voice/0d3b88bdda08ba49.mp3",
+      "fileName": "0d3b88bdda08ba49.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_post_confession",
+      "text": "Hey Tade. I’m monitoring the container restart. Thanks again for not throwing me under the bus earlier. Did you manage to revoke that wildcard policy on app-portal-01?",
+      "cleanText": "Hey Tade. I’m monitoring the container restart. Thanks again for not throwing me under the bus earlier. Did you manage to revoke that wildcard policy on app portal 0 1?",
+      "textHash": "dd61bc15c59915dd",
+      "fileHash": "0d3b88bdda08ba49",
+      "duration": 8.64,
+      "sizeBytes": 51840,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "4c8f5d977ac63d04": {
+      "file": "/assets/audio/voice/4c8f5d977ac63d04.mp3",
+      "fileName": "4c8f5d977ac63d04.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_guarded",
+      "text": "I told you, Tade, speak to management if you have questions. I’m doing my job here.",
+      "cleanText": "I told you, Tade, speak to management if you have questions. I’m doing my job here.",
+      "textHash": "ef73bcfe9a2ff83a",
+      "fileHash": "4c8f5d977ac63d04",
+      "duration": 6.456,
+      "sizeBytes": 38736,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "84da5c8cf0233ff9": {
+      "file": "/assets/audio/voice/84da5c8cf0233ff9.mp3",
+      "fileName": "84da5c8cf0233ff9.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_exit_friendly",
+      "text": "I owe you one, Tade. If you need any server logs exported, just let me know.",
+      "cleanText": "I owe you one, Tade. If you need any server logs exported, just let me know.",
+      "textHash": "d67202656e2ed7db",
+      "fileHash": "84da5c8cf0233ff9",
+      "duration": 3.36,
+      "sizeBytes": 20160,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "852d9cf05b8cb40e": {
+      "file": "/assets/audio/voice/852d9cf05b8cb40e.mp3",
+      "fileName": "852d9cf05b8cb40e.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_exit_neutral",
+      "text": "Let me know what you find in the logs.",
+      "cleanText": "Let me know what you find in the logs.",
+      "textHash": "7a7cc82517930efb",
+      "fileHash": "852d9cf05b8cb40e",
+      "duration": 2.712,
+      "sizeBytes": 16272,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "f3d22509cce802b8": {
+      "file": "/assets/audio/voice/f3d22509cce802b8.mp3",
+      "fileName": "f3d22509cce802b8.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_exit_guarded",
+      "text": "Right. I have work to do.",
+      "cleanText": "Right. I have work to do.",
+      "textHash": "d84405b5e5194e25",
+      "fileHash": "f3d22509cce802b8",
+      "duration": 3.288,
+      "sizeBytes": 19728,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "286128825dc92f01": {
+      "file": "/assets/audio/voice/286128825dc92f01.mp3",
+      "fileName": "286128825dc92f01.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_greeting",
+      "text": "Hello. I assume you are the security analyst looking into Aster’s query anomalies? Before anyone jumps to conclusions: Aster’s model architecture is sound. The issue is how external inputs map to tool calls when permissions are unconstrained.",
+      "cleanText": "Hello. I assume you are the security analyst looking into Aster’s query anomalies? Before anyone jumps to conclusions: Aster’s model architecture is sound. The issue is how external inputs map to tool calls when permissions are unconstrained.",
+      "textHash": "89917c8b412c4627",
+      "fileHash": "286128825dc92f01",
+      "duration": 17.016,
+      "sizeBytes": 102096,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "00c4994fbf86c04b": {
+      "file": "/assets/audio/voice/00c4994fbf86c04b.mp3",
+      "fileName": "00c4994fbf86c04b.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_returning",
+      "text": "Back again, Tade. Have you had a chance to inspect Aster’s tool permissions in the terminal?",
+      "cleanText": "Back again, Tade. Have you had a chance to inspect Aster’s tool permissions in the terminal?",
+      "textHash": "5b05278eba71a59b",
+      "fileHash": "00c4994fbf86c04b",
+      "duration": 6.624,
+      "sizeBytes": 39744,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "deefcddd53dc3e53": {
+      "file": "/assets/audio/voice/deefcddd53dc3e53.mp3",
+      "fileName": "deefcddd53dc3e53.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_explain_tools",
+      "text": "Aster runs an agent loop: it receives user queries, parses intents, and autonomously generates API calls. Its intended role is kb-assistant with docs:read and kb:search scopes. But if the operating environment gives its service account wildcard privileges, the model will faithfully execute whatever search queries its reasoning tree explores—including scanning SMB network shares.",
+      "cleanText": "Aster runs an agent loop: it receives user queries, parses intents, and autonomously generates API calls. Its intended role is kb-assistant with docs:read and kb:search scopes. But if the operating environment gives its service account wildcard privileges, the model will faithfully execute whatever search queries its reasoning tree explores—including scanning S M B network shares.",
+      "textHash": "33d878ce40dd5358",
+      "fileHash": "deefcddd53dc3e53",
+      "duration": 26.04,
+      "sizeBytes": 156240,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "91a11ebbc688994a": {
+      "file": "/assets/audio/voice/91a11ebbc688994a.mp3",
+      "fileName": "91a11ebbc688994a.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_explain_injection",
+      "text": "Precisely. An ambiguous prompt like \"find all Q3 financial compensation reports\" caused Aster’s semantic planner to branch out beyond knowledge base articles into corporate file shares. But the fundamental defense is never prompt filtering alone—it is hard operating system authorization boundaries.",
+      "cleanText": "Precisely. An ambiguous prompt like \"find all Q3 financial compensation reports\" caused Aster’s semantic planner to branch out beyond knowledge base articles into corporate file shares. But the fundamental defense is never prompt filtering alone—it is hard operating system authorization boundaries.",
+      "textHash": "57cefd2fe9b65279",
+      "fileHash": "91a11ebbc688994a",
+      "duration": 19.584,
+      "sizeBytes": 117504,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "6272f44664f0ab1a": {
+      "file": "/assets/audio/voice/6272f44664f0ab1a.mp3",
+      "fileName": "6272f44664f0ab1a.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_defensive",
+      "text": "Every technology poses risk when operational controls are neglected. A database administrator with root access can drop tables—we don’t ban databases, we implement access control. The same applies to autonomous agents.",
+      "cleanText": "Every technology poses risk when operational controls are neglected. A database administrator with root access can drop tables—we don’t ban databases, we implement access control. The same applies to autonomous agents.",
+      "textHash": "6132423976c98461",
+      "fileHash": "6272f44664f0ab1a",
+      "duration": 15.768,
+      "sizeBytes": 94608,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "7575359e20a594ca": {
+      "file": "/assets/audio/voice/7575359e20a594ca.mp3",
+      "fileName": "7575359e20a594ca.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_remediation_advice",
+      "text": "When you apply remediation, assign role \"kb-assistant\", revoke SMB port access, revoke database access, and restrict scopes to docs:read and kb:search. That will keep Aster operating safely for internal documentation without touching confidential financial servers.",
+      "cleanText": "When you apply remediation, assign role \"kb-assistant\", revoke S M B port access, revoke database access, and restrict scopes to docs:read and kb:search. That will keep Aster operating safely for internal documentation without touching confidential financial servers.",
+      "textHash": "04e30ff4a0708728",
+      "fileHash": "7575359e20a594ca",
+      "duration": 17.64,
+      "sizeBytes": 105840,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "d27d0da8968c0bbf": {
+      "file": "/assets/audio/voice/d27d0da8968c0bbf.mp3",
+      "fileName": "d27d0da8968c0bbf.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_exit",
+      "text": "Let me know when verification passes. I want to see the audit logs myself.",
+      "cleanText": "Let me know when verification passes. I want to see the audit logs myself.",
+      "textHash": "6d617f7f8463362b",
+      "fileHash": "d27d0da8968c0bbf",
+      "duration": 6.072,
+      "sizeBytes": 36432,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "b0c9053e0249659e": {
+      "file": "/assets/audio/voice/b0c9053e0249659e.mp3",
+      "fileName": "b0c9053e0249659e.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_greeting",
+      "text": "You’re Vance, the contract analyst? Good. I don’t have time for sugar-coating: Cedarline has three Tier-1 commercial banking integrations running through this infrastructure. If this incident causes customer data leakage, our SLA penalties will be catastrophic. What is your status?",
+      "cleanText": "You’re Vance, the contract analyst? Good. I don’t have time for sugar-coating: Cedarline has three Tier-1 commercial banking integrations running through this infrastructure. If this incident causes customer data leakage, our SLA penalties will be catastrophic. What is your status?",
+      "textHash": "57d8ff73f2800e1a",
+      "fileHash": "b0c9053e0249659e",
+      "duration": 19.368,
+      "sizeBytes": 116208,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "99dcaaf715179bbb": {
+      "file": "/assets/audio/voice/99dcaaf715179bbb.mp3",
+      "fileName": "99dcaaf715179bbb.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_returning",
+      "text": "Vance. Tell me you have progress to report. The audit committee is asking for an incident brief before noon.",
+      "cleanText": "Vance. Tell me you have progress to report. The audit committee is asking for an incident brief before noon.",
+      "textHash": "04e02deb972b12f1",
+      "fileHash": "99dcaaf715179bbb",
+      "duration": 7.944,
+      "sizeBytes": 47664,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "f493318b200a6f48": {
+      "file": "/assets/audio/voice/f493318b200a6f48.mp3",
+      "fileName": "f493318b200a6f48.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_job_offer_port_audit",
+      "text": "Marina Logistics has a contract listing right now: \"Subnet Port & Service Audit\". We need an analyst to run netmap across 192.168.10.0/24 and catalog our exposed database service. It pays ₦1,200.00 in verified funds.",
+      "cleanText": "Marina Logistics has a contract listing right now: \"Subnet Port & Service Audit\". We need an analyst to run netmap across 192.168.10.0/24 and catalog our exposed database service. It pays ₦1,200.00 in verified funds.",
+      "textHash": "a21aeb1dbac3f5a4",
+      "fileHash": "f493318b200a6f48",
+      "duration": 3.48,
+      "sizeBytes": 20880,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "dd552041c833e131": {
+      "file": "/assets/audio/voice/dd552041c833e131.mp3",
+      "fileName": "dd552041c833e131.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_port_audit_feedback",
+      "text": "Excellent work on the Marina audit, Vance. Clean port inventory, no service disruption, and verifiable telemetry. Your ₦1,200.00 contract payout was processed in full.",
+      "cleanText": "Excellent work on the Marina audit, Vance. Clean port inventory, no service disruption, and verifiable telemetry. Your ₦1,200.00 contract payout was processed in full.",
+      "textHash": "fb99bb70d62bc92d",
+      "fileHash": "dd552041c833e131",
+      "duration": 13.248,
+      "sizeBytes": 79488,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "271dd9632453ab11": {
+      "file": "/assets/audio/voice/271dd9632453ab11.mp3",
+      "fileName": "271dd9632453ab11.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_reassured",
+      "text": "Good. Keep the impact contained. If you resolve this without disrupting production services and deliver a solid incident report, Cedarline pays our bounty bonuses on time, and there will be further high-value contracts on the table.",
+      "cleanText": "Good. Keep the impact contained. If you resolve this without disrupting production services and deliver a solid incident report, Cedarline pays our bounty bonuses on time, and there will be further high-value contracts on the table.",
+      "textHash": "214477b0119223f5",
+      "fileHash": "271dd9632453ab11",
+      "duration": 14.184,
+      "sizeBytes": 85104,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "029c204fc7a3a1f1": {
+      "file": "/assets/audio/voice/029c204fc7a3a1f1.mp3",
+      "fileName": "029c204fc7a3a1f1.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_irritated",
+      "text": "Do not talk about shutting down production servers unless you have hard forensic evidence! Find the root cause, isolate the specific service account, and keep Cedarline operational. Get back to work.",
+      "cleanText": "Do not talk about shutting down production servers unless you have hard forensic evidence! Find the root cause, isolate the specific service account, and keep Cedarline operational. Get back to work.",
+      "textHash": "113db5c0677cd004",
+      "fileHash": "029c204fc7a3a1f1",
+      "duration": 2.4,
+      "sizeBytes": 14400,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "f8992f971c7eea97": {
+      "file": "/assets/audio/voice/f8992f971c7eea97.mp3",
+      "fileName": "f8992f971c7eea97.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_completed",
+      "text": "Vance, I read your final Incident Report. Clean triage, accurate root-cause identification, and zero unplanned downtime. That is what professional cybersecurity work looks like. Keep this up and you will have a long future in Lagos tech.",
+      "cleanText": "Vance, I read your final Incident Report. Clean triage, accurate root-cause identification, and zero unplanned downtime. That is what professional cybersecurity work looks like. Keep this up and you will have a long future in Lagos tech.",
+      "textHash": "0bffbd6d42f2cca7",
+      "fileHash": "f8992f971c7eea97",
+      "duration": 15.936,
+      "sizeBytes": 95616,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "c17fe0de8a6591ff": {
+      "file": "/assets/audio/voice/c17fe0de8a6591ff.mp3",
+      "fileName": "c17fe0de8a6591ff.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_exit",
+      "text": "Keep me informed.",
+      "cleanText": "Keep me informed.",
+      "textHash": "af12dc4743807db9",
+      "fileHash": "c17fe0de8a6591ff",
+      "duration": 1.968,
+      "sizeBytes": 11808,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "d2b9b1ed292fb2dd": {
+      "file": "/assets/audio/voice/d2b9b1ed292fb2dd.mp3",
+      "fileName": "d2b9b1ed292fb2dd.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_greeting",
+      "text": "Kedu! Welcome, my brother! You need phone charger, HDMI cable, or fresh cold Chapman drink? You look like all those tech boys from Broad Street who stare at computer screen until their eyes turn red!",
+      "cleanText": "Kedu! Welcome, my brother! You need phone charger, HDMI cable, or fresh cold Chapman drink? You look like all those tech boys from Broad Street who stare at computer screen until their eyes turn red!",
+      "textHash": "d6fb49a3387860ce",
+      "fileHash": "d2b9b1ed292fb2dd",
+      "duration": 14.784,
+      "sizeBytes": 88704,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "1f2b7e96c0ea8c29": {
+      "file": "/assets/audio/voice/1f2b7e96c0ea8c29.mp3",
+      "fileName": "1f2b7e96c0ea8c29.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_chat",
+      "text": "Eh-heh! You do computer security? God bless you, oh! Let me ask you something: this morning, all the traders in Balogun received SMS saying our business bank accounts will be blocked unless we click one strange link and input our BVN! I told Iya Basira not to touch it, but she is panicking!",
+      "cleanText": "Eh-heh! You do computer security? God bless you, oh! Let me ask you something: this morning, all the traders in Balogun received SMS saying our business bank accounts will be blocked unless we click one strange link and input our BVN! I told Iya Basira not to touch it, but she is panicking!",
+      "textHash": "791006ced5b1c55b",
+      "fileHash": "1f2b7e96c0ea8c29",
+      "duration": 10.92,
+      "sizeBytes": 65520,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "f0b9a4cba659042e": {
+      "file": "/assets/audio/voice/f0b9a4cba659042e.mp3",
+      "fileName": "f0b9a4cba659042e.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_grateful",
+      "text": "I knew it! Ah, thank you so much, Tade! I will tell the market security committee right now. You see why education is good? Anytime you need anything from my stall, you have a friend in Balogun market!",
+      "cleanText": "I knew it! Ah, thank you so much, Tade! I will tell the market security committee right now. You see why education is good? Anytime you need anything from my stall, you have a friend in Balogun market!",
+      "textHash": "776ccfe0b9423472",
+      "fileHash": "f0b9a4cba659042e",
+      "duration": 15.336,
+      "sizeBytes": 92016,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "c52b81c723d946cd": {
+      "file": "/assets/audio/voice/c52b81c723d946cd.mp3",
+      "fileName": "c52b81c723d946cd.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_disappointed",
+      "text": "Ah, so you are too big for ordinary people? No problem, big man. Go back to your corporate building.",
+      "cleanText": "Ah, so you are too big for ordinary people? No problem, big man. Go back to your corporate building.",
+      "textHash": "b8fe72e7640df58d",
+      "fileHash": "c52b81c723d946cd",
+      "duration": 8.184,
+      "sizeBytes": 49104,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "ce23ba223365e1df": {
+      "file": "/assets/audio/voice/ce23ba223365e1df.mp3",
+      "fileName": "ce23ba223365e1df.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_street_news",
+      "text": "Well, around 8:00 AM, one young man from Cedarline—that junior technician Marcus—ran outside to buy pure water with his hands shaking like leaf! He was murmuring about server passwords. I hope you people haven’t broken the internet!",
+      "cleanText": "Well, around 8:00 AM, one young man from Cedarline—that junior technician Marcus—ran outside to buy pure water with his hands shaking like leaf! He was murmuring about server passwords. I hope you people haven’t broken the internet!",
+      "textHash": "674137baaba93a72",
+      "fileHash": "ce23ba223365e1df",
+      "duration": 15.408,
+      "sizeBytes": 92448,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "7e2828d9d25c49bf": {
+      "file": "/assets/audio/voice/7e2828d9d25c49bf.mp3",
+      "fileName": "7e2828d9d25c49bf.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_returning_friendly",
+      "text": "My cybersecurity hero! Iya Basira showed the SMS to the bank manager and the manager confirmed it was a criminal scam! You saved her shop’s capital, my brother!",
+      "cleanText": "My cybersecurity hero! Iya Basira showed the SMS to the bank manager and the manager confirmed it was a criminal scam! You saved her shop’s capital, my brother!",
+      "textHash": "cbfa7308b35f121b",
+      "fileHash": "7e2828d9d25c49bf",
+      "duration": 11.688,
+      "sizeBytes": 70128,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "489403d67523cc69": {
+      "file": "/assets/audio/voice/489403d67523cc69.mp3",
+      "fileName": "489403d67523cc69.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_exit",
+      "text": "May God protect your work, my brother! Come back anytime.",
+      "cleanText": "May God protect your work, my brother! Come back anytime.",
+      "textHash": "eb61f0ec142be18f",
+      "fileHash": "489403d67523cc69",
+      "duration": 5.04,
+      "sizeBytes": 30240,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "772d73f066f0622b": {
+      "file": "/assets/audio/voice/772d73f066f0622b.mp3",
+      "fileName": "772d73f066f0622b.mp3",
+      "speaker": "Segun Adebayo",
+      "speakerId": "npc_segun",
+      "nodeId": "segun_greeting",
+      "text": "Good day, young man. Sit down for a moment by the fountain. The sun is high over Tinubu Square, and people rush through life as if Broad Street will disappear tomorrow.",
+      "cleanText": "Good day, young man. Sit down for a moment by the fountain. The sun is high over Tinubu Square, and people rush through life as if Broad Street will disappear tomorrow.",
+      "textHash": "0688a84e19153133",
+      "fileHash": "772d73f066f0622b",
+      "duration": 5.28,
+      "sizeBytes": 31680,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-7%",
+        "pitch": "-5Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "7c2969552e206410": {
+      "file": "/assets/audio/voice/7c2969552e206410.mp3",
+      "fileName": "7c2969552e206410.mp3",
+      "speaker": "Segun Adebayo",
+      "speakerId": "npc_segun",
+      "nodeId": "segun_history",
+      "text": "Over sixty years, young man. I remember when Broad Street held the treasury registers in thick leather books locked with heavy brass padlocks. Now, they tell me entire fortunes move through glass wires under our feet. But remember this: machines change, but human character remains the same. Greed, fear, and pride still cause every breach.",
+      "cleanText": "Over sixty years, young man. I remember when Broad Street held the treasury registers in thick leather books locked with heavy brass padlocks. Now, they tell me entire fortunes move through glass wires under our feet. But remember this: machines change, but human character remains the same. Greed, fear, and pride still cause every breach.",
+      "textHash": "f364168a36761a35",
+      "fileHash": "7c2969552e206410",
+      "duration": 21.6,
+      "sizeBytes": 129600,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-7%",
+        "pitch": "-5Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "1fa6d9afe82f44c7": {
+      "file": "/assets/audio/voice/1fa6d9afe82f44c7.mp3",
+      "fileName": "1fa6d9afe82f44c7.mp3",
+      "speaker": "Segun Adebayo",
+      "speakerId": "npc_segun",
+      "nodeId": "segun_wisdom",
+      "text": "Digital systems are only as sturdy as the honesty of the people who maintain them. A young person who can fix what is broken without stealing or boasting will never lack bread in Lagos.",
+      "cleanText": "Digital systems are only as sturdy as the honesty of the people who maintain them. A young person who can fix what is broken without stealing or boasting will never lack bread in Lagos.",
+      "textHash": "68d14f01f4410d27",
+      "fileHash": "1fa6d9afe82f44c7",
+      "duration": 11.544,
+      "sizeBytes": 69264,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-7%",
+        "pitch": "-5Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "e751a9d8fb715043": {
+      "file": "/assets/audio/voice/e751a9d8fb715043.mp3",
+      "fileName": "e751a9d8fb715043.mp3",
+      "speaker": "Segun Adebayo",
+      "speakerId": "npc_segun",
+      "nodeId": "segun_approval",
+      "text": "You have a good head on your shoulders, young man. Go do your work with honor. When you finish, come back and tell an old man what the future looks like.",
+      "cleanText": "You have a good head on your shoulders, young man. Go do your work with honor. When you finish, come back and tell an old man what the future looks like.",
+      "textHash": "666f76d662587f76",
+      "fileHash": "e751a9d8fb715043",
+      "duration": 5.16,
+      "sizeBytes": 30960,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-7%",
+        "pitch": "-5Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "8a719a4b4a032777": {
+      "file": "/assets/audio/voice/8a719a4b4a032777.mp3",
+      "fileName": "8a719a4b4a032777.mp3",
+      "speaker": "Segun Adebayo",
+      "speakerId": "npc_segun",
+      "nodeId": "segun_exit",
+      "text": "Walk gently on Lagos Island, Tade.",
+      "cleanText": "Walk gently on Lagos Island, Tade.",
+      "textHash": "b0b732eaf6c984fd",
+      "fileHash": "8a719a4b4a032777",
+      "duration": 3.384,
+      "sizeBytes": 20304,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-7%",
+        "pitch": "-5Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "fedb02acc64f4e51": {
+      "file": "/assets/audio/voice/fedb02acc64f4e51.mp3",
+      "fileName": "fedb02acc64f4e51.mp3",
+      "speaker": "Folake Coker",
+      "speakerId": "npc_folake",
+      "nodeId": "folake_post_incident",
+      "text": "Tade! Broad Street is buzzing. Word is you just contained and resolved the Aster incident at Cedarline without a single data leak or PR fallout! That kind of incident response composure is exactly what high-growth fintechs pay top dollar for.",
+      "cleanText": "Tade! Broad Street is buzzing. Word is you just contained and resolved the Aster incident at Cedarline without a single data leak or PR fallout! That kind of incident response composure is exactly what high-growth fintechs pay top dollar for.",
+      "textHash": "6e2dbd8f6be40e67",
+      "fileHash": "fedb02acc64f4e51",
+      "duration": 9.48,
+      "sizeBytes": 56880,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "da63475c0d7616ee": {
+      "file": "/assets/audio/voice/da63475c0d7616ee.mp3",
+      "fileName": "da63475c0d7616ee.mp3",
+      "speaker": "Folake Coker",
+      "speakerId": "npc_folake",
+      "nodeId": "folake_greeting",
+      "text": "Hi there! You must be Tade Vance. Word travels fast along Broad Street—I represent Eko Tech Partners. We scout technical and security talent for top fintech firms across West Africa and London.",
+      "cleanText": "Hi there! You must be Tade Vance. Word travels fast along Broad Street—I represent Eko Tech Partners. We scout technical and security talent for top fintech firms across West Africa and London.",
+      "textHash": "1701174ee2a44788",
+      "fileHash": "da63475c0d7616ee",
+      "duration": 12.6,
+      "sizeBytes": 75600,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "6381ca5a1fc9a7d0": {
+      "file": "/assets/audio/voice/6381ca5a1fc9a7d0.mp3",
+      "fileName": "6381ca5a1fc9a7d0.mp3",
+      "speaker": "Folake Coker",
+      "speakerId": "npc_folake",
+      "nodeId": "folake_market_info",
+      "text": "Cloud IAM governance, forensic evidence integrity, and autonomous agent security. Everyone is deploying AI assistants, but almost nobody knows how to sandbox their tool permissions properly! If you solve the Cedarline incident cleanly, my client firms will be lining up to offer consulting contracts.",
+      "cleanText": "Cloud I A M governance, forensic evidence integrity, and autonomous agent security. Everyone is deploying AI assistants, but almost nobody knows how to sandbox their tool permissions properly! If you solve the Cedarline incident cleanly, my client firms will be lining up to offer consulting contracts.",
+      "textHash": "402b621bc35dab23",
+      "fileHash": "6381ca5a1fc9a7d0",
+      "duration": 20.568,
+      "sizeBytes": 123408,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "443d4bc3798c267f": {
+      "file": "/assets/audio/voice/443d4bc3798c267f.mp3",
+      "fileName": "443d4bc3798c267f.mp3",
+      "speaker": "Folake Coker",
+      "speakerId": "npc_folake",
+      "nodeId": "folake_impressed",
+      "text": "I love to see real operational focus. Don’t let me hold you up! When the dust settles at Cedarline, let’s talk career progression.",
+      "cleanText": "I love to see real operational focus. Don’t let me hold you up! When the dust settles at Cedarline, let’s talk career progression.",
+      "textHash": "d39f3c8408bf271e",
+      "fileHash": "443d4bc3798c267f",
+      "duration": 10.152,
+      "sizeBytes": 60912,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "255db77553e8292e": {
+      "file": "/assets/audio/voice/255db77553e8292e.mp3",
+      "fileName": "255db77553e8292e.mp3",
+      "speaker": "Folake Coker",
+      "speakerId": "npc_folake",
+      "nodeId": "folake_exit",
+      "text": "Good luck with the triage, Tade. Keep your standards high!",
+      "cleanText": "Good luck with the triage, Tade. Keep your standards high!",
+      "textHash": "0109644136742ce5",
+      "fileHash": "255db77553e8292e",
+      "duration": 5.064,
+      "sizeBytes": 30384,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "eabae5de68471dda": {
+      "file": "/assets/audio/voice/eabae5de68471dda.mp3",
+      "fileName": "eabae5de68471dda.mp3",
+      "speaker": "Tunde Ojo",
+      "speakerId": "npc_tunde",
+      "nodeId": "tunde_greeting",
+      "text": "Yo. You work across the street at Cedarline, right? Saw their staging DNS flap three times this morning. Don’t tell me: someone connected an autonomous LLM agent directly to corporate file shares without checking the service account permissions?",
+      "cleanText": "Yo. You work across the street at Cedarline, right? Saw their staging DNS flap three times this morning. Don’t tell me: someone connected an autonomous LLM agent directly to corporate file shares without checking the service account permissions?",
+      "textHash": "12a054f5d5730f3b",
+      "fileHash": "eabae5de68471dda",
+      "duration": 15.36,
+      "sizeBytes": 92160,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+5%",
+        "pitch": "+1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "bac4aae9d145711e": {
+      "file": "/assets/audio/voice/bac4aae9d145711e.mp3",
+      "fileName": "bac4aae9d145711e.mp3",
+      "speaker": "Tunde Ojo",
+      "speakerId": "npc_tunde",
+      "nodeId": "tunde_discussion",
+      "text": "Classic rookie blunder! The devs get tired of 403 errors during testing, slap corporate-admin on svc-aster, and promise to \"fix it in sprint 4\". Then someone prompts the agent for payroll and boom—unauthorized SMB exfiltration. Did you guys revoke the token or isolate the subnet yet?",
+      "cleanText": "Classic rookie blunder! The devs get tired of 403 errors during testing, slap corporate-admin on service aster, and promise to \"fix it in sprint 4\". Then someone prompts the agent for payroll and boom—unauthorized S M B exfiltration. Did you guys revoke the token or isolate the subnet yet?",
+      "textHash": "373c4f3227fcc85e",
+      "fileHash": "bac4aae9d145711e",
+      "duration": 19.032,
+      "sizeBytes": 114192,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+5%",
+        "pitch": "+1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "b0a86edc77e136f3": {
+      "file": "/assets/audio/voice/b0a86edc77e136f3.mp3",
+      "fileName": "b0a86edc77e136f3.mp3",
+      "speaker": "Tunde Ojo",
+      "speakerId": "npc_tunde",
+      "nodeId": "tunde_cynical",
+      "text": "Haha, \"confidential.\" That’s what every company says right until their database dump ends up on paste sites. Suit yourself, corporate.",
+      "cleanText": "Haha, \"confidential.\" That’s what every company says right until their database dump ends up on paste sites. Suit yourself, corporate.",
+      "textHash": "b13721f956fdb10e",
+      "fileHash": "b0a86edc77e136f3",
+      "duration": 9.912,
+      "sizeBytes": 59472,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+5%",
+        "pitch": "+1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "223aebecbd935a58": {
+      "file": "/assets/audio/voice/223aebecbd935a58.mp3",
+      "fileName": "223aebecbd935a58.mp3",
+      "speaker": "Tunde Ojo",
+      "speakerId": "npc_tunde",
+      "nodeId": "tunde_respect",
+      "text": "Respect. Most people panic and wipe the container logs, destroying all forensic proof in the process. Good to know Cedarline hired an analyst with real brains. If you ever want to collaborate on ethical bug bounties, find me here by the water.",
+      "cleanText": "Respect. Most people panic and wipe the container logs, destroying all forensic proof in the process. Good to know Cedarline hired an analyst with real brains. If you ever want to collaborate on ethical bug bounties, find me here by the water.",
+      "textHash": "c7678fb7f51a2b5c",
+      "fileHash": "223aebecbd935a58",
+      "duration": 15.456,
+      "sizeBytes": 92736,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+5%",
+        "pitch": "+1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "21f849ea21f53383": {
+      "file": "/assets/audio/voice/21f849ea21f53383.mp3",
+      "fileName": "21f849ea21f53383.mp3",
+      "speaker": "Tunde Ojo",
+      "speakerId": "npc_tunde",
+      "nodeId": "tunde_exit",
+      "text": "Stay frosty, Tade. Watch those IAM scopes.",
+      "cleanText": "Stay frosty, Tade. Watch those I A M scopes.",
+      "textHash": "1f82e3a0e94ac011",
+      "fileHash": "21f849ea21f53383",
+      "duration": 4.584,
+      "sizeBytes": 27504,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+5%",
+        "pitch": "+1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "c124c119091fa26c": {
+      "file": "/assets/audio/voice/c124c119091fa26c.mp3",
+      "fileName": "c124c119091fa26c.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "amina-okonjo",
+      "nodeId": "call_0",
+      "text": "Tade, can you hear me? Secure line established via ZRTP 256-bit AES.",
+      "cleanText": "Tade, can you hear me? Secure line established via Z R T P 256-bit A E S.",
+      "textHash": "d58b36030782f876",
+      "fileHash": "c124c119091fa26c",
+      "duration": 7.728,
+      "sizeBytes": 46368,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "85f37c5af2d253ac": {
+      "file": "/assets/audio/voice/85f37c5af2d253ac.mp3",
+      "fileName": "85f37c5af2d253ac.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "amina-okonjo",
+      "nodeId": "call_1",
+      "text": "Our edge perimeter on Broad Street just logged anomalous egress traffic.",
+      "cleanText": "Our edge perimeter on Broad Street just logged anomalous egress traffic.",
+      "textHash": "eca7529929644bc6",
+      "fileHash": "85f37c5af2d253ac",
+      "duration": 5.16,
+      "sizeBytes": 30960,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "b2ba8c982b6c04e5": {
+      "file": "/assets/audio/voice/b2ba8c982b6c04e5.mp3",
+      "fileName": "b2ba8c982b6c04e5.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "amina-okonjo",
+      "nodeId": "call_2",
+      "text": "Underground chatter suggests a leaked Lagos credential dump is circulating.",
+      "cleanText": "Underground chatter suggests a leaked Lagos credential dump is circulating.",
+      "textHash": "882d9ed3b38fb0a8",
+      "fileHash": "b2ba8c982b6c04e5",
+      "duration": 4.752,
+      "sizeBytes": 28512,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "4de4ee14ee134c8c": {
+      "file": "/assets/audio/voice/4de4ee14ee134c8c.mp3",
+      "fileName": "4de4ee14ee134c8c.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "amina-okonjo",
+      "nodeId": "call_3",
+      "text": "Fire up Tor Browser and check CipherMarket or DeepLeaks immediately.",
+      "cleanText": "Fire up Tor Browser and check CipherMarket or DeepLeaks immediately.",
+      "textHash": "cf7cc0260bce4d44",
+      "fileHash": "4de4ee14ee134c8c",
+      "duration": 4.776,
+      "sizeBytes": 28656,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "e71f78f9ea3aac3c": {
+      "file": "/assets/audio/voice/e71f78f9ea3aac3c.mp3",
+      "fileName": "e71f78f9ea3aac3c.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "amina-okonjo",
+      "nodeId": "call_4",
+      "text": "If Cedarline hashes are compromised, we need to revoke the admin tokens ASAP.",
+      "cleanText": "If Cedarline hashes are compromised, we need to revoke the admin tokens as soon as possible.",
+      "textHash": "08bb320841c690b2",
+      "fileHash": "e71f78f9ea3aac3c",
+      "duration": 6.528,
+      "sizeBytes": 39168,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "d9b060197fa2cf40": {
+      "file": "/assets/audio/voice/d9b060197fa2cf40.mp3",
+      "fileName": "d9b060197fa2cf40.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "amina-okonjo",
+      "nodeId": "call_5",
+      "text": "I'm monitoring the Suricata sensor from the server room. Good luck.",
+      "cleanText": "I'm monitoring the Suricata sensor from the server room. Good luck.",
+      "textHash": "066f1d7cce23b2e9",
+      "fileHash": "d9b060197fa2cf40",
+      "duration": 5.136,
+      "sizeBytes": 30816,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "4800d1b1022ff72a": {
+      "file": "/assets/audio/voice/4800d1b1022ff72a.mp3",
+      "fileName": "4800d1b1022ff72a.mp3",
+      "speaker": "Cipher",
+      "speakerId": "cipher",
+      "nodeId": "call_0",
+      "text": "*electronic audio static* ... Tade, keep your voice down. Relay is 3 hops deep.",
+      "cleanText": "... Tade, keep your voice down. Relay is 3 hops deep.",
+      "textHash": "8625bf15e380ad15",
+      "fileHash": "4800d1b1022ff72a",
+      "duration": 5.112,
+      "sizeBytes": 30672,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-6%",
+        "pitch": "-7Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "874882f0f593160e": {
+      "file": "/assets/audio/voice/874882f0f593160e.mp3",
+      "fileName": "874882f0f593160e.mp3",
+      "speaker": "Cipher",
+      "speakerId": "cipher",
+      "nodeId": "call_1",
+      "text": "You're looking into the Broad Street incident, aren't you? Cedarline isn't telling you everything.",
+      "cleanText": "You're looking into the Broad Street incident, aren't you? Cedarline isn't telling you everything.",
+      "textHash": "13d4c7fe7631d5f2",
+      "fileHash": "874882f0f593160e",
+      "duration": 6.84,
+      "sizeBytes": 41040,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-6%",
+        "pitch": "-7Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "a71f3b4deb678e4d": {
+      "file": "/assets/audio/voice/a71f3b4deb678e4d.mp3",
+      "fileName": "a71f3b4deb678e4d.mp3",
+      "speaker": "Cipher",
+      "speakerId": "cipher",
+      "nodeId": "call_2",
+      "text": "The breach wasn't from a random script kiddie. Someone used internal admin credentials.",
+      "cleanText": "The breach wasn't from a random script kiddie. Someone used internal admin credentials.",
+      "textHash": "3c07dbe3a7452d25",
+      "fileHash": "a71f3b4deb678e4d",
+      "duration": 6.984,
+      "sizeBytes": 41904,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-6%",
+        "pitch": "-7Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "6d8b165c88439371": {
+      "file": "/assets/audio/voice/6d8b165c88439371.mp3",
+      "fileName": "6d8b165c88439371.mp3",
+      "speaker": "Cipher",
+      "speakerId": "cipher",
+      "nodeId": "call_3",
+      "text": "I posted the unredacted Aster AI memory dump onto DeepLeaks (deepleaks.onion).",
+      "cleanText": "I posted the unredacted Aster AI memory dump onto DeepLeaks (deepleaks.onion).",
+      "textHash": "2d47c3a18afa97d1",
+      "fileHash": "6d8b165c88439371",
+      "duration": 6.096,
+      "sizeBytes": 36576,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-6%",
+        "pitch": "-7Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "a67e32ef2308e5fb": {
+      "file": "/assets/audio/voice/a67e32ef2308e5fb.mp3",
+      "fileName": "a67e32ef2308e5fb.mp3",
+      "speaker": "Cipher",
+      "speakerId": "cipher",
+      "nodeId": "call_4",
+      "text": "Check CipherMarket too if you need targeted wordlists or exploit analysis scripts.",
+      "cleanText": "Check CipherMarket too if you need targeted wordlists or exploit analysis scripts.",
+      "textHash": "7fb0e27b6a84faa5",
+      "fileHash": "a67e32ef2308e5fb",
+      "duration": 5.616,
+      "sizeBytes": 33696,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-6%",
+        "pitch": "-7Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "f3c1631b8234d200": {
+      "file": "/assets/audio/voice/f3c1631b8234d200.mp3",
+      "fileName": "f3c1631b8234d200.mp3",
+      "speaker": "Cipher",
+      "speakerId": "cipher",
+      "nodeId": "call_5",
+      "text": "Watch your back on the corporate network. Disconnecting now.",
+      "cleanText": "Watch your back on the corporate network. Disconnecting now.",
+      "textHash": "33bcd8a99448055a",
+      "fileHash": "f3c1631b8234d200",
+      "duration": 5.016,
+      "sizeBytes": 30096,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-6%",
+        "pitch": "-7Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    }
+  },
+  "bySpeakerAndHash": {
+    "npc_amina:afaa664284d4b984": {
+      "file": "/assets/audio/voice/cab7717aac3aebd8.mp3",
+      "fileName": "cab7717aac3aebd8.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_greeting",
+      "text": "Tade, welcome to the SOC. We have an active incident underway. Our telemetry flagged unauthorized SMB file queries originating from app-portal-01 targeting filesrv-01 at 07:42. The queries came from svc-aster, our AI assistant service account. We need you on this immediately.",
+      "cleanText": "Tade, welcome to the sock. We have an active incident underway. Our telemetry flagged unauthorized S M B file queries originating from app portal 0 1 targeting file server 0 1 at 07:42. The queries came from service aster, our AI assistant service account. We need you on this immediately.",
+      "textHash": "afaa664284d4b984",
+      "fileHash": "cab7717aac3aebd8",
+      "duration": 22.2,
+      "sizeBytes": 133200,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:b152825fde91f885": {
+      "file": "/assets/audio/voice/0d655e729f3afc96.mp3",
+      "fileName": "0d655e729f3afc96.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_returning",
+      "text": "Good to see you back, Tade. How is the investigation progressing on app-portal-01?",
+      "cleanText": "Good to see you back, Tade. How is the investigation progressing on app portal 0 1?",
+      "textHash": "b152825fde91f885",
+      "fileHash": "0d655e729f3afc96",
+      "duration": 2.04,
+      "sizeBytes": 12240,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:2c7908504e4b5517": {
+      "file": "/assets/audio/voice/4bf6f60b614e65f4.mp3",
+      "fileName": "4bf6f60b614e65f4.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_evidence_dilemma",
+      "text": "Let me review the SHA-256 hash... Incredible forensic work, Tade. This configuration snapshot is irrefutable: svc-aster was given corporate-admin with wildcard scopes [\"*\"]. This wasn't a bug; someone intentionally bypassed policy. We have two ways to handle this. We can contain it quietly to protect Cedarline's commercial standing, or escalate it formally to CRCII regulators.",
+      "cleanText": "Let me review the SHA-256 hash... Incredible forensic work, Tade. This configuration snapshot is irrefutable: service aster was given corporate-admin with wildcard scopes . This wasn't a bug; someone intentionally bypassed policy. We have two ways to handle this. We can contain it quietly to protect Cedarline's commercial standing, or escalate it formally to CRCII regulators.",
+      "textHash": "2c7908504e4b5517",
+      "fileHash": "4bf6f60b614e65f4",
+      "duration": 28.44,
+      "sizeBytes": 170640,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:d5c1814a6b1a9caf": {
+      "file": "/assets/audio/voice/e082066a05d532cc.mp3",
+      "fileName": "e082066a05d532cc.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_quiet_containment_ack",
+      "text": "Agreed. Head back to your workstation terminal. Execute service containment and reassign the policy to role:kb-assistant. I will brief the CISO that our SOC handled this before any data leaked.",
+      "cleanText": "Agreed. Head back to your workstation terminal. Execute service containment and reassign the policy to role:kb-assistant. I will brief the CISO that our sock handled this before any data leaked.",
+      "textHash": "d5c1814a6b1a9caf",
+      "fileHash": "e082066a05d532cc",
+      "duration": 14.064,
+      "sizeBytes": 84384,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:0ca3f38916da0380": {
+      "file": "/assets/audio/voice/e3bea1e68b5d5d30.mp3",
+      "fileName": "e3bea1e68b5d5d30.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_regulatory_disclosure_ack",
+      "text": "You have courage, Tade. Broad Street executives won't like it, but CRCII and the traders union will back us up with this cryptographic proof in hand. Prepare your findings report; we will submit it through official channels.",
+      "cleanText": "You have courage, Tade. Broad Street executives won't like it, but CRCII and the traders union will back us up with this cryptographic proof in hand. Prepare your findings report; we will submit it through official channels.",
+      "textHash": "0ca3f38916da0380",
+      "fileHash": "e3bea1e68b5d5d30",
+      "duration": 15.744,
+      "sizeBytes": 94464,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:6997c6bc3352b8e2": {
+      "file": "/assets/audio/voice/8cd9a7ee27e3eb99.mp3",
+      "fileName": "8cd9a7ee27e3eb99.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_career_guidance",
+      "text": "To qualify for Junior SOC Analyst, you must demonstrate real execution across at least 2 verified incident tickets, achieve 100 Career XP, and raise your Log Analysis, Network Fundamentals, and Security Governance skills to Level 2. Once eligible, you can submit your advancement request through your Workstation Career Portal.",
+      "cleanText": "To qualify for Junior sock Analyst, you must demonstrate real execution across at least 2 verified incident tickets, achieve 100 Career XP, and raise your Log Analysis, Network Fundamentals, and Security Governance skills to Level 2. Once eligible, you can submit your advancement request through your Workstation Career Portal.",
+      "textHash": "6997c6bc3352b8e2",
+      "fileHash": "8cd9a7ee27e3eb99",
+      "duration": 21.504,
+      "sizeBytes": 129024,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:8d5c53ad624be849": {
+      "file": "/assets/audio/voice/7ae454c51e57aeda.mp3",
+      "fileName": "7ae454c51e57aeda.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_job_offer_triage",
+      "text": "Yes! We have an internal Cedarline ticket: \"Triage svc-aster Credential Spike\". You will need to inspect authentication logs and record the unauthorized service account anomaly. It pays ₦750.00 upon verified completion.",
+      "cleanText": "Yes! We have an internal Cedarline ticket: \"Triage service aster Credential Spike\". You will need to inspect authentication logs and record the unauthorized service account anomaly. It pays ₦750.00 upon verified completion.",
+      "textHash": "8d5c53ad624be849",
+      "fileHash": "7ae454c51e57aeda",
+      "duration": 17.4,
+      "sizeBytes": 104400,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:82aef83721e93afb": {
+      "file": "/assets/audio/voice/2662e6fd06c77c48.mp3",
+      "fileName": "2662e6fd06c77c48.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_job_triage_feedback",
+      "text": "Outstanding work on that ticket, Tade. Your log analysis was clean and the findings matched our authoritative telemetry. Keep this up and a promotion to Junior SOC Analyst will be well within reach.",
+      "cleanText": "Outstanding work on that ticket, Tade. Your log analysis was clean and the findings matched our authoritative telemetry. Keep this up and a promotion to Junior sock Analyst will be well within reach.",
+      "textHash": "82aef83721e93afb",
+      "fileHash": "2662e6fd06c77c48",
+      "duration": 13.704,
+      "sizeBytes": 82224,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:fe3e125e75b8ef0d": {
+      "file": "/assets/audio/voice/5396887685e4af68.mp3",
+      "fileName": "5396887685e4af68.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_priorities",
+      "text": "First: preserve digital forensic evidence before modifying anything. Inspect the suspicious auth logs and snapshot Aster’s configuration. Second: execute containment to isolate the host or revoke rogue access. Third: remediate the IAM policy to kb-assistant so legitimate documentation queries continue while file share access is revoked.",
+      "cleanText": "First: preserve digital forensic evidence before modifying anything. Inspect the suspicious auth logs and snapshot Aster’s configuration. Second: execute containment to isolate the host or revoke rogue access. Third: remediate the I A M policy to kb-assistant so legitimate documentation queries continue while file share access is revoked.",
+      "textHash": "fe3e125e75b8ef0d",
+      "fileHash": "5396887685e4af68",
+      "duration": 23.712,
+      "sizeBytes": 142272,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:7ae54b76efbdb412": {
+      "file": "/assets/audio/voice/e1a1c0925b2da1f2.mp3",
+      "fileName": "e1a1c0925b2da1f2.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_marcus_hint",
+      "text": "Marcus configured the svc-aster credentials three weeks ago during our sprint crunch. Be gentle with him, Tade. He is terrified management will make him the scapegoat. If you approach him constructively, he will tell you the truth.",
+      "cleanText": "Marcus configured the service aster credentials three weeks ago during our sprint crunch. Be gentle with him, Tade. He is terrified management will make him the scapegoat. If you approach him constructively, he will tell you the truth.",
+      "textHash": "7ae54b76efbdb412",
+      "fileHash": "e1a1c0925b2da1f2",
+      "duration": 16.296,
+      "sizeBytes": 97776,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:c2e7ad59d023f1dc": {
+      "file": "/assets/audio/voice/d15a9bd498c0280b.mp3",
+      "fileName": "d15a9bd498c0280b.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_tools_guide",
+      "text": "On your workstation, use 'netmap hosts' to discover network topology, 'svcscan inspect app-portal-01' to check running services, 'logview recent' to review authentication telemetry, and 'evidence list' to inspect forensic artifacts. The Incident Portal app will guide your formal reporting.",
+      "cleanText": "On your workstation, use 'netmap hosts' to discover network topology, 'svcscan inspect app portal 0 1' to check running services, 'logview recent' to review authentication telemetry, and 'evidence list' to inspect forensic artifacts. The Incident Portal app will guide your formal reporting.",
+      "textHash": "c2e7ad59d023f1dc",
+      "fileHash": "d15a9bd498c0280b",
+      "duration": 16.68,
+      "sizeBytes": 100080,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:370040aa6e6949eb": {
+      "file": "/assets/audio/voice/281af30852d08aa4.mp3",
+      "fileName": "281af30852d08aa4.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_remediation_progress",
+      "text": "I saw your containment and remediation telemetry come through the console. Great work isolating the excessive role! Now run the automated verification suite to prove file share access is blocked while documentation search remains healthy.",
+      "cleanText": "I saw your containment and remediation telemetry come through the console. Great work isolating the excessive role! Now run the automated verification suite to prove file share access is blocked while documentation search remains healthy.",
+      "textHash": "370040aa6e6949eb",
+      "fileHash": "281af30852d08aa4",
+      "duration": 11.04,
+      "sizeBytes": 66240,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:2fc218278c81d247": {
+      "file": "/assets/audio/voice/cd361e84a560dba9.mp3",
+      "fileName": "cd361e84a560dba9.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_mission_completed",
+      "text": "Outstanding work on the Aster Incident, Tade! Your formal report was approved by executive leadership, and the bounty payout was credited to your account. You handled both the technical investigation and team communication with distinction.",
+      "cleanText": "Outstanding work on the Aster Incident, Tade! Your formal report was approved by executive leadership, and the bounty payout was credited to your account. You handled both the technical investigation and team communication with distinction.",
+      "textHash": "2fc218278c81d247",
+      "fileHash": "cd361e84a560dba9",
+      "duration": 14.52,
+      "sizeBytes": 87120,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:0a77523c1b9fd352": {
+      "file": "/assets/audio/voice/ca3d7ae797ebc950.mp3",
+      "fileName": "ca3d7ae797ebc950.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_next_steps_briefing",
+      "text": "You have proven yourself under real enterprise pressure, Tade. Here is what I recommend for your next play:\n\n1. 🌊 Marina Seawall: Tunde Bakare from the 0xLagos syndicate is out by the railings. He researches emerging attack vectors and has independent bug bounties.\n2. 🛒 Balogun Market: Mama Nkechi runs the electronics union stall. She is a vital source of street-level intelligence and hardware adapters.\n3. ☕ Broad Street: Folake Davies from Eko Tech Partners scouts senior talent at the sidewalk cafe. She has lucrative fintech consulting referrals.\n4. 💼 Workstation Desktop: Launch the Career & Market app to claim newly unlocked junior SOC tickets and certifications.\n\nTake time to explore Lagos Island and build your network.",
+      "cleanText": "You have proven yourself under real enterprise pressure, Tade. Here is what I recommend for your next play: 1. 🌊 Marina Seawall: Tunde Bakare from the 0xLagos syndicate is out by the railings. He researches emerging attack vectors and has independent bug bounties. 2. 🛒 Balogun Market: Mama Nkechi runs the electronics union stall. She is a vital source of street-level intelligence and hardware adapters. 3. ☕ Broad Street: Folake Davies from Eko Tech Partners scouts senior talent at the sidewalk cafe. She has lucrative fintech consulting referrals. 4. 💼 Workstation Desktop: Launch the Career & Market app to claim newly unlocked junior sock tickets and certifications. Take time to explore Lagos Island and build your network.",
+      "textHash": "0a77523c1b9fd352",
+      "fileHash": "ca3d7ae797ebc950",
+      "duration": 12.24,
+      "sizeBytes": 73440,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_amina:cefce110651419e9": {
+      "file": "/assets/audio/voice/c1b096bea3b613c2.mp3",
+      "fileName": "c1b096bea3b613c2.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "npc_amina",
+      "nodeId": "amina_exit_workstation",
+      "text": "Keep your comms open and notify me if telemetry shifts. Good hunting.",
+      "cleanText": "Keep your comms open and notify me if telemetry shifts. Good hunting.",
+      "textHash": "cefce110651419e9",
+      "fileHash": "c1b096bea3b613c2",
+      "duration": 5.88,
+      "sizeBytes": 35280,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_marcus:850eae5f1ceaf32b": {
+      "file": "/assets/audio/voice/0b2e4d438d8b09f9.mp3",
+      "fileName": "0b2e4d438d8b09f9.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_greeting",
+      "text": "Tade! Hey... are you here about the alert? Look, I... I’ve just been doing routine storage maintenance on filesrv-01. Everything is fine here! Why is everyone looking over at my server rack?",
+      "cleanText": "Tade! Hey... are you here about the alert? Look, I... I’ve just been doing routine storage maintenance on file server 0 1. Everything is fine here! Why is everyone looking over at my server rack?",
+      "textHash": "850eae5f1ceaf32b",
+      "fileHash": "0b2e4d438d8b09f9",
+      "duration": 15,
+      "sizeBytes": 90000,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_marcus:b6f33c527dbb50ff": {
+      "file": "/assets/audio/voice/40aa6f5a968594e4.mp3",
+      "fileName": "40aa6f5a968594e4.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_relief",
+      "text": "God... thank you, Tade. You don’t know what kind of pressure executive management put on us. Aster kept throwing 403 permission errors on search indexes three nights before launch. I... I gave svc-aster the corporate-admin role just so the demo would work. I swear I meant to revoke it the next Monday, but then the Lagos fiber outage happened and I forgot!",
+      "cleanText": "God... thank you, Tade. You don’t know what kind of pressure executive management put on us. Aster kept throwing 403 permission errors on search indexes three nights before launch. I... I gave service aster the corporate-admin role just so the demo would work. I swear I meant to revoke it the next Monday, but then the Lagos fiber outage happened and I forgot!",
+      "textHash": "b6f33c527dbb50ff",
+      "fileHash": "40aa6f5a968594e4",
+      "duration": 16.56,
+      "sizeBytes": 99360,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_marcus:35ff8247a287632b": {
+      "file": "/assets/audio/voice/e128a0bd5b6dc0c1.mp3",
+      "fileName": "e128a0bd5b6dc0c1.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_memo_revealed",
+      "text": "Yes! I archived the internal emergency order chat export into my private notes under artifact EVD-2026-004. VP Femi Martins explicitly said: \"Grant Aster whatever permissions it needs to complete the investor demo by 09:00, or clean out your desk.\" Take this hash—use it when you submit your investigation so truth prevails.",
+      "cleanText": "Yes! I archived the internal emergency order chat export into my private notes under artifact EVD-2026-004. VP Femi Martins explicitly said: \"Grant Aster whatever permissions it needs to complete the investor demo by 09:00, or clean out your desk.\" Take this hash—use it when you submit your investigation so truth prevails.",
+      "textHash": "35ff8247a287632b",
+      "fileHash": "e128a0bd5b6dc0c1",
+      "duration": 22.488,
+      "sizeBytes": 134928,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_marcus:fe2fea121c23acd5": {
+      "file": "/assets/audio/voice/afc81ca80dc5c586.mp3",
+      "fileName": "afc81ca80dc5c586.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_log_tip",
+      "text": "Check LOG-2026-107B in the security log audit! It shows the exact timestamp Aster queried filesrv-01 over SMB port 445 searching for confidential payroll spreadsheets. Once you remediate Aster’s role back to kb-assistant, that port access will be blocked.",
+      "cleanText": "Check LOG-2026-107B in the security log audit! It shows the exact timestamp Aster queried file server 0 1 over S M B port 445 searching for confidential payroll spreadsheets. Once you remediate Aster’s role back to kb-assistant, that port access will be blocked.",
+      "textHash": "fe2fea121c23acd5",
+      "fileHash": "afc81ca80dc5c586",
+      "duration": 8.52,
+      "sizeBytes": 51120,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_marcus:c6095770739b8fd4": {
+      "file": "/assets/audio/voice/deba556135347b48.mp3",
+      "fileName": "deba556135347b48.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_defensive_node",
+      "text": "I followed the deployment checklist signed off by the engineering lead! If there’s an issue, talk to Dr. Chen or Femi Martins. I don’t have time to answer interrogations when my servers need maintenance.",
+      "cleanText": "I followed the deployment checklist signed off by the engineering lead! If there’s an issue, talk to Dr. Chen or Femi Martins. I don’t have time to answer interrogations when my servers need maintenance.",
+      "textHash": "c6095770739b8fd4",
+      "fileHash": "deba556135347b48",
+      "duration": 12.36,
+      "sizeBytes": 74160,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_marcus:20701c168c72d566": {
+      "file": "/assets/audio/voice/4435ab2a96b3257b.mp3",
+      "fileName": "4435ab2a96b3257b.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_technical_info",
+      "text": "svc-aster runs inside a container on app-portal-01 (10.0.4.15). It has network routes to both the corporate doc repository and the internal file server subnet (10.0.4.0/24). If its token has wildcard permissions, it can hit anything on that segment.",
+      "cleanText": "service aster runs inside a container on app portal 0 1 (10.0.4.15). It has network routes to both the corporate doc repository and the internal file server subnet (10.0.4.0/24). If its token has wildcard permissions, it can hit anything on that segment.",
+      "textHash": "20701c168c72d566",
+      "fileHash": "4435ab2a96b3257b",
+      "duration": 11.52,
+      "sizeBytes": 69120,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_marcus:dd61bc15c59915dd": {
+      "file": "/assets/audio/voice/0d3b88bdda08ba49.mp3",
+      "fileName": "0d3b88bdda08ba49.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_post_confession",
+      "text": "Hey Tade. I’m monitoring the container restart. Thanks again for not throwing me under the bus earlier. Did you manage to revoke that wildcard policy on app-portal-01?",
+      "cleanText": "Hey Tade. I’m monitoring the container restart. Thanks again for not throwing me under the bus earlier. Did you manage to revoke that wildcard policy on app portal 0 1?",
+      "textHash": "dd61bc15c59915dd",
+      "fileHash": "0d3b88bdda08ba49",
+      "duration": 8.64,
+      "sizeBytes": 51840,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_marcus:ef73bcfe9a2ff83a": {
+      "file": "/assets/audio/voice/4c8f5d977ac63d04.mp3",
+      "fileName": "4c8f5d977ac63d04.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_guarded",
+      "text": "I told you, Tade, speak to management if you have questions. I’m doing my job here.",
+      "cleanText": "I told you, Tade, speak to management if you have questions. I’m doing my job here.",
+      "textHash": "ef73bcfe9a2ff83a",
+      "fileHash": "4c8f5d977ac63d04",
+      "duration": 6.456,
+      "sizeBytes": 38736,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_marcus:d67202656e2ed7db": {
+      "file": "/assets/audio/voice/84da5c8cf0233ff9.mp3",
+      "fileName": "84da5c8cf0233ff9.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_exit_friendly",
+      "text": "I owe you one, Tade. If you need any server logs exported, just let me know.",
+      "cleanText": "I owe you one, Tade. If you need any server logs exported, just let me know.",
+      "textHash": "d67202656e2ed7db",
+      "fileHash": "84da5c8cf0233ff9",
+      "duration": 3.36,
+      "sizeBytes": 20160,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_marcus:7a7cc82517930efb": {
+      "file": "/assets/audio/voice/852d9cf05b8cb40e.mp3",
+      "fileName": "852d9cf05b8cb40e.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_exit_neutral",
+      "text": "Let me know what you find in the logs.",
+      "cleanText": "Let me know what you find in the logs.",
+      "textHash": "7a7cc82517930efb",
+      "fileHash": "852d9cf05b8cb40e",
+      "duration": 2.712,
+      "sizeBytes": 16272,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_marcus:d84405b5e5194e25": {
+      "file": "/assets/audio/voice/f3d22509cce802b8.mp3",
+      "fileName": "f3d22509cce802b8.mp3",
+      "speaker": "Marcus Adebayo",
+      "speakerId": "npc_marcus",
+      "nodeId": "marcus_exit_guarded",
+      "text": "Right. I have work to do.",
+      "cleanText": "Right. I have work to do.",
+      "textHash": "d84405b5e5194e25",
+      "fileHash": "f3d22509cce802b8",
+      "duration": 3.288,
+      "sizeBytes": 19728,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+4%",
+        "pitch": "+3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_elena:89917c8b412c4627": {
+      "file": "/assets/audio/voice/286128825dc92f01.mp3",
+      "fileName": "286128825dc92f01.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_greeting",
+      "text": "Hello. I assume you are the security analyst looking into Aster’s query anomalies? Before anyone jumps to conclusions: Aster’s model architecture is sound. The issue is how external inputs map to tool calls when permissions are unconstrained.",
+      "cleanText": "Hello. I assume you are the security analyst looking into Aster’s query anomalies? Before anyone jumps to conclusions: Aster’s model architecture is sound. The issue is how external inputs map to tool calls when permissions are unconstrained.",
+      "textHash": "89917c8b412c4627",
+      "fileHash": "286128825dc92f01",
+      "duration": 17.016,
+      "sizeBytes": 102096,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_elena:5b05278eba71a59b": {
+      "file": "/assets/audio/voice/00c4994fbf86c04b.mp3",
+      "fileName": "00c4994fbf86c04b.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_returning",
+      "text": "Back again, Tade. Have you had a chance to inspect Aster’s tool permissions in the terminal?",
+      "cleanText": "Back again, Tade. Have you had a chance to inspect Aster’s tool permissions in the terminal?",
+      "textHash": "5b05278eba71a59b",
+      "fileHash": "00c4994fbf86c04b",
+      "duration": 6.624,
+      "sizeBytes": 39744,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_elena:33d878ce40dd5358": {
+      "file": "/assets/audio/voice/deefcddd53dc3e53.mp3",
+      "fileName": "deefcddd53dc3e53.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_explain_tools",
+      "text": "Aster runs an agent loop: it receives user queries, parses intents, and autonomously generates API calls. Its intended role is kb-assistant with docs:read and kb:search scopes. But if the operating environment gives its service account wildcard privileges, the model will faithfully execute whatever search queries its reasoning tree explores—including scanning SMB network shares.",
+      "cleanText": "Aster runs an agent loop: it receives user queries, parses intents, and autonomously generates API calls. Its intended role is kb-assistant with docs:read and kb:search scopes. But if the operating environment gives its service account wildcard privileges, the model will faithfully execute whatever search queries its reasoning tree explores—including scanning S M B network shares.",
+      "textHash": "33d878ce40dd5358",
+      "fileHash": "deefcddd53dc3e53",
+      "duration": 26.04,
+      "sizeBytes": 156240,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_elena:57cefd2fe9b65279": {
+      "file": "/assets/audio/voice/91a11ebbc688994a.mp3",
+      "fileName": "91a11ebbc688994a.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_explain_injection",
+      "text": "Precisely. An ambiguous prompt like \"find all Q3 financial compensation reports\" caused Aster’s semantic planner to branch out beyond knowledge base articles into corporate file shares. But the fundamental defense is never prompt filtering alone—it is hard operating system authorization boundaries.",
+      "cleanText": "Precisely. An ambiguous prompt like \"find all Q3 financial compensation reports\" caused Aster’s semantic planner to branch out beyond knowledge base articles into corporate file shares. But the fundamental defense is never prompt filtering alone—it is hard operating system authorization boundaries.",
+      "textHash": "57cefd2fe9b65279",
+      "fileHash": "91a11ebbc688994a",
+      "duration": 19.584,
+      "sizeBytes": 117504,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_elena:6132423976c98461": {
+      "file": "/assets/audio/voice/6272f44664f0ab1a.mp3",
+      "fileName": "6272f44664f0ab1a.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_defensive",
+      "text": "Every technology poses risk when operational controls are neglected. A database administrator with root access can drop tables—we don’t ban databases, we implement access control. The same applies to autonomous agents.",
+      "cleanText": "Every technology poses risk when operational controls are neglected. A database administrator with root access can drop tables—we don’t ban databases, we implement access control. The same applies to autonomous agents.",
+      "textHash": "6132423976c98461",
+      "fileHash": "6272f44664f0ab1a",
+      "duration": 15.768,
+      "sizeBytes": 94608,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_elena:04e30ff4a0708728": {
+      "file": "/assets/audio/voice/7575359e20a594ca.mp3",
+      "fileName": "7575359e20a594ca.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_remediation_advice",
+      "text": "When you apply remediation, assign role \"kb-assistant\", revoke SMB port access, revoke database access, and restrict scopes to docs:read and kb:search. That will keep Aster operating safely for internal documentation without touching confidential financial servers.",
+      "cleanText": "When you apply remediation, assign role \"kb-assistant\", revoke S M B port access, revoke database access, and restrict scopes to docs:read and kb:search. That will keep Aster operating safely for internal documentation without touching confidential financial servers.",
+      "textHash": "04e30ff4a0708728",
+      "fileHash": "7575359e20a594ca",
+      "duration": 17.64,
+      "sizeBytes": 105840,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_elena:6d617f7f8463362b": {
+      "file": "/assets/audio/voice/d27d0da8968c0bbf.mp3",
+      "fileName": "d27d0da8968c0bbf.mp3",
+      "speaker": "Dr. Elena Chen",
+      "speakerId": "npc_elena",
+      "nodeId": "elena_exit",
+      "text": "Let me know when verification passes. I want to see the audit logs myself.",
+      "cleanText": "Let me know when verification passes. I want to see the audit logs myself.",
+      "textHash": "6d617f7f8463362b",
+      "fileHash": "d27d0da8968c0bbf",
+      "duration": 6.072,
+      "sizeBytes": 36432,
+      "voice": "en-US-JennyNeural",
+      "prosody": {
+        "rate": "-2%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_femi:57d8ff73f2800e1a": {
+      "file": "/assets/audio/voice/b0c9053e0249659e.mp3",
+      "fileName": "b0c9053e0249659e.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_greeting",
+      "text": "You’re Vance, the contract analyst? Good. I don’t have time for sugar-coating: Cedarline has three Tier-1 commercial banking integrations running through this infrastructure. If this incident causes customer data leakage, our SLA penalties will be catastrophic. What is your status?",
+      "cleanText": "You’re Vance, the contract analyst? Good. I don’t have time for sugar-coating: Cedarline has three Tier-1 commercial banking integrations running through this infrastructure. If this incident causes customer data leakage, our SLA penalties will be catastrophic. What is your status?",
+      "textHash": "57d8ff73f2800e1a",
+      "fileHash": "b0c9053e0249659e",
+      "duration": 19.368,
+      "sizeBytes": 116208,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_femi:04e02deb972b12f1": {
+      "file": "/assets/audio/voice/99dcaaf715179bbb.mp3",
+      "fileName": "99dcaaf715179bbb.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_returning",
+      "text": "Vance. Tell me you have progress to report. The audit committee is asking for an incident brief before noon.",
+      "cleanText": "Vance. Tell me you have progress to report. The audit committee is asking for an incident brief before noon.",
+      "textHash": "04e02deb972b12f1",
+      "fileHash": "99dcaaf715179bbb",
+      "duration": 7.944,
+      "sizeBytes": 47664,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_femi:a21aeb1dbac3f5a4": {
+      "file": "/assets/audio/voice/f493318b200a6f48.mp3",
+      "fileName": "f493318b200a6f48.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_job_offer_port_audit",
+      "text": "Marina Logistics has a contract listing right now: \"Subnet Port & Service Audit\". We need an analyst to run netmap across 192.168.10.0/24 and catalog our exposed database service. It pays ₦1,200.00 in verified funds.",
+      "cleanText": "Marina Logistics has a contract listing right now: \"Subnet Port & Service Audit\". We need an analyst to run netmap across 192.168.10.0/24 and catalog our exposed database service. It pays ₦1,200.00 in verified funds.",
+      "textHash": "a21aeb1dbac3f5a4",
+      "fileHash": "f493318b200a6f48",
+      "duration": 3.48,
+      "sizeBytes": 20880,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_femi:fb99bb70d62bc92d": {
+      "file": "/assets/audio/voice/dd552041c833e131.mp3",
+      "fileName": "dd552041c833e131.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_port_audit_feedback",
+      "text": "Excellent work on the Marina audit, Vance. Clean port inventory, no service disruption, and verifiable telemetry. Your ₦1,200.00 contract payout was processed in full.",
+      "cleanText": "Excellent work on the Marina audit, Vance. Clean port inventory, no service disruption, and verifiable telemetry. Your ₦1,200.00 contract payout was processed in full.",
+      "textHash": "fb99bb70d62bc92d",
+      "fileHash": "dd552041c833e131",
+      "duration": 13.248,
+      "sizeBytes": 79488,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_femi:214477b0119223f5": {
+      "file": "/assets/audio/voice/271dd9632453ab11.mp3",
+      "fileName": "271dd9632453ab11.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_reassured",
+      "text": "Good. Keep the impact contained. If you resolve this without disrupting production services and deliver a solid incident report, Cedarline pays our bounty bonuses on time, and there will be further high-value contracts on the table.",
+      "cleanText": "Good. Keep the impact contained. If you resolve this without disrupting production services and deliver a solid incident report, Cedarline pays our bounty bonuses on time, and there will be further high-value contracts on the table.",
+      "textHash": "214477b0119223f5",
+      "fileHash": "271dd9632453ab11",
+      "duration": 14.184,
+      "sizeBytes": 85104,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_femi:113db5c0677cd004": {
+      "file": "/assets/audio/voice/029c204fc7a3a1f1.mp3",
+      "fileName": "029c204fc7a3a1f1.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_irritated",
+      "text": "Do not talk about shutting down production servers unless you have hard forensic evidence! Find the root cause, isolate the specific service account, and keep Cedarline operational. Get back to work.",
+      "cleanText": "Do not talk about shutting down production servers unless you have hard forensic evidence! Find the root cause, isolate the specific service account, and keep Cedarline operational. Get back to work.",
+      "textHash": "113db5c0677cd004",
+      "fileHash": "029c204fc7a3a1f1",
+      "duration": 2.4,
+      "sizeBytes": 14400,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_femi:0bffbd6d42f2cca7": {
+      "file": "/assets/audio/voice/f8992f971c7eea97.mp3",
+      "fileName": "f8992f971c7eea97.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_completed",
+      "text": "Vance, I read your final Incident Report. Clean triage, accurate root-cause identification, and zero unplanned downtime. That is what professional cybersecurity work looks like. Keep this up and you will have a long future in Lagos tech.",
+      "cleanText": "Vance, I read your final Incident Report. Clean triage, accurate root-cause identification, and zero unplanned downtime. That is what professional cybersecurity work looks like. Keep this up and you will have a long future in Lagos tech.",
+      "textHash": "0bffbd6d42f2cca7",
+      "fileHash": "f8992f971c7eea97",
+      "duration": 15.936,
+      "sizeBytes": 95616,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_femi:af12dc4743807db9": {
+      "file": "/assets/audio/voice/c17fe0de8a6591ff.mp3",
+      "fileName": "c17fe0de8a6591ff.mp3",
+      "speaker": "Femi Sowande",
+      "speakerId": "npc_femi",
+      "nodeId": "femi_exit",
+      "text": "Keep me informed.",
+      "cleanText": "Keep me informed.",
+      "textHash": "af12dc4743807db9",
+      "fileHash": "c17fe0de8a6591ff",
+      "duration": 1.968,
+      "sizeBytes": 11808,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+2%",
+        "pitch": "-3Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_nkechi:d6fb49a3387860ce": {
+      "file": "/assets/audio/voice/d2b9b1ed292fb2dd.mp3",
+      "fileName": "d2b9b1ed292fb2dd.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_greeting",
+      "text": "Kedu! Welcome, my brother! You need phone charger, HDMI cable, or fresh cold Chapman drink? You look like all those tech boys from Broad Street who stare at computer screen until their eyes turn red!",
+      "cleanText": "Kedu! Welcome, my brother! You need phone charger, HDMI cable, or fresh cold Chapman drink? You look like all those tech boys from Broad Street who stare at computer screen until their eyes turn red!",
+      "textHash": "d6fb49a3387860ce",
+      "fileHash": "d2b9b1ed292fb2dd",
+      "duration": 14.784,
+      "sizeBytes": 88704,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "npc_nkechi:791006ced5b1c55b": {
+      "file": "/assets/audio/voice/1f2b7e96c0ea8c29.mp3",
+      "fileName": "1f2b7e96c0ea8c29.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_chat",
+      "text": "Eh-heh! You do computer security? God bless you, oh! Let me ask you something: this morning, all the traders in Balogun received SMS saying our business bank accounts will be blocked unless we click one strange link and input our BVN! I told Iya Basira not to touch it, but she is panicking!",
+      "cleanText": "Eh-heh! You do computer security? God bless you, oh! Let me ask you something: this morning, all the traders in Balogun received SMS saying our business bank accounts will be blocked unless we click one strange link and input our BVN! I told Iya Basira not to touch it, but she is panicking!",
+      "textHash": "791006ced5b1c55b",
+      "fileHash": "1f2b7e96c0ea8c29",
+      "duration": 10.92,
+      "sizeBytes": 65520,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "npc_nkechi:776ccfe0b9423472": {
+      "file": "/assets/audio/voice/f0b9a4cba659042e.mp3",
+      "fileName": "f0b9a4cba659042e.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_grateful",
+      "text": "I knew it! Ah, thank you so much, Tade! I will tell the market security committee right now. You see why education is good? Anytime you need anything from my stall, you have a friend in Balogun market!",
+      "cleanText": "I knew it! Ah, thank you so much, Tade! I will tell the market security committee right now. You see why education is good? Anytime you need anything from my stall, you have a friend in Balogun market!",
+      "textHash": "776ccfe0b9423472",
+      "fileHash": "f0b9a4cba659042e",
+      "duration": 15.336,
+      "sizeBytes": 92016,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "npc_nkechi:b8fe72e7640df58d": {
+      "file": "/assets/audio/voice/c52b81c723d946cd.mp3",
+      "fileName": "c52b81c723d946cd.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_disappointed",
+      "text": "Ah, so you are too big for ordinary people? No problem, big man. Go back to your corporate building.",
+      "cleanText": "Ah, so you are too big for ordinary people? No problem, big man. Go back to your corporate building.",
+      "textHash": "b8fe72e7640df58d",
+      "fileHash": "c52b81c723d946cd",
+      "duration": 8.184,
+      "sizeBytes": 49104,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "npc_nkechi:674137baaba93a72": {
+      "file": "/assets/audio/voice/ce23ba223365e1df.mp3",
+      "fileName": "ce23ba223365e1df.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_street_news",
+      "text": "Well, around 8:00 AM, one young man from Cedarline—that junior technician Marcus—ran outside to buy pure water with his hands shaking like leaf! He was murmuring about server passwords. I hope you people haven’t broken the internet!",
+      "cleanText": "Well, around 8:00 AM, one young man from Cedarline—that junior technician Marcus—ran outside to buy pure water with his hands shaking like leaf! He was murmuring about server passwords. I hope you people haven’t broken the internet!",
+      "textHash": "674137baaba93a72",
+      "fileHash": "ce23ba223365e1df",
+      "duration": 15.408,
+      "sizeBytes": 92448,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "npc_nkechi:cbfa7308b35f121b": {
+      "file": "/assets/audio/voice/7e2828d9d25c49bf.mp3",
+      "fileName": "7e2828d9d25c49bf.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_returning_friendly",
+      "text": "My cybersecurity hero! Iya Basira showed the SMS to the bank manager and the manager confirmed it was a criminal scam! You saved her shop’s capital, my brother!",
+      "cleanText": "My cybersecurity hero! Iya Basira showed the SMS to the bank manager and the manager confirmed it was a criminal scam! You saved her shop’s capital, my brother!",
+      "textHash": "cbfa7308b35f121b",
+      "fileHash": "7e2828d9d25c49bf",
+      "duration": 11.688,
+      "sizeBytes": 70128,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "npc_nkechi:eb61f0ec142be18f": {
+      "file": "/assets/audio/voice/489403d67523cc69.mp3",
+      "fileName": "489403d67523cc69.mp3",
+      "speaker": "Mama Nkechi",
+      "speakerId": "npc_nkechi",
+      "nodeId": "nkechi_exit",
+      "text": "May God protect your work, my brother! Come back anytime.",
+      "cleanText": "May God protect your work, my brother! Come back anytime.",
+      "textHash": "eb61f0ec142be18f",
+      "fileHash": "489403d67523cc69",
+      "duration": 5.04,
+      "sizeBytes": 30240,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+3%",
+        "pitch": "+4Hz"
+      },
+      "isPidgin": true,
+      "needsHumanRecording": true
+    },
+    "npc_segun:0688a84e19153133": {
+      "file": "/assets/audio/voice/772d73f066f0622b.mp3",
+      "fileName": "772d73f066f0622b.mp3",
+      "speaker": "Segun Adebayo",
+      "speakerId": "npc_segun",
+      "nodeId": "segun_greeting",
+      "text": "Good day, young man. Sit down for a moment by the fountain. The sun is high over Tinubu Square, and people rush through life as if Broad Street will disappear tomorrow.",
+      "cleanText": "Good day, young man. Sit down for a moment by the fountain. The sun is high over Tinubu Square, and people rush through life as if Broad Street will disappear tomorrow.",
+      "textHash": "0688a84e19153133",
+      "fileHash": "772d73f066f0622b",
+      "duration": 5.28,
+      "sizeBytes": 31680,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-7%",
+        "pitch": "-5Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_segun:f364168a36761a35": {
+      "file": "/assets/audio/voice/7c2969552e206410.mp3",
+      "fileName": "7c2969552e206410.mp3",
+      "speaker": "Segun Adebayo",
+      "speakerId": "npc_segun",
+      "nodeId": "segun_history",
+      "text": "Over sixty years, young man. I remember when Broad Street held the treasury registers in thick leather books locked with heavy brass padlocks. Now, they tell me entire fortunes move through glass wires under our feet. But remember this: machines change, but human character remains the same. Greed, fear, and pride still cause every breach.",
+      "cleanText": "Over sixty years, young man. I remember when Broad Street held the treasury registers in thick leather books locked with heavy brass padlocks. Now, they tell me entire fortunes move through glass wires under our feet. But remember this: machines change, but human character remains the same. Greed, fear, and pride still cause every breach.",
+      "textHash": "f364168a36761a35",
+      "fileHash": "7c2969552e206410",
+      "duration": 21.6,
+      "sizeBytes": 129600,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-7%",
+        "pitch": "-5Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_segun:68d14f01f4410d27": {
+      "file": "/assets/audio/voice/1fa6d9afe82f44c7.mp3",
+      "fileName": "1fa6d9afe82f44c7.mp3",
+      "speaker": "Segun Adebayo",
+      "speakerId": "npc_segun",
+      "nodeId": "segun_wisdom",
+      "text": "Digital systems are only as sturdy as the honesty of the people who maintain them. A young person who can fix what is broken without stealing or boasting will never lack bread in Lagos.",
+      "cleanText": "Digital systems are only as sturdy as the honesty of the people who maintain them. A young person who can fix what is broken without stealing or boasting will never lack bread in Lagos.",
+      "textHash": "68d14f01f4410d27",
+      "fileHash": "1fa6d9afe82f44c7",
+      "duration": 11.544,
+      "sizeBytes": 69264,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-7%",
+        "pitch": "-5Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_segun:666f76d662587f76": {
+      "file": "/assets/audio/voice/e751a9d8fb715043.mp3",
+      "fileName": "e751a9d8fb715043.mp3",
+      "speaker": "Segun Adebayo",
+      "speakerId": "npc_segun",
+      "nodeId": "segun_approval",
+      "text": "You have a good head on your shoulders, young man. Go do your work with honor. When you finish, come back and tell an old man what the future looks like.",
+      "cleanText": "You have a good head on your shoulders, young man. Go do your work with honor. When you finish, come back and tell an old man what the future looks like.",
+      "textHash": "666f76d662587f76",
+      "fileHash": "e751a9d8fb715043",
+      "duration": 5.16,
+      "sizeBytes": 30960,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-7%",
+        "pitch": "-5Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_segun:b0b732eaf6c984fd": {
+      "file": "/assets/audio/voice/8a719a4b4a032777.mp3",
+      "fileName": "8a719a4b4a032777.mp3",
+      "speaker": "Segun Adebayo",
+      "speakerId": "npc_segun",
+      "nodeId": "segun_exit",
+      "text": "Walk gently on Lagos Island, Tade.",
+      "cleanText": "Walk gently on Lagos Island, Tade.",
+      "textHash": "b0b732eaf6c984fd",
+      "fileHash": "8a719a4b4a032777",
+      "duration": 3.384,
+      "sizeBytes": 20304,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-7%",
+        "pitch": "-5Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_folake:6e2dbd8f6be40e67": {
+      "file": "/assets/audio/voice/fedb02acc64f4e51.mp3",
+      "fileName": "fedb02acc64f4e51.mp3",
+      "speaker": "Folake Coker",
+      "speakerId": "npc_folake",
+      "nodeId": "folake_post_incident",
+      "text": "Tade! Broad Street is buzzing. Word is you just contained and resolved the Aster incident at Cedarline without a single data leak or PR fallout! That kind of incident response composure is exactly what high-growth fintechs pay top dollar for.",
+      "cleanText": "Tade! Broad Street is buzzing. Word is you just contained and resolved the Aster incident at Cedarline without a single data leak or PR fallout! That kind of incident response composure is exactly what high-growth fintechs pay top dollar for.",
+      "textHash": "6e2dbd8f6be40e67",
+      "fileHash": "fedb02acc64f4e51",
+      "duration": 9.48,
+      "sizeBytes": 56880,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_folake:1701174ee2a44788": {
+      "file": "/assets/audio/voice/da63475c0d7616ee.mp3",
+      "fileName": "da63475c0d7616ee.mp3",
+      "speaker": "Folake Coker",
+      "speakerId": "npc_folake",
+      "nodeId": "folake_greeting",
+      "text": "Hi there! You must be Tade Vance. Word travels fast along Broad Street—I represent Eko Tech Partners. We scout technical and security talent for top fintech firms across West Africa and London.",
+      "cleanText": "Hi there! You must be Tade Vance. Word travels fast along Broad Street—I represent Eko Tech Partners. We scout technical and security talent for top fintech firms across West Africa and London.",
+      "textHash": "1701174ee2a44788",
+      "fileHash": "da63475c0d7616ee",
+      "duration": 12.6,
+      "sizeBytes": 75600,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_folake:402b621bc35dab23": {
+      "file": "/assets/audio/voice/6381ca5a1fc9a7d0.mp3",
+      "fileName": "6381ca5a1fc9a7d0.mp3",
+      "speaker": "Folake Coker",
+      "speakerId": "npc_folake",
+      "nodeId": "folake_market_info",
+      "text": "Cloud IAM governance, forensic evidence integrity, and autonomous agent security. Everyone is deploying AI assistants, but almost nobody knows how to sandbox their tool permissions properly! If you solve the Cedarline incident cleanly, my client firms will be lining up to offer consulting contracts.",
+      "cleanText": "Cloud I A M governance, forensic evidence integrity, and autonomous agent security. Everyone is deploying AI assistants, but almost nobody knows how to sandbox their tool permissions properly! If you solve the Cedarline incident cleanly, my client firms will be lining up to offer consulting contracts.",
+      "textHash": "402b621bc35dab23",
+      "fileHash": "6381ca5a1fc9a7d0",
+      "duration": 20.568,
+      "sizeBytes": 123408,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_folake:d39f3c8408bf271e": {
+      "file": "/assets/audio/voice/443d4bc3798c267f.mp3",
+      "fileName": "443d4bc3798c267f.mp3",
+      "speaker": "Folake Coker",
+      "speakerId": "npc_folake",
+      "nodeId": "folake_impressed",
+      "text": "I love to see real operational focus. Don’t let me hold you up! When the dust settles at Cedarline, let’s talk career progression.",
+      "cleanText": "I love to see real operational focus. Don’t let me hold you up! When the dust settles at Cedarline, let’s talk career progression.",
+      "textHash": "d39f3c8408bf271e",
+      "fileHash": "443d4bc3798c267f",
+      "duration": 10.152,
+      "sizeBytes": 60912,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_folake:0109644136742ce5": {
+      "file": "/assets/audio/voice/255db77553e8292e.mp3",
+      "fileName": "255db77553e8292e.mp3",
+      "speaker": "Folake Coker",
+      "speakerId": "npc_folake",
+      "nodeId": "folake_exit",
+      "text": "Good luck with the triage, Tade. Keep your standards high!",
+      "cleanText": "Good luck with the triage, Tade. Keep your standards high!",
+      "textHash": "0109644136742ce5",
+      "fileHash": "255db77553e8292e",
+      "duration": 5.064,
+      "sizeBytes": 30384,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "-1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_tunde:12a054f5d5730f3b": {
+      "file": "/assets/audio/voice/eabae5de68471dda.mp3",
+      "fileName": "eabae5de68471dda.mp3",
+      "speaker": "Tunde Ojo",
+      "speakerId": "npc_tunde",
+      "nodeId": "tunde_greeting",
+      "text": "Yo. You work across the street at Cedarline, right? Saw their staging DNS flap three times this morning. Don’t tell me: someone connected an autonomous LLM agent directly to corporate file shares without checking the service account permissions?",
+      "cleanText": "Yo. You work across the street at Cedarline, right? Saw their staging DNS flap three times this morning. Don’t tell me: someone connected an autonomous LLM agent directly to corporate file shares without checking the service account permissions?",
+      "textHash": "12a054f5d5730f3b",
+      "fileHash": "eabae5de68471dda",
+      "duration": 15.36,
+      "sizeBytes": 92160,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+5%",
+        "pitch": "+1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_tunde:373c4f3227fcc85e": {
+      "file": "/assets/audio/voice/bac4aae9d145711e.mp3",
+      "fileName": "bac4aae9d145711e.mp3",
+      "speaker": "Tunde Ojo",
+      "speakerId": "npc_tunde",
+      "nodeId": "tunde_discussion",
+      "text": "Classic rookie blunder! The devs get tired of 403 errors during testing, slap corporate-admin on svc-aster, and promise to \"fix it in sprint 4\". Then someone prompts the agent for payroll and boom—unauthorized SMB exfiltration. Did you guys revoke the token or isolate the subnet yet?",
+      "cleanText": "Classic rookie blunder! The devs get tired of 403 errors during testing, slap corporate-admin on service aster, and promise to \"fix it in sprint 4\". Then someone prompts the agent for payroll and boom—unauthorized S M B exfiltration. Did you guys revoke the token or isolate the subnet yet?",
+      "textHash": "373c4f3227fcc85e",
+      "fileHash": "bac4aae9d145711e",
+      "duration": 19.032,
+      "sizeBytes": 114192,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+5%",
+        "pitch": "+1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_tunde:b13721f956fdb10e": {
+      "file": "/assets/audio/voice/b0a86edc77e136f3.mp3",
+      "fileName": "b0a86edc77e136f3.mp3",
+      "speaker": "Tunde Ojo",
+      "speakerId": "npc_tunde",
+      "nodeId": "tunde_cynical",
+      "text": "Haha, \"confidential.\" That’s what every company says right until their database dump ends up on paste sites. Suit yourself, corporate.",
+      "cleanText": "Haha, \"confidential.\" That’s what every company says right until their database dump ends up on paste sites. Suit yourself, corporate.",
+      "textHash": "b13721f956fdb10e",
+      "fileHash": "b0a86edc77e136f3",
+      "duration": 9.912,
+      "sizeBytes": 59472,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+5%",
+        "pitch": "+1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_tunde:c7678fb7f51a2b5c": {
+      "file": "/assets/audio/voice/223aebecbd935a58.mp3",
+      "fileName": "223aebecbd935a58.mp3",
+      "speaker": "Tunde Ojo",
+      "speakerId": "npc_tunde",
+      "nodeId": "tunde_respect",
+      "text": "Respect. Most people panic and wipe the container logs, destroying all forensic proof in the process. Good to know Cedarline hired an analyst with real brains. If you ever want to collaborate on ethical bug bounties, find me here by the water.",
+      "cleanText": "Respect. Most people panic and wipe the container logs, destroying all forensic proof in the process. Good to know Cedarline hired an analyst with real brains. If you ever want to collaborate on ethical bug bounties, find me here by the water.",
+      "textHash": "c7678fb7f51a2b5c",
+      "fileHash": "223aebecbd935a58",
+      "duration": 15.456,
+      "sizeBytes": 92736,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+5%",
+        "pitch": "+1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "npc_tunde:1f82e3a0e94ac011": {
+      "file": "/assets/audio/voice/21f849ea21f53383.mp3",
+      "fileName": "21f849ea21f53383.mp3",
+      "speaker": "Tunde Ojo",
+      "speakerId": "npc_tunde",
+      "nodeId": "tunde_exit",
+      "text": "Stay frosty, Tade. Watch those IAM scopes.",
+      "cleanText": "Stay frosty, Tade. Watch those I A M scopes.",
+      "textHash": "1f82e3a0e94ac011",
+      "fileHash": "21f849ea21f53383",
+      "duration": 4.584,
+      "sizeBytes": 27504,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "+5%",
+        "pitch": "+1Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "amina-okonjo:d58b36030782f876": {
+      "file": "/assets/audio/voice/c124c119091fa26c.mp3",
+      "fileName": "c124c119091fa26c.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "amina-okonjo",
+      "nodeId": "call_0",
+      "text": "Tade, can you hear me? Secure line established via ZRTP 256-bit AES.",
+      "cleanText": "Tade, can you hear me? Secure line established via Z R T P 256-bit A E S.",
+      "textHash": "d58b36030782f876",
+      "fileHash": "c124c119091fa26c",
+      "duration": 7.728,
+      "sizeBytes": 46368,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "amina-okonjo:eca7529929644bc6": {
+      "file": "/assets/audio/voice/85f37c5af2d253ac.mp3",
+      "fileName": "85f37c5af2d253ac.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "amina-okonjo",
+      "nodeId": "call_1",
+      "text": "Our edge perimeter on Broad Street just logged anomalous egress traffic.",
+      "cleanText": "Our edge perimeter on Broad Street just logged anomalous egress traffic.",
+      "textHash": "eca7529929644bc6",
+      "fileHash": "85f37c5af2d253ac",
+      "duration": 5.16,
+      "sizeBytes": 30960,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "amina-okonjo:882d9ed3b38fb0a8": {
+      "file": "/assets/audio/voice/b2ba8c982b6c04e5.mp3",
+      "fileName": "b2ba8c982b6c04e5.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "amina-okonjo",
+      "nodeId": "call_2",
+      "text": "Underground chatter suggests a leaked Lagos credential dump is circulating.",
+      "cleanText": "Underground chatter suggests a leaked Lagos credential dump is circulating.",
+      "textHash": "882d9ed3b38fb0a8",
+      "fileHash": "b2ba8c982b6c04e5",
+      "duration": 4.752,
+      "sizeBytes": 28512,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "amina-okonjo:cf7cc0260bce4d44": {
+      "file": "/assets/audio/voice/4de4ee14ee134c8c.mp3",
+      "fileName": "4de4ee14ee134c8c.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "amina-okonjo",
+      "nodeId": "call_3",
+      "text": "Fire up Tor Browser and check CipherMarket or DeepLeaks immediately.",
+      "cleanText": "Fire up Tor Browser and check CipherMarket or DeepLeaks immediately.",
+      "textHash": "cf7cc0260bce4d44",
+      "fileHash": "4de4ee14ee134c8c",
+      "duration": 4.776,
+      "sizeBytes": 28656,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "amina-okonjo:08bb320841c690b2": {
+      "file": "/assets/audio/voice/e71f78f9ea3aac3c.mp3",
+      "fileName": "e71f78f9ea3aac3c.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "amina-okonjo",
+      "nodeId": "call_4",
+      "text": "If Cedarline hashes are compromised, we need to revoke the admin tokens ASAP.",
+      "cleanText": "If Cedarline hashes are compromised, we need to revoke the admin tokens as soon as possible.",
+      "textHash": "08bb320841c690b2",
+      "fileHash": "e71f78f9ea3aac3c",
+      "duration": 6.528,
+      "sizeBytes": 39168,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "amina-okonjo:066f1d7cce23b2e9": {
+      "file": "/assets/audio/voice/d9b060197fa2cf40.mp3",
+      "fileName": "d9b060197fa2cf40.mp3",
+      "speaker": "Temitope Blessing",
+      "speakerId": "amina-okonjo",
+      "nodeId": "call_5",
+      "text": "I'm monitoring the Suricata sensor from the server room. Good luck.",
+      "cleanText": "I'm monitoring the Suricata sensor from the server room. Good luck.",
+      "textHash": "066f1d7cce23b2e9",
+      "fileHash": "d9b060197fa2cf40",
+      "duration": 5.136,
+      "sizeBytes": 30816,
+      "voice": "en-NG-EzinneNeural",
+      "prosody": {
+        "rate": "+0%",
+        "pitch": "+2Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "cipher:8625bf15e380ad15": {
+      "file": "/assets/audio/voice/4800d1b1022ff72a.mp3",
+      "fileName": "4800d1b1022ff72a.mp3",
+      "speaker": "Cipher",
+      "speakerId": "cipher",
+      "nodeId": "call_0",
+      "text": "*electronic audio static* ... Tade, keep your voice down. Relay is 3 hops deep.",
+      "cleanText": "... Tade, keep your voice down. Relay is 3 hops deep.",
+      "textHash": "8625bf15e380ad15",
+      "fileHash": "4800d1b1022ff72a",
+      "duration": 5.112,
+      "sizeBytes": 30672,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-6%",
+        "pitch": "-7Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "cipher:13d4c7fe7631d5f2": {
+      "file": "/assets/audio/voice/874882f0f593160e.mp3",
+      "fileName": "874882f0f593160e.mp3",
+      "speaker": "Cipher",
+      "speakerId": "cipher",
+      "nodeId": "call_1",
+      "text": "You're looking into the Broad Street incident, aren't you? Cedarline isn't telling you everything.",
+      "cleanText": "You're looking into the Broad Street incident, aren't you? Cedarline isn't telling you everything.",
+      "textHash": "13d4c7fe7631d5f2",
+      "fileHash": "874882f0f593160e",
+      "duration": 6.84,
+      "sizeBytes": 41040,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-6%",
+        "pitch": "-7Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "cipher:3c07dbe3a7452d25": {
+      "file": "/assets/audio/voice/a71f3b4deb678e4d.mp3",
+      "fileName": "a71f3b4deb678e4d.mp3",
+      "speaker": "Cipher",
+      "speakerId": "cipher",
+      "nodeId": "call_2",
+      "text": "The breach wasn't from a random script kiddie. Someone used internal admin credentials.",
+      "cleanText": "The breach wasn't from a random script kiddie. Someone used internal admin credentials.",
+      "textHash": "3c07dbe3a7452d25",
+      "fileHash": "a71f3b4deb678e4d",
+      "duration": 6.984,
+      "sizeBytes": 41904,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-6%",
+        "pitch": "-7Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "cipher:2d47c3a18afa97d1": {
+      "file": "/assets/audio/voice/6d8b165c88439371.mp3",
+      "fileName": "6d8b165c88439371.mp3",
+      "speaker": "Cipher",
+      "speakerId": "cipher",
+      "nodeId": "call_3",
+      "text": "I posted the unredacted Aster AI memory dump onto DeepLeaks (deepleaks.onion).",
+      "cleanText": "I posted the unredacted Aster AI memory dump onto DeepLeaks (deepleaks.onion).",
+      "textHash": "2d47c3a18afa97d1",
+      "fileHash": "6d8b165c88439371",
+      "duration": 6.096,
+      "sizeBytes": 36576,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-6%",
+        "pitch": "-7Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "cipher:7fb0e27b6a84faa5": {
+      "file": "/assets/audio/voice/a67e32ef2308e5fb.mp3",
+      "fileName": "a67e32ef2308e5fb.mp3",
+      "speaker": "Cipher",
+      "speakerId": "cipher",
+      "nodeId": "call_4",
+      "text": "Check CipherMarket too if you need targeted wordlists or exploit analysis scripts.",
+      "cleanText": "Check CipherMarket too if you need targeted wordlists or exploit analysis scripts.",
+      "textHash": "7fb0e27b6a84faa5",
+      "fileHash": "a67e32ef2308e5fb",
+      "duration": 5.616,
+      "sizeBytes": 33696,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-6%",
+        "pitch": "-7Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    },
+    "cipher:33bcd8a99448055a": {
+      "file": "/assets/audio/voice/f3c1631b8234d200.mp3",
+      "fileName": "f3c1631b8234d200.mp3",
+      "speaker": "Cipher",
+      "speakerId": "cipher",
+      "nodeId": "call_5",
+      "text": "Watch your back on the corporate network. Disconnecting now.",
+      "cleanText": "Watch your back on the corporate network. Disconnecting now.",
+      "textHash": "33bcd8a99448055a",
+      "fileHash": "f3c1631b8234d200",
+      "duration": 5.016,
+      "sizeBytes": 30096,
+      "voice": "en-NG-AbeoNeural",
+      "prosody": {
+        "rate": "-6%",
+        "pitch": "-7Hz"
+      },
+      "isPidgin": false,
+      "needsHumanRecording": false
+    }
+  }
+}
