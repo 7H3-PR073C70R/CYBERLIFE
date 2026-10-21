@@ -14,6 +14,8 @@ import { CatalogueSimulationState } from '../catalogue/types';
 import { createInitialCatalogueState } from '../catalogue/catalogueHandler';
 import { NarrativeState } from '../narrative/narrativeTypes';
 import { createInitialNarrativeState } from '../narrative/initialNarrativeState';
+import { NetworkInvestigationState } from '../cyber/investigation/types';
+import { createInitialNetworkInvestigationState } from '../cyber/investigation/m16ScenarioData';
 
 export interface InitialStateOverrides {
   readonly schemaVersion?: number;
@@ -38,6 +40,7 @@ export interface InitialStateOverrides {
   readonly onboarding?: OnboardingSimulationState;
   readonly catalogue?: CatalogueSimulationState;
   readonly narrative?: NarrativeState;
+  readonly networkInvestigation?: NetworkInvestigationState;
 }
 
 /**
@@ -148,6 +151,8 @@ export function createInitialSimulationState(
     },
     catalogue: overrides?.catalogue ?? createInitialCatalogueState(),
     narrative: overrides?.narrative ?? createInitialNarrativeState(),
+    networkInvestigation:
+      overrides?.networkInvestigation ?? createInitialNetworkInvestigationState(),
   };
 
   validateSimulationState(state);

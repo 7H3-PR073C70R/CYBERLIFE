@@ -54,7 +54,9 @@ export type SimulationEventType =
   | 'INVESTIGATIVE_EVIDENCE_RECORDED'
   | 'INVESTIGATIVE_CONCLUSION_FORMULATED'
   | 'INVESTIGATIVE_CONCLUSION_SUBMITTED'
-  | 'FACTION_STANDING_CHANGED';
+  | 'FACTION_STANDING_CHANGED'
+  | 'THREAT_INDICATOR_CORRELATED'
+  | 'NETWORK_INVESTIGATION_CONCLUDED';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -447,7 +449,27 @@ export type SimulationEvent =
   | InvestigativeEvidenceRecordedEvent
   | InvestigativeConclusionFormulatedEvent
   | InvestigativeConclusionSubmittedEvent
-  | FactionStandingChangedEvent;
+  | FactionStandingChangedEvent
+  | ThreatIndicatorCorrelatedEvent
+  | NetworkInvestigationConcludedEvent;
+
+export type ThreatIndicatorCorrelatedEvent = BaseSimulationEvent<
+  'THREAT_INDICATOR_CORRELATED',
+  {
+    readonly indicatorId: string;
+    readonly status: string;
+  }
+>;
+
+export type NetworkInvestigationConcludedEvent = BaseSimulationEvent<
+  'NETWORK_INVESTIGATION_CONCLUDED',
+  {
+    readonly isApproved: boolean;
+    readonly scorePercentage: number;
+    readonly suspectedActor: string;
+    readonly compromisedHostId: string;
+  }
+>;
 
 export type OnboardingStepCompletedEvent = BaseSimulationEvent<
   'ONBOARDING_STEP_COMPLETED',

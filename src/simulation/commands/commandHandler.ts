@@ -67,6 +67,12 @@ import {
   handleSubmitInvestigativeConclusion,
   handleChangeFactionStanding,
 } from '../narrative/narrativeCommandHandler';
+import {
+  handleSetIndicatorReviewStatus,
+  handleRecordNetworkAnalystNote,
+  handleAdvanceNetworkObjective,
+  handleSubmitNetworkInvestigationConclusion,
+} from '../cyber/investigation/networkInvestigationCommandHandler';
 import { clampFactionStanding, getFactionStandingBand } from '../narrative/narrativeEvaluator';
 
 function makeFailure(
@@ -2346,6 +2352,22 @@ export function handleCommand(
 
       case 'ChangeFactionStanding': {
         return handleChangeFactionStanding(currentState, command);
+      }
+
+      case 'SetIndicatorReviewStatus': {
+        return handleSetIndicatorReviewStatus(currentState, command);
+      }
+
+      case 'RecordNetworkAnalystNote': {
+        return handleRecordNetworkAnalystNote(currentState, command);
+      }
+
+      case 'AdvanceNetworkObjective': {
+        return handleAdvanceNetworkObjective(currentState, command);
+      }
+
+      case 'SubmitNetworkInvestigationConclusion': {
+        return handleSubmitNetworkInvestigationConclusion(currentState, command);
       }
 
       default: {

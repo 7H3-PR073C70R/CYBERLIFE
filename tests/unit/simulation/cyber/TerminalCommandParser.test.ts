@@ -66,7 +66,9 @@ describe('TerminalCommandParser & Registry', () => {
     expect(registry.has('exploitlab')).toBe(true);
     expect(registry.has('webproxy')).toBe(true);
     expect(registry.has('pretext')).toBe(true);
-    expect(registry.getAll().length).toBe(24);
+    expect(registry.has('threatintel')).toBe(true);
+    expect(registry.has('topology')).toBe(true);
+    expect(registry.getAll().length).toBe(26);
   });
 
   it('executes help command returning available commands and beginner tips', () => {

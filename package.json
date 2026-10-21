@@ -18,6 +18,8 @@
     "test:coverage": "vitest run --coverage",
     "test:m14": "vitest run tests/unit/simulation/cyber/ExploitLabEngine.test.ts tests/unit/simulation/cyber/WebProxyEngine.test.ts tests/unit/simulation/cyber/SocialPretextEngine.test.ts tests/unit/simulation/cyber/OffensiveSecurityBoundary.test.ts tests/unit/simulation/cyber/M14Integration.test.ts",
     "screenshots:m14": "node scripts/capture-m14-screenshots.mjs",
+    "test:m16": "vitest run tests/unit/simulation/cyber/NetworkTopology.test.ts tests/unit/simulation/cyber/TrafficAnalyzer.test.ts tests/unit/simulation/cyber/ThreatCorrelation.test.ts tests/unit/simulation/cyber/NetworkInvestigation.test.ts tests/unit/simulation/cyber/NetworkSafetyBoundary.test.ts tests/unit/presentation/desktop/PacketLensAppM16.test.tsx",
+    "screenshots:m16": "node scripts/capture-m16-screenshots.mjs",
     "voice:generate": "node scripts/generate-voice.mjs",
     "voice:dry-run": "node scripts/generate-voice.mjs --dry-run",
     "voice:force": "node scripts/generate-voice.mjs --force",

@@ -360,7 +360,44 @@ export type SimulationCommand =
   | RecordInvestigativeEvidenceCommand
   | FormulateConclusionCommand
   | SubmitInvestigativeConclusionCommand
-  | ChangeFactionStandingCommand;
+  | ChangeFactionStandingCommand
+  | SetIndicatorReviewStatusCommand
+  | RecordNetworkAnalystNoteCommand
+  | AdvanceNetworkObjectiveCommand
+  | SubmitNetworkInvestigationConclusionCommand;
+
+import type { ThreatReviewStatus } from '../cyber/threatintel/types';
+import type { InvestigationConclusionSubmission } from '../cyber/investigation/types';
+
+export interface SetIndicatorReviewStatusCommand {
+  readonly type: 'SetIndicatorReviewStatus';
+  readonly indicatorId: string;
+  readonly status: ThreatReviewStatus;
+  readonly notes?: string;
+}
+
+export interface RecordNetworkAnalystNoteCommand {
+  readonly type: 'RecordNetworkAnalystNote';
+  readonly title: string;
+  readonly content: string;
+  readonly category: 'TOPOLOGY' | 'TRAFFIC' | 'THREAT_INTEL' | 'HYPOTHESIS';
+  readonly linkedHostIds?: readonly string[];
+  readonly linkedEventIds?: readonly string[];
+  readonly linkedIndicatorIds?: readonly string[];
+}
+
+export interface AdvanceNetworkObjectiveCommand {
+  readonly type: 'AdvanceNetworkObjective';
+  readonly objectiveId: string;
+  readonly inspectedHostId?: string;
+  readonly inspectedEventId?: string;
+  readonly correlatedIndicatorId?: string;
+}
+
+export interface SubmitNetworkInvestigationConclusionCommand {
+  readonly type: 'SubmitNetworkInvestigationConclusion';
+  readonly submission: InvestigationConclusionSubmission;
+}
 
 export interface StartStoryArcCommand {
   readonly type: 'StartStoryArc';

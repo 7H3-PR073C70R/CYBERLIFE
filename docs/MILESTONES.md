@@ -596,13 +596,18 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 
 ## M16 — Network Analysis & Threat Intelligence
 
-- **Purpose**: Implement real-time packet inspection, Suricata-inspired signature evaluation, and correlated threat intelligence workflows for defensive and investigative operations.
+- **Purpose**: Implement a technically credible, interactive network-analysis and threat-intelligence system backed by simulated network state, multi-protocol dissection, local threat intelligence correlation, narrative evidence integration, and structured objective evaluation.
 - **Scope**:
-  - Real-time packet capture inspection (`tool_packet_lens`) with BPF filtering and stream reconstruction.
-  - Fictional threat intelligence feeds (`onion-intel` and commercial threat databases) tracking adversary groups, IOCs, and CVE advisories.
-  - Correlated SIEM event bus aggregating physical access events, firewall rejects, and EDR detections.
+  - **Interactive Network Topology**: 5 distinct network segments (`seg-corp-lan`, `seg-dmz`, `seg-dc-internal`, `seg-mgmt-soc`, `seg-wan-ext`), 12 simulated nodes with authentic IP, MAC, services (including Aster Assistant API proxy on `app-portal-01:8080`), and directional connection links.
+  - **Multi-Protocol Traffic Stream**: Synthetic packet trace across Frame, Ethernet, IPv4, TCP, UDP, DNS, HTTP, TLS, and SMB2 protocols, with forensic filtering, text search, conversation grouping, and hexadecimal payload inspection.
+  - **Local Threat Intelligence Registry**: 7 authored local fictional IOC records across IPv4 addresses, domain names, SHA-256 hashes, regex patterns, and JA3 TLS fingerprints, with clear distinction between adversary severity and observational confidence.
+  - **Explainable Correlation Engine**: Pure domain correlation engine matching network events against indicators with human-readable rationale and explicit benign allowlist warnings for internal SOC scanners (`mon-siem-01`).
+  - **Evidence Collection Integration**: 1-click forensic preservation creating cryptographic evidence items in the player's Evidence Vault with SHA-256 hash provenance and audio feedback.
+  - **Playable Scenario ("Operation Marina Nexus")**: Authored 7-objective investigation tracking the Aster agent exfiltration breach and Eko Nexus C2 beaconing anomaly with ground-truth evaluation and pedagogical critique.
+  - **EkoSec Packet Lens App**: 4-tab desktop GUI suite (`Network Topology`, `Traffic Stream`, `Threat Intelligence`, `Investigation & Findings`) plus in-game CLI commands (`packetview`, `threatintel`, `topology`).
+  - **Safety Boundaries**: 100% simulated in-memory state; zero host network operations, zero external API lookups, zero shell escapes.
 - **Dependencies**: M14.
-- **Status**: **PLANNED**.
+- **Status**: **COMPLETED**.
 
 ---
 

@@ -72,6 +72,7 @@ import type {
 import type { OnboardingSimulationState } from '../onboarding/types';
 import type { CatalogueSimulationState } from '../catalogue/types';
 import type { NarrativeState } from '../narrative/narrativeTypes';
+import type { NetworkInvestigationState } from '../cyber/investigation/types';
 
 export interface SimulationState {
   readonly metadata: SimulationMetadata;
@@ -91,4 +92,5 @@ export interface SimulationState {
   readonly onboarding?: OnboardingSimulationState;
   readonly catalogue?: CatalogueSimulationState;
   readonly narrative?: NarrativeState;
+  readonly networkInvestigation?: NetworkInvestigationState;
 }

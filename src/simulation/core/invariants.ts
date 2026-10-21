@@ -518,5 +518,70 @@ export function validateSimulationState(state: SimulationState): void {
       throw new InvariantViolationError('narrative.submittedConclusions must be an array');
     }
   }
+
+  // 16. Network investigation domain invariants
+  const { networkInvestigation } = state;
+  if (networkInvestigation) {
+    if (!networkInvestigation.scenarioId || typeof networkInvestigation.scenarioId !== 'string') {
+      throw new InvariantViolationError('networkInvestigation.scenarioId must be a non-empty string');
+    }
+    if (!networkInvestigation.title || typeof networkInvestigation.title !== 'string') {
+      throw new InvariantViolationError('networkInvestigation.title must be a non-empty string');
+    }
+    const validPhases = [
+      'BRIEFING',
+      'TOPOLOGY_TRIAGE',
+      'TRAFFIC_INSPECTION',
+      'THREAT_CORRELATION',
+      'EVIDENCE_SYNTHESIS',
+      'CONCLUSION_SUBMISSION',
+      'COMPLETED',
+    ];
+    if (!validPhases.includes(networkInvestigation.activePhase)) {
+      throw new InvariantViolationError(
+        `Invalid networkInvestigation.activePhase: ${networkInvestigation.activePhase}`
+      );
+    }
+    if (!Array.isArray(networkInvestigation.objectives)) {
+      throw new InvariantViolationError('networkInvestigation.objectives must be an array');
+    }
+    for (const obj of networkInvestigation.objectives) {
+      if (!obj || typeof obj !== 'object' || !obj.id || typeof obj.title !== 'string') {
+        throw new InvariantViolationError('networkInvestigation objective is malformed');
+      }
+    }
+    if (!Array.isArray(networkInvestigation.inspectedHostIds)) {
+      throw new InvariantViolationError('networkInvestigation.inspectedHostIds must be an array');
+    }
+    if (!Array.isArray(networkInvestigation.inspectedEventIds)) {
+      throw new InvariantViolationError('networkInvestigation.inspectedEventIds must be an array');
+    }
+    if (!Array.isArray(networkInvestigation.correlatedIndicatorIds)) {
+      throw new InvariantViolationError('networkInvestigation.correlatedIndicatorIds must be an array');
+    }
+    if (!Array.isArray(networkInvestigation.collectedEvidenceIds)) {
+      throw new InvariantViolationError('networkInvestigation.collectedEvidenceIds must be an array');
+    }
+    if (!networkInvestigation.indicatorReviews || typeof networkInvestigation.indicatorReviews !== 'object') {
+      throw new InvariantViolationError('networkInvestigation.indicatorReviews must be an object');
+    }
+    if (!Array.isArray(networkInvestigation.analystNotes)) {
+      throw new InvariantViolationError('networkInvestigation.analystNotes must be an array');
+    }
+  }
 }
+
+export function checkSimulationInvariants(state: SimulationState): string[] {
+  try {
+    validateSimulationState(state);
+    return [];
+  } catch (err: unknown) {
+    if (err instanceof InvariantViolationError) {
+      return [err.message];
+    }
+    return [String(err)];
+  }
+}
+
+
 

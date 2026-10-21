@@ -11,6 +11,12 @@ import { virtualFilesystem, resolveVirtualPath } from '../filesystem';
 import { ExploitLabEngine } from '../offensive/ExploitLabEngine';
 import { WebProxyEngine } from '../webproxy/WebProxyEngine';
 import { SocialPretextEngine } from '../social/SocialPretextEngine';
+import { SYNTHETIC_TRAFFIC_EVENTS } from '../network/trafficFixtures';
+import { filterTrafficEvents } from '../network/trafficAnalyzer';
+import { ProtocolType } from '../network/types';
+import { THREAT_INTEL_RECORDS } from '../threatintel/threatIntelFixtures';
+import { searchThreatRecords, correlateAllTraffic } from '../threatintel/threatCorrelationEngine';
+import { SIMULATED_NETWORK_NODES, NETWORK_SEGMENTS } from '../network/topologyFixtures';
 
 export class TerminalCommandRegistry {
   private handlers = new Map<string, TerminalCommandHandler>();
@@ -597,41 +603,161 @@ export const nmapCommand: TerminalCommandHandler = {
 
 export const packetviewCommand: TerminalCommandHandler = {
   name: 'packetview',
-  description: 'Inspects synthetic packet capture stream from /mnt/evidence/EVD-2026-001.pcap.',
-  usage: 'packetview [filter]',
+  description: 'Inspects synthetic packet capture stream with protocol and text filtering.',
+  usage: 'packetview [filter] [--proto <type>]',
   execute(args: string[]): TerminalCommandResult {
-    const filter = args[0]?.toLowerCase();
-    const allPackets = [
-      'No.   Time     Source        Destination   Proto  Length  Info',
+    const protoArgIdx = args.findIndex(a => a === '--proto');
+    let protoFilter: ProtocolType | undefined;
+    let query = '';
+
+    if (protoArgIdx !== -1 && args[protoArgIdx + 1]) {
+      protoFilter = args[protoArgIdx + 1]!.toUpperCase() as ProtocolType;
+      query = args.filter((_, idx) => idx !== protoArgIdx && idx !== protoArgIdx + 1).join(' ');
+    } else {
+      query = args.join(' ');
+    }
+
+    const filtered = filterTrafficEvents(SYNTHETIC_TRAFFIC_EVENTS, {
+      protocol: protoFilter,
+      searchQuery: query || undefined,
+    });
+
+    const lines = [
+      `=== EkoSec Packet Lens (CLI) — ${filtered.length} packets displayed ===`,
+      'No.   Time          Source        Destination   Proto  Length  Info',
       '--------------------------------------------------------------------------------',
-      '001   0.0000   10.0.4.15     10.0.4.1      ARP    42      Who has 10.0.4.1? Tell 10.0.4.15',
-      '002   0.0008   10.0.4.1      10.0.4.15     ARP    42      10.0.4.1 is at 02:42:0a:00:04:01',
-      '003   0.0124   10.0.4.10     10.0.4.20     TCP    74      51204 > 445 [SYN] Seq=0 Win=64240',
-      '004   0.0128   10.0.4.20     10.0.4.10     TCP    74      445 > 51204 [SYN, ACK] Seq=0 Ack=1',
-      '005   0.0131   10.0.4.10     10.0.4.20     TCP    66      51204 > 445 [ACK] Seq=1 Ack=1',
-      '006   0.0142   10.0.4.10     10.0.4.20     SMB2   182     Negotiate Protocol Request',
-      '007   0.0149   10.0.4.20     10.0.4.10     SMB2   268     Negotiate Protocol Response',
-      '008   0.0160   10.0.4.10     10.0.4.20     SMB2   288     Session Setup Request, User: svc-aster',
-      '009   0.0175   10.0.4.20     10.0.4.10     SMB2   196     Session Setup Response [SUCCESS]',
-      '010   0.0188   10.0.4.10     10.0.4.20     SMB2   214     Tree Connect Request: \\\\filesrv-01\\payroll$',
-      '011   0.0194   10.0.4.20     10.0.4.10     SMB2   142     Tree Connect Response: Access Granted (Admin)',
-      '012   0.0210   10.0.4.10     10.0.4.20     SMB2   248     Create Request File: october_salaries.xlsx',
+      ...filtered.map(p => {
+        const no = String(p.sequenceNo).padStart(3, '0');
+        const time = p.formattedTime.padEnd(13, ' ');
+        const src = (p.sourceIp + (p.sourcePort ? `:${p.sourcePort}` : '')).padEnd(20, ' ');
+        const dst = (p.destinationIp + (p.destinationPort ? `:${p.destinationPort}` : '')).padEnd(20, ' ');
+        const proto = p.protocol.padEnd(6, ' ');
+        const len = String(p.lengthBytes).padStart(6, ' ');
+        const info = p.summaryInfo;
+        return `${no}   ${time} ${src} ${dst} ${proto} ${len}  ${info}`;
+      }),
+      '',
+      'Tip: Launch the graphical "Packet Lens" app on your desktop for deep multi-layer dissection and hex dump.',
     ];
 
-    if (!filter) {
+    return { stdout: lines };
+  },
+};
+
+export const threatintelCommand: TerminalCommandHandler = {
+  name: 'threatintel',
+  description: 'Searches local threat intelligence indicators and correlates with observed traffic.',
+  usage: 'threatintel [search <query> | show <id> | correlate]',
+  execute(args: string[]): TerminalCommandResult {
+    const sub = args[0]?.toLowerCase() ?? 'list';
+
+    if (sub === 'search') {
+      const q = args.slice(1).join(' ');
+      const results = searchThreatRecords(THREAT_INTEL_RECORDS, { queryText: q });
       return {
         stdout: [
-          '=== EkoSec Packet Lens (CLI) — PCAP: /mnt/evidence/EVD-2026-001.pcap ===',
-          ...allPackets,
-          '',
-          'Tip: Launch the graphical "Packet Lens" app on your desktop for deep protocol decode.',
+          `=== Local Threat Intelligence Database — Search: "${q}" (${results.length} matches) ===`,
+          ...results.map(r => `[${r.id}] ${r.type} | ${r.value} | Severity: ${r.severity} | Campaign: ${r.campaign}`),
         ],
       };
     }
 
-    const filtered = allPackets.filter((p, i) => i < 2 || p.toLowerCase().includes(filter));
+    if (sub === 'show') {
+      const id = args[1]?.trim();
+      const rec = THREAT_INTEL_RECORDS.find(r => r.id === id || r.value === id);
+      if (!rec) {
+        return {
+          stdout: [],
+          stderr: [`Threat indicator not found: "${id}". Use "threatintel" to list available records.`],
+        };
+      }
+      return {
+        stdout: [
+          `=== Threat Indicator Details: ${rec.id} ===`,
+          `Value:        ${rec.value}`,
+          `Type:         ${rec.type}`,
+          `Category:     ${rec.category}`,
+          `Severity:     ${rec.severity}`,
+          `Confidence:   ${rec.confidenceScore}/100`,
+          `Campaign:     ${rec.campaign}`,
+          `Threat Actor: ${rec.threatActor}`,
+          `Publisher:    ${rec.provenance.publisher} (${rec.provenance.reportReference})`,
+          `Description:  ${rec.description}`,
+          `MITRE:        ${rec.mitreTechniques.join(', ')}`,
+          `Known Benign: ${rec.isKnownBenignAllowlist ? 'YES (Allowlist)' : 'NO (Adversary)'}`,
+        ],
+      };
+    }
+
+    if (sub === 'correlate') {
+      const matches = correlateAllTraffic(SYNTHETIC_TRAFFIC_EVENTS, THREAT_INTEL_RECORDS);
+      return {
+        stdout: [
+          `=== Real-Time Threat Correlation (${matches.length} active indicators matched in traffic) ===`,
+          ...matches.map(m =>
+            `[MATCH ${m.matchStrength}] Event: ${m.matchedEventId} | Indicator: ${m.indicatorValue} (${m.severity}) | ${m.reasonExplanation}`
+          ),
+        ],
+      };
+    }
+
+    // Default: list all records
     return {
-      stdout: [`=== EkoSec Packet Lens (CLI) — Filter: '${filter}' ===`, ...filtered],
+      stdout: [
+        `=== Local Threat Intelligence Database (${THREAT_INTEL_RECORDS.length} indicators) ===`,
+        ...THREAT_INTEL_RECORDS.map(r =>
+          `[${r.id}] ${r.type.padEnd(16, ' ')} ${r.value.padEnd(36, ' ')} [${r.severity.padEnd(8, ' ')}] ${r.campaign}`
+        ),
+        '',
+        'Usage: threatintel search <term> | threatintel show <id> | threatintel correlate',
+      ],
+    };
+  },
+};
+
+export const topologyCommand: TerminalCommandHandler = {
+  name: 'topology',
+  description: 'Displays simulated network topology segments and host assets.',
+  usage: 'topology [segment | host <hostname>]',
+  execute(args: string[]): TerminalCommandResult {
+    const sub = args[0]?.toLowerCase();
+    if (sub === 'host') {
+      const target = args[1]?.toLowerCase();
+      const node = SIMULATED_NETWORK_NODES.find(n => n.id.toLowerCase() === target || n.hostname.toLowerCase().includes(target ?? ''));
+      if (!node) {
+        return {
+          stdout: [],
+          stderr: [`Host not found: "${target}".`],
+        };
+      }
+      return {
+        stdout: [
+          `=== Host Details: ${node.hostname} (${node.ipAddress}) ===`,
+          `FQDN:         ${node.fqdn}`,
+          `Segment:      ${node.segmentId}`,
+          `Role:         ${node.roleLabel}`,
+          `OS:           ${node.os}`,
+          `Status:       ${node.status}`,
+          `Location:     ${node.location}`,
+          `Relevance:    ${node.investigationRelevance}`,
+          `Services:     ${node.services.map(s => `${s.port}/${s.protocol} (${s.name})`).join(', ') || 'None'}`,
+          `Description:  ${node.description}`,
+        ],
+      };
+    }
+
+    return {
+      stdout: [
+        '=== Marina Tower Network Topology Segments ===',
+        ...NETWORK_SEGMENTS.map(s => `[${s.id}] ${s.name} (${s.cidr}, VLAN ${s.vlanId}) — ${s.securityZone}`),
+        '',
+        'Hosts inventory:',
+        ...SIMULATED_NETWORK_NODES.map(n =>
+          `  ${n.ipAddress.padEnd(15, ' ')} ${n.hostname.padEnd(24, ' ')} [${n.segmentId}] ${n.roleLabel}`
+        ),
+        '',
+        'Usage: topology host <name/id> to view host details.',
+      ],
     };
   },
 };
@@ -1063,6 +1189,8 @@ export function createDefaultCommandRegistry(): TerminalCommandRegistry {
   registry.register(nmapCommand);
   registry.register(packetviewCommand);
   registry.register(revviewCommand);
+  registry.register(threatintelCommand);
+  registry.register(topologyCommand);
 
   // M14 Authorized Offensive & Social Pretexting CLI tools
   registry.register(exploitlabCommand);
