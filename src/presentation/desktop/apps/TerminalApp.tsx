@@ -66,6 +66,11 @@ const KNOWN_COMMANDS = [
   'svcscan',
   'logview',
   'evidence',
+  'redteam',
+  'bounty',
+  'forensics',
+  'soctriage',
+  'complianceaudit',
 ];
 
 function formatDirForPrompt(dir: string): string {
@@ -318,6 +323,18 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
             tags: ['terminal_forensics', 'preserved'],
           });
         }
+      } else if (firstToken === 'forensics') {
+        guidedStdout.push('');
+        guidedStdout.push('  [✓] OBJECTIVE COMPLETED: Digital Forensics Artifact Analysis Complete');
+        guidedStdout.push("  [→] NEXT STEP: Run 'forensics report' to file certified disclosure findings");
+      } else if (firstToken === 'soctriage') {
+        guidedStdout.push('');
+        guidedStdout.push('  [✓] OBJECTIVE COMPLETED: SOC Telemetry Triage Action Dispatched');
+        guidedStdout.push("  [→] NEXT STEP: Run 'soctriage submit' to commit incident escalation ticket");
+      } else if (firstToken === 'complianceaudit') {
+        guidedStdout.push('');
+        guidedStdout.push('  [✓] OBJECTIVE COMPLETED: Regulatory Compliance Scan Evaluated');
+        guidedStdout.push("  [→] NEXT STEP: Run 'complianceaudit sign conditional' to authorize restricted launch");
       }
     }
 
@@ -406,6 +423,20 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
     window.addEventListener('cyberlife:terminal:paste', handlePasteEvent);
     return () => window.removeEventListener('cyberlife:terminal:paste', handlePasteEvent);
   }, [activeTab.id, handleExecute]);
+
+  const hasExecutedUrlCmdRef = useRef(false);
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !hasExecutedUrlCmdRef.current) {
+      const params = new URLSearchParams(window.location.search);
+      const cmd = params.get('cmd') || params.get('runCommand');
+      if (cmd) {
+        hasExecutedUrlCmdRef.current = true;
+        setTimeout(() => {
+          handleExecute(cmd);
+        }, 150);
+      }
+    }
+  }, [handleExecute]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // Stop propagation so 3D world player controller never receives terminal keys

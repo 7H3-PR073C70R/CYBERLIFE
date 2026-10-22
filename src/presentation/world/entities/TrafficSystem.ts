@@ -302,7 +302,12 @@ export class TrafficSystem {
       }
       v.bodyRoot.add(model);
 
-      // Add normal-sized red LED taillights at scale 1.0 directly on bodyRoot
+      // Add red LED taillights accurately fitted to the vehicle's rear fascia
+      const bbox = new THREE.Box3().setFromObject(model);
+      const rearZ = bbox.min.z + 0.02;
+      const lightY = Math.max(0.45, bbox.min.y + (bbox.max.y - bbox.min.y) * 0.38);
+      const halfWidth = Math.max(0.4, (bbox.max.x - bbox.min.x) * 0.38);
+
       const blMat = new THREE.MeshStandardMaterial({
         color: 0x7f1d1d,
         emissive: new THREE.Color(0x3f0a0a),
@@ -311,9 +316,9 @@ export class TrafficSystem {
       });
       newMaterials.push(blMat);
 
-      [-0.85, 0.85].forEach(bx => {
-        const bl = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.14, 0.04), blMat);
-        bl.position.set(bx, 0.72, -2.25);
+      [-halfWidth, halfWidth].forEach(bx => {
+        const bl = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.12, 0.03), blMat);
+        bl.position.set(bx, lightY, rearZ);
         v.bodyRoot.add(bl);
         newBrakeLights.push(bl);
       });

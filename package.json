@@ -28,6 +28,8 @@
     "screenshots:m19": "node scripts/capture-m19-screenshots.mjs",
     "test:m22": "vitest run tests/unit/simulation/LivingCityAndWorldSim.test.ts",
     "screenshots:m22": "node scripts/capture-m22-screenshots.mjs",
+    "test:m23": "vitest run tests/unit/simulation/M23ProductionAssetsAndProfessions.test.ts tests/unit/presentation/world/AssetManifestValidation.test.ts",
+    "screenshots:m23": "node scripts/capture-m23-screenshots.mjs",
     "voice:generate": "node scripts/generate-voice.mjs",
     "voice:dry-run": "node scripts/generate-voice.mjs --dry-run",
     "voice:force": "node scripts/generate-voice.mjs --force",

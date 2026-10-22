@@ -257,4 +257,140 @@ export const JOB_LISTINGS: Readonly<Record<string, JobListing>> = {
       },
     ],
   },
+
+  // M23 — Additional Playable Professions Job Listings
+  job_marina_forensic_timeline: {
+    id: 'job_marina_forensic_timeline',
+    title: 'Marina Maritime: Disk Artifact & Exfiltration Forensic Analysis',
+    employer: 'Marina Logistics Port Authority',
+    contactNpcId: 'npc_marcus',
+    description:
+      'Acquire cryptographic hash of seized removable drive, parse filesystem MFT for timestomping anomalies, and extract exfiltrated data archive.',
+    minCareerLevel: 1,
+    requiredSkills: {
+      evidence_handling: 1,
+      log_analysis: 1,
+    },
+    payoutKobo: 180_000,
+    careerXpReward: 120,
+    skillRewards: {
+      evidence_handling: 60,
+      log_analysis: 45,
+    },
+    estimatedMinutes: 15,
+    isRepeatable: false,
+    objectives: [
+      {
+        id: 'obj_forensics_hash_verify',
+        type: 'RUN_TOOL',
+        description: 'Verify SHA-256 cryptographic hash of evidence image using forensics CLI.',
+        target: 'forensics',
+        isCompleted: false,
+      },
+      {
+        id: 'obj_forensics_timestomp_detect',
+        type: 'RECORD_FINDING',
+        description: 'Analyze Master File Table records and identify timestomped exfiltration files.',
+        target: 'forensics',
+        isCompleted: false,
+      },
+      {
+        id: 'obj_forensics_submit_report',
+        type: 'SUBMIT_REPORT',
+        description: 'Compile defensible digital forensic disclosure report with verified chain of custody.',
+        target: 'forensics',
+        isCompleted: false,
+      },
+    ],
+  },
+
+  job_interbank_siem_triage: {
+    id: 'job_interbank_siem_triage',
+    title: 'Broad Street Interbank: Peak-Hour SOC Alert Triage & Containment',
+    employer: 'Broad Street Financial Interbank',
+    contactNpcId: 'npc_amina',
+    description:
+      'Triage high-priority security events on core interbank switch, differentiate critical brute force / C2 beacons from routine payroll jobs, and isolate compromised nodes.',
+    minCareerLevel: 1,
+    requiredSkills: {
+      incident_response: 1,
+      log_analysis: 1,
+    },
+    payoutKobo: 200_000,
+    careerXpReward: 130,
+    skillRewards: {
+      incident_response: 60,
+      log_analysis: 50,
+    },
+    estimatedMinutes: 15,
+    isRepeatable: false,
+    objectives: [
+      {
+        id: 'obj_soc_queue_review',
+        type: 'RUN_TOOL',
+        description: 'Review pending alert queue using soctriage CLI tool.',
+        target: 'soctriage',
+        isCompleted: false,
+      },
+      {
+        id: 'obj_soc_isolate_endpoint',
+        type: 'VERIFY_SERVICE',
+        description: 'Apply network containment to isolate compromised endpoints and suppress false positives.',
+        target: 'soctriage',
+        isCompleted: false,
+      },
+      {
+        id: 'obj_soc_submit_escalation',
+        type: 'SUBMIT_REPORT',
+        description: 'Submit graded SOC triage bundle and incident escalation ticket.',
+        target: 'soctriage',
+        isCompleted: false,
+      },
+    ],
+  },
+
+  job_fintech_compliance_audit: {
+    id: 'job_fintech_compliance_audit',
+    title: 'Paystack Partner: Pre-Launch Security & NDPR Compliance Audit',
+    employer: 'Lagos Tech Corridor Compliance Alliance',
+    contactNpcId: 'npc_elizabeth',
+    description:
+      'Execute comprehensive pre-launch regulatory audit across Paystack partner infrastructure. Verify database encryption, detect leaked production API keys in staging code, and issue compliance certification.',
+    minCareerLevel: 1,
+    requiredSkills: {
+      security_fundamentals: 1,
+      reporting: 1,
+    },
+    payoutKobo: 220_000,
+    careerXpReward: 140,
+    skillRewards: {
+      security_fundamentals: 60,
+      reporting: 50,
+    },
+    estimatedMinutes: 20,
+    isRepeatable: false,
+    objectives: [
+      {
+        id: 'obj_audit_domain_scans',
+        type: 'RUN_TOOL',
+        description: 'Inspect encryption, API secrets, and access control domains using complianceaudit tool.',
+        target: 'complianceaudit',
+        isCompleted: false,
+      },
+      {
+        id: 'obj_audit_remediation_plan',
+        type: 'RECORD_FINDING',
+        description: 'Compile prioritized remediation matrix for critical and high severity audit findings.',
+        target: 'complianceaudit',
+        isCompleted: false,
+      },
+      {
+        id: 'obj_audit_certify_verdict',
+        type: 'SUBMIT_REPORT',
+        description: 'Issue formal regulatory attestation and conditional launch authorization certificate.',
+        target: 'complianceaudit',
+        isCompleted: false,
+      },
+    ],
+  },
 };

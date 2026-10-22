@@ -67,14 +67,16 @@ export class NpcManager {
         `NPC: ${profile.name}`
       );
 
-      // Interactable marker floating above NPC head (at y = 2.15)
+      // Interactable marker with flush ground ring and overhead holographic beacon (y = 2.15)
       const marker = new InteractableMarker(
         px,
         pz,
         profile.palette.jacketTrim ?? 0x38bdf8,
-        profile.name
+        {
+          label: profile.name,
+          beaconHeight: 2.15,
+        }
       );
-      marker.getMesh().position.y = 0.25;
 
       const interactableId = `interact_${profile.id}`;
       this.interactionRegistry.register({

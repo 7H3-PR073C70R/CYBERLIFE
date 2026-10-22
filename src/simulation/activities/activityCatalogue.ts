@@ -737,6 +737,201 @@ export const AUTHORED_ACTIVITIES: Readonly<Record<string, ActivityDefinition>> =
     whyRecommended:
       'Authorized physical security assessments are a highly valued specialist skill. Completing this unlocks advanced physical pen-testing contracts.',
   },
+
+  // M23 — Additional Playable Professions Authored Activities
+  act_forensics_marina_breach: {
+    id: 'act_forensics_marina_breach',
+    type: 'INVESTIGATION',
+    title: 'Marina Maritime: USB Exfiltration & Anti-Forensic Tampering Analysis',
+    shortTitle: 'Forensic Analysis',
+    description:
+      'Verify cryptographic evidence chain-of-custody, parse Master File Table records to detect anti-forensic timestomping, and extract exfiltrated file archive.',
+    narrativeContext:
+      'Marina Logistics internal controls detected an unauthorized USB mass storage device connected to the port manifest server. The operator claims innocence, but telemetry indicates file transfers.',
+    source: 'Marina Legal & Integrity Chambers',
+    priority: 'RECOMMENDED',
+    locationId: 'cedarline_interior',
+    prerequisites: {
+      minCareerLevel: 1,
+    },
+    objectives: [
+      {
+        id: 'obj_m23_forensics_hash',
+        title: 'Verify Cryptographic Evidence Hash',
+        description: 'Verify SHA-256 cryptographic hash of evidence image using forensics CLI.',
+        type: 'RUN_TOOL',
+        target: 'forensics',
+        isCompleted: false,
+        hint: 'Use `forensics hash /evidence/marina_exfil_usb.dd` to verify integrity against baseline.',
+        actionPrompt: 'Verify evidence image cryptographic hash.',
+      },
+      {
+        id: 'obj_m23_forensics_mft',
+        title: 'Detect Timestomped Files via MFT Analysis',
+        description: 'Analyze Master File Table records and identify timestomped exfiltration files.',
+        type: 'RECORD_FINDING',
+        target: 'forensics',
+        isCompleted: false,
+        hint: 'Run `forensics mft` to inspect timestamp discrepancies between $STANDARD_INFO and $FILE_NAME.',
+        actionPrompt: 'Analyze filesystem timeline for anti-forensic tampering.',
+      },
+      {
+        id: 'obj_m23_forensics_report',
+        title: 'Compile Certified Forensic Disclosure',
+        description: 'Compile defensible digital forensic disclosure report with verified chain of custody.',
+        type: 'SUBMIT_REPORT',
+        target: 'forensics',
+        isCompleted: false,
+        hint: 'Run `forensics report` to generate and file the certified investigative report.',
+        actionPrompt: 'Submit certified forensic report.',
+      },
+    ],
+    reward: {
+      payoutKobo: 450_000,
+      careerXp: 180,
+      skillRewards: {
+        evidence_handling: 100,
+        log_analysis: 80,
+        reporting: 60,
+      },
+      reputationPoints: 45,
+      flagsToSet: { m23_forensics_completed: true },
+    },
+    consequences: {
+      recoveryGuidance: 'Review evidence hash verification and MFT timeline discrepancies before generating final report.',
+    },
+    isRepeatable: false,
+    whyRecommended: 'Critical digital forensics engagement advancing the Independent Investigator path.',
+  },
+
+  act_soc_triage_interbank: {
+    id: 'act_soc_triage_interbank',
+    type: 'DEFENSIVE_OPERATION',
+    title: 'Broad Street Interbank: Peak-Hour Alert Triage & Incident Scoping',
+    shortTitle: 'SOC Alert Triage',
+    description:
+      'Triage high-priority security events on the core interbank switch, differentiate critical brute force / C2 beacons from routine payroll jobs, and isolate compromised nodes.',
+    narrativeContext:
+      'Broad Street Interbank gateway generates high-volume telemetry. 4 alerts flagged during peak trading requiring rapid triage and containment.',
+    source: 'Cedarline SecOps Dispatch',
+    priority: 'RECOMMENDED',
+    locationId: 'cedarline_interior',
+    prerequisites: {
+      minCareerLevel: 1,
+    },
+    objectives: [
+      {
+        id: 'obj_m23_soc_queue',
+        title: 'Review Active SIEM Telemetry Queue',
+        description: 'Review pending alert queue using soctriage CLI tool.',
+        type: 'RUN_TOOL',
+        target: 'soctriage',
+        isCompleted: false,
+        hint: 'Run `soctriage list` and `soctriage inspect <alert-id>` to investigate telemetry.',
+        actionPrompt: 'Review and inspect active alert queue.',
+      },
+      {
+        id: 'obj_m23_soc_contain',
+        title: 'Apply Containment Actions',
+        description: 'Isolate compromised endpoints, block malicious IPs, and suppress legitimate false positives.',
+        type: 'EXECUTE_ACTION',
+        target: 'soctriage',
+        isCompleted: false,
+        hint: 'Use `soctriage action <alert-id> <isolate|block_ip|suppress|escalate>` to apply containment.',
+        actionPrompt: 'Apply network containment and suppression rules.',
+      },
+      {
+        id: 'obj_m23_soc_submit',
+        title: 'Submit Graded Incident Escalation Ticket',
+        description: 'Submit graded SOC triage bundle and incident escalation ticket.',
+        type: 'SUBMIT_REPORT',
+        target: 'soctriage',
+        isCompleted: false,
+        hint: 'Run `soctriage submit` to finalize incident scoping and review response grading.',
+        actionPrompt: 'Submit incident escalation ticket.',
+      },
+    ],
+    reward: {
+      payoutKobo: 500_000,
+      careerXp: 190,
+      skillRewards: {
+        incident_response: 100,
+        log_analysis: 90,
+      },
+      reputationPoints: 50,
+      flagsToSet: { m23_soctriage_completed: true },
+    },
+    consequences: {
+      recoveryGuidance: 'Inspect raw payloads with `soctriage inspect` to distinguish C2 beacons from authorized batch cron jobs.',
+    },
+    isRepeatable: false,
+    whyRecommended: 'Real-time alert triage and containment for Tier 2/3 SOC Analysts.',
+  },
+
+  act_audit_fintech_compliance: {
+    id: 'act_audit_fintech_compliance',
+    type: 'CAREER_ASSIGNMENT',
+    title: 'Paystack Partner: Pre-Launch Security & NDPR Compliance Audit',
+    shortTitle: 'Fintech Audit',
+    description:
+      'Execute comprehensive pre-launch regulatory audit across Paystack partner infrastructure. Verify database encryption, detect leaked production API keys in staging code, and issue compliance certification.',
+    narrativeContext:
+      'A fast-growing fintech startup on Broad Street is preparing to launch a merchant payment processing gateway. The Central Bank and NDPR mandate an external security and data protection audit before production API keys can be activated.',
+    source: 'Lagos Tech Corridor Compliance Alliance',
+    priority: 'RECOMMENDED',
+    locationId: 'cedarline_interior',
+    prerequisites: {
+      minCareerLevel: 1,
+    },
+    objectives: [
+      {
+        id: 'obj_m23_audit_scans',
+        title: 'Execute Technical Control Domain Audits',
+        description: 'Inspect encryption, API secrets, IAM, and cryptographic storage using complianceaudit tool.',
+        type: 'RUN_TOOL',
+        target: 'complianceaudit',
+        isCompleted: false,
+        hint: 'Run `complianceaudit scan <ndpr|secrets|iam|crypto>` to evaluate each compliance domain.',
+        actionPrompt: 'Perform compliance domain audits.',
+      },
+      {
+        id: 'obj_m23_audit_remediation',
+        title: 'Formulate Prioritized Remediation Matrix',
+        description: 'Compile prioritized remediation matrix for critical and high severity audit findings.',
+        type: 'RECORD_FINDING',
+        target: 'complianceaudit',
+        isCompleted: false,
+        hint: 'Run `complianceaudit remediate` to generate actionable guidance for engineering.',
+        actionPrompt: 'Compile remediation advisory matrix.',
+      },
+      {
+        id: 'obj_m23_audit_verdict',
+        title: 'Issue Regulatory Compliance Attestation',
+        description: 'Issue formal regulatory attestation and conditional launch authorization certificate.',
+        type: 'SUBMIT_REPORT',
+        target: 'complianceaudit',
+        isCompleted: false,
+        hint: 'Run `complianceaudit sign conditional` to certify audit findings and authorize restricted launch.',
+        actionPrompt: 'Issue certified compliance verdict.',
+      },
+    ],
+    reward: {
+      payoutKobo: 600_000,
+      careerXp: 210,
+      skillRewards: {
+        security_fundamentals: 110,
+        reporting: 90,
+        log_analysis: 60,
+      },
+      reputationPoints: 55,
+      flagsToSet: { m23_complianceaudit_completed: true },
+    },
+    consequences: {
+      recoveryGuidance: 'Check all 4 control domains with `complianceaudit status` and verify remediation recommendations.',
+    },
+    isRepeatable: false,
+    whyRecommended: 'Foundational enterprise audit contract establishing the Security Consultant & Auditor career path.',
+  },
 };
 
 export const ACTIVITY_CATALOGUE = AUTHORED_ACTIVITIES;
@@ -802,6 +997,9 @@ export function createInitialActivityDirectorState(
       'act_story_broad_street_intel',
       'act_blue_broad_street_triage',
       'act_bounty_atm_audit',
+      'act_forensics_marina_breach',
+      'act_soc_triage_interbank',
+      'act_audit_fintech_compliance',
     ],
     completedHistory: [],
     longTermGoals: INITIAL_LONG_TERM_GOALS,

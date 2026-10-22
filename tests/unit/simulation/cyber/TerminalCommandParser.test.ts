@@ -72,7 +72,10 @@ describe('TerminalCommandParser & Registry', () => {
     expect(registry.has('purpleteam')).toBe(true);
     expect(registry.has('redteam')).toBe(true);
     expect(registry.has('bounty')).toBe(true);
-    expect(registry.getAll().length).toBe(30);
+    expect(registry.has('forensics')).toBe(true);
+    expect(registry.has('soctriage')).toBe(true);
+    expect(registry.has('complianceaudit')).toBe(true);
+    expect(registry.getAll().length).toBe(33);
   });
 
   it('executes help command returning available commands and beginner tips', () => {

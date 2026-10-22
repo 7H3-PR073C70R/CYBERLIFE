@@ -899,6 +899,7 @@ export class LagosProps {
       | 'PAYSTACK'
       | 'OPAY'
       | 'STARLINK'
+      | 'CYBER_DEFENSE'
       | 'GOOGLE_ADMOB',
     width = 7.0,
     height = 3.6
@@ -1140,40 +1141,45 @@ export class LagosProps {
           ctx.fillStyle = '#ffffff';
           ctx.font = 'bold 24px sans-serif';
           ctx.fillText('ORDER KIT ONLINE', 105, 416);
-        } else {
-          // Google AdMob / Digital Advertising Monetization
-          ctx.fillStyle = '#1e293b';
+        } else if (brand === 'CYBER_DEFENSE') {
+          // Lagos Cyber Defense Alliance / Cyber Command
+          ctx.fillStyle = '#0a0f1d';
           ctx.fillRect(0, 0, 1024, 512);
 
-          // Google colored top stripe
-          ctx.fillStyle = '#4285f4';
-          ctx.fillRect(0, 0, 256, 16);
-          ctx.fillStyle = '#ea4335';
-          ctx.fillRect(256, 0, 256, 16);
-          ctx.fillStyle = '#fbbc05';
-          ctx.fillRect(512, 0, 256, 16);
-          ctx.fillStyle = '#34a853';
-          ctx.fillRect(768, 0, 256, 16);
+          // Cyan & Emerald security header stripe
+          ctx.fillStyle = '#06b6d4';
+          ctx.fillRect(0, 0, 512, 16);
+          ctx.fillStyle = '#10b981';
+          ctx.fillRect(512, 0, 512, 16);
+
+          // Cyber Command Badge Outline
+          ctx.strokeStyle = '#06b6d4';
+          ctx.lineWidth = 3;
+          ctx.strokeRect(60, 60, 904, 392);
+
+          ctx.fillStyle = '#06b6d4';
+          ctx.font = '900 48px monospace';
+          ctx.textAlign = 'left';
+          ctx.fillText('LAGOS CYBER DEFENSE ALLIANCE', 90, 140);
 
           ctx.fillStyle = '#f8fafc';
-          ctx.font = '900 58px sans-serif';
-          ctx.textAlign = 'left';
-          ctx.fillText('Google AdMob', 80, 140);
-
-          ctx.fillStyle = '#38bdf8';
           ctx.font = 'bold 36px sans-serif';
-          ctx.fillText('Earn Maximum Revenue with Premium In-App & City Ads', 80, 220);
+          ctx.fillText('BROAD STREET // SECURE FINANCIAL CORRIDOR', 90, 220);
 
           ctx.fillStyle = '#94a3b8';
-          ctx.font = '26px sans-serif';
-          ctx.fillText('Ad Space Placement Slot • Banner & Rewarded Video Enabled', 80, 290);
-          ctx.fillText('Global Demand Partners • Real-time Automated Bidding', 80, 335);
+          ctx.font = '26px monospace';
+          ctx.fillText('24/7 SIEM TELEMETRY • ENDPOINT THREAT ISOLATION • NDPR AUDITED', 90, 290);
+          ctx.fillText('CEDARLINE SEC-OPS • MARINA FINANCIAL SECTOR GATEWAY', 90, 335);
 
-          ctx.fillStyle = '#4285f4';
-          ctx.fillRect(80, 385, 340, 56);
-          ctx.fillStyle = '#ffffff';
+          ctx.fillStyle = '#10b981';
+          ctx.fillRect(90, 375, 380, 56);
+          ctx.fillStyle = '#022c22';
           ctx.font = 'bold 24px sans-serif';
-          ctx.fillText('GET STARTED WITH ADMOB', 95, 420);
+          ctx.fillText('THREAT LEVEL: NOMINAL', 110, 412);
+
+          ctx.fillStyle = '#38bdf8';
+          ctx.font = 'bold 22px monospace';
+          ctx.fillText('SECTOR 04 // ACTIVE NODES: 1,420', 500, 412);
         }
 
         adTexture = new THREE.CanvasTexture(canvas);

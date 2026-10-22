@@ -28,6 +28,8 @@ export class WorldEnvironment {
   private interiorProps: THREE.Object3D[] = [];
   private interiorProceduralProps: THREE.Object3D[] = [];
   private ceilingFanMesh: THREE.Object3D | null = null;
+  private serverRackLeds: THREE.Mesh[] = [];
+  private ledBlinkTimer = 0;
   private interiorLight: THREE.PointLight | null = null;
   private interiorSunLight: THREE.DirectionalLight | null = null;
   private interiorDeskLamp: THREE.PointLight | null = null;
@@ -884,8 +886,8 @@ export class WorldEnvironment {
     const gtcoAd = LagosProps.createBillboardAd(18, 24.5, 6, -Math.PI / 2, 'GTCO_BANK', 8.0, 4.0);
     this.group.add(gtcoAd);
 
-    // 5. Google AdMob Digital Commercial Billboard on Broad Street North Portal Gantry
-    const admobAd = LagosProps.createBillboardAd(0, 7.8, -35.8, 0, 'GOOGLE_ADMOB', 8.5, 3.2);
+    // 5. Lagos Cyber Defense Alliance Billboard on Broad Street North Portal Gantry
+    const admobAd = LagosProps.createBillboardAd(0, 7.8, -35.8, 0, 'CYBER_DEFENSE', 8.5, 3.2);
     this.group.add(admobAd);
 
     // 6. Paystack Commercial Billboard on Marina Waterfront Promenade
@@ -954,14 +956,15 @@ export class WorldEnvironment {
     });
 
     const isCedarline = locationId === 'cedarline_interior';
-    const floorColor = isCedarline ? 0x0f172a : 0x1e293b;
-    const wallColor = isCedarline ? 0x1e293b : 0x334155;
+    // Bright, natural architectural tones so PBR diffuse textures retain natural clarity and bounce
+    const floorColor = isCedarline ? 0x94a3b8 : 0xd1d5db;
+    const wallColor = isCedarline ? 0xe2e8f0 : 0xf1ece4;
     const accentColor = isCedarline ? 0x10b981 : 0x38bdf8;
 
     // Interior Dedicated Lighting
     // 1. Warm Key Light (Directional entrance light providing warm, rich illumination across the room)
-    const keyLightColor = isCedarline ? 0xffecd1 : 0xfffaed;
-    this.interiorSunLight = new THREE.DirectionalLight(keyLightColor, isCedarline ? 1.5 : 0.95);
+    const keyLightColor = isCedarline ? 0xfff7ed : 0xfffaed;
+    this.interiorSunLight = new THREE.DirectionalLight(keyLightColor, isCedarline ? 1.6 : 1.4);
     this.interiorSunLight.position.set(-3.5, 4.2, 5.0);
     this.interiorSunLight.target.position.set(0.5, 0.8, -1.5);
     this.interiorSunLight.castShadow = true;
@@ -972,15 +975,15 @@ export class WorldEnvironment {
     this.group.add(this.interiorSunLight.target);
 
     // 2. Soft Fill Light (Gentle cool-slate fill preventing flat/black shadows without washing out contrast)
-    const fillLightColor = isCedarline ? 0x94a3b8 : 0xbae6fd;
-    const interiorFillLight = new THREE.DirectionalLight(fillLightColor, isCedarline ? 0.6 : 0.35);
+    const fillLightColor = isCedarline ? 0xcfd8dc : 0xfde68a;
+    const interiorFillLight = new THREE.DirectionalLight(fillLightColor, isCedarline ? 0.9 : 0.75);
     interiorFillLight.position.set(4.5, 3.8, 2.0);
     interiorFillLight.target.position.set(-1.0, 0.5, -2.0);
     this.group.add(interiorFillLight);
     this.group.add(interiorFillLight.target);
 
     // 3. Warm Desk Lamp point light located directly over workstation
-    this.interiorDeskLamp = new THREE.PointLight(0xffb347, 1.2, 5.5);
+    this.interiorDeskLamp = new THREE.PointLight(0xffb347, 1.8, 6.0, 1.2);
     this.interiorDeskLamp.position.set(-0.65, 1.25, -3.54);
     this.interiorDeskLamp.castShadow = true;
     this.group.add(this.interiorDeskLamp);
@@ -988,27 +991,56 @@ export class WorldEnvironment {
     // 4. Central Ceiling Light & Accent Downlights
     this.interiorLight = new THREE.PointLight(
       isCedarline ? 0xfff7ed : 0xffffff,
-      isCedarline ? 1.2 : 1.1,
-      20
+      isCedarline ? 2.2 : 2.0,
+      25,
+      1.2
     );
     this.interiorLight.position.set(0, 4.2, 0);
     this.interiorLight.castShadow = true;
     this.group.add(this.interiorLight);
 
+    // Recessed ceiling lighting troffers (4 illuminated panel troffers distributing light evenly)
+    const fixtureMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      emissive: new THREE.Color(0xfff8e7),
+      emissiveIntensity: 0.95,
+      roughness: 0.2,
+    });
+    const fixtureGeo = new THREE.BoxGeometry(1.6, 0.05, 0.8);
+    const ceilingLightPositions: [number, number][] = [
+      [-3.8, -3.2],
+      [3.8, -3.2],
+      [-3.8, 2.2],
+      [3.8, 2.2],
+    ];
+    ceilingLightPositions.forEach(([lx, lz]) => {
+      const fix = new THREE.Mesh(fixtureGeo, fixtureMat);
+      fix.position.set(lx, roomH - 0.03, lz);
+      this.group.add(fix);
+      this.interiorProps.push(fix);
+
+      const pl = new THREE.PointLight(0xfff7ed, 1.4, 14, 1.2);
+      pl.position.set(lx, roomH - 0.2, lz);
+      this.group.add(pl);
+      this.interiorProps.push(pl);
+    });
+
     if (isCedarline) {
       // Warm downlight over Blessing's desk and reception
-      const aminaDownlight = new THREE.PointLight(0xffedd5, 1.4, 7.0);
+      const aminaDownlight = new THREE.PointLight(0xffedd5, 1.6, 8.0, 1.2);
       aminaDownlight.position.set(3.2, 3.8, 0);
       this.group.add(aminaDownlight);
+      this.interiorProps.push(aminaDownlight);
 
-      // Server rack accent light
-      const serverDownlight = new THREE.PointLight(0x38bdf8, 1.2, 5.0);
-      serverDownlight.position.set(-3.5, 3.2, -0.6);
+      // Server rack accent light (cyan security wash)
+      const serverDownlight = new THREE.PointLight(0x38bdf8, 1.5, 6.0, 1.2);
+      serverDownlight.position.set(-3.8, 3.2, -1.8);
       this.group.add(serverDownlight);
+      this.interiorProps.push(serverDownlight);
     }
 
-    // 5. Subtle Ambient Fill
-    this.interiorAmbient = new THREE.AmbientLight(0xfff8f0, isCedarline ? 0.28 : 0.32);
+    // 5. Rich Ambient Fill ensuring walls, corners, and floor retain natural texture definition
+    this.interiorAmbient = new THREE.AmbientLight(0xfff8f0, isCedarline ? 0.75 : 0.82);
     this.group.add(this.interiorAmbient);
 
     // Floor with PBR Ceramic Tile Textures
@@ -1111,7 +1143,7 @@ export class WorldEnvironment {
     // Enclosed Ceiling (Encloses the interior room so camera does not view sky above walls)
     const ceilingGeo = new THREE.PlaneGeometry(roomW, roomD);
     const ceilingMat = new THREE.MeshStandardMaterial({
-      color: isCedarline ? 0x1e293b : 0x273549,
+      color: isCedarline ? 0x334155 : 0x475569,
       roughness: 0.85,
       metalness: 0.05,
     });
@@ -1126,7 +1158,11 @@ export class WorldEnvironment {
     this.collisionWorld.addObstacle(-1.2, 1.2, -4.0, -2.9, 'Workstation Desk');
 
     // Workstation Interaction Trigger & Marker in front of desk
-    const wsMarker = new InteractableMarker(0, -2.4, accentColor, 'Workstation Terminal');
+    const wsMarker = new InteractableMarker(0, -2.4, accentColor, {
+      label: 'Workstation Terminal',
+      radius: 0.8,
+      beaconHeight: 1.85,
+    });
     this.markers.push(wsMarker);
     this.group.add(wsMarker.getMesh());
 
@@ -1144,39 +1180,13 @@ export class WorldEnvironment {
     });
 
     if (isCedarline) {
-      // Workstation desk for Blessing
-      const aminaDeskGeo = new THREE.BoxGeometry(1.6, 0.75, 0.8);
-      const aminaDeskMat = new THREE.MeshStandardMaterial({
-        color: 0x334155,
-        roughness: 0.5,
-        metalness: 0.2,
-      });
-      const aminaDesk = new THREE.Mesh(aminaDeskGeo, aminaDeskMat);
-      aminaDesk.position.set(3.2, 0.75 / 2, 0);
-      this.group.add(aminaDesk);
-
-      const aminaLaptopGeo = new THREE.BoxGeometry(0.35, 0.02, 0.25);
-      const aminaLaptopMat = new THREE.MeshStandardMaterial({ color: 0x0f172a });
-      const aminaLaptop = new THREE.Mesh(aminaLaptopGeo, aminaLaptopMat);
-      aminaLaptop.position.set(3.2, 0.76, 0);
-      this.group.add(aminaLaptop);
-      this.collisionWorld.addObstacle(2.3, 4.1, -0.5, 0.5, 'Blessing Desk');
-
-      // Server infrastructure rack for Tobi
-      const serverRackGeo = new THREE.BoxGeometry(1.2, 2.2, 0.9);
-      const serverRackMat = new THREE.MeshStandardMaterial({
-        color: 0x1e293b,
-        roughness: 0.4,
-        metalness: 0.6,
-      });
-      const serverRack = new THREE.Mesh(serverRackGeo, serverRackMat);
-      serverRack.position.set(-3.5, 1.1, -0.6);
-      this.group.add(serverRack);
-      this.collisionWorld.addObstacle(-4.2, -2.8, -1.2, 0.0, 'Cedarline Server Rack');
+      // Build comprehensive corporate SOC environment (Signage, Video Wall, Server Racks, Workstation Pods)
+      this.buildCedarlineSocEnvironment(accentColor, halfW, halfD, roomH);
     } else {
-      // Player Apartment interior furniture
+      // Player Apartment interior furniture and decorations
       this.buildApartmentProceduralFallback();
       this.loadApartmentProps();
+      this.buildApartmentDecorations(halfW, halfD, roomH);
     }
 
     // Rebuild interior NPCs (Blessing, Tobi, Dr. Elizabeth) with articulated models & markers
@@ -1185,8 +1195,12 @@ export class WorldEnvironment {
       this.group.add(this.npcManager.getMesh());
     }
 
-    // Exit Doorway Marker at (0, 0, 5.0)
-    const exitMarker = new InteractableMarker(0, 5.0, accentColor, 'Exit Door');
+    // Exit Doorway Marker at (0, 0, 5.0) - Floor-only reticle so no floating shape obstructs camera
+    const exitMarker = new InteractableMarker(0, 5.0, accentColor, {
+      label: isCedarline ? 'Cedarline Services Exit' : 'Apartment Exit',
+      isFloorOnly: true,
+      radius: 1.0,
+    });
     this.markers.push(exitMarker);
     this.group.add(exitMarker.getMesh());
 
@@ -1202,7 +1216,11 @@ export class WorldEnvironment {
 
     if (!isCedarline) {
       // Bed Interactable & Marker for sleep and energy restoration
-      const bedMarker = new InteractableMarker(4.0, -3.8, accentColor, 'Bed');
+      const bedMarker = new InteractableMarker(4.0, -3.8, accentColor, {
+        label: 'Bed',
+        radius: 0.85,
+        beaconHeight: 1.8,
+      });
       this.markers.push(bedMarker);
       this.group.add(bedMarker.getMesh());
 
@@ -1217,7 +1235,11 @@ export class WorldEnvironment {
       });
 
       // Bookshelf Interactable & Marker
-      const bookMarker = new InteractableMarker(-6.0, -3.5, accentColor, 'Bookshelf');
+      const bookMarker = new InteractableMarker(-6.0, -3.5, accentColor, {
+        label: 'Bookshelf',
+        radius: 0.85,
+        beaconHeight: 1.9,
+      });
       this.markers.push(bookMarker);
       this.group.add(bookMarker.getMesh());
 
@@ -1231,6 +1253,522 @@ export class WorldEnvironment {
         radius: 2.4,
       });
     }
+  }
+
+  /**
+   * Constructs the full corporate Security Operations Center (SOC) aesthetic:
+   * - Illuminated Cedarline InfoSec wall branding
+   * - Large 4-panel SOC video wall with real-time network topology and SIEM alert feed
+   * - Enterprise 42U dual server cabinets with animated status LEDs
+   * - Blessing's analyst desk with dual curved monitors and ergonomic chair
+   * - SysAdmin workbench with diagnostic gear
+   * - Frosted glass dividers, hydration station, and office ficus plant
+   */
+  private buildCedarlineSocEnvironment(
+    _accentColor: number,
+    halfW: number,
+    halfD: number,
+    roomH: number
+  ): void {
+    const socGroup = new THREE.Group();
+    socGroup.name = 'CedarlineSOC_Environment';
+
+    // 1. Corporate Illuminated Wall Signage: "CEDARLINE SOLUTIONS // SOC"
+    let signTexture: THREE.CanvasTexture | null = null;
+    if (typeof document !== 'undefined') {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 256;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, 1024, 256);
+
+        // Emerald accent stripe
+        ctx.fillStyle = '#10b981';
+        ctx.fillRect(0, 0, 1024, 12);
+        ctx.fillRect(0, 244, 1024, 12);
+
+        // Metallic border
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(8, 8, 1008, 240);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 44px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('CEDARLINE SOLUTIONS', 512, 90);
+
+        ctx.fillStyle = '#10b981';
+        ctx.font = 'bold 30px monospace';
+        ctx.fillText('SECURITY OPERATIONS CENTER // SOC', 512, 145);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '20px sans-serif';
+        ctx.fillText('LAGOS ISLAND • MARINA CORRIDOR • THREAT MONITORING', 512, 195);
+
+        signTexture = new THREE.CanvasTexture(canvas);
+        signTexture.colorSpace = THREE.SRGBColorSpace;
+      }
+    }
+
+    const signGeo = new THREE.BoxGeometry(6.4, 1.6, 0.08);
+    const signMat = new THREE.MeshStandardMaterial({
+      map: signTexture,
+      roughness: 0.25,
+      metalness: 0.75,
+      emissive: new THREE.Color(0x10b981),
+      emissiveIntensity: 0.35,
+    });
+    const wallSign = new THREE.Mesh(signGeo, signMat);
+    wallSign.position.set(0, roomH - 1.2, -halfD + 0.1);
+    socGroup.add(wallSign);
+
+    // 2. Large 4-Panel SOC Video Wall on West Wall
+    let videoWallTexture: THREE.CanvasTexture | null = null;
+    if (typeof document !== 'undefined') {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#030712';
+        ctx.fillRect(0, 0, 1024, 512);
+
+        // Header bar
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, 1024, 48);
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 22px monospace';
+        ctx.fillText('LIVE TELEMETRY // BROAD STREET - MARINA GATEWAY // SECTOR 4', 24, 32);
+
+        // Network Topology Map Quadrant (Left)
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(20, 60, 480, 430);
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 18px monospace';
+        ctx.fillText('NETWORK TOPOLOGY // 4 ACTIVE NODES', 40, 95);
+
+        // Draw node grid
+        const nodes = [
+          { name: 'Broad St GW', x: 120, y: 220, color: '#10b981' },
+          { name: 'Marina C2 Triage', x: 260, y: 160, color: '#f59e0b' },
+          { name: 'Balogun Branch', x: 260, y: 320, color: '#10b981' },
+          { name: 'Cedarline Core', x: 400, y: 240, color: '#38bdf8' },
+        ];
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(120, 220);
+        ctx.lineTo(260, 160);
+        ctx.lineTo(400, 240);
+        ctx.lineTo(260, 320);
+        ctx.lineTo(120, 220);
+        ctx.stroke();
+
+        nodes.forEach(n => {
+          ctx.fillStyle = n.color;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, 10, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#f8fafc';
+          ctx.font = '14px sans-serif';
+          ctx.fillText(n.name, n.x - 35, n.y + 26);
+        });
+
+        // SIEM Alerts Ticker Quadrant (Right)
+        ctx.strokeStyle = '#1e293b';
+        ctx.strokeRect(520, 60, 484, 430);
+
+        ctx.fillStyle = '#ef4444';
+        ctx.font = 'bold 18px monospace';
+        ctx.fillText('SIEM INCIDENT STREAM [REAL-TIME]', 540, 95);
+
+        const alerts = [
+          { time: '08:00:14', text: 'ALERT #402: SMB Spray detected on 10.0.4.84', lvl: '#ef4444' },
+          { time: '07:58:32', text: 'ALERT #401: svc-aster IAM privilege anomaly', lvl: '#f59e0b' },
+          { time: '07:54:19', text: 'NOTICE #399: SSL Certificate Inspection OK', lvl: '#10b981' },
+          { time: '07:49:02', text: 'TRAFFIC #398: TLS Beacon on Port 8443 (Marina)', lvl: '#f59e0b' },
+          { time: '07:42:50', text: 'NOTICE #397: Morning routine synchronised', lvl: '#10b981' },
+        ];
+
+        alerts.forEach((a, idx) => {
+          const y = 140 + idx * 60;
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(536, y - 24, 452, 48);
+          ctx.fillStyle = a.lvl;
+          ctx.fillRect(536, y - 24, 6, 48);
+          ctx.fillStyle = '#f8fafc';
+          ctx.font = '13px monospace';
+          ctx.fillText(a.time, 552, y);
+          ctx.fillStyle = '#cbd5e1';
+          ctx.font = '13px sans-serif';
+          ctx.fillText(a.text, 552, y + 18);
+        });
+
+        videoWallTexture = new THREE.CanvasTexture(canvas);
+        videoWallTexture.colorSpace = THREE.SRGBColorSpace;
+      }
+    }
+
+    const vwGeo = new THREE.BoxGeometry(0.08, 2.6, 5.2);
+    const vwMat = new THREE.MeshStandardMaterial({
+      map: videoWallTexture,
+      roughness: 0.2,
+      metalness: 0.6,
+      emissive: new THREE.Color(0x38bdf8),
+      emissiveIntensity: 0.45,
+    });
+    const videoWall = new THREE.Mesh(vwGeo, vwMat);
+    videoWall.position.set(-halfW + 0.1, 2.6, 0.5);
+    socGroup.add(videoWall);
+    this.collisionWorld.addObstacle(-halfW, -halfW + 0.6, -2.5, 3.5, 'SOC Video Wall');
+
+    // 3. Enterprise Dual 42U Server Cabinets
+    const cabinetMat = new THREE.MeshStandardMaterial({
+      color: 0x0f172a,
+      roughness: 0.35,
+      metalness: 0.85,
+    });
+    const rackGlassMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      transparent: true,
+      opacity: 0.45,
+      roughness: 0.1,
+      metalness: 0.9,
+    });
+
+    [-4.5, -3.2].forEach(rx => {
+      const rackFrame = new THREE.Mesh(new THREE.BoxGeometry(1.0, 2.6, 0.9), cabinetMat);
+      rackFrame.position.set(rx, 1.3, -3.8);
+      socGroup.add(rackFrame);
+
+      // Glass front door
+      const glassDoor = new THREE.Mesh(new THREE.BoxGeometry(0.9, 2.4, 0.04), rackGlassMat);
+      glassDoor.position.set(rx, 1.3, -3.33);
+      socGroup.add(glassDoor);
+
+      // Server blades and blinking LED indicators
+      for (let s = 0; s < 6; s++) {
+        const blade = new THREE.Mesh(
+          new THREE.BoxGeometry(0.82, 0.22, 0.75),
+          new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.7, roughness: 0.4 })
+        );
+        blade.position.set(rx, 0.35 + s * 0.38, -3.8);
+        socGroup.add(blade);
+
+        // Green & Amber status LEDs
+        const ledMat1 = new THREE.MeshBasicMaterial({ color: 0x10b981 });
+        const led1 = new THREE.Mesh(new THREE.SphereGeometry(0.018, 6, 6), ledMat1);
+        led1.position.set(rx - 0.32, 0.35 + s * 0.38, -3.38);
+        socGroup.add(led1);
+        this.serverRackLeds.push(led1);
+
+        const ledMat2 = new THREE.MeshBasicMaterial({ color: s % 2 === 0 ? 0x38bdf8 : 0xf59e0b });
+        const led2 = new THREE.Mesh(new THREE.SphereGeometry(0.018, 6, 6), ledMat2);
+        led2.position.set(rx - 0.25, 0.35 + s * 0.38, -3.38);
+        socGroup.add(led2);
+        this.serverRackLeds.push(led2);
+      }
+    });
+    this.collisionWorld.addObstacle(-5.2, -2.5, -4.4, -3.2, 'Cedarline Server Racks');
+
+    // 4. Blessing's Analyst Workstation Desk & Chair (at x = 3.2, z = 0)
+    const deskMat = new THREE.MeshStandardMaterial({
+      color: 0x334155,
+      roughness: 0.45,
+      metalness: 0.3,
+    });
+    const aminaDesk = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.76, 0.9), deskMat);
+    aminaDesk.position.set(3.2, 0.38, 0);
+    socGroup.add(aminaDesk);
+
+    // Dual Monitors on Blessing's Desk
+    const monFrameMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.2 });
+    const monScreenMat = new THREE.MeshStandardMaterial({
+      color: 0x0284c7,
+      emissive: new THREE.Color(0x0284c7),
+      emissiveIntensity: 0.6,
+      roughness: 0.1,
+    });
+
+    [-0.42, 0.42].forEach((mx, idx) => {
+      const mon = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.32, 0.03), monFrameMat);
+      mon.position.set(3.2 + mx, 0.98, -0.15);
+      mon.rotation.y = idx === 0 ? 0.15 : -0.15;
+      socGroup.add(mon);
+
+      const scr = new THREE.Mesh(new THREE.PlaneGeometry(0.44, 0.28), monScreenMat);
+      scr.position.set(3.2 + mx, 0.98, -0.13);
+      scr.rotation.y = idx === 0 ? 0.15 : -0.15;
+      socGroup.add(scr);
+    });
+
+    // Keyboard & Mouse
+    const kb = new THREE.Mesh(
+      new THREE.BoxGeometry(0.42, 0.015, 0.15),
+      new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4 })
+    );
+    kb.position.set(3.2, 0.77, 0.15);
+    socGroup.add(kb);
+
+    const mouse = new THREE.Mesh(
+      new THREE.BoxGeometry(0.06, 0.02, 0.1),
+      new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.3 })
+    );
+    mouse.position.set(3.6, 0.77, 0.15);
+    socGroup.add(mouse);
+
+    // Ergonomic Swivel Task Chair for Blessing
+    const chairMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7 });
+    const chairBase = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.06, 8), chairMat);
+    chairBase.position.set(3.2, 0.15, 0.65);
+    socGroup.add(chairBase);
+    const chairPost = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.32, 8), deskMat);
+    chairPost.position.set(3.2, 0.31, 0.65);
+    socGroup.add(chairPost);
+    const chairSeat = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.08, 0.48), chairMat);
+    chairSeat.position.set(3.2, 0.48, 0.65);
+    socGroup.add(chairSeat);
+    const chairBack = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.48, 0.06), chairMat);
+    chairBack.position.set(3.2, 0.74, 0.88);
+    socGroup.add(chairBack);
+
+    this.collisionWorld.addObstacle(2.1, 4.3, -0.6, 1.1, 'Blessing SOC Workstation');
+
+    // 5. Tobi's SysAdmin Server Console Workstation (at x = -2.8, z = 0.2 facing Tobi who sits at [-3.5, 0, 0.2])
+    const tobiDesk = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.76, 1.2), deskMat);
+    tobiDesk.position.set(-2.8, 0.38, 0.2);
+    socGroup.add(tobiDesk);
+
+    const tobiMon = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.36, 0.54), monFrameMat);
+    tobiMon.position.set(-2.7, 0.96, 0.2);
+    socGroup.add(tobiMon);
+
+    const tobiScr = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.5, 0.32),
+      new THREE.MeshStandardMaterial({
+        color: 0x10b981,
+        emissive: new THREE.Color(0x10b981),
+        emissiveIntensity: 0.6,
+        roughness: 0.2,
+      })
+    );
+    tobiScr.rotation.y = -Math.PI / 2; // Facing Tobi at -X
+    tobiScr.position.set(-2.73, 0.96, 0.2);
+    socGroup.add(tobiScr);
+
+    // Tobi's Ergonomic Swivel Chair (under Tobi at x = -3.5, z = 0.2, facing +X)
+    const tobiChairBase = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.06, 8), chairMat);
+    tobiChairBase.position.set(-3.5, 0.15, 0.2);
+    socGroup.add(tobiChairBase);
+    const tobiChairPost = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.32, 8), deskMat);
+    tobiChairPost.position.set(-3.5, 0.31, 0.2);
+    socGroup.add(tobiChairPost);
+    const tobiChairSeat = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.08, 0.48), chairMat);
+    tobiChairSeat.position.set(-3.5, 0.48, 0.2);
+    socGroup.add(tobiChairSeat);
+    const tobiChairBack = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.48, 0.44), chairMat);
+    tobiChairBack.position.set(-3.74, 0.74, 0.2); // Behind Tobi
+    socGroup.add(tobiChairBack);
+
+    this.collisionWorld.addObstacle(-3.3, -2.3, -0.5, 0.9, 'Tobi SysAdmin Workstation');
+
+    // 6. Frosted Glass Architectural Divider Partition
+    const dividerMat = new THREE.MeshStandardMaterial({
+      color: 0x94a3b8,
+      transparent: true,
+      opacity: 0.38,
+      roughness: 0.15,
+      metalness: 0.3,
+    });
+    const dividerFrameMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8 });
+
+    const dividerGlass = new THREE.Mesh(new THREE.BoxGeometry(0.04, 2.0, 2.6), dividerMat);
+    dividerGlass.position.set(1.8, 1.0, 0);
+    socGroup.add(dividerGlass);
+
+    const dividerFrame = new THREE.Mesh(new THREE.BoxGeometry(0.08, 2.05, 0.08), dividerFrameMat);
+    dividerFrame.position.set(1.8, 1.025, 1.3);
+    socGroup.add(dividerFrame);
+
+    // 7. Water Cooler & Hydration Station (Near Entrance at x = -4.5, z = 3.8)
+    const coolerMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.4 });
+    const coolerBody = new THREE.Mesh(new THREE.BoxGeometry(0.4, 1.0, 0.4), coolerMat);
+    coolerBody.position.set(-4.5, 0.5, 3.8);
+    socGroup.add(coolerBody);
+
+    const bottleMat = new THREE.MeshStandardMaterial({
+      color: 0x0284c7,
+      transparent: true,
+      opacity: 0.7,
+      roughness: 0.1,
+    });
+    const waterBottle = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.42, 16), bottleMat);
+    waterBottle.position.set(-4.5, 1.21, 3.8);
+    socGroup.add(waterBottle);
+    this.collisionWorld.addObstacle(-4.8, -4.2, 3.5, 4.1, 'Water Cooler');
+
+    this.group.add(socGroup);
+    this.interiorProps.push(socGroup);
+  }
+
+  /**
+   * Constructs the atmospheric decorations for the Player's Lagos Apartment:
+   * - East wall architectural window with louvers and warm morning light
+   * - Power backup inverter system with digital status readout ("NEPA GRID: 230V // BATTERY: 98%")
+   * - Wall-mounted Lagos network topology & cybersecurity posters
+   * - Geometric woven area rugs for home comfort
+   */
+  private buildApartmentDecorations(halfW: number, halfD: number, _roomH: number): void {
+    const aptGroup = new THREE.Group();
+    aptGroup.name = 'ApartmentDecorations';
+
+    // 1. East Wall Architectural Window (Morning sunlight & city silhouette)
+    const windowFrameMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.7 });
+    const winFrame = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.4, 3.4), windowFrameMat);
+    winFrame.position.set(halfW - 0.06, 2.4, 0);
+    aptGroup.add(winFrame);
+
+    // Window Glass with bright golden Lagos morning sunlight
+    const glassMat = new THREE.MeshStandardMaterial({
+      color: 0xffedd5,
+      emissive: new THREE.Color(0xffedd5),
+      emissiveIntensity: 0.85,
+      roughness: 0.1,
+    });
+    const glassPane = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 2.2), glassMat);
+    glassPane.rotation.y = -Math.PI / 2;
+    glassPane.position.set(halfW - 0.1, 2.4, 0);
+    aptGroup.add(glassPane);
+
+    // Horizontal wooden blinds / louvers
+    for (let b = 0; b < 10; b++) {
+      const slat = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.03, 3.1), windowFrameMat);
+      slat.position.set(halfW - 0.12, 1.45 + b * 0.2, 0);
+      aptGroup.add(slat);
+    }
+
+    // Directional window sunlight streaming across the apartment floor
+    const windowLight = new THREE.DirectionalLight(0xffedd5, 1.2);
+    windowLight.position.set(halfW - 0.2, 3.2, 0);
+    windowLight.target.position.set(0, 0.5, 0);
+    aptGroup.add(windowLight);
+    aptGroup.add(windowLight.target);
+
+    // 2. Power Backup Inverter with glowing digital LED status display
+    let inverterTexture: THREE.CanvasTexture | null = null;
+    if (typeof document !== 'undefined') {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 256;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, 512, 256);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(6, 6, 500, 244);
+
+        ctx.fillStyle = '#10b981';
+        ctx.font = 'bold 34px monospace';
+        ctx.fillText('NEPA GRID: ACTIVE [230V]', 24, 60);
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 30px monospace';
+        ctx.fillText('BATTERY: 98% [PURE SINE]', 24, 120);
+
+        ctx.fillStyle = '#f59e0b';
+        ctx.font = 'bold 24px monospace';
+        ctx.fillText('INVERTER STANDBY // 3.5kVA', 24, 180);
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = '20px sans-serif';
+        ctx.fillText('SUKAH POWER • LAGOS RESIDENTIAL', 24, 225);
+
+        inverterTexture = new THREE.CanvasTexture(canvas);
+        inverterTexture.colorSpace = THREE.SRGBColorSpace;
+      }
+    }
+
+    const invDisplayGeo = new THREE.PlaneGeometry(0.5, 0.25);
+    const invDisplayMat = new THREE.MeshStandardMaterial({
+      map: inverterTexture,
+      emissive: new THREE.Color(0x10b981),
+      emissiveIntensity: 0.5,
+      roughness: 0.2,
+    });
+    const invDisplay = new THREE.Mesh(invDisplayGeo, invDisplayMat);
+    invDisplay.position.set(-4.5, 0.72, -5.48);
+    aptGroup.add(invDisplay);
+
+    // 3. Woven Geometric Area Rug under Workstation
+    const rugMat = new THREE.MeshStandardMaterial({
+      color: 0x1e3a5f, // Deep indigo with geometric border
+      roughness: 0.9,
+      metalness: 0.05,
+    });
+    const rug = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 2.6), rugMat);
+    rug.rotation.x = -Math.PI / 2;
+    rug.position.set(0, 0.015, -2.8);
+    rug.receiveShadow = true;
+    aptGroup.add(rug);
+
+    // 4. Cybersecurity Wall Posters
+    let posterTexture: THREE.CanvasTexture | null = null;
+    if (typeof document !== 'undefined') {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 768;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#020617';
+        ctx.fillRect(0, 0, 512, 768);
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 6;
+        ctx.strokeRect(10, 10, 492, 748);
+
+        ctx.fillStyle = '#06b6d4';
+        ctx.font = '900 42px monospace';
+        ctx.fillText('ORION OS 4.5', 30, 80);
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 24px monospace';
+        ctx.fillText('KERNEL 6.8.0-ORION // ARCH', 30, 130);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '18px monospace';
+        ctx.fillText('• SECCOMP SANDBOX VFS', 30, 220);
+        ctx.fillText('• PCAP BUFFER ENGINE', 30, 270);
+        ctx.fillText('• VOLATILITY MEMORY FORENSICS', 30, 320);
+        ctx.fillText('• MITRE ATT&CK ADVERSARY LAB', 30, 370);
+        ctx.fillText('• CRYPTOGRAPHIC EVIDENCE VAULT', 30, 420);
+
+        ctx.fillStyle = '#10b981';
+        ctx.fillRect(30, 640, 452, 48);
+        ctx.fillStyle = '#022c22';
+        ctx.font = 'bold 22px sans-serif';
+        ctx.fillText('DEFENSE IN DEPTH // 2026', 110, 672);
+
+        posterTexture = new THREE.CanvasTexture(canvas);
+        posterTexture.colorSpace = THREE.SRGBColorSpace;
+      }
+    }
+
+    const posterGeo = new THREE.PlaneGeometry(1.2, 1.8);
+    const posterMat = new THREE.MeshStandardMaterial({
+      map: posterTexture,
+      roughness: 0.4,
+      metalness: 0.1,
+    });
+    const poster = new THREE.Mesh(posterGeo, posterMat);
+    poster.position.set(-2.4, 2.5, -halfD + 0.22);
+    aptGroup.add(poster);
+
+    this.group.add(aptGroup);
+    this.interiorProps.push(aptGroup);
   }
 
   private buildApartmentProceduralFallback(): void {
@@ -1509,7 +2047,7 @@ export class WorldEnvironment {
       this.interiorSunLight.intensity = 0.95;
       this.interiorSunLight.color.setHex(0xfffaed);
       this.interiorDeskLamp.intensity = 0.85;
-      this.interiorAmbient.intensity = 0.32;
+      this.interiorAmbient.intensity = 0.78;
       if (this.interiorLight) this.interiorLight.intensity = 0.95;
     } else {
       // Atmospheric nighttime with warm desk lamp halogen glow and moonlight fill
@@ -1517,7 +2055,7 @@ export class WorldEnvironment {
       this.interiorSunLight.color.setHex(0x38bdf8);
       this.interiorDeskLamp.intensity = 1.8;
       this.interiorDeskLamp.color.setHex(0xffaa44);
-      this.interiorAmbient.intensity = 0.18;
+      this.interiorAmbient.intensity = 0.52;
       if (this.interiorLight) this.interiorLight.intensity = 0.3;
     }
   }
@@ -1552,6 +2090,17 @@ export class WorldEnvironment {
     }
     if (this.ceilingFanMesh) {
       this.ceilingFanMesh.rotation.y += deltaTime * 3.5;
+    }
+    if (this.serverRackLeds.length > 0 && !this.isOutdoor) {
+      this.ledBlinkTimer += deltaTime;
+      if (this.ledBlinkTimer > 0.35) {
+        this.ledBlinkTimer = 0;
+        this.serverRackLeds.forEach(led => {
+          if (Math.random() > 0.35) {
+            led.visible = !led.visible;
+          }
+        });
+      }
     }
     if (!this.isOutdoor) {
       this.updateInteriorLighting(simulationTimeStr);
@@ -1605,6 +2154,8 @@ export class WorldEnvironment {
     });
     this.interiorProps = [];
     this.ceilingFanMesh = null;
+    this.serverRackLeds = [];
+    this.ledBlinkTimer = 0;
     this.interiorLight = null;
     this.interiorSunLight = null;
     this.interiorDeskLamp = null;

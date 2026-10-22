@@ -295,6 +295,57 @@ export const CAREER_PATHS: Readonly<Record<CareerPathId, CareerPathDefinition>> 
       },
     ],
   },
+  career_security_consultant: {
+    id: 'career_security_consultant',
+    title: 'Enterprise Cybersecurity Consulting & Compliance Auditing',
+    description:
+      'Audit corporate information systems against Nigerian and international standards (NDPR, ISO/IEC 27001, PCI-DSS), assess control gaps, and recommend risk mitigation strategies.',
+    issuingOrg: 'Lagos Tech Corridor Compliance Alliance',
+    levels: [
+      {
+        level: 1,
+        title: 'Associate Security Auditor',
+        description:
+          'Audit basic control domains, verify cryptographic storage policies, and inspect data inventory schemas.',
+        minXp: 0,
+        requiredSkillLevels: {
+          security_fundamentals: 1,
+          reporting: 1,
+        },
+        minCompletedJobs: 0,
+        salaryBonusKobo: 0,
+      },
+      {
+        level: 2,
+        title: 'Senior Compliance Consultant',
+        description:
+          'Conduct comprehensive pre-launch technical audits, identity & access policy evaluations, and API secret leakage reviews.',
+        minXp: 120,
+        requiredSkillLevels: {
+          security_fundamentals: 2,
+          reporting: 2,
+          log_analysis: 2,
+        },
+        minCompletedJobs: 2,
+        salaryBonusKobo: 50_000,
+      },
+      {
+        level: 3,
+        title: 'Principal Enterprise Security Advisor',
+        description:
+          'Deliver binding regulatory compliance attestations, architect enterprise zero-trust frameworks, and guide executive risk governance.',
+        minXp: 320,
+        requiredSkillLevels: {
+          security_fundamentals: 3,
+          reporting: 3,
+          incident_response: 2,
+          evidence_handling: 2,
+        },
+        minCompletedJobs: 4,
+        salaryBonusKobo: 110_000,
+      },
+    ],
+  },
 };
 
 export function getCareerLevelDefinition(pathId: CareerPathId, level: number) {

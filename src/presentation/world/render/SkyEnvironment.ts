@@ -181,22 +181,24 @@ export class SkyEnvironment {
     if (this.sky) {
       this.sky.visible = false;
     }
-    // Deep neutral architectural background; no outdoor fog washing out interior walls
-    this.scene.background = new THREE.Color(0x0a0f18);
+    // Rich neutral architectural background; no outdoor fog washing out interior walls
+    this.scene.background = new THREE.Color(0x131a26);
     this.scene.fog = null;
 
     if (this.interiorEnvMap) {
       this.scene.environment = this.interiorEnvMap;
     }
-    // Lower environment intensity for interiors than for outdoors (0.18 vs 0.55)
-    this.scene.environmentIntensity = 0.18;
+    // Rich interior environment reflections (PBR metallic and roughness response)
+    this.scene.environmentIntensity = 0.85;
 
-    // Disable outdoor sun when inside dedicated interior rooms
+    // Interior ambient hemisphere fill providing warm bounce between floor and ceiling
     if (this.sunLight) {
       this.sunLight.visible = false;
     }
     if (this.hemiLight) {
-      this.hemiLight.intensity = 0.05;
+      this.hemiLight.color.setHex(0xfff8ed); // warm ceiling bounce
+      this.hemiLight.groundColor.setHex(0x334155); // cool floor bounce
+      this.hemiLight.intensity = 0.55;
     }
   }
 

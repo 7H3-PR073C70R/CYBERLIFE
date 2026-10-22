@@ -46,6 +46,9 @@ import {
   BountyHubState,
   ContractObjective,
 } from '../contracts/types';
+import { forensicsCommand } from './forensicsCommand';
+import { soctriageCommand } from './soctriageCommand';
+import { complianceauditCommand } from './complianceauditCommand';
 
 export class TerminalCommandRegistry {
   private handlers = new Map<string, TerminalCommandHandler>();
@@ -2016,6 +2019,11 @@ export function createDefaultCommandRegistry(): TerminalCommandRegistry {
   // M19 Bounty Hunting & Freelance Contracts CLI tool
   registry.register(bountyCommand);
 
+  // M23 Additional Playable Professions CLI tools
+  registry.register(forensicsCommand);
+  registry.register(soctriageCommand);
+  registry.register(complianceauditCommand);
+
   // M5 simulated cybersecurity tools
   for (const tool of createDefaultCyberTools()) {
     registry.register(createToolCommandHandler(tool));
@@ -2023,5 +2031,9 @@ export function createDefaultCommandRegistry(): TerminalCommandRegistry {
 
   return registry;
 }
+
+export { forensicsCommand } from './forensicsCommand';
+export { soctriageCommand } from './soctriageCommand';
+export { complianceauditCommand } from './complianceauditCommand';
 
 
