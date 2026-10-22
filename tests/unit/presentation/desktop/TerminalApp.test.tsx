@@ -15,7 +15,7 @@ describe('TerminalApp Component', () => {
     expect(screen.getByText(/Orion OS/i)).toBeInTheDocument();
     expect(screen.getByTestId('terminal-command-input')).toBeInTheDocument();
     expect(screen.getByTestId('terminal-input-row')).toBeInTheDocument();
-    expect(screen.getByText(/tade/i)).toBeInTheDocument();
+    expect(screen.getByText(/protector/i)).toBeInTheDocument();
   });
 
   it('submits a command on Enter and displays formatted output', () => {

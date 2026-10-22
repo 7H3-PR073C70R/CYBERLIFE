@@ -38,7 +38,7 @@ const mockContext: TerminalExecutionContext = {
   },
   currentUser: {
     username: 'analyst',
-    displayName: 'Amina Adebayo',
+    displayName: 'Blessing',
     role: 'Lead Security Analyst',
     organization: 'Cedarline Solutions Ltd.',
     accessTier: 2,

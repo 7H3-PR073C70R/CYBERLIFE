@@ -61,7 +61,7 @@ export const POPULATION_TIERS: readonly PopulationTierDefinition[] = [
   {
     tier: 'TIER_4_STORY_CRITICAL',
     name: 'Story-Critical Narrative Actors',
-    description: 'Named techno-thriller characters (Amina, Marcus, Elena, Femi, etc.) with branching consequences.',
+    description: 'Named techno-thriller characters (Blessing, Barry, Mercy, Michael, etc.) with branching consequences.',
     maxActiveInstances: 8,
     hasMemory: true,
     hasDialogue: true,
@@ -78,7 +78,7 @@ export type EnvironmentProfileId =
   | 'residential_neighborhood'       // Broad Street residential apartments & alleyways
   | 'commercial_street_market'        // Balogun & Idumota market trading stalls
   | 'cafe_coffee_shop'                // Eko Bistro & freelancer work spots
-  | 'restaurant_food_venue'           // Mama Nkechi Buka & local eateries
+  | 'restaurant_food_venue'           // Mama Esther Buka & local eateries
   | 'nightlife_venue'                 // Marina Lagoon Lounge & evening venues
   | 'corporate_office_reception'      // Marina Tower Ground Lobby & corporate checkpoints
   | 'repair_shop_cybercafe'           // Tinubu Tech Repair & Internet Cyberlounge

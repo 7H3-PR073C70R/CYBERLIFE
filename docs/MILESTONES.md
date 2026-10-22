@@ -560,7 +560,7 @@ This document establishes the official sequential milestone roadmap for Cyberlif
     - 8 nuanced factions: Cedarline Services Ltd., Eko Merchant Bank, Krest Incident Response, 0xLagos Research Syndicate, The Lagos Inquirer, Civic Rights & Cyber Integrity Initiative (CRCII), Balogun Traders Electronic Union, and National Digital Security Regulatory Commission (NDSRC).
     - Continuous faction standing scale (-100 Hostile to +100 Allied) with 5 qualitative bands, perks, and access barriers.
   - **Part 4 — Recurring Cast & Interpersonal Dynamics (`docs/narrative/recurring-characters-and-relationships.md`)**:
-    - 11 authored characters: Temitope Blessing (Amina), Marcus Adebayo, Dr. Elena Chen, Femi Martins, Mama Nkechi, Uncle Segun, Folake Davies, Tunde "ZeroDay" Bakare, Kemi Adeyemi, Babatunde Lawal, and Chidi Okonkwo.
+    - 11 authored characters: Blessing, Barry, Mercy, Michael, Mama Esther, Uncle Segun, Goodness, Tsharp, Mary, Daniel, and Choker.
     - Explicit knowledge boundaries, conflicting loyalties, schedules, and progressive dialogue branches.
   - **Part 5 — Player Agency & Consequence Architecture (`docs/narrative/player-agency-and-consequences.md`)**:
     - 4 Ethical Alignments: Strict Procedural, Ethical Mentor, Uncompromising Truth, Pragmatic Commercial.

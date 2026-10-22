@@ -94,7 +94,7 @@ export const POST_INCIDENT_DIRECTIVES = [
   {
     icon: '🌊',
     location: 'Marina Seawall Promenade',
-    contact: "Tsharp 'ZeroDay' Bakare",
+    contact: 'Tsharp',
     action: 'Meet independent researcher Tsharp for bug bounty collaborations and threat intelligence.',
   },
   {
@@ -106,8 +106,8 @@ export const POST_INCIDENT_DIRECTIVES = [
   {
     icon: '☕',
     location: 'Broad Street Sidewalk Café',
-    contact: 'Anjola',
-    action: 'Meet tech talent scout Anjola to review high-paying fintech contracts and salary benchmarks.',
+    contact: 'Goodness',
+    action: 'Meet tech talent scout Goodness to review high-paying fintech contracts and salary benchmarks.',
   },
   {
     icon: '💼',

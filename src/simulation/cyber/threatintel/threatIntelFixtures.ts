@@ -59,7 +59,7 @@ export const THREAT_INTEL_RECORDS: readonly ThreatIndicatorRecord[] = [
     provenance: {
       feedName: 'Krest Incident Response Threat Bulletin',
       feedId: 'feed-krest-ir',
-      publisher: 'Krest Incident Response (Dr. Elena Chen)',
+      publisher: 'Krest Incident Response (Mercy)',
       publishedDate: '2026-10-11',
       reportReference: 'KREST-TB-2026-104',
       fictionalContext: 'Commercial DFIR telemetry collected during triage of regional supply-chain anomalies.',
@@ -90,7 +90,7 @@ export const THREAT_INTEL_RECORDS: readonly ThreatIndicatorRecord[] = [
     provenance: {
       feedName: '0xLagos Research Syndicate Pastebin',
       feedId: 'feed-0xlagos-open',
-      publisher: '0xLagos Hackerspace (Tunde "ZeroDay" Bakare)',
+      publisher: '0xLagos Hackerspace (Tsharp)',
       publishedDate: '2026-10-09',
       reportReference: '0xL-INTEL-404-WEAVER',
       fictionalContext: 'Community-sourced reverse engineering report dissecting leaked agent binary.',

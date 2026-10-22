@@ -7,8 +7,8 @@
  * 3. Select Choice 0 (procedural protocol) and capture relationship + faction standing toast.
  * 4. Open ContactsApp on the Virtual Desktop, switch to Factions & Corporate Influence tab,
  *    and capture real-time standings and audit history.
- * 5. Branch 1: Marcus Adebayo empathy path (trust increase + whistleblower memo evidence).
- * 6. Branch 2: Marcus Adebayo accusation path (distrust + defensive clamming up).
+ * 5. Branch 1: Barry empathy path (trust increase + whistleblower memo evidence).
+ * 6. Branch 2: Barry accusation path (distrust + defensive clamming up).
  * 7. Evidence-dependent dilemma: preserving EVD-2026-001 unlocks high-stakes dilemma branch.
  * 8. In-game Save/Load manager interface verifying narrative state persistence.
  */
@@ -212,9 +212,9 @@ async function main() {
     await cdp.captureScreenshot('03_contacts_factions_tab.png');
 
     // ------------------------------------------------------------------------
-    // Screenshot 4: Marcus Adebayo Branch 1 (Empathy & Whistleblower Memo)
+    // Screenshot 4: Barry Branch 1 (Empathy & Whistleblower Memo)
     // ------------------------------------------------------------------------
-    console.log('[*] Step 4: Testing Marcus Adebayo Branch 1 (Empathy / Protection)...');
+    console.log('[*] Step 4: Testing Barry Branch 1 (Empathy / Protection)...');
     await cdp.send('Page.navigate', { url: `${BASE_URL}/?skipIntro=1&npc=npc_marcus` });
     await cdp.waitForSelector('[data-testid="dialogue-choice-0"]');
     await sleep(500);
@@ -228,9 +228,9 @@ async function main() {
     await cdp.captureScreenshot('04_marcus_branch1_empathy.png');
 
     // ------------------------------------------------------------------------
-    // Screenshot 5: Marcus Adebayo Branch 2 (Accusation & Defensive Clamming Up)
+    // Screenshot 5: Barry Branch 2 (Accusation & Defensive Clamming Up)
     // ------------------------------------------------------------------------
-    console.log('[*] Step 5: Testing Marcus Adebayo Branch 2 (Accusation / Scapegoating)...');
+    console.log('[*] Step 5: Testing Barry Branch 2 (Accusation / Scapegoating)...');
     await cdp.send('Page.navigate', { url: `${BASE_URL}/?skipIntro=1&npc=npc_marcus` });
     await cdp.waitForSelector('[data-testid="dialogue-choice-1"]');
     await sleep(500);

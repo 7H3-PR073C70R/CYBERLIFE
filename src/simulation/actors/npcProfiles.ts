@@ -69,7 +69,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 2. Cedarline employee (sysadmin who provisioned Aster)
   {
     id: 'npc_marcus',
-    name: 'Tobi',
+    name: 'Barry',
     role: 'Junior Infrastructure Administrator',
     organization: 'Cedarline Services Ltd.',
     bio: 'Second-year systems administrator at Cedarline. Capable and hardworking, but frequently overwhelmed by overlapping executive deadlines and conflicting architectural demands.',
@@ -101,7 +101,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
         'Failed to roll back the corporate-admin role before going on leave.',
       ],
       suspectedFacts: [
-        'Fears he will be terminated if Gabriel or the audit committee discovers the role assignment.',
+        'Fears he will be terminated if Michael or the audit committee discovers the role assignment.',
       ],
       unknownFacts: [
         'Does not understand the AI prompt injection vector or how the model interpreted user requests.',
@@ -151,18 +151,18 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 3. Technical colleague (lead AI engineer)
   {
     id: 'npc_elena',
-    name: 'Dr. Elizabeth',
+    name: 'Mercy',
     role: 'Lead AI Engineer',
     organization: 'Cedarline Services Ltd.',
-    bio: 'Applied machine learning specialist formerly with an international research lab. She architected Aster’s autonomous retrieval and tool-calling agent loop.',
+    bio: 'Top Nigerian applied machine learning specialist and system architect. She architected Aster’s autonomous retrieval and tool-calling agent loop.',
     personality:
       'Intellectually formidable, passionate about agentic systems, sensitive to simplistic "AI is evil" tropes, but rigorously honest when shown hard log traces.',
-    voiceTone: 'Crisp, articulate, analytical, punctuated by technical precision.',
+    voiceTone: 'Crisp, articulate, analytical Nigerian English, punctuated by technical precision.',
     voice: {
       gender: 'female',
       pitch: 1.02,
       rate: 1.0,
-      voiceHints: ['female', 'en-gb', 'en-us', 'karen', 'serena'],
+      voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena'],
     },
     palette: {
       skin: 0x8d5b4c,
@@ -212,7 +212,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 4. Manager / business stakeholder
   {
     id: 'npc_femi',
-    name: 'Gabriel',
+    name: 'Michael',
     role: 'VP of Technology & Operations',
     organization: 'Cedarline Services Ltd.',
     bio: 'Seasoned enterprise technology executive responsible for Cedarline’s operational P&L, client SLA commitments, and regulatory compliance.',
@@ -333,7 +333,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 6. Neighborhood resident / community elder
   {
     id: 'npc_segun',
-    name: 'Uncle Ola',
+    name: 'Uncle Segun',
     role: 'Community Elder & Historian',
     organization: 'Tinubu Square Civic Association',
     bio: 'Retired Lagos civil servant and neighborhood elder. Spends his days around Tinubu Square observing the transformation of Lagos Island from colonial trading post to modern digital hub.',
@@ -396,7 +396,7 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
   // 7. Recruiter / client / professional contact
   {
     id: 'npc_folake',
-    name: 'Anjola',
+    name: 'Goodness',
     role: 'Technology Talent Liaison',
     organization: 'Eko Tech Partners',
     bio: 'Headhunter and talent partner connecting cybersecurity analysts, developers, and infrastructure specialists with African fintech unicorns and international cyber firms.',

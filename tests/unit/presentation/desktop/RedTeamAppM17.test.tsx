@@ -135,6 +135,6 @@ describe('RedTeamApp (Milestone 17 Presentation Suite)', () => {
 
     expect(screen.getByText(/CISO Technical Evaluation & Assessment Sign-off/i)).toBeInTheDocument();
     expect(screen.getByText(/100%/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/Folake Davies/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Goodness/i).length).toBeGreaterThan(0);
   });
 });

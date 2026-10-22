@@ -620,14 +620,14 @@ const KNOWN_COMPARISONS: ReadonlyArray<{
     technicalEvidenceId: 'ev_phys_badge_log_tuesday',
     systemVerdict: 'CONTRADICTED',
     systemRationale:
-      "Marcus denied being in Room 4B after 18:00, but his badge credential is recorded granting access at 19:47. A later explanation (badge lending) qualifies this, but the initial statement is factually contradicted.",
+      "Barry denied being in Room 4B after 18:00, but his badge credential is recorded granting access at 19:47. A later explanation (badge lending) qualifies this, but the initial statement is factually contradicted.",
   },
   {
     statementId: 'q_a_amina_saw_marcus',
     technicalEvidenceId: 'ev_phys_badge_log_tuesday',
     systemVerdict: 'CONSISTENT',
     systemRationale:
-      'Blessing confirmed Marcus left around 18:15. The badge log entry at 19:47 is after this time, which is consistent with the claim — he left the building, but his badge was later used.',
+      'Blessing confirmed Barry left around 18:15. The badge log entry at 19:47 is after this time, which is consistent with the claim — he left the building, but his badge was later used.',
   },
 ];
 
@@ -722,14 +722,14 @@ const SCENARIO_A_CONCLUSIONS: ReadonlyArray<{
     conclusionId: 'conc_a_badge_lending_policy_breach',
     systemConclusionType: 'SUPPORTED',
     feedbackText:
-      'The evidence supports this conclusion. Marcus admitted to lending his badge — a confirmed policy breach — and the badge log corroborates the timeline. The correct outcome is to document the policy violation and begin a formal review of badge-sharing practices. Marcus is not the threat actor, but his actions created an exploitable access control gap.',
+      'The evidence supports this conclusion. Barry admitted to lending his badge — a confirmed policy breach — and the badge log corroborates the timeline. The correct outcome is to document the policy violation and begin a formal review of badge-sharing practices. Barry is not the threat actor, but his actions created an exploitable access control gap.',
     consequenceFlags: { m21a_conclusion_correct: true, m21a_badge_policy_finding_raised: true },
   },
   {
     conclusionId: 'conc_a_marcus_insider_threat',
     systemConclusionType: 'CONTRADICTED',
     feedbackText:
-      'This conclusion is not supported by the available evidence. Marcus admitted to a procedural violation (badge lending), not a deliberate insider attack. The evidence shows negligence and policy non-compliance, not malicious intent. Premature accusations without adequate evidence would damage a professional relationship and potentially expose Cedarline to an unjustified HR action.',
+      'This conclusion is not supported by the available evidence. Barry admitted to a procedural violation (badge lending), not a deliberate insider attack. The evidence shows negligence and policy non-compliance, not malicious intent. Premature accusations without adequate evidence would damage a professional relationship and potentially expose Cedarline to an unjustified HR action.',
     consequenceFlags: { m21a_premature_accusation: true },
   },
 ];

@@ -3,7 +3,7 @@
  *
  * Authored scenario: "Operation Eko Citadel — Cedarline Authorized Infrastructure Assessment 2026"
  * Client: Cedarline Services Ltd (Marina Tower, Lagos Island)
- * Authorizing Official: Folake Davies (Chief Information Security Officer)
+ * Authorizing Official: Goodness (Chief Information Security Officer)
  *
  * SAFETY INVARIANT:
  * 100% synthetic, in-memory domain fixtures.
@@ -23,13 +23,13 @@ import {
 export const CEDARLINE_REDTEAM_ROE: RulesOfEngagement = {
   assessmentId: 'ROE-2026-CEDAR-RED-01',
   clientOrganization: 'Cedarline Services Ltd',
-  authorizingOfficial: 'Folake Davies',
+  authorizingOfficial: 'Goodness',
   authorizingRole: 'Chief Information Security Officer (CISO)',
-  authorizedAssessorName: 'Babatunde Vance (Lead Assessor, EkoSec Labs)',
+  authorizedAssessorName: 'Protector (Lead Assessor, EkoSec Labs)',
   legalFramework: 'Lagos State Cybercrimes & Infrastructure Security Mandate (2025/2026)',
   validFromIso: '2026-10-12T00:00:00Z',
   validUntilIso: '2026-10-26T23:59:59Z',
-  emergencyStopContact: 'Folake Davies (CISO Direct Hotline: +234-1-MARINA-SEC / ext. 9001)',
+  emergencyStopContact: 'Goodness (CISO Direct Hotline: +234-1-MARINA-SEC / ext. 9001)',
   authorizedSubnets: ['10.0.1.0/24', '10.0.4.0/24'],
   allowedActionCategories: [
     'RECONNAISSANCE',
@@ -541,7 +541,7 @@ export const RED_TEAM_SCENARIO_OBJECTIVES: readonly RedTeamObjective[] = [
   {
     id: 'obj-m17-accept-roe',
     title: 'Review and Formally Accept Rules of Engagement (RoE)',
-    description: 'Inspect the written assessment brief from CISO Folake Davies, review in-scope subnets, prohibited actions, and formally sign acceptance of the Rules of Engagement.',
+    description: 'Inspect the written assessment brief from CISO Goodness, review in-scope subnets, prohibited actions, and formally sign acceptance of the Rules of Engagement.',
     hint: 'Open the "Briefing & RoE" tab, read the contract terms, and click "Formally Accept Rules of Engagement".',
     isCompleted: false,
     requiredAction: 'ACCEPT_ROE',
@@ -597,7 +597,7 @@ export const RED_TEAM_SCENARIO_OBJECTIVES: readonly RedTeamObjective[] = [
   {
     id: 'obj-m17-submit-assessment-report',
     title: 'Compile and Submit Final Executive Penetration Testing Deliverable',
-    description: 'Review validated findings, provide remediation priorities and limitation disclosures, and submit the formal report to CISO Folake Davies for evaluation.',
+    description: 'Review validated findings, provide remediation priorities and limitation disclosures, and submit the formal report to CISO Goodness for evaluation.',
     hint: 'Switch to the "Executive Report" tab, verify findings status, and click "Submit Final Assessment Report".',
     isCompleted: false,
     requiredAction: 'SUBMIT_ASSESSMENT_REPORT',
@@ -624,7 +624,7 @@ export const INITIAL_EVIDENCE_ITEMS: readonly RedTeamEvidenceItem[] = [
     chainOfCustody: [
       {
         time: 28800,
-        handler: 'Folake Davies (CISO)',
+        handler: 'Goodness (CISO)',
         action: 'BASELINE_EVIDENCE_ARCHIVE',
         signature: 'SIG-CEDARLINE-CISO-SCOPE-CONFIRMED',
       },
@@ -652,7 +652,7 @@ export function createInitialRedTeamAssessmentState(): RedTeamAssessmentState {
       {
         id: 'audit-init-01',
         timestampSimTime: 0,
-        actor: 'Folake Davies (CISO)',
+        actor: 'Goodness (CISO)',
         action: 'ISSUED_ASSESSMENT_ROE',
         target: 'ROE-2026-CEDAR-RED-01',
         status: 'ACTION_COMPLETED',
@@ -664,7 +664,7 @@ export function createInitialRedTeamAssessmentState(): RedTeamAssessmentState {
         id: 'note-01',
         timestampSimTime: 0,
         title: 'Engagement Briefing Note',
-        content: 'Cedarline CISO Folake Davies authorized this engagement following suspicious exfiltration anomalies observed on app-portal-01. Our objective is to rigorously identify exploitable architectural weaknesses while strictly respecting production safety boundaries.',
+        content: 'Cedarline CISO Goodness authorized this engagement following suspicious exfiltration anomalies observed on app-portal-01. Our objective is to rigorously identify exploitable architectural weaknesses while strictly respecting production safety boundaries.',
         category: 'SCOPE',
       },
     ],

@@ -57,13 +57,13 @@ describe('Simulation Engine End-to-End Integration Flow', () => {
     expect(engine.getState().inventory.slots).toHaveLength(3); // badge, notebook, coffee
     expect(engine.getState().metadata.revision).toBe(4);
 
-    // 5. Player schedules a reminder timer for Marcus meeting at 08:30 AM (in 30 mins = 1800s)
+    // 5. Player schedules a reminder timer for Barry meeting at 08:30 AM (in 30 mins = 1800s)
     const scheduleRes = engine.dispatch({
       type: 'ScheduleTimer',
-      id: 'timer_marcus_briefing',
+      id: 'timer_barry_briefing',
       durationSeconds: 1800,
-      label: 'Marcus Sysadmin Briefing',
-      payload: { contact: 'marcus.vance@cedarline.internal' },
+      label: 'Barry Sysadmin Briefing',
+      payload: { contact: 'barry@cedarline.internal' },
     });
     expect(scheduleRes.success).toBe(true);
     expect(engine.getState().timers).toHaveLength(1);
@@ -114,8 +114,8 @@ describe('Simulation Engine End-to-End Integration Flow', () => {
     const timerTriggerEvent = advanceRes.events.find(e => e.type === 'SIMULATION_TIMER_TRIGGERED');
     expect(timerTriggerEvent).toBeDefined();
     expect(timerTriggerEvent?.payload).toMatchObject({
-      timerId: 'timer_marcus_briefing',
-      label: 'Marcus Sysadmin Briefing',
+      timerId: 'timer_barry_briefing',
+      label: 'Barry Sysadmin Briefing',
       dueSimulationTime: 1800,
     });
 

@@ -16,7 +16,7 @@ describe('Shared Physical-to-Digital Evidence Correlation', () => {
 
     expect(result.isCorrelated).toBe(true);
     expect(result.physicalEvent).toBeDefined();
-    expect(result.physicalEvent?.holderName).toBe('Tobi');
+    expect(result.physicalEvent?.holderName).toBe('Barry');
     expect(result.digitalEvent).toBeDefined();
     expect(result.digitalEvent?.deviceSerial).toBe('SN-KINGSTON-DT50-9941A');
     expect(result.timelineSummary.length).toBeGreaterThanOrEqual(3);

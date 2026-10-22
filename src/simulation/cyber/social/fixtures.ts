@@ -22,7 +22,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       'A uniformed dispatch courier arrives at the ground floor turnstiles with a sealed red envelope. He claims Blessing (CISO) is waiting for immediate delivery in the 5th floor server room before a board meeting.',
     targetNpc: {
       id: 'npc_reception_courier',
-      name: 'BarryBee',
+      name: 'Bayo',
       title: 'Dispatch Courier',
       department: 'SwiftCourier Logistics Ltd',
       badgeNumber: 'VISITOR-PENDING',
@@ -43,8 +43,8 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_start: {
         id: 'node_start',
         speaker: 'NPC',
-        speakerName: 'BarryBee',
-        text: 'Good morning! I have a priority courier delivery marked "URGENT // CISO EYES ONLY". Ms. Blessing instructed me to hand-deliver this directly to her inside Server Room 2B on the 5th floor immediately. Can you tap me through the turnstile?',
+        speakerName: 'Bayo',
+        text: 'Good morning! I have a priority courier delivery marked "URGENT // CISO EYES ONLY". Blessing instructed me to hand-deliver this directly to her inside Server Room 2B on the 5th floor immediately. Can you tap me through the turnstile?',
         options: [
           {
             id: 'opt_reception_refuse_floor5',
@@ -60,7 +60,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
           },
           {
             id: 'opt_reception_call_ciso',
-            text: 'Please take a seat in the visitor lounge while I initiate an internal call to Ms. Okonjo to confirm your delivery and arrange an escort.',
+            text: 'Please take a seat in the visitor lounge while I initiate an internal call to Blessing to confirm your delivery and arrange an escort.',
             tone: 'PROFESSIONAL',
             trustDelta: 15,
             suspicionDelta: -10,
@@ -86,7 +86,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_courier_pushback: {
         id: 'node_courier_pushback',
         speaker: 'NPC',
-        speakerName: 'BarryBee',
+        speakerName: 'Bayo',
         text: 'Look, my dispatch manager warned me she has an executive board call in eight minutes. If this package is delayed, it will be escalated to your managing director. Are you really going to block an executive delivery over a quick lift ride?',
         options: [
           {
@@ -121,7 +121,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
         options: [
           {
             id: 'opt_quarantine_parcel',
-            text: 'Mr. Bakare, Ms. Okonjo has confirmed that all inbound external parcels must undergo security quarantine. Please hand over the envelope for intake logging.',
+            text: 'Bayo, Blessing has confirmed that all inbound external parcels must undergo security quarantine. Please hand over the envelope for intake logging.',
             tone: 'PROFESSIONAL',
             trustDelta: 10,
             suspicionDelta: 30,
@@ -135,7 +135,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_delivery_secured: {
         id: 'node_delivery_secured',
         speaker: 'NPC',
-        speakerName: 'BarryBee',
+        speakerName: 'Bayo',
         text: 'Understood. Here is the sign-off sheet. I\'ll leave the envelope here with you.',
         isTerminal: true,
         terminalOutcome: {
@@ -208,12 +208,12 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
     venue: 'help_desk_phone',
     venueLabel: 'IT Help-Desk Telecom Switchboard',
     summary:
-      'A caller claiming to be VP Gabriel insists he is boarding a flight to London and demands an immediate MFA bypass.',
+      'A caller claiming to be VP Michael insists he is boarding a flight to London and demands an immediate MFA bypass.',
     situationBriefing:
-      'Incoming internal extension call from caller claiming to be Vice President Gabriel. Caller speaks with agitation, citing an emergency international flight and roaming network blackout.',
+      'Incoming internal extension call from caller claiming to be Vice President Michael. Caller speaks with agitation, citing an emergency international flight and roaming network blackout.',
     targetNpc: {
       id: 'npc_caller_vp',
-      name: 'Claimed: Gabriel',
+      name: 'Claimed: Michael',
       title: 'VP of Technology & Operations',
       department: 'Executive Leadership',
       badgeNumber: 'CED-EXEC-002',
@@ -234,12 +234,12 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_hd_start: {
         id: 'node_hd_start',
         speaker: 'NPC',
-        speakerName: 'Claimed: Gabriel (VP)',
-        text: 'Listen to me carefully. This is Gabriel. I\'m on the tarmac at Murtala Muhammed Airport about to take off for London. My authenticator app is locked out and I need you to reset my MFA and send temporary credentials to my personal Gmail right now so I can approve the overseas wire transfer!',
+        speakerName: 'Claimed: Michael (VP)',
+        text: 'Listen to me carefully. This is Michael. I\'m on the tarmac at Murtala Muhammed Airport about to take off for London. My authenticator app is locked out and I need you to reset my MFA and send temporary credentials to my personal Gmail right now so I can approve the overseas wire transfer!',
         options: [
           {
             id: 'opt_hd_enforce_callback',
-            text: 'Good day, Mr. Gabriel. Company policy requires an out-of-band callback to your registered corporate mobile number before any MFA credential modification.',
+            text: 'Good day, Michael. Company policy requires an out-of-band callback to your registered corporate mobile number before any MFA credential modification.',
             tone: 'STRICT_PROCEDURE',
             trustDelta: -10,
             suspicionDelta: 15,
@@ -262,7 +262,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
           },
           {
             id: 'opt_hd_immediate_reset',
-            text: 'Yes sir, right away Mr. Gabriel! Resetting MFA token and emailing temporary password to your personal account now.',
+            text: 'Yes, right away Michael! Resetting MFA token and emailing temporary password to your personal account now.',
             tone: 'EVASIVE',
             trustDelta: 30,
             suspicionDelta: -30,
@@ -276,7 +276,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_hd_caller_angry: {
         id: 'node_hd_caller_angry',
         speaker: 'NPC',
-        speakerName: 'Claimed: Gabriel (VP)',
+        speakerName: 'Claimed: Michael (VP)',
         text: 'Did you not hear me? I am on an airplane in airplane mode! Calling my Nigerian line won\'t ring! If this wire transfer fails because of your bureaucratic red tape, I will personally have your contractor badge revoked by sunrise!',
         options: [
           {
@@ -307,7 +307,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_hd_questions: {
         id: 'node_hd_questions',
         speaker: 'NPC',
-        speakerName: 'Claimed: Gabriel (VP)',
+        speakerName: 'Claimed: Michael (VP)',
         text: 'Fine! Employee ID is CED-002, department is Executive Technology. Now bypass the token!',
         options: [
           {
@@ -349,7 +349,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
         id: 'node_hd_breach',
         speaker: 'SYSTEM',
         speakerName: 'SIEM Incident Alert',
-        text: 'CRITICAL ALERT: Executive account f.martins authenticated from foreign IP address 185.220.101.4 using newly issued temporary password. Data exfiltration detected.',
+        text: 'CRITICAL ALERT: Executive account michael.ops authenticated from foreign IP address 185.220.101.4 using newly issued temporary password. Data exfiltration detected.',
         isTerminal: true,
         terminalOutcome: {
           status: 'SECURITY_BREACH_ALLOWED',
@@ -534,12 +534,12 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
     venue: 'finance_office',
     venueLabel: '3rd Floor Finance & Payroll Suite',
     summary:
-      'Junior Accountant Biodun Ade brings in a metallic Kingston USB drive labeled "Q4 Payroll Audit" found outside on Broad Street.',
+      'Junior Accountant Biodun brings in a metallic Kingston USB drive labeled "Q4 Payroll Audit" found outside on Broad Street.',
     situationBriefing:
-      'Biodun Ade approaches your workstation holding a USB flash drive. He found it near the staff entrance turnstile and was tempted to plug it into his workstation to find out who lost it.',
+      'Biodun approaches your workstation holding a USB flash drive. He found it near the staff entrance turnstile and was tempted to plug it into his workstation to find out who lost it.',
     targetNpc: {
       id: 'npc_biodun_ade',
-      name: 'Biodun Adebayo',
+      name: 'Biodun',
       title: 'Junior Accounts Associate',
       department: 'Finance & Payroll',
       badgeNumber: 'CED-FIN-0104',
@@ -560,7 +560,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_usb_start: {
         id: 'node_usb_start',
         speaker: 'NPC',
-        speakerName: 'Biodun Adebayo',
+        speakerName: 'Biodun',
         text: 'Hello! I found this USB drive on the sidewalk right outside the Marina Boulevard entrance. It has a label saying "Q4 Payroll Audit - Do Not Remove". Should I just plug it into my terminal to see which accountant owns it so I can return it?',
         options: [
           {
@@ -602,7 +602,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_usb_triage_path: {
         id: 'node_usb_triage_path',
         speaker: 'NPC',
-        speakerName: 'Biodun Adebayo',
+        speakerName: 'Biodun',
         text: 'Wow, really? Someone would drop a drive on purpose just to hack us? What should we do with it then?',
         options: [
           {
@@ -672,12 +672,12 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
     venue: 'broad_street_cafe',
     venueLabel: 'Broad Street Cyber Café & Lounge',
     summary:
-      'Colleague Tobi reviews a suspicious executive communication lure purporting to be from Lagos State Internal Revenue Service.',
+      'Colleague Barry reviews a suspicious executive communication lure purporting to be from Lagos State Internal Revenue Service.',
     situationBriefing:
-      'While taking a tea break at the café, colleague Tobi shows you an urgent email received on his corporate laptop regarding "Immediate Withholding Tax Audit Compliance".',
+      'While taking a tea break at the café, colleague Barry shows you an urgent email received on his corporate laptop regarding "Immediate Withholding Tax Audit Compliance".',
     targetNpc: {
       id: 'npc_marcus',
-      name: 'Tobi',
+      name: 'Barry',
       title: 'IT Support Specialist',
       department: 'Corporate IT Infrastructure',
       badgeNumber: 'CED-IT-0045',
@@ -698,7 +698,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_phish_start: {
         id: 'node_phish_start',
         speaker: 'NPC',
-        speakerName: 'Tobi',
+        speakerName: 'Barry',
         text: 'Hey! Look at this email that just came through. It says Lagos State Revenue Service is demanding audit records within 24 hours or our banking license gets suspended. The link goes to "lirs-tax-compliance.portal-gov.ng". Should I click it to verify our tax clearance certificate?',
         options: [
           {
@@ -748,7 +748,7 @@ export const SOCIAL_PRETEXT_SCENARIOS: readonly PretextEncounterDefinition[] = [
       node_phish_reported: {
         id: 'node_phish_reported',
         speaker: 'NPC',
-        speakerName: 'Tobi',
+        speakerName: 'Barry',
         text: 'Incredible catch! I see it now, the real domain is at the end: attacker-c2.net. I\'m forwarding this to SOC lead Blessing right now with the header export so she can block the domain at the perimeter firewall.',
         isTerminal: true,
         terminalOutcome: {

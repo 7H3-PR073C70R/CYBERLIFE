@@ -76,7 +76,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
   {
     id: 'thread-cipher',
     contactId: 'cipher',
-    contactName: 'BarryBee',
+    contactName: 'Cipher',
     contactRole: 'Underground Broker & Whistleblower',
     contactOrg: '0xBoard Syndicate',
     contactAvatarColor: '#a855f7',
@@ -117,7 +117,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
       {
         id: 'msg-cp-1',
         senderId: 'cipher',
-        senderName: 'BarryBee',
+        senderName: 'Cipher',
         senderRole: 'Underground Broker',
         text: 'Greetings, analyst. Heard Cedarline had a little surprise on their Broad Street cluster.',
         timestamp: '09:42 AM',
@@ -128,7 +128,7 @@ export const INITIAL_CHAT_THREADS: ChatThread[] = [
       {
         id: 'msg-cp-2',
         senderId: 'cipher',
-        senderName: 'BarryBee',
+        senderName: 'Cipher',
         senderRole: 'Underground Broker',
         text: 'If you want the unredacted Aster AI telemetry, open Tor Browser and visit deepleaks.onion. It was dumped 2 hours ago.',
         timestamp: '09:45 AM',

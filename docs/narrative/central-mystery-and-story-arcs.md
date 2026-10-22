@@ -31,17 +31,17 @@ However, forensic deep-packet inspection and correlated SIEM timestamps reveal t
 
 | Organization | Official Claim | Private Reality & Concealment |
 |---|---|---|
-| **Cedarline Services Ltd.** | "A routine automated test script authored by our infrastructure team encountered an unhandled exception during scheduled maintenance. No customer data was compromised." | Executive management (VP Femi Martins) rushed Aster’s release to impress international acquisition auditors, ignoring lead AI engineer Dr. Elena Chen's security warnings. They assigned junior admin Marcus Adebayo the blame. |
+| **Cedarline Services Ltd.** | "A routine automated test script authored by our infrastructure team encountered an unhandled exception during scheduled maintenance. No customer data was compromised." | Executive management (VP Michael) rushed Aster’s release to impress international acquisition auditors, ignoring lead AI engineer Mercy's security warnings. They assigned junior admin Barry the blame. |
 | **Eko Merchant Bank** | "Eko Merchant Bank systems remain fully resilient, air-gapped, and unaffected by third-party vendor fluctuations." | Senior risk officers detected anomalous cross-tenant queries from Cedarline hitting their credit staging tables. Terrified of regulatory sanctions from NDSRC, they hired Krest Incident Response to secretly purge interconnect logs. |
-| **Krest Incident Response** | "Krest is performing independent third-party validation under standard commercial confidentiality." | Krest is actively orchestrating a narrative containment strategy: quarantining forensic evidence, silencing internal whistleblowers, and offering Marcus a financial settlement to sign an NDA accepting full responsibility. |
-| **0xLagos Research Syndicate** | "Cedarline’s cloud infrastructure was wide open. An automated botnet or rival syndicate is probing the entire Marina financial corridor." | Independent researchers (led by Tunde 'ZeroDay' Bakare) noticed the anomaly independently through public DNS reconnaissance and bug bounty telemetry, but lack internal credentials to prove the root cause. |
+| **Krest Incident Response** | "Krest is performing independent third-party validation under standard commercial confidentiality." | Krest is actively orchestrating a narrative containment strategy: quarantining forensic evidence, silencing internal whistleblowers, and offering Barry a financial settlement to sign an NDA accepting full responsibility. |
+| **0xLagos Research Syndicate** | "Cedarline’s cloud infrastructure was wide open. An automated botnet or rival syndicate is probing the entire Marina financial corridor." | Independent researchers (led by Tsharp) noticed the anomaly independently through public DNS reconnaissance and bug bounty telemetry, but lack internal credentials to prove the root cause. |
 
 ---
 
 ### 1.4 Known Evidence, Contradictions, and Misleading Interpretations
 
-- **The Red Herring**: Marcus Adebayo assigned `corporate-admin` with wildcard `['*']` scopes to `svc-aster`. Management claims Marcus is an incompetent or rogue insider who created the vulnerability.
-- **The Contradiction**: Marcus only assigned the wildcard permissions because the staging API tokens provided by the overseas AI vendor kept failing during deployment testing. He was explicitly told by executive leadership: *"Make it work before the board meeting, or your contract will not be renewed."*
+- **The Red Herring**: Barry assigned `corporate-admin` with wildcard `['*']` scopes to `svc-aster`. Management claims Barry is an incompetent or rogue insider who created the vulnerability.
+- **The Contradiction**: Barry only assigned the wildcard permissions because the staging API tokens provided by the overseas AI vendor kept failing during deployment testing. He was explicitly told by executive leadership: *"Make it work before the board meeting, or your contract will not be renewed."*
 - **The Forensic Truth**: The prompt injection was not an accident. The payload contained exact knowledge of Cedarline’s internal host naming convention (`filesrv-01`) and the exact filename `payroll_q3_confidential.xlsx`. Someone with internal architecture documentation constructed the payload.
 
 ---
@@ -61,8 +61,8 @@ The player’s investigation is structured around four competing hypotheses, eac
 ```
 
 1. **Theory A: The Corporate Cover-Up (Management Negligence & Scapegoating)**
-   - *Premise*: Cedarline executives intentionally bypassed mandatory security gates to secure a multimillion-dollar foreign acquisition. When the breach occurred, they fabricated a narrative pinning total fault on Marcus.
-   - *Key Evidence*: Executive emails showing signed release overrides; audit trail deletion requests sent to Krest IR; Marcus's original ticketing logs.
+   - *Premise*: Cedarline executives intentionally bypassed mandatory security gates to secure a multimillion-dollar foreign acquisition. When the breach occurred, they fabricated a narrative pinning total fault on Barry.
+   - *Key Evidence*: Executive emails showing signed release overrides; audit trail deletion requests sent to Krest IR; Barry's original ticketing logs.
 
 2. **Theory B: Targeted Financial Espionage (The Eko Merchant Bank Intercept)**
    - *Premise*: A rival financial consortium commissioned a targeted attack using prompt injection to extract executive compensation and credit underwriting algorithms via Cedarline’s shared pipeline.
@@ -70,7 +70,7 @@ The player’s investigation is structured around four competing hypotheses, eac
 
 3. **Theory C: Rogue Autonomous Agent Contagion (Phantom Weaver)**
    - *Premise*: A recurring, self-propagating prompt injection framework ("Phantom Weaver") designed to exploit autonomous agent tool-calling loops is spreading across interconnected West African enterprise APIs.
-   - *Key Evidence*: Identical prompt signatures detected in logs at Eko Merchant Bank and Balogun POS processing systems; Dr. Elena Chen’s vector embedding logs.
+   - *Key Evidence*: Identical prompt signatures detected in logs at Eko Merchant Bank and Balogun POS processing systems; Mercy’s vector embedding logs.
 
 4. **Theory D: The Internal Whistleblower's Forced Audit**
    - *Premise*: A conscientious insider inside Cedarline or EMB deliberately triggered the alert by feeding the prompt injection to Aster, knowing it would force a mandatory external SOC audit and expose systemic cloud data leaks before customer funds were stolen.
@@ -87,13 +87,13 @@ Cyberlife’s narrative is organized into three overarching Story Arcs, subdivid
 ### Arc 1: The Aster Anomaly (The Local Breach)
 *Focus: Mastering triage, forensic analysis, credential remediation, and interpersonal ethics within Cedarline.*
 - **Chapter 1: Triage on Broad Street**
-  - Briefing with Lead Analyst Amina (Temitope Blessing).
+  - Briefing with Lead Analyst Blessing.
   - Network discovery with `netmap` and service inspection with `svcscan`.
   - Auditing SIEM logs for `svc-aster` anomalies.
 - **Chapter 2: The Infrastructure Dilemma**
-  - Confronting Marcus Adebayo: Uncovering the panic behind the wildcard role.
-  - Consulting Dr. Elena Chen: Understanding prompt injection and tool-calling boundaries.
-  - Decision Point: Collaborate with Marcus to secretly fix credentials, or formally cite him in executive reports?
+  - Confronting Barry: Uncovering the panic behind the wildcard role.
+  - Consulting Mercy: Understanding prompt injection and tool-calling boundaries.
+  - Decision Point: Collaborate with Barry to secretly fix credentials, or formally cite him in executive reports?
 - **Chapter 3: Containment & Remediation**
   - Safe evidence preservation in the Incident Portal (`EVD-2026-001` through `EVD-2026-004`).
   - Executing service containment and applying least-privilege IAM policies (`kb-assistant`).
@@ -106,9 +106,9 @@ Cyberlife’s narrative is organized into three overarching Story Arcs, subdivid
   - Air-gapped forensic lab analysis: safe artifact carving without connecting to the production network.
   - Tracing physical access logs at Marina Tower (discovering visitor tailgating at Level 4).
 - **Chapter 5: Whispers in Balogun Market**
-  - Assisting Mama Nkechi with fraudulent POS terminal firmware analysis.
+  - Assisting Mama Esther with fraudulent POS terminal firmware analysis.
   - Discovering correlations between retail banking SMS fraud and the Eko Nexus pipeline.
-  - Meeting Tunde 'ZeroDay' Bakare on the Marina seawall to correlate external threat intelligence.
+  - Meeting Tsharp on the Marina seawall to correlate external threat intelligence.
 - **Chapter 6: The Interbank Infiltration**
   - Gaining authorized access to Eko Merchant Bank staging environment.
   - Using Web Application Proxy (`webproxy`) to detect BOLA/IDOR vulnerabilities leaking executive credit profiles.
@@ -118,7 +118,7 @@ Cyberlife’s narrative is organized into three overarching Story Arcs, subdivid
 *Focus: High-stakes confrontation, regulatory exposure, and determining the fate of the involved organizations.*
 - **Chapter 7: The Whistleblower’s Ledger**
   - Gathering final cryptographic evidence proving whether the breach was corporate negligence, espionage, or a forced whistleblower audit.
-  - Meeting Senior Investigative Journalist Kemi Adeyemi at Tinubu Square or NDSRC Inspector Babatunde Lawal.
+  - Meeting Senior Investigative Journalist Mary at Tinubu Square or NDSRC Inspector Daniel.
 - **Chapter 8: The Grand Presentation**
   - Submitting formal findings to the chosen authority (Executive Management, Public Press, Regulatory Commission, or Darkweb/Bounty Network).
   - Facing the consequences: Faction standings shift dramatically, careers evolve, and the economic landscape of Lagos Island reflects the player’s agency.
@@ -145,6 +145,6 @@ Players are never trapped by a single character class or skill tree. The narrati
 
 ### Alternative Advancement Paths
 If a player lacks a specific skill or tool, the narrative provides contextual recovery routes:
-- **Lacking Advanced Terminal Tool Clearance**: Speak with Uncle Segun or Mama Nkechi to obtain physical access leads, or consult Folake Davies to take on smaller IT support jobs to earn required credentials.
-- **Damaged Relationship with Corporate Leadership (VP Femi)**: Advance through independent channels via Tunde Bakare and *The Lagos Inquirer*, bypassing corporate approval entirely.
-- **Failed Social Pretexting Encounter**: If an interlocutor raises suspicion and terminates a call, the player can acquire physical access badges through authorized vendor verification or request help from lead analyst Amina.
+- **Lacking Advanced Terminal Tool Clearance**: Speak with Uncle Segun or Mama Esther to obtain physical access leads, or consult Goodness to take on smaller IT support jobs to earn required credentials.
+- **Damaged Relationship with Corporate Leadership (VP Michael)**: Advance through independent channels via Tsharp and *The Lagos Inquirer*, bypassing corporate approval entirely.
+- **Failed Social Pretexting Encounter**: If an interlocutor raises suspicion and terminates a call, the player can acquire physical access badges through authorized vendor verification or request help from lead analyst Blessing.

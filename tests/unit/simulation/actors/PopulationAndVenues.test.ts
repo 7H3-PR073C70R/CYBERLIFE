@@ -118,7 +118,7 @@ describe('Population Hierarchy & Urban Location System', () => {
       expect(checkInterior.reason).toContain('Interior environment supports secure, confidential discussion');
     });
 
-    it('allows meaningful interaction at designated contextual street spots (e.g. Mama Nkechi stall, Uncle Segun fountain bench)', () => {
+    it('allows meaningful interaction at designated contextual street spots (e.g. Mama Esther stall, Uncle Segun fountain bench)', () => {
       const checkNkechi = PopulationController.isMeaningfulInteractionAllowed('neighborhood', 'npc_nkechi');
       expect(checkNkechi.allowed).toBe(true);
       expect(checkNkechi.reason).toContain('Balogun electronics stall');

@@ -760,7 +760,7 @@ export class WorldEnvironment {
 
     // 3. Four Colorful Market Stalls along Balogun Market Lane
     const stallsConfig = [
-      { x: 10, z: -8, color1: 0x15803d, color2: 0xfef3c7, name: 'Mama Esther Provisions' },
+      { x: 10, z: -8, color1: 0x15803d, color2: 0xfef3c7, name: 'Mama Esther Provisions & Electronics' },
       { x: 16, z: -8, color1: 0x0284c7, color2: 0xfacc15, name: 'Danfo Mobile Accessories' },
       { x: 22, z: -8, color1: 0xe11d48, color2: 0xfef3c7, name: 'Iya Basira Textiles' },
       { x: 28, z: -8, color1: 0xd97706, color2: 0x15803d, name: 'Lagos Fresh Citrus & Yams' },
@@ -1268,7 +1268,7 @@ export class WorldEnvironment {
       this.buildApartmentDecorations(halfW, halfD, roomH);
     }
 
-    // Rebuild interior NPCs (Blessing, Tobi, Dr. Elizabeth) with articulated models & markers
+    // Rebuild interior NPCs (Blessing, Barry, Mercy) with articulated models & markers
     this.npcManager.rebuildForLocation(locationId);
     if (!this.group.children.includes(this.npcManager.getMesh())) {
       this.group.add(this.npcManager.getMesh());
@@ -1617,7 +1617,7 @@ export class WorldEnvironment {
 
     this.collisionWorld.addObstacle(2.1, 4.3, -0.6, 1.1, 'Blessing SOC Workstation');
 
-    // 5. Tobi's SysAdmin Server Console Workstation (at x = -2.8, z = 0.2 facing Tobi who sits at [-3.5, 0, 0.2])
+    // 5. Barry's SysAdmin Server Console Workstation (at x = -2.8, z = 0.2 facing Barry who sits at [-3.5, 0, 0.2])
     const tobiDesk = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.76, 1.2), deskMat);
     tobiDesk.position.set(-2.8, 0.38, 0.2);
     socGroup.add(tobiDesk);
@@ -1635,11 +1635,11 @@ export class WorldEnvironment {
         roughness: 0.2,
       })
     );
-    tobiScr.rotation.y = -Math.PI / 2; // Facing Tobi at -X
+    tobiScr.rotation.y = -Math.PI / 2; // Facing Barry at -X
     tobiScr.position.set(-2.73, 0.96, 0.2);
     socGroup.add(tobiScr);
 
-    // Tobi's Ergonomic Swivel Chair (under Tobi at x = -3.5, z = 0.2, facing +X)
+    // Barry's Ergonomic Swivel Chair (under Barry at x = -3.5, z = 0.2, facing +X)
     const tobiChairBase = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.06, 8), chairMat);
     tobiChairBase.position.set(-3.5, 0.15, 0.2);
     socGroup.add(tobiChairBase);
@@ -1650,10 +1650,10 @@ export class WorldEnvironment {
     tobiChairSeat.position.set(-3.5, 0.48, 0.2);
     socGroup.add(tobiChairSeat);
     const tobiChairBack = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.48, 0.44), chairMat);
-    tobiChairBack.position.set(-3.74, 0.74, 0.2); // Behind Tobi
+    tobiChairBack.position.set(-3.74, 0.74, 0.2); // Behind Barry
     socGroup.add(tobiChairBack);
 
-    this.collisionWorld.addObstacle(-3.3, -2.3, -0.5, 0.9, 'Tobi SysAdmin Workstation');
+    this.collisionWorld.addObstacle(-3.3, -2.3, -0.5, 0.9, 'Barry SysAdmin Workstation');
 
     // 6. Frosted Glass Architectural Divider Partition
     const dividerMat = new THREE.MeshStandardMaterial({

@@ -156,7 +156,7 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
   }, [openGtkMenu]);
 
   const isCedarline = workstationId.includes('cedarline');
-  const activeUser = isCedarline ? 'tade' : 'player';
+  const activeUser = isCedarline ? 'protector' : 'player';
   const activeHost = isCedarline ? HOSTNAMES.office : HOSTNAMES.home;
 
   const buildContext = useCallback(

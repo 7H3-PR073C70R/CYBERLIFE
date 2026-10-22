@@ -15,7 +15,7 @@ export type InvestigativeRole =
 
 export type NarrativeEthicsAlignment =
   | 'STRICT_PROCEDURAL'     // Adheres strictly to corporate handbook and management chain
-  | 'ETHICAL_MENTOR'        // Prioritizes protecting young talent (e.g. Marcus) from corporate scapegoating
+  | 'ETHICAL_MENTOR'        // Prioritizes protecting young talent (e.g. Barry) from corporate scapegoating
   | 'UNCOMPROMISING_TRUTH'  // Whistleblower approach, insists on full unvarnished disclosure
   | 'PRAGMATIC_COMMERCIAL'; // Balances client liability, PR impact, and business continuity
 
@@ -29,13 +29,13 @@ export interface NarrativeStoryFlag {
 export const PERSISTENT_NARRATIVE_FLAGS: readonly NarrativeStoryFlag[] = [
   {
     flagKey: 'flag_marcus_protected',
-    description: 'Player collaborated with Marcus to remediate Aster IAM credentials without reporting him to VP Gabriel.',
+    description: 'Player collaborated with Barry to remediate Aster IAM credentials without reporting him to VP Michael.',
     category: 'RELATIONSHIP_CONSEQUENCE',
     defaultValue: false,
   },
   {
     flagKey: 'flag_marcus_exposed',
-    description: 'Player formally cited Tobi as the root cause in the executive audit report.',
+    description: 'Player formally cited Barry as the root cause in the executive audit report.',
     category: 'RELATIONSHIP_CONSEQUENCE',
     defaultValue: false,
   },
@@ -47,7 +47,7 @@ export const PERSISTENT_NARRATIVE_FLAGS: readonly NarrativeStoryFlag[] = [
   },
   {
     flagKey: 'flag_femi_audit_passed',
-    description: 'VP Gabriel accepted the compliance report, unlocking enterprise consulting referrals.',
+    description: 'VP Michael accepted the compliance report, unlocking enterprise consulting referrals.',
     category: 'INCIDENT_OUTCOME',
     defaultValue: false,
   },

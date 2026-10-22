@@ -24,56 +24,56 @@ export const PEDESTRIAN_ARCHETYPES: PedestrianArchetype[] = [
   // 1. Babajide - Managing Director, Marina Capital Holdings (Elite Executive)
   {
     id: 'marina_managing_director',
-    name: 'Babajide Adeleke',
+    name: 'Babajide',
     role: 'Managing Director, Marina Capital',
     bodyType: 'male_1',
   },
   // 2. Ngozi - Senior Commercial Legal Counsel (Elite Executive)
   {
     id: 'broad_street_legal_counsel',
-    name: 'Ngozi Okonjo',
+    name: 'Ngozi',
     role: 'Senior Commercial Legal Counsel',
     bodyType: 'female_1',
   },
   // 3. Chidi - Executive Chairman, Eko Maritime (Elite Executive)
   {
     id: 'marina_executive_chairman',
-    name: 'Chidi Obi',
+    name: 'Chidi',
     role: 'Executive Chairman, Eko Maritime',
     bodyType: 'male_2',
   },
   // 4. Zainab - Chief Investment Officer, Sovereign Wealth (Elite Executive)
   {
     id: 'chief_investment_officer',
-    name: 'Zainab Mohammed',
+    name: 'Zainab',
     role: 'Chief Investment Officer',
     bodyType: 'female_2',
   },
   // 5. Olumide - VP of Digital Infrastructure (Elite Executive)
   {
     id: 'fintech_vp_infrastructure',
-    name: 'Olumide Martins',
+    name: 'Olumide',
     role: 'VP of Digital Infrastructure',
     bodyType: 'male_1',
   },
   // 6. Folashade - Senior Partner, Maritime Arbitration (Elite Executive)
   {
     id: 'commercial_arbitration_partner',
-    name: 'Folashade Bello',
+    name: 'Folashade',
     role: 'Senior Partner, Maritime Law',
     bodyType: 'female_1',
   },
   // 7. Femi - Chief Risk Officer, Broad Street Interbank (Elite Executive)
   {
     id: 'interbank_risk_director',
-    name: 'Femi Bankole',
+    name: 'Femi',
     role: 'Chief Risk Officer, Interbank',
     bodyType: 'male_2',
   },
   // 8. Ronke - Managing Partner, Eko Private Equity (Elite Executive)
   {
     id: 'private_equity_partner',
-    name: 'Ronke Adeleke',
+    name: 'Ronke',
     role: 'Managing Partner, Private Equity',
     bodyType: 'female_2',
   },
@@ -87,105 +87,105 @@ export const PEDESTRIAN_ARCHETYPES: PedestrianArchetype[] = [
   // 10. Emeka - Balogun Market Merchant (Vibrant Ankara)
   {
     id: 'balogun_market_merchant',
-    name: 'Emeka Eze',
+    name: 'Emeka',
     role: 'Balogun Market Merchant',
     bodyType: 'male_2',
   },
   // 11. Amina - Broad Street Cyber Researcher (Smart Casual)
   {
     id: 'broad_street_cyber_researcher',
-    name: 'Amina Yusuf',
+    name: 'Amina',
     role: 'Broad Street Cyber Researcher',
     bodyType: 'female_2',
   },
   // 12. Halima - Lagos Urban Systems Planner (Smart Casual)
   {
     id: 'urban_planner_consultant',
-    name: 'Halima Danjuma',
+    name: 'Halima',
     role: 'Lagos Urban Systems Planner',
     bodyType: 'female_1',
   },
   // 13. Kunle - Broad Street Creative Director (Smart Casual)
   {
     id: 'creative_agency_director',
-    name: 'Kunle Solanke',
+    name: 'Kunle',
     role: 'Broad Street Creative Director',
     bodyType: 'male_1',
   },
   // 14. Blessing - Idumota Logistics Coordinator (Smart Casual)
   {
     id: 'logistics_operations_lead',
-    name: 'Blessing Okoli',
+    name: 'Blessing',
     role: 'Idumota Logistics Coordinator',
     bodyType: 'female_2',
   },
   // 15. Dayo - Marina Ferry Operations Officer (Maritime Casual)
   {
     id: 'marina_ferry_captain',
-    name: 'Dayo Oladipo',
+    name: 'Dayo',
     role: 'Marina Ferry Transit Officer',
     bodyType: 'male_1',
   },
   // 16. Funke - Fintech Systems Architect (Smart Casual)
   {
     id: 'fintech_systems_architect',
-    name: 'Funke Alabi',
+    name: 'Funke',
     role: 'Fintech Systems Architect',
     bodyType: 'female_1',
   },
   // 17. Femi - Balogun Textile Designer (Vibrant Ankara)
   {
     id: 'balogun_textile_designer',
-    name: 'Femi Alade',
+    name: 'Femi',
     role: 'Balogun Textile Designer',
     bodyType: 'male_2',
   },
   // 18. Yetunde - 5G Infrastructure Engineer (Streetwear)
   {
     id: 'telecoms_rf_engineer',
-    name: 'Yetunde Braimoh',
+    name: 'Yetunde',
     role: '5G Infrastructure Engineer',
     bodyType: 'female_2',
   },
   // 19. Seyi - Green Energy Grid Consultant (Smart Casual)
   {
     id: 'clean_energy_consultant',
-    name: 'Seyi Johnson',
+    name: 'Seyi',
     role: 'Green Energy Consultant',
     bodyType: 'male_1',
   },
   // 20. Aisha - Cyber Threat Intelligence Analyst (Smart Casual)
   {
     id: 'digital_forensics_analyst',
-    name: 'Aisha Belgore',
+    name: 'Aisha',
     role: 'Cyber Forensics Analyst',
     bodyType: 'female_1',
   },
   // 21. Kayode - Eko Port Logistics Agent (Smart Casual)
   {
     id: 'maritime_shipping_agent',
-    name: 'Kayode Williams',
+    name: 'Kayode',
     role: 'Eko Maritime Logistics Agent',
     bodyType: 'male_2',
   },
   // 22. Uche - Balogun Premium Ankara Wholesaler (Vibrant Ankara)
   {
     id: 'balogun_fashion_wholesaler',
-    name: 'Uche Nnamdi',
+    name: 'Uche',
     role: 'Balogun Ankara Wholesaler',
     bodyType: 'male_1',
   },
   // 23. Hadiza - Tinubu Cultural Heritage Curator (Vibrant Ankara)
   {
     id: 'tinubu_cultural_curator',
-    name: 'Hadiza Sanusi',
+    name: 'Hadiza',
     role: 'Tinubu Cultural Curator',
     bodyType: 'female_2',
   },
   // 24. Segun - Solar Micro-Grid Engineer (Streetwear)
   {
     id: 'solar_infrastructure_lead',
-    name: 'Segun Arinze',
+    name: 'Segun',
     role: 'Solar Grid Engineer',
     bodyType: 'male_2',
   },
@@ -232,7 +232,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x451a03, // Polished dark mahogany leather
     hair: 0x1c1917,
   },
-  // 2. Chidi Obi - Executive Chairman (Elite: Executive Obsidian Black Suit + Black Monk-Straps)
+  // 2. Chidi - Executive Chairman (Elite: Executive Obsidian Black Suit + Black Monk-Straps)
   {
     style: 'ELITE_SUIT',
     skin: 0x482818, // Deep Espresso
@@ -241,7 +241,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x050505, // Black patent leather
     hair: 0x111111,
   },
-  // 3. Zainab Mohammed - Chief Investment Officer (Elite: Marina Corporate Emerald Suit + Chestnut Monk-Strap Heels)
+  // 3. Zainab - Chief Investment Officer (Elite: Marina Corporate Emerald Suit + Chestnut Monk-Strap Heels)
   {
     style: 'ELITE_SUIT',
     skin: 0x8d5c3f, // Warm Caramel
@@ -250,7 +250,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x5c2b14, // Burnished chestnut monk-straps
     hair: 0x1c1917,
   },
-  // 4. Olumide Martins - VP Digital Infrastructure (Elite: Bespoke Champagne Camel Suit + Cognac Loafers)
+  // 4. Olumide - VP Digital Infrastructure (Elite: Bespoke Champagne Camel Suit + Cognac Loafers)
   {
     style: 'ELITE_SUIT',
     skin: 0x4d2d1d, // Rich Dark Chocolate
@@ -259,7 +259,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x451a03, // Rich cognac leather loafers
     hair: 0x09090b,
   },
-  // 5. Folashade Bello - Senior Partner Maritime Law (Elite: Silk Ivory/Cream Executive Suit + Cordovan Heels)
+  // 5. Folashade - Senior Partner Maritime Law (Elite: Silk Ivory/Cream Executive Suit + Cordovan Heels)
   {
     style: 'ELITE_SUIT',
     skin: 0x7b5036, // Radiant Bronze
@@ -268,7 +268,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x3b0713, // Italian cordovan burgundy leather
     hair: 0x141414,
   },
-  // 6. Femi Bankole - Chief Risk Officer (Elite: Sapphire Banker Navy Suit + Cordovan Loafers)
+  // 6. Femi - Chief Risk Officer (Elite: Sapphire Banker Navy Suit + Cordovan Loafers)
   {
     style: 'ELITE_SUIT',
     skin: 0x523220, // Deep Warm Umber
@@ -277,7 +277,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x3b0713, // Cordovan burgundy dress loafers
     hair: 0x111111,
   },
-  // 7. Ronke Adeleke - Managing Partner PE (Elite: Imperial Royal Burgundy Suit + Crimson Sole Heels)
+  // 7. Ronke - Managing Partner PE (Elite: Imperial Royal Burgundy Suit + Crimson Sole Heels)
   {
     style: 'ELITE_SUIT',
     skin: 0xa87250, // Golden Honey
@@ -286,7 +286,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x7f1d1d, // Designer crimson sole heels
     hair: 0x141414,
   },
-  // 8. Tunde Bakare - Tech Entrepreneur (Warm Cocoa + Royal Blue + White Runners)
+  // 8. Tsharp - Tech Entrepreneur (Warm Cocoa + Royal Blue + White Runners)
   {
     style: 'SMART_CASUAL',
     skin: 0x5c3826,
@@ -295,7 +295,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0xffffff, // Crisp white street runners
     hair: 0x111111,
   },
-  // 9. Emeka Eze - Balogun Market Merchant (Warm Mahogany + Ankara Indigo + Cognac Loafers)
+  // 9. Emeka - Balogun Market Merchant (Warm Mahogany + Ankara Indigo + Cognac Loafers)
   {
     style: 'VIBRANT_ANKARA',
     skin: 0x543220,
@@ -304,7 +304,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x451a03, // Rich cognac dress loafers
     hair: 0x0f0f0f,
   },
-  // 10. Amina Yusuf - Cyber Researcher (Deep Dark Ebony + Sunset Terracotta + Modern Tech Runners)
+  // 10. Amina - Cyber Researcher (Deep Dark Ebony + Sunset Terracotta + Modern Tech Runners)
   {
     style: 'SMART_CASUAL',
     skin: 0x3a2012,
@@ -313,7 +313,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0xf8fafc, // Modern white tech runners
     hair: 0x18181b,
   },
-  // 11. Halima Danjuma - Urban Planner (Warm Pecan + Danfo Yellow + Sand Suede Loafers)
+  // 11. Halima - Urban Planner (Warm Pecan + Danfo Yellow + Sand Suede Loafers)
   {
     style: 'SMART_CASUAL',
     skin: 0xb17a56,
@@ -322,7 +322,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0xca8a04, // Sand suede loafers
     hair: 0x18181b,
   },
-  // 12. Kunle Solanke - Creative Director (Warm Chestnut + Deep Crimson + Walnut Brogues)
+  // 12. Kunle - Creative Director (Warm Chestnut + Deep Crimson + Walnut Brogues)
   {
     style: 'SMART_CASUAL',
     skin: 0x6c442c,
@@ -331,7 +331,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x27150a, // Dark walnut leather brogues
     hair: 0x09090b,
   },
-  // 13. Blessing Okoli - Logistics Coordinator (Rich Amber Honey + Mint Emerald + Pristine Runners)
+  // 13. Blessing - Logistics Coordinator (Rich Amber Honey + Mint Emerald + Pristine Runners)
   {
     style: 'SMART_CASUAL',
     skin: 0x9f6a4a,
@@ -340,7 +340,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0xffffff, // Crisp white runners
     hair: 0x17120e,
   },
-  // 14. Dayo Oladipo - Ferry Operations Officer (Deep Dark Ebony + Ecru + Suede Navy Loafers)
+  // 14. Dayo - Ferry Operations Officer (Deep Dark Ebony + Ecru + Suede Navy Loafers)
   {
     style: 'SMART_CASUAL',
     skin: 0x3a2012,
@@ -349,7 +349,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x172554, // Suede navy loafers
     hair: 0x111111,
   },
-  // 15. Funke Alabi - Systems Architect (Golden Sand + Royal Violet + Violet Patent Heels)
+  // 15. Funke - Systems Architect (Golden Sand + Royal Violet + Violet Patent Heels)
   {
     style: 'SMART_CASUAL',
     skin: 0xb9825d,
@@ -358,7 +358,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x581c87, // Royal violet patent heels
     hair: 0x1c1917,
   },
-  // 16. Femi Alade - Textile Designer (Warm Cocoa + Ochre Gold Ankara + Chestnut Monk-Straps)
+  // 16. Femi - Textile Designer (Warm Cocoa + Ochre Gold Ankara + Chestnut Monk-Straps)
   {
     style: 'VIBRANT_ANKARA',
     skin: 0x5c3826,
@@ -367,7 +367,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x5c2b14, // Burnished chestnut monk-straps
     hair: 0x111111,
   },
-  // 17. Yetunde Braimoh - 5G Engineer (Warm Mahogany + Electric Coral + Gold Accent Shoes)
+  // 17. Yetunde - 5G Engineer (Warm Mahogany + Electric Coral + Gold Accent Shoes)
   {
     style: 'STREETWEAR',
     skin: 0x543220,
@@ -376,7 +376,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0xd4af37, // Metallic gold accent shoes
     hair: 0x18181b,
   },
-  // 18. Seyi Johnson - Green Energy Consultant (Dark Roast Cocoa + Lagos Green + Suede Desert Boots)
+  // 18. Seyi - Green Energy Consultant (Dark Roast Cocoa + Lagos Green + Suede Desert Boots)
   {
     style: 'SMART_CASUAL',
     skin: 0x422416,
@@ -385,7 +385,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x92400e, // Suede desert boots
     hair: 0x0a0a0a,
   },
-  // 19. Aisha Belgore - Cyber Forensics Analyst (Light Honey + Turquoise + Midnight Blue Heels)
+  // 19. Aisha - Cyber Forensics Analyst (Light Honey + Turquoise + Midnight Blue Heels)
   {
     style: 'SMART_CASUAL',
     skin: 0xc9936c,
@@ -394,7 +394,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x0c1e3d, // Midnight blue patent leather heels
     hair: 0x1c1917,
   },
-  // 20. Kayode Williams - Port Logistics Agent (Deep Bronze + Ruby Wine + Oxblood Derby Shoes)
+  // 20. Kayode - Port Logistics Agent (Deep Bronze + Ruby Wine + Oxblood Derby Shoes)
   {
     style: 'SMART_CASUAL',
     skin: 0x734a32,
@@ -403,7 +403,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x581825, // Oxblood derby shoes
     hair: 0x111111,
   },
-  // 21. Uche Nnamdi - Ankara Wholesaler (Deep Espresso + Sunset Tangerine + Tan Chelsea Boots)
+  // 21. Uche - Ankara Wholesaler (Deep Espresso + Sunset Tangerine + Tan Chelsea Boots)
   {
     style: 'VIBRANT_ANKARA',
     skin: 0x482818,
@@ -412,7 +412,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0xa16207, // Tan suede Chelsea boots
     hair: 0x111111,
   },
-  // 22. Hadiza Sanusi - Cultural Curator (Golden Bronze + Traditional Indigo + Rose Gold Heels)
+  // 22. Hadiza - Cultural Curator (Golden Bronze + Traditional Indigo + Rose Gold Heels)
   {
     style: 'VIBRANT_ANKARA',
     skin: 0x84563a,
@@ -421,7 +421,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0xb76e79, // Rose gold metallic heels
     hair: 0x18181b,
   },
-  // 23. Segun Arinze - Solar Grid Engineer (Deep Midnight Ebony + Danfo Yellow + Black High-Tops)
+  // 23. Segun - Solar Grid Engineer (Deep Midnight Ebony + Danfo Yellow + Black High-Tops)
   {
     style: 'STREETWEAR',
     skin: 0x321a0e,

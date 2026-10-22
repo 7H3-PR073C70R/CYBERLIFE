@@ -92,7 +92,7 @@ graph TD
 - **Verification**: Fully covered by `Journey B` test suite and contract lifecycle integration tests.
 
 ### Journey C: Investigation and Narrative Consequences
-- **Workflow**: Player launches `HumanIntelApp` (Witness Interviews tab) → Interviews Tobi (`npc_marcus`) regarding Room 4B access → Tobi claims an alibi of leaving at 18:00 sharp → Player presents `ev_phys_badge_log_tuesday` proving door access at 19:47:13 → Contradiction detected → Marcus admits lending his badge to Femi Adeyemi → Player compares testimony against physical access log and submits finding `conc_a_badge_lending_policy_breach` → Ground truth validated as `SUPPORTED` (`isCorrect: true`) → World flags updated and reflected in security office records.
+- **Workflow**: Player launches `HumanIntelApp` (Witness Interviews tab) → Interviews Barry (`npc_marcus`) regarding Room 4B access → Barry claims an alibi of leaving at 18:00 sharp → Player presents `ev_phys_badge_log_tuesday` proving door access at 19:47:13 → Contradiction detected → Barry admits lending his badge to Michael → Player compares testimony against physical access log and submits finding `conc_a_badge_lending_policy_breach` → Ground truth validated as `SUPPORTED` (`isCorrect: true`) → World flags updated and reflected in security office records.
 - **Verification**: Automated in `M24WholeGameIntegrationAndSafety.test.ts` and headless render `03_m24_human_intel_investigation.png`.
 
 ### Journey D: NPCs and Living World Simulation

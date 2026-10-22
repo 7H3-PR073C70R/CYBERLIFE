@@ -34,8 +34,8 @@ import type {
 // ============================================================================
 
 /**
- * Interview questions for npc_marcus (Tobi, Junior Infra Admin) in Scenario A.
- * Tobi claims he was not in the server room that evening — but the badge log
+ * Interview questions for npc_marcus (Barry, Junior Infra Admin) in Scenario A.
+ * Barry claims he was not in the server room that evening — but the badge log
  * says otherwise.
  */
 export const SCENARIO_A_MARCUS_QUESTIONS: readonly InterviewQuestion[] = [
@@ -59,10 +59,10 @@ export const SCENARIO_A_MARCUS_QUESTIONS: readonly InterviewQuestion[] = [
     questionText:
       'The badge access log shows your credential swiped into the restricted room at 19:47. Can you explain that?',
     responseText:
-      'That — look, I lent my badge to Femi to grab the spare patch cable I left inside. It was just two minutes. I told him the code. I know I should have logged it but we were in the middle of a deployment.',
+      'That — look, I lent my badge to Michael to grab the spare patch cable I left inside. It was just two minutes. I told him the code. I know I should have logged it but we were in the middle of a deployment.',
     reliability: 'FIRSTHAND',
     requiredFlags: { m21a_marcus_alibi_claimed: true, m21a_badge_log_reviewed: true },
-    claimedFact: 'npc_marcus lent badge to Femi Adeyemi at 19:47 Tuesday',
+    claimedFact: 'npc_marcus lent badge to Michael at 19:47 Tuesday',
     potentialContradiction: 'introduces_femi_lead',
     flagsToSet: { m21a_marcus_badge_explanation_given: true, m21a_femi_lead_discovered: true },
     relationshipDelta: 10,
@@ -89,7 +89,7 @@ export const SCENARIO_A_AMINA_QUESTIONS: readonly InterviewQuestion[] = [
     id: 'q_a_amina_saw_marcus',
     targetNpcId: 'npc_amina',
     activityId: 'act_m21_conflicting_accounts',
-    questionText: 'Did you see Tobi leave on Tuesday evening?',
+    questionText: 'Did you see Barry leave on Tuesday evening?',
     responseText:
       "Yes — I saw him head to the lift with his bag around six fifteen. He seemed in a hurry. But I was at the console by seven so I can't say what happened after that.",
     reliability: 'FIRSTHAND',
@@ -113,9 +113,9 @@ export const SCENARIO_A_AMINA_QUESTIONS: readonly InterviewQuestion[] = [
 ];
 
 /**
- * Comparison: Marcus's claim vs the physical badge log.
- * Ground-truth: CONTRADICTED — Marcus said he was not there, but his badge
- * entered the room. Partial correction: badge was used by Femi (secondhand).
+ * Comparison: Barry's claim vs the physical badge log.
+ * Ground-truth: CONTRADICTED — Barry said he was not there, but his badge
+ * entered the room. Partial correction: badge was used by Michael (secondhand).
  * Correct verdict is PARTIALLY_CONSISTENT after the second interview.
  */
 export const SCENARIO_A_COMPARISON_A: Omit<EvidenceComparisonRecord, 'id' | 'activityId' | 'recordedAtSimTime'> = {
@@ -125,7 +125,7 @@ export const SCENARIO_A_COMPARISON_A: Omit<EvidenceComparisonRecord, 'id' | 'act
   playerRationale: '',
   systemVerdict: 'CONTRADICTED',
   systemRationale:
-    "Marcus claimed he was not in the server room after 18:00, but the physical badge log records his credential granting access at 19:47. The contradiction is real even if a subsequent explanation (badge lending) partially accounts for it.",
+    "Barry claimed he was not in the server room after 18:00, but the physical badge log records his credential granting access at 19:47. The contradiction is real even if a subsequent explanation (badge lending) partially accounts for it.",
   isCorrect: false, // Evaluated at submission time
 };
 
@@ -403,16 +403,16 @@ export const M21_SCENARIO_A_EVIDENCE = [
     source: 'Cedarline Physical Access Control System',
     title: 'Badge Access Log — Tuesday 19:47',
     description:
-      'Badge credential ID CED-2026-B-0247 (assigned to Tobi A., Junior Infrastructure Admin) recorded door access to Room 4B (Restricted Server Room) on Tuesday at 19:47:13. Access was GRANTED. No escort record exists for this entry.',
+      'Badge credential ID CED-2026-B-0247 (assigned to Barry, Junior Infrastructure Admin) recorded door access to Room 4B (Restricted Server Room) on Tuesday at 19:47:13. Access was GRANTED. No escort record exists for this entry.',
     hash: 'sha256:a3f9c2e1d8b7a4f6e0c5d9b2a7f3e8c1d4b6a9e2f5c8d1b4a7f0e3c6d9b2a5',
     tags: ['physical_access', 'badge_log', 'scenario_a', 'server_room_4b'],
   },
   {
     evidenceId: 'ev_phys_badge_log_femi',
     source: 'Cedarline Physical Access Control System',
-    title: 'Badge Access Log — No Entry for Femi Adeyemi',
+    title: 'Badge Access Log — No Entry for Michael',
     description:
-      'No badge access record exists for Femi Adeyemi (CED-2026-B-0319) in Room 4B on Tuesday between 18:00 and 23:00. Either Adeyemi did not use his own badge, or his badge was not the one that entered Room 4B.',
+      'No badge access record exists for Michael (CED-2026-B-0319) in Room 4B on Tuesday between 18:00 and 23:00. Either Michael did not use his own badge, or his badge was not the one that entered Room 4B.',
     hash: 'sha256:b4e0d3c7f6a5e2d9c8b1a4f7e0d3c6b9a2f5e8d1c4b7a0f3e6d9c2b5a8f1e4',
     tags: ['physical_access', 'badge_log', 'scenario_a', 'femi_lead'],
   },

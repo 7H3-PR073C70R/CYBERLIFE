@@ -10,6 +10,7 @@ import {
   AUTHORED_ACTIVITIES,
   generateProceduralContract,
 } from '@/simulation/activities/activityCatalogue';
+import type { ActivityDefinition } from '@/simulation/activities/types';
 
 describe('ActivityDirectorM20 Simulation Engine', () => {
   it('initializes activityDirector in simulation state with primary and recommended activities', () => {
@@ -201,13 +202,13 @@ describe('ActivityDirectorM20 Simulation Engine', () => {
     const director = state.activityDirector!;
 
     // Depleted catalogue simulating post-story state where all authored missions are completed
-    const depletedCatalogue: Record<string, any> = {};
+    const depletedCatalogue: Record<string, ActivityDefinition> = {};
 
     const prioritized = prioritizeOpportunities(state, director, depletedCatalogue);
 
     expect(prioritized.primaryObjectiveId).toBeDefined();
     expect(Object.keys(depletedCatalogue).length).toBeGreaterThan(0);
     const generatedId = Object.keys(depletedCatalogue)[0]!;
-    expect(depletedCatalogue[generatedId].id).toContain('procedural_contract');
+    expect(depletedCatalogue[generatedId]!.id).toContain('procedural_contract');
   });
 });

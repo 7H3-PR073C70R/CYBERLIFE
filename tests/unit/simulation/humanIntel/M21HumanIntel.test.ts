@@ -356,7 +356,7 @@ describe('M21 Scenario A: Conflicting Accounts', () => {
       statementId: 'q_a_marcus_whereabouts',
       technicalEvidenceId: 'ev_phys_badge_log_tuesday',
       playerVerdict: 'CONTRADICTED',
-      playerRationale: "Marcus said he left at 6pm but his badge entered Room 4B at 19:47.",
+      playerRationale: "Barry said he left at 6pm but his badge entered Room 4B at 19:47.",
     });
 
     expect(r.success).toBe(true);
@@ -400,7 +400,7 @@ describe('M21 Scenario A: Conflicting Accounts', () => {
       type: 'SubmitM21Conclusion',
       activityId: 'act_m21_conflicting_accounts',
       conclusionId: 'conc_a_badge_lending_policy_breach',
-      hypothesisText: 'Tobi lent his badge in violation of physical security policy, creating an access control gap.',
+      hypothesisText: 'Barry lent his badge in violation of physical security policy, creating an access control gap.',
       playerConclusionType: 'SUPPORTED',
       supportingStatementIds: ['q_a_marcus_whereabouts'],
       supportingEvidenceIds: ['ev_phys_badge_log_tuesday'],
@@ -426,7 +426,7 @@ describe('M21 Scenario A: Conflicting Accounts', () => {
       type: 'SubmitM21Conclusion',
       activityId: 'act_m21_conflicting_accounts',
       conclusionId: 'conc_a_marcus_insider_threat',
-      hypothesisText: 'Tobi is an insider threat who deliberately accessed the server room.',
+      hypothesisText: 'Barry is an insider threat who deliberately accessed the server room.',
       playerConclusionType: 'SUPPORTED', // Wrong — should be CONTRADICTED
       supportingStatementIds: ['q_a_marcus_whereabouts'],
       supportingEvidenceIds: [],

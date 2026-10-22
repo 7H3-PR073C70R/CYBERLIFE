@@ -51,7 +51,7 @@ export const ONBOARDING_STEPS: readonly OnboardingStepDefinition[] = [
     category: 'interaction',
     title: 'Locate Characters & Workstations',
     description:
-      'Look for colleagues such as Lead Investigator Amina or Folake on the street, or head inside Cedarline Solutions to locate your analyst desk. Interactive objects and NPCs glow with a turquoise target beacon when you are nearby.',
+      'Look for colleagues such as Lead Investigator Blessing or Goodness on the street, or head inside Cedarline Solutions to locate your analyst desk. Interactive objects and NPCs glow with a turquoise target beacon when you are nearby.',
     controlsHint: 'Approach glowing beacons on the ground',
     whyItMatters:
       'Gathering facts in security investigations begins with interviews, physical access points, and identifying key stakeholders before touching systems.',

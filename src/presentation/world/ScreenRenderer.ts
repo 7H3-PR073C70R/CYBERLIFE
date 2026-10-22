@@ -43,7 +43,7 @@ export interface ScreenRendererOptions {
  * - Left vertical desktop icons (Home, Trash, Terminal, Tools)
  * - Restyled dark GTK window frame with centered title and controls
  * - Signature two-line colored terminal prompt:
- *   ┌─[tade@Orion-ws04]─[~]
+ *   ┌─[protector@Orion-ws04]─[~]
  *   └──╼ $
  * - Procedural circuit & node background
  */
@@ -516,15 +516,15 @@ export class ScreenRenderer {
 
     // Signature Two-Line Terminal Prompt (Green on Black)
     const host = HOSTNAMES.office;
-    // Line 1: ┌─[tade@Orion-ws04]─[~]
+    // Line 1: ┌─[protector@Orion-ws04]─[~]
     ctx.fillStyle = '#00aa44';
     ctx.fillText('┌─[', winX + 16, lineY);
     ctx.fillStyle = '#00ff66';
-    ctx.fillText('tade', winX + 40, lineY);
+    ctx.fillText('protector', winX + 40, lineY);
     ctx.fillStyle = '#39ff14';
-    ctx.fillText(`@${host}`, winX + 70, lineY);
+    ctx.fillText(`@${host}`, winX + 110, lineY);
     ctx.fillStyle = '#00aa44';
-    const hostOffset = 70 + host.length * 8;
+    const hostOffset = 110 + host.length * 8;
     ctx.fillText(']─[', winX + hostOffset, lineY);
     ctx.fillStyle = '#00e575';
     ctx.fillText('~', winX + hostOffset + 24, lineY);

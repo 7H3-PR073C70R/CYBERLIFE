@@ -208,20 +208,20 @@ The following 10-step walkthrough illustrates the complete player guidance exper
 
 ### Step 1: Meet Your Contact in the Neighborhood
 
-- **Goal**: Find and speak with Marcus Vance, the Cedarline Systems Administrator.
+- **Goal**: Find and speak with Barry, the Cedarline Systems Administrator.
 - **Why it matters**: Real incident response begins with a human report. A panicked sysadmin noticed strange system activity and reached out for help.
 - **Where to go**: Walk out of your apartment building onto Central Avenue. Turn left toward the *Blue Neon Cafe* outdoor seating area.
 - **What to do**:
   1. Walk near the character seated at the corner cafe table with an open laptop.
-  2. Notice the floating prompt: `[E] Talk to Marcus`.
+  2. Notice the floating prompt: `[E] Talk to Barry`.
   3. Press `E` to initiate conversation.
   4. Select dialogue option: *"You mentioned an urgent security issue at Cedarline?"*
-- **What to look for**: Marcus explains that an autonomous customer support AI named "Aster" is consuming hundreds of database queries per minute, and hands you temporary remote VPN credentials (`vpn.cedarline.internal`).
+- **What to look for**: Barry explains that an autonomous customer support AI named "Aster" is consuming hundreds of database queries per minute, and hands you temporary remote VPN credentials (`vpn.cedarline.internal`).
 - **How to interpret it**: Cedarline's AI agent is acting abnormally, possibly compromised. You need to access their internal network from your apartment desk to investigate.
-- **How to confirm success**: Objective Tracker updates: *"✓ Spoke with Marcus Vance. New Objective: Return to your workstation."*
+- **How to confirm success**: Objective Tracker updates: *"✓ Spoke with Barry. New Objective: Return to your workstation."*
 - **What if I am stuck?**:
   - *Nudge*: "Look for the cafe with the blue neon sign across the street."
-  - *Explicit*: A visual guidance marker appears above Marcus's head, and an on-screen arrow points toward the cafe.
+  - *Explicit*: A visual guidance marker appears above Barry's head, and an on-screen arrow points toward the cafe.
 
 ---
 

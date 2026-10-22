@@ -26,7 +26,7 @@ export function getNpcBodyType(npcId: string): PedestrianBodyType {
 export function getNpcCustomPalette(profile: NpcProfile): CharacterPalette {
   const base = profile.palette;
   switch (profile.id) {
-    // 1. Gabriel - VP of Technology & Operations: Bespoke Executive Midnight Navy Suit
+    // 1. Michael - VP of Technology & Operations: Bespoke Executive Midnight Navy Suit
     case 'npc_femi':
       return {
         ...base,
@@ -37,7 +37,7 @@ export function getNpcCustomPalette(profile: NpcProfile): CharacterPalette {
         skin: 0x3d2012, // Deep Ebony Melanin
       };
 
-    // 2. Anjola - Technology Talent Partner / Recruiter: Regal Violet Executive Suit
+    // 2. Goodness - Technology Talent Partner / Recruiter: Regal Violet Executive Suit
     case 'npc_folake':
       return {
         ...base,
@@ -48,7 +48,7 @@ export function getNpcCustomPalette(profile: NpcProfile): CharacterPalette {
         skin: 0x5c3826, // Warm Cocoa
       };
 
-    // 3. Dr. Elizabeth - Lead AI Engineer: Corporate Emerald Tailored Blazer
+    // 3. Mercy - Lead AI Engineer: Corporate Emerald Tailored Blazer
     case 'npc_elena':
       return {
         ...base,
@@ -70,7 +70,7 @@ export function getNpcCustomPalette(profile: NpcProfile): CharacterPalette {
         skin: 0x5c3826, // Warm Cocoa
       };
 
-    // 5. Mama Nkechi - Merchant & Electronics Vendor: Vibrant Crimson Traditional Ankara
+    // 5. Mama Esther - Merchant & Electronics Vendor: Vibrant Crimson Traditional Ankara
     case 'npc_nkechi':
       return {
         ...base,
@@ -93,7 +93,7 @@ export function getNpcCustomPalette(profile: NpcProfile): CharacterPalette {
         hair: 0x9ca3af, // Silver-grey hair
       };
 
-    // 7. Tobi - Junior SysAdmin: Utility Windbreaker & Chinos
+    // 7. Barry - Junior SysAdmin: Utility Windbreaker & Chinos
     case 'npc_marcus':
       return {
         ...base,
@@ -104,7 +104,7 @@ export function getNpcCustomPalette(profile: NpcProfile): CharacterPalette {
         skin: 0x4a2a1a, // Deep Umber
       };
 
-    // 8. Tunde "ZeroDay" Bakare - Independent Security Researcher: Modern Streetwear
+    // 8. Tsharp - Independent Security Researcher: Modern Streetwear
     case 'npc_tunde':
       return {
         ...base,

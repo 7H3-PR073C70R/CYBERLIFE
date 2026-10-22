@@ -125,7 +125,7 @@ describe('RedTeam Findings Triage & Assessment Reporting', () => {
     expect(evaluation.isApproved).toBe(true);
     expect(evaluation.scorePercentage).toBe(100);
     expect(evaluation.feedbackSummary).toContain('APPROVED');
-    expect(evaluation.feedbackSummary).toContain('Folake Davies');
+    expect(evaluation.feedbackSummary).toContain('Goodness');
   });
 
   it('deducts points and rejects report when false positives are misclassified as confirmed', () => {

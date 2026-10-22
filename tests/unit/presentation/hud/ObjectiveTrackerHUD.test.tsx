@@ -96,9 +96,9 @@ describe('ObjectiveTrackerHUD Component', () => {
     // Directives list places and contacts
     expect(screen.getByText(/Where to Go Next/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Lead Analyst Blessing/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(/Tsharp 'ZeroDay' Bakare/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Tsharp/i).length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText(/Mama Esther/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(/Anjola/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Goodness/i).length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText(/Career & Market App/i).length).toBeGreaterThanOrEqual(1);
 
     // Collapsed header verification

@@ -531,7 +531,7 @@ export const AUTHORED_ACTIVITIES: Readonly<Record<string, ActivityDefinition>> =
     description:
       'Two staff members have given contradictory accounts about who accessed the restricted server room on the night of the Aster Incident. Badge logs and testimonies conflict. Interview both witnesses, compare their statements against the physical access record, and reach a defensible investigative conclusion.',
     narrativeContext:
-      'Following the Aster containment, physical access logs reveal that badge credential CED-2026-B-0247 (assigned to Tobi A.) was used to enter Room 4B at 19:47 — over an hour after Tobi claims to have left for the day. Blessing confirms seeing Tobi depart around 18:15. The discrepancy requires face-to-face investigation.',
+      'Following the Aster containment, physical access logs reveal that badge credential CED-2026-B-0247 (assigned to Barry) was used to enter Room 4B at 19:47 — over an hour after Barry claims to have left for the day. Blessing confirms seeing Barry depart around 18:15. The discrepancy requires face-to-face investigation.',
     source: 'Cedarline Security Office (Internal Review)',
     priority: 'RECOMMENDED',
     locationId: 'cedarline_interior',
@@ -550,13 +550,13 @@ export const AUTHORED_ACTIVITIES: Readonly<Record<string, ActivityDefinition>> =
       },
       {
         id: 'obj_m21a_interview_marcus',
-        title: 'Interview Tobi (Infra Admin)',
-        description: 'Conduct a formal interview with Tobi regarding his whereabouts on Tuesday evening.',
+        title: 'Interview Barry (Infra Admin)',
+        description: 'Conduct a formal interview with Barry regarding his whereabouts on Tuesday evening.',
         type: 'TALK_TO_NPC',
         target: 'npc_marcus',
         isCompleted: false,
         hint: 'Use StartInterview → AskInterviewQuestion → ConcludeInterview.',
-        actionPrompt: 'Locate Tobi in Cedarline and begin the interview.',
+        actionPrompt: 'Locate Barry in Cedarline and begin the interview.',
       },
       {
         id: 'obj_m21a_interview_amina',
@@ -566,12 +566,12 @@ export const AUTHORED_ACTIVITIES: Readonly<Record<string, ActivityDefinition>> =
         target: 'npc_amina',
         isCompleted: false,
         hint: 'Ask Blessing about what she observed on Tuesday evening.',
-        actionPrompt: 'Speak with Blessing after interviewing Tobi.',
+        actionPrompt: 'Speak with Blessing after interviewing Barry.',
       },
       {
         id: 'obj_m21a_compare_testimony',
         title: 'Compare Testimony vs Badge Log',
-        description: "Use the CompareEvidenceWithTestimony command to formally compare Tobi's initial statement against the physical badge access log.",
+        description: "Use the CompareEvidenceWithTestimony command to formally compare Barry's initial statement against the physical badge access log.",
         type: 'RECORD_FINDING',
         isCompleted: false,
         hint: 'Statement ID: q_a_marcus_whereabouts | Evidence ID: ev_phys_badge_log_tuesday',

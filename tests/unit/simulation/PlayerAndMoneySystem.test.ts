@@ -16,7 +16,7 @@ import {
 describe('Player and Money Systems', () => {
   const samplePlayer: PlayerAttributes = {
     id: 'player_01',
-    name: 'Babatunde Vance',
+    name: 'Protector',
     health: 80,
     energy: 50,
     moneyKobo: 100_000, // ₦1,000.00

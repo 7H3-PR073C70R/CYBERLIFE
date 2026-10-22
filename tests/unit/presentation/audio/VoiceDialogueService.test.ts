@@ -184,7 +184,7 @@ describe('VoiceDialogueService', () => {
       expect(isNigerianVoice(fakeSingaporeVoice)).toBe(false);
     });
 
-    it('NEVER selects a female voice for a male request (e.g. Tobi)', () => {
+    it('NEVER selects a female voice for a male request (e.g. Barry)', () => {
       const maleProfile: CharacterVoiceProfile = {
         preferredGender: 'male',
         pitch: 1.02,

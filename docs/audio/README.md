@@ -126,4 +126,4 @@ For official production builds and distribution:
 ## 6. Runtime Fallback & Nigerian Pidgin Handling
 
 - **Missing Audio Fallback**: If an audio file is ever missing from `manifest.json`, [src/presentation/audio/VoicePlayer.ts](file:///Users/protector/Documents/projects/cyberlife/src/presentation/audio/VoicePlayer.ts) automatically falls back to browser `SpeechSynthesis` (`VoiceDialogueService`) so dialogue never breaks or halts.
-- **Nigerian Pidgin Lines**: Dialogue lines containing Nigerian Pidgin (e.g., Mama Nkechi's stall dialogues) are marked with `"needsHumanRecording": true` in `manifest.json`. When live voice actors record human takes, replace the corresponding `.mp3` files in `public/assets/audio/voice/` or update the file pointers in `manifest.json`.
+- **Nigerian Pidgin Lines**: Dialogue lines containing Nigerian Pidgin (e.g., Mama Esther's stall dialogues) are marked with `"needsHumanRecording": true` in `manifest.json`. When live voice actors record human takes, replace the corresponding `.mp3` files in `public/assets/audio/voice/` or update the file pointers in `manifest.json`.

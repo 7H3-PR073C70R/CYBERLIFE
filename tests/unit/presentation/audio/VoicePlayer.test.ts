@@ -33,11 +33,11 @@ describe('VoicePlayer', () => {
       hash_nkechi_greet: {
         file: '/assets/audio/voice/hash_nkechi_greet.mp3',
         fileName: 'hash_nkechi_greet.mp3',
-        speaker: 'Mama Nkechi',
+        speaker: 'Mama Esther',
         speakerId: 'npc_nkechi',
         nodeId: 'nkechi_greeting',
-        text: 'Kedu! Welcome, my brother! You need phone charger or cold Chapman drink?',
-        cleanText: 'Kedu! Welcome, my brother! You need phone charger or cold Chapman drink?',
+        text: 'Kedu! Welcome, my friend! You need phone charger or cold Chapman drink?',
+        cleanText: 'Kedu! Welcome, my friend! You need phone charger or cold Chapman drink?',
         textHash: 'texthash_nkechi_1',
         fileHash: 'hash_nkechi_greet',
         duration: 3.8,
@@ -69,11 +69,11 @@ describe('VoicePlayer', () => {
       'npc_nkechi:texthash_nkechi_1': {
         file: '/assets/audio/voice/hash_nkechi_greet.mp3',
         fileName: 'hash_nkechi_greet.mp3',
-        speaker: 'Mama Nkechi',
+        speaker: 'Mama Esther',
         speakerId: 'npc_nkechi',
         nodeId: 'nkechi_greeting',
-        text: 'Kedu! Welcome, my brother! You need phone charger or cold Chapman drink?',
-        cleanText: 'Kedu! Welcome, my brother! You need phone charger or cold Chapman drink?',
+        text: 'Kedu! Welcome, my friend! You need phone charger or cold Chapman drink?',
+        cleanText: 'Kedu! Welcome, my friend! You need phone charger or cold Chapman drink?',
         textHash: 'texthash_nkechi_1',
         fileHash: 'hash_nkechi_greet',
         duration: 3.8,
@@ -141,7 +141,7 @@ describe('VoicePlayer', () => {
     it('finds Nigerian Pidgin clip marked for human recording', () => {
       const clip = player.findClip(
         'npc_nkechi',
-        'Kedu! Welcome, my brother! You need phone charger or cold Chapman drink?'
+        'Kedu! Welcome, my friend! You need phone charger or cold Chapman drink?'
       );
       expect(clip).not.toBeNull();
       expect(clip?.isPidgin).toBe(true);
@@ -161,7 +161,7 @@ describe('VoicePlayer', () => {
       const unrenderedText = 'This line has no pre-rendered audio file.';
 
       const handle = player.playVoice(unrenderedText, {
-        speaker: 'Tobi',
+        speaker: 'Barry',
         speakerId: 'npc_marcus',
       });
 
@@ -169,7 +169,7 @@ describe('VoicePlayer', () => {
       expect(handle.durationMs).toBeGreaterThan(0);
       expect(speakSpy).toHaveBeenCalledWith(
         unrenderedText,
-        expect.objectContaining({ speaker: 'Tobi' })
+        expect.objectContaining({ speaker: 'Barry' })
       );
     });
 

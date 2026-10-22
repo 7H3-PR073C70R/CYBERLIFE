@@ -54,7 +54,7 @@ const CONTROL_GROUPS: readonly ControlGroup[] = [
       },
       {
         keyBadge: '1 - 4 / Click',
-        action: 'Select dialogue choices when speaking with NPCs like Amina, Folake, or Dr. Kalu.',
+        action: 'Select dialogue choices when speaking with NPCs like Blessing, Goodness, or Uncle Segun.',
       },
       {
         keyBadge: 'Esc',

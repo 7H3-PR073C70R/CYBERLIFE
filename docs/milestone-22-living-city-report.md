@@ -73,13 +73,13 @@ All 8 named characters have authored 24-hour schedules with distinct locations, 
 | Character | Role | Primary Day Location | Evening / Night Location | Special Routine Feature |
 |---|---|---|---|---|
 | **Blessing** (`npc_amina`) | Lead Security Analyst | Cedarline Interior (08:00–18:00) | Cedarline SOC (19:00–07:00) | Dedicated overnight incident review shift |
-| **Femi** (`npc_femi`) | IT Systems Administrator | Cedarline Server Room | Neighborhood Balogun Market | Afternoon hardware errand & evening social |
+| **Michael** (`npc_femi`) | IT Systems Administrator | Cedarline Server Room | Neighborhood Balogun Market | Afternoon hardware errand & evening social |
 | **Mama Esther** (`npc_nkechi`) | Market Vendor / Informant | Balogun Provisions Stall | Residence (Closed Sun) | 07:00–19:00 market shift; key neighborhood intel |
-| **Uncle Ola** (`npc_segun`) | Retired Civil Servant | Neighborhood Tinubu Square | Residence | Fountain bench reading; ATM skimming tips |
-| **Anjola** (`npc_folake`) | Tech Talent Recruiter | Eko Bistro Outdoor Tables | Marina Café | 09:00–15:00 fintech contract talent scouting |
+| **Uncle Segun** (`npc_segun`) | Retired Civil Servant | Neighborhood Tinubu Square | Residence | Fountain bench reading; ATM skimming tips |
+| **Goodness** (`npc_folake`) | Tech Talent Recruiter | Eko Bistro Outdoor Tables | Marina Café | 09:00–15:00 fintech contract talent scouting |
 | **Tsharp** (`npc_tunde`) | Grey-Hat Hacker | Balogun Cybercafé | Marina Seawall (19:00–24:00) | Hardened laptop darknet intelligence at dusk |
 | **Bank Security Lead** (`npc_chidi`) | Corporate Security Officer | FCMB Broad Street Branch | Broad Street Patrol | Physical security walkarounds |
-| **Marcus** (`npc_marcus`) | Junior Infra Admin | Cedarline Desk 4B | Balogun Eatery | Desk-bound workday; badge loan discrepancies |
+| **Barry** (`npc_marcus`) | Junior Infra Admin | Cedarline Desk 4B | Balogun Eatery | Desk-bound workday; badge loan discrepancies |
 
 ### Schedule Resolution & Availability
 - Snapshots are derived purely from `simulationHour` (0–23) via `WorldSimulationService.getNpcRoutineSnapshots(hour)`.

@@ -57,7 +57,7 @@ export const HumanIntelApp: React.FC = () => {
   const [selectedWitnessId, setSelectedWitnessId] = useState<string>('npc_marcus');
   const [selectedVerdict, setSelectedVerdict] = useState<ComparisonVerdict>('CONTRADICTED');
   const [comparisonRationale, setComparisonRationale] = useState<string>(
-    'The physical badge log shows Marcus’s credential swiped into Room 4B at 19:47, directly contradicting his claim that he left at 18:00.'
+    'The physical badge log shows Barry’s credential swiped into Room 4B at 19:47, directly contradicting his claim that he left at 18:00.'
   );
   const [selectedConclusionId, setSelectedConclusionId] = useState<string>('conc_a_badge_lending_policy_breach');
 
@@ -115,7 +115,7 @@ export const HumanIntelApp: React.FC = () => {
       activityId: 'act_m21_conflicting_accounts',
     });
     if (res.success) {
-      showFeedback(`Interview session opened with ${npcId === 'npc_marcus' ? 'Tobi (Infra Admin)' : 'Blessing (Lead Analyst)'}. Badge log evidence added to vault.`, 'success');
+      showFeedback(`Interview session opened with ${npcId === 'npc_marcus' ? 'Barry (Infra Admin)' : 'Blessing (Lead Analyst)'}. Badge log evidence added to vault.`, 'success');
     } else {
       showFeedback(res.message || 'Failed to start interview', 'error');
     }
@@ -187,8 +187,8 @@ export const HumanIntelApp: React.FC = () => {
       activityId: 'act_m21_conflicting_accounts',
       conclusionId: selectedConclusionId,
       hypothesisText: isLending
-        ? 'Marcus lent his badge to Femi to fetch a patch cable during deployment, violating Section 4.2.'
-        : 'Marcus deliberately accessed the server room as an insider threat.',
+        ? 'Barry lent his badge to Michael to fetch a patch cable during deployment, violating Section 4.2.'
+        : 'Barry deliberately accessed the server room as an insider threat.',
       playerConclusionType: isLending ? 'SUPPORTED' : 'CONTRADICTED',
       supportingStatementIds: ['q_a_marcus_badge', 'q_a_amina_badge_policy'],
       supportingEvidenceIds: ['ev_phys_badge_log_tuesday'],
@@ -502,8 +502,8 @@ export const HumanIntelApp: React.FC = () => {
                     Conflicting Accounts Investigation (Room 4B)
                   </h2>
                   <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0, maxWidth: '800px' }}>
-                    Credential <code>CED-2026-B-0247</code> (assigned to Tobi) was recorded at 19:47 entering Room 4B,
-                    yet Tobi claims he left at 18:00. Interview both staff members, confront contradictions with badge logs,
+                    Credential <code>CED-2026-B-0247</code> (assigned to Barry) was recorded at 19:47 entering Room 4B,
+                    yet Barry claims he left at 18:00. Interview both staff members, confront contradictions with badge logs,
                     and submit a substantiated investigative conclusion.
                   </p>
                 </div>
@@ -523,7 +523,7 @@ export const HumanIntelApp: React.FC = () => {
                   Available Witnesses
                 </div>
 
-                {/* Witness 1: Tobi (Marcus) */}
+                {/* Witness 1: Barry */}
                 <div
                   onClick={() => setSelectedWitnessId('npc_marcus')}
                   style={{
@@ -536,7 +536,7 @@ export const HumanIntelApp: React.FC = () => {
                   data-testid="witness-marcus"
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <strong style={{ fontSize: '13px', color: '#f8fafc' }}>Tobi A. (Marcus)</strong>
+                    <strong style={{ fontSize: '13px', color: '#f8fafc' }}>Barry</strong>
                     <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '4px', backgroundColor: '#334155', color: '#cbd5e1' }}>
                       Junior Infra Admin
                     </span>
@@ -551,7 +551,7 @@ export const HumanIntelApp: React.FC = () => {
                   )}
                 </div>
 
-                {/* Witness 2: Blessing (Amina) */}
+                {/* Witness 2: Blessing */}
                 <div
                   onClick={() => setSelectedWitnessId('npc_amina')}
                   style={{
@@ -564,13 +564,13 @@ export const HumanIntelApp: React.FC = () => {
                   data-testid="witness-amina"
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <strong style={{ fontSize: '13px', color: '#f8fafc' }}>Blessing (Amina)</strong>
+                    <strong style={{ fontSize: '13px', color: '#f8fafc' }}>Blessing</strong>
                     <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '4px', backgroundColor: '#334155', color: '#cbd5e1' }}>
                       Lead Security Analyst
                     </span>
                   </div>
                   <p style={{ fontSize: '11px', color: '#94a3b8', margin: '4px 0 0 0' }}>
-                    Corroborates Tobi’s early departure. Can clarify policy Section 4.2.
+                    Corroborates Barry’s early departure. Can clarify policy Section 4.2.
                   </p>
                   {flags['m21_interview_completed_npc_amina_act_m21_conflicting_accounts'] && (
                     <div style={{ fontSize: '10px', color: '#10b981', marginTop: '6px' }}>
@@ -654,7 +654,7 @@ export const HumanIntelApp: React.FC = () => {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <h3 style={{ fontSize: '14px', margin: 0, color: '#f8fafc' }}>
-                    {activeSession ? `Active Session: ${selectedWitnessId === 'npc_marcus' ? 'Tobi' : 'Blessing'}` : 'Recorded Testimonies & Statements'}
+                    {activeSession ? `Active Session: ${selectedWitnessId === 'npc_marcus' ? 'Barry' : 'Blessing'}` : 'Recorded Testimonies & Statements'}
                   </h3>
                   <span
                     style={{
@@ -740,7 +740,7 @@ export const HumanIntelApp: React.FC = () => {
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
                           <span style={{ fontSize: '11px', fontWeight: 700, color: '#38bdf8' }}>
-                            {stmt.npcId === 'npc_marcus' ? 'Tobi (Admin)' : 'Blessing (SecOps Lead)'}
+                            {stmt.npcId === 'npc_marcus' ? 'Barry (Admin)' : 'Blessing (SecOps Lead)'}
                           </span>
                           <span
                             style={{
@@ -881,10 +881,10 @@ export const HumanIntelApp: React.FC = () => {
                     data-testid="select-conclusion"
                   >
                     <option value="conc_a_badge_lending_policy_breach">
-                      Policy Breach: Marcus lent badge to Femi (Non-Malicious Policy Violation)
+                      Policy Breach: Barry lent badge to Michael (Non-Malicious Policy Violation)
                     </option>
                     <option value="conc_a_marcus_insider_threat">
-                      Malicious Insider: Marcus intentionally conducted unauthorized access
+                      Malicious Insider: Barry intentionally conducted unauthorized access
                     </option>
                   </select>
 
@@ -1355,7 +1355,7 @@ export const HumanIntelApp: React.FC = () => {
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <strong style={{ fontSize: '13px', color: '#f8fafc' }}>
-                      Statement: {stmt.npcId === 'npc_marcus' ? 'Tobi A.' : 'Blessing'}
+                      Statement: {stmt.npcId === 'npc_marcus' ? 'Barry' : 'Blessing'}
                     </strong>
                     <span style={{ fontSize: '9px', padding: '2px 5px', borderRadius: '3px', backgroundColor: '#334155', color: '#94a3b8' }}>
                       TESTIMONY

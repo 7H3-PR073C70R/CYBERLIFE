@@ -21,7 +21,7 @@ The implementation introduces:
 3. **Deterministic Simulated Assessment Tools**: 5 non-destructive security testing techniques (`tool-recon-enum`, `tool-config-smb-audit`, `tool-web-api-idor`, `tool-auth-header-spoof`, `tool-crypto-cipher-eval`) providing pedagogical explanations of methodology, required inputs, and generating realistic terminal diagnostics.
 4. **Candidate Findings Validation Studio**: A vulnerability triage workspace allowing operators to review suspected flaws, reproduce findings safely, validate genuine security weaknesses (`VULN-CEDAR-001` BOLA, `VULN-CEDAR-002` SMB Signing, `VULN-CEDAR-003` Envoy Header Spoofing), and explicitly reject benign false positives (`VULN-CEDAR-004` TLS 1.2 Cipher).
 5. **Cryptographic Evidence Vault**: An evidence preservation repository featuring SHA-256 provenance hashes, RFC 3161-style timestamped chain of custody handlers, sanitized artifact payload viewers, and analyst notes categorized by `SCOPE`, `OBSERVATION`, `FINDING`, or `REMEDIATION`.
-6. **Executive Penetration Testing Report & CISO Evaluation Scorecard**: A client deliverable generator compiling executive summaries, CVSS v3.1 risk ratings, strategic remediation roadmaps, and submitting for automated grading by Client CISO **Folake Davies**, producing an authoritative evaluation scorecard and sign-off.
+6. **Executive Penetration Testing Report & CISO Evaluation Scorecard**: A client deliverable generator compiling executive summaries, CVSS v3.1 risk ratings, strategic remediation roadmaps, and submitting for automated grading by Client CISO **Goodness**, producing an authoritative evaluation scorecard and sign-off.
 7. **Virtual Desktop & Terminal Interfaces**: A 6-tab graphical desktop application (`RedTeamApp`) integrated into Orion OS 4.5 and a CLI tool suite (`redteam`) registered into the simulation terminal registry.
 
 ---
@@ -123,7 +123,7 @@ Seven authentic, high-resolution screenshots were captured using headless Google
 
 | Artifact | Workflow Description | Key Visual Elements |
 |---|---|---|
-| `01_m17_redteam_briefing_scope.png` | **Rules of Engagement & Mandate Briefing** | Mandate header (`ROE-2026-CEDAR-RED-01`), client organization (Cedarline Services Ltd), authorizing official (CISO Folake Davies), legal framework, authorized subnets, prohibited techniques, and formal sign-off card. |
+| `01_m17_redteam_briefing_scope.png` | **Rules of Engagement & Mandate Briefing** | Mandate header (`ROE-2026-CEDAR-RED-01`), client organization (Cedarline Services Ltd), authorizing official (CISO Goodness), legal framework, authorized subnets, prohibited techniques, and formal sign-off card. |
 | `02_m17_redteam_target_inventory.png` | **Target Inventory & Scope Explorer** | In-scope staging assets (`app-portal-01`, `filesrv-01`, `api-gw-01`) vs prohibited enterprise core infrastructure (`dc-core-01`, `mon-siem-01`, `c2-nexus-01`), network segments, exposed services, and security justifications. |
 | `03_m17_redteam_console_execution.png` | **Assessment Console & Tool Execution** | Authorized tool execution (`tool-recon-enum`), pedagogical explanation cards, and diagnostic terminal trace with green output. |
 | `04_m17_redteam_scope_rejection.png` | **Scope Gate Rejection Warning** | Out-of-scope target `dc-core-01` selected, authorization denial warning banner, and halted execution state. |

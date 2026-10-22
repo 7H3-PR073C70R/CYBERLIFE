@@ -32,7 +32,7 @@ describe('Persistence Full Simulation Round-Trip & Reconciliation', () => {
       },
       player: {
         id: 'player_01',
-        name: 'Babatunde Vance',
+        name: 'Protector',
         health: 85,
         energy: 70,
         moneyKobo: 1_540_000, // ₦15,400.00
@@ -226,7 +226,7 @@ describe('Persistence Full Simulation Round-Trip & Reconciliation', () => {
     const restored = targetEngine.getState();
 
     // 5. Verify authoritative simulation fields match with 100% fidelity
-    expect(restored.player.name).toBe('Babatunde Vance');
+    expect(restored.player.name).toBe('Protector');
     expect(restored.player.health).toBe(85);
     expect(restored.player.energy).toBe(70);
     expect(restored.player.moneyKobo).toBe(1_540_000);

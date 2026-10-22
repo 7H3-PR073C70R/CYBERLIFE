@@ -40,7 +40,7 @@ export const CONTRACT_CATALOGUE: readonly BountyContract[] = [
       factionId: 'faction_balogun_traders',
       isVerifiedProgram: true,
       reputationRating: 4.8,
-      contactPerson: 'Alhaji Rasheed Balogun',
+      contactPerson: 'Alhaji Rasheed',
       contactRole: 'Head of Merchant Consortium Tech',
       profileSummary:
         'Representative body for over 4,000 wholesale and retail merchants across Lagos Island, modernizing payment collection systems.',
@@ -175,7 +175,7 @@ export const CONTRACT_CATALOGUE: readonly BountyContract[] = [
       factionId: 'faction_eko_bank',
       isVerifiedProgram: true,
       reputationRating: 4.9,
-      contactPerson: 'Ngozi Okafor, CISSP',
+      contactPerson: 'Ngozi, CISSP',
       contactRole: 'Chief Information Security Officer',
       profileSummary:
         'One of Nigeria’s premier tier-1 commercial banking institutions, operating high-security digital banking and ATM switches across Lagos Island.',
@@ -311,7 +311,7 @@ export const CONTRACT_CATALOGUE: readonly BountyContract[] = [
       factionId: 'faction_cedarline',
       isVerifiedProgram: true,
       reputationRating: 4.7,
-      contactPerson: 'Engr. Michael Adeyemi',
+      contactPerson: 'Engr. Michael',
       contactRole: 'Director of Platform Security',
       profileSummary:
         'Lagos Island enterprise cloud services provider hosting business workflows and customer collaboration tools across West Africa.',
@@ -447,7 +447,7 @@ export const CONTRACT_CATALOGUE: readonly BountyContract[] = [
       factionId: 'faction_krest_ir',
       isVerifiedProgram: true,
       reputationRating: 4.9,
-      contactPerson: 'Tunde Bakare',
+      contactPerson: 'Tsharp',
       contactRole: 'Lead Detection Engineer',
       profileSummary:
         'Managed security services provider monitoring mid-market financial and commercial firms across the Victoria Island business district.',
@@ -563,7 +563,7 @@ export const CONTRACT_CATALOGUE: readonly BountyContract[] = [
       {
         id: 'obj-krest-04',
         title: 'Submit Purple Team Validation Report',
-        description: 'Deliver detection scorecard and engineering recommendations to Tunde Bakare.',
+        description: 'Deliver detection scorecard and engineering recommendations to Tsharp.',
         requiredAction: 'submit_report',
         hint: 'Include executive summary and affirm all testing occurred within lab boundary.',
       },
@@ -583,7 +583,7 @@ export const CONTRACT_CATALOGUE: readonly BountyContract[] = [
       factionId: 'faction_0xlagos',
       isVerifiedProgram: false,
       reputationRating: 3.9,
-      contactPerson: 'Korede "0xKorede" Adeleke',
+      contactPerson: 'Korede',
       contactRole: 'Lead Protocol Contributor',
       profileSummary:
         'Fast-moving web3 fintech startup building tokenized invoice clearance across West Africa, operating with informal security documentation.',

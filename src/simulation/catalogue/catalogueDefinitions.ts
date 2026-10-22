@@ -346,7 +346,7 @@ export const CATALOGUE_ENTRIES: readonly CatalogueEntry[] = [
     whyItMatters:
       'Technical defenses cannot prevent an intrusion if employees or AI agents can be tricked into granting access or bypassing controls.',
     fictionalScenario:
-      'Analyze a simulated phishing email received by finance employee Anjola that attempted to harvest intranet portal credentials.',
+      'Analyze a simulated phishing email received by finance employee Goodness that attempted to harvest intranet portal credentials.',
     difficulty: 'beginner',
     learningObjectives: [
       'Identify social engineering indicators: urgency, mismatched domains, pretexting',
@@ -522,7 +522,7 @@ export const CATALOGUE_ENTRIES: readonly CatalogueEntry[] = [
     whyItMatters:
       'Collaborative security improvement provides objective, data-driven proof that organizational resilience has measurably increased.',
     fictionalScenario:
-      'Prove that tuning RULE-DET-SMB-LATERAL enables immediate detection of svc-aster lateral movement without triggering false alerts on legitimate user Anjola.',
+      'Prove that tuning RULE-DET-SMB-LATERAL enables immediate detection of svc-aster lateral movement without triggering false alerts on legitimate user Goodness.',
     difficulty: 'intermediate',
     learningObjectives: [
       'Perform a controlled adversary behavior in a baseline state and record telemetry',

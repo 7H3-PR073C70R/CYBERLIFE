@@ -1943,7 +1943,7 @@ export const RedTeamApp: React.FC<RedTeamAppProps> = ({ initialTab }) => {
                       boxShadow: '0 0 16px rgba(220, 38, 38, 0.4)',
                     }}
                   >
-                    Submit Final Report to CISO Folake Davies
+                    Submit Final Report to CISO Goodness
                   </button>
                 </div>
               )}

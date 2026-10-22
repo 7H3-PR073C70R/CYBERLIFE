@@ -51,9 +51,9 @@ export const EXPLORATION_DISCOVERIES: readonly ExplorationDiscovery[] = [
   {
     id: 'disc_uncle_ola_fountain_chat',
     category: 'NPC_INTEL',
-    title: 'Uncle Ola at the Civic Fountain',
+    title: 'Uncle Segun at the Civic Fountain',
     description:
-      "Uncle Ola is sitting at the Tinubu Square fountain bench reading his phone. He mentions a recent power outage at Broad Street 14-18 that coincided with what he believes was an ATM card skimmer installation on the FCMB kiosk. He'll share more if your relationship is warm.",
+      "Uncle Segun is sitting at the Tinubu Square fountain bench reading his phone. He mentions a recent power outage at Broad Street 14-18 that coincided with what he believes was an ATM card skimmer installation on the FCMB kiosk. He'll share more if your relationship is warm.",
     requiredLocationId: 'neighborhood',
     requiredNpcId: 'npc_segun',
     availableHours: [17, 21],
@@ -113,9 +113,9 @@ export const EXPLORATION_DISCOVERIES: readonly ExplorationDiscovery[] = [
   {
     id: 'disc_anjola_recruiter_encounter',
     category: 'CONTRACT_LEAD',
-    title: 'Anjola Talent Scouting',
+    title: 'Goodness Talent Scouting',
     description:
-      'Anjola (Folake) is conducting informal talent interviews at a white plastic table outside the Eko Bistro. She sees you and waves — she has a Lagos-based fintech client (Paystack partner) seeking a freelance security auditor for a 3-day contract.',
+      'Goodness is conducting informal talent interviews at a white plastic table outside the Eko Bistro. She sees you and waves — she has a Lagos-based fintech client (Paystack partner) seeking a freelance security auditor for a 3-day contract.',
     requiredLocationId: 'neighborhood',
     requiredNpcId: 'npc_folake',
     availableHours: [9, 15],
@@ -159,7 +159,7 @@ export const EXPLORATION_DISCOVERIES: readonly ExplorationDiscovery[] = [
     category: 'VENUE_UNLOCK',
     title: 'SOC Access Badge Available',
     description:
-      'Femi (Gabriel) is at the Cedarline reception and mentions the temporary contractor access cards are now available — you can collect your SECURITY_SECOPS badge at the front desk. This grants access to the Level 4 SOC workstation for the duration of the Aster investigation.',
+      'Michael is at the Cedarline reception and mentions the temporary contractor access cards are now available — you can collect your SECURITY_SECOPS badge at the front desk. This grants access to the Level 4 SOC workstation for the duration of the Aster investigation.',
     requiredLocationId: 'cedarline_interior',
     requiredNpcId: 'npc_femi',
     availableHours: [8, 18],

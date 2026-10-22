@@ -42,7 +42,7 @@ export class RedTeamEngine {
       targetId,
       toolId,
       currentSimTime = 0,
-      actorName = 'Babatunde Vance (Assessor)',
+      actorName = 'Protector (Assessor)',
     } = options;
 
     const actionId = `act-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -350,7 +350,7 @@ export class RedTeamEngine {
             `REQUEST: GET /api/v1/internal/claims/CLM-2026-9042 HTTP/1.1`,
             `AUTHORIZATION: Bearer jwt_token_standard_staff_user`,
             `RESPONSE: HTTP/1.1 200 OK`,
-            `PAYLOAD_SNIPPET: {"claimId": "CLM-2026-9042", "executiveOwner": "Folake Davies", "settlementPayoutNaira": 85000000, "status": "CONFIDENTIAL_EXECUTIVE_HOLD"}`,
+            `PAYLOAD_SNIPPET: {"claimId": "CLM-2026-9042", "executiveOwner": "Goodness", "settlementPayoutNaira": 85000000, "status": "CONFIDENTIAL_EXECUTIVE_HOLD"}`,
             `RESULT: BOLA/IDOR Confirmed — Standard user accessed executive record without authorization!`,
           ],
           chainOfCustody: [
@@ -374,7 +374,7 @@ export class RedTeamEngine {
           `[>] Authorization: Bearer <valid_low_privileged_staff_token>`,
           `[*] Awaiting simulated server response...`,
           `[<] HTTP/1.1 200 OK (Content-Type: application/json)`,
-          `[<] Payload: {"claimId":"CLM-2026-9042","executive":"Folake Davies","settlement":85000000}`,
+          `[<] Payload: {"claimId":"CLM-2026-9042","executive":"Goodness","settlement":85000000}`,
           `[!] VULNERABILITY CONFIRMED: Broken Object-Level Authorization (BOLA/IDOR)!`,
           `[!] The API returned confidential executive settlement data to an unauthorized staff session.`,
           `[+] Preserving cryptographic HTTP trace artifact: ${evidenceId}`,
@@ -596,7 +596,7 @@ export class RedTeamEngine {
     decision: 'VALIDATE' | 'REJECT' | 'MARK_UNRESOLVED',
     rationale: string,
     currentSimTime: number = 0,
-    actorName: string = 'Babatunde Vance (Assessor)'
+    actorName: string = 'Protector (Assessor)'
   ): RedTeamAssessmentState {
     const findingIndex = state.findings.findIndex(f => f.id === findingId);
     if (findingIndex === -1) return state;
@@ -733,7 +733,7 @@ export class RedTeamEngine {
     const isApproved = finalScore >= 75 && !falsePositiveIncorrectlyReportedAsReal;
 
     const summary = isApproved
-      ? `EXCELLENT RED TEAM ASSESSMENT (Score: ${finalScore}%). CISO Folake Davies has officially APPROVED the penetration testing deliverable. Technical findings are rigorous, false positives were correctly eliminated, and actionable remediation priorities were established.`
+      ? `EXCELLENT RED TEAM ASSESSMENT (Score: ${finalScore}%). CISO Goodness has officially APPROVED the penetration testing deliverable. Technical findings are rigorous, false positives were correctly eliminated, and actionable remediation priorities were established.`
       : `ASSESSMENT DELIVERABLE REVISED / REJECTED (Score: ${finalScore}%). The submission did not meet professional Red Team assurance standards. Please review false-positive determinations and evidence completeness.`;
 
     return {

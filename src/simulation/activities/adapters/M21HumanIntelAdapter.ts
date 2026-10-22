@@ -24,7 +24,7 @@ export class M21HumanIntelAdapter {
 
       // ── Scenario A: Conflicting Accounts ─────────────────────────────────
       if (activity.definitionId === 'act_m21_conflicting_accounts') {
-        // Objective: Interview Tobi (Marcus)
+        // Objective: Interview Barry (Marcus)
         if (
           obj.id === 'obj_m21a_interview_marcus' &&
           flags['m21_interview_completed_npc_marcus_act_m21_conflicting_accounts']

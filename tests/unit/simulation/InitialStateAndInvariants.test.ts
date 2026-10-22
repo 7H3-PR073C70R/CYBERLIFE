@@ -20,7 +20,7 @@ describe('Initial Simulation State & Invariants', () => {
     expect(state.time.calendar.dayOfWeek).toBe('Monday');
 
     expect(state.player.id).toBe('player_01');
-    expect(state.player.name).toBe('Babatunde Vance');
+    expect(state.player.name).toBe('Protector');
     expect(state.player.health).toBe(100);
     expect(state.player.energy).toBe(100);
     expect(state.player.moneyKobo).toBe(250_000); // ₦2,500.00

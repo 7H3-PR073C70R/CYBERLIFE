@@ -273,7 +273,7 @@ export const ActivityApp: React.FC<ActivityAppProps> = ({
               ACTIVITY DIRECTOR & CAREER HUB
             </h2>
             <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-              Cyberlife M20 // Node: {nodeLabel} // Player: {state?.player.name ?? 'Babatunde Vance'}
+              Cyberlife M20 // Node: {nodeLabel} // Player: {state?.player.name ?? 'Protector'}
             </div>
           </div>
         </div>

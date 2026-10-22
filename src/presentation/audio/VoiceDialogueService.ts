@@ -62,7 +62,14 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
     voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena', 'samantha'],
   },
 
-  // Junior Sysadmin
+  // Junior Sysadmin (npc_marcus)
+  'Barry': {
+    preferredGender: 'male',
+    pitch: 1.02,
+    rate: 1.03,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'oliver', 'george'],
+  },
   'Tobi': {
     preferredGender: 'male',
     pitch: 1.02,
@@ -78,30 +85,44 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
     voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'oliver', 'george'],
   },
 
-  // Lead AI Engineer
+  // Lead AI Engineer (npc_elena)
+  'Mercy': {
+    preferredGender: 'female',
+    pitch: 1.02,
+    rate: 1.0,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena'],
+  },
   'Dr. Elizabeth': {
     preferredGender: 'female',
     pitch: 1.02,
     rate: 1.0,
     volume: 1.0,
-    voiceHints: ['female', 'en-gb', 'en-us', 'karen', 'serena'],
+    voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena'],
   },
   'Elizabeth': {
     preferredGender: 'female',
     pitch: 1.02,
     rate: 1.0,
     volume: 1.0,
-    voiceHints: ['female', 'en-gb', 'en-us', 'karen', 'serena'],
+    voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena'],
   },
   'Dr. Elena Chen': {
     preferredGender: 'female',
     pitch: 1.02,
     rate: 1.0,
     volume: 1.0,
-    voiceHints: ['female', 'en-gb', 'en-us', 'karen', 'serena'],
+    voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena'],
   },
 
-  // VP / Enterprise Executive
+  // VP / Enterprise Executive (npc_femi)
+  'Michael': {
+    preferredGender: 'male',
+    pitch: 0.94,
+    rate: 0.96,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'george'],
+  },
   'Gabriel': {
     preferredGender: 'male',
     pitch: 0.94,
@@ -124,7 +145,7 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
     voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'george'],
   },
 
-  // Merchant / Vendor
+  // Merchant / Vendor (npc_nkechi)
   'Mama Esther': {
     preferredGender: 'female',
     pitch: 1.08,
@@ -147,7 +168,14 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
     voiceHints: ['en-ng', 'nigeria', 'female', 'serena'],
   },
 
-  // Community Elder & Historian
+  // Community Elder & Historian (npc_segun)
+  'Uncle Segun': {
+    preferredGender: 'male',
+    pitch: 0.92,
+    rate: 0.92,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'george', 'daniel'],
+  },
   'Uncle Ola': {
     preferredGender: 'male',
     pitch: 0.92,
@@ -162,15 +190,15 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
     volume: 1.0,
     voiceHints: ['en-ng', 'nigeria', 'male', 'george', 'daniel'],
   },
-  'Uncle Segun': {
-    preferredGender: 'male',
-    pitch: 0.92,
-    rate: 0.92,
-    volume: 1.0,
-    voiceHints: ['en-ng', 'nigeria', 'male', 'george', 'daniel'],
-  },
 
-  // Talent Liaison
+  // Talent Liaison (npc_folake)
+  'Goodness': {
+    preferredGender: 'female',
+    pitch: 1.06,
+    rate: 1.02,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena'],
+  },
   'Anjola': {
     preferredGender: 'female',
     pitch: 1.06,
@@ -186,7 +214,7 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
     voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena'],
   },
 
-  // Security Researcher
+  // Security Researcher (npc_tunde)
   'Tsharp': {
     preferredGender: 'male',
     pitch: 0.96,
@@ -207,6 +235,38 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
     rate: 1.02,
     volume: 1.0,
     voiceHints: ['en-ng', 'nigeria', 'male', 'oliver', 'alex'],
+  },
+
+  // Investigative Journalist (npc_kemi)
+  'Mary': {
+    preferredGender: 'female',
+    pitch: 1.04,
+    rate: 1.0,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'female', 'serena', 'victoria'],
+  },
+  'Kemi Adeyemi': {
+    preferredGender: 'female',
+    pitch: 1.04,
+    rate: 1.0,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'female', 'serena', 'victoria'],
+  },
+
+  // NDSRC Inspector (npc_babatunde)
+  'Daniel': {
+    preferredGender: 'male',
+    pitch: 0.95,
+    rate: 0.96,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'george'],
+  },
+  'Babatunde Lawal': {
+    preferredGender: 'male',
+    pitch: 0.95,
+    rate: 0.96,
+    volume: 1.0,
+    voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'george'],
   },
 
   // Underground Broker / Hacker Phone Calls
@@ -255,13 +315,6 @@ export const DEFAULT_CHARACTER_PROFILES: Record<string, CharacterVoiceProfile> =
     rate: 1.0,
     volume: 1.0,
     voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'oliver'],
-  },
-  'Michael': {
-    preferredGender: 'male',
-    pitch: 0.95,
-    rate: 0.98,
-    volume: 1.0,
-    voiceHints: ['en-ng', 'nigeria', 'male', 'george', 'daniel'],
   },
   'Beth': {
     preferredGender: 'female',

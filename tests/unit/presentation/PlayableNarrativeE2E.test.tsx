@@ -93,12 +93,12 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
     );
 
     // Marcus initial state
-    expect(screen.getByTestId('dialogue-npc-name')).toHaveTextContent('Tobi');
+    expect(screen.getByTestId('dialogue-npc-name')).toHaveTextContent('Barry');
     expect(screen.getByTestId('npc-relationship-badge')).toHaveTextContent('Neutral (0)');
 
     // Choose Branch 1: Empathy / De-escalation ("Take a breath, Marcus...")
     const choiceEmpathy = screen.getByTestId('dialogue-choice-0');
-    expect(choiceEmpathy).toHaveTextContent(/Tobi, breathe/i);
+    expect(choiceEmpathy).toHaveTextContent(/Barry, breathe/i);
     fireEvent.click(choiceEmpathy);
 
     rerender(
@@ -115,7 +115,7 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
 
     // Now Marcus offers the memo request option
     const choiceRequestMemo = screen.getByTestId('dialogue-choice-0');
-    expect(choiceRequestMemo).toHaveTextContent(/documentation of VP Gabriel ordering this bypass/i);
+    expect(choiceRequestMemo).toHaveTextContent(/documentation of Michael ordering this bypass/i);
     fireEvent.click(choiceRequestMemo);
 
     rerender(
@@ -352,7 +352,7 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
       evidenceId: 'EVD-2026-004',
       source: 'marcus_private_notes',
       title: 'Executive Emergency Deployment Memo',
-      description: 'VP Gabriel deployment authorization',
+      description: 'Michael deployment authorization',
       hash: 'sha256-memo-test',
       tags: ['whistleblower'],
     });

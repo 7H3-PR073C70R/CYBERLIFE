@@ -93,7 +93,7 @@ export const PURPLE_SMB_LATERAL_SCENARIO: readonly AdversaryScenarioStep[] = [
 
 /**
  * Benign background noise fixture used to measure false positive rate.
- * Normal operations from authorized users (Folake, Tade, Chidi).
+ * Normal operations from authorized users (Goodness, Protector, Chidi).
  */
 export const BENIGN_NOISE_FIXTURE: readonly FictionalLogEntry[] = [
   {

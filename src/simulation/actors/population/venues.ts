@@ -79,7 +79,7 @@ export const LAGOS_ISLAND_VENUES: readonly InteriorVenueDefinition[] = [
   // 4. Balogun Electronics & Hardware Stall
   {
     venueId: 'venue-mama-nkechi-market',
-    name: 'Mama Esther Electronics & Provisions Stall',
+    name: 'Mama Esther Provisions & Electronics',
     address: 'Corner of Balogun Street & Broad Street',
     environmentType: 'commercial_street_market',
     correspondingLocationId: 'neighborhood',

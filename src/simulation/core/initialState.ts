@@ -86,7 +86,7 @@ export function createInitialSimulationState(
     },
     player: {
       id: overrides?.playerId ?? 'player_01',
-      name: overrides?.playerName ?? 'Babatunde Vance',
+      name: overrides?.playerName ?? 'Protector',
       health: overrides?.health ?? 100,
       energy: overrides?.energy ?? 100,
       moneyKobo: initialMoneyKobo,

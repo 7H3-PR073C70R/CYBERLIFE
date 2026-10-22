@@ -5,24 +5,24 @@
 Cyberlife features an interconnected ensemble cast rooted in the social fabric of Lagos Island. Characters have distinct jobs, personal anxieties, financial stakes, and bounded fields of perception. They do not act as omniscient quest dispensers; their dialogue and willingness to assist evolve based on the player’s proven reliability, ethical choices, and investigative evidence.
 
 ```
-                  [ Femi Martins ] (VP Operations)
+                  [ Michael ] (VP Operations)
                    ▲            ▲
      Direct Report │            │ Commercial Pressure
                    │            ▼
-   [ Marcus Adebayo ] ◄──► [ Dr. Elena Chen ]
+   [ Barry ] ◄──► [ Mercy ]
          │ (Panic)               │ (AI Ethics)
          │                       │
          ▼                       ▼
-   [ Temitope Blessing ] ◄─ Mentor ─► [ Player (Tade) ] ◄── Mutual Respect ──► [ Tunde Bakare ]
+   [ Blessing ] ◄─ Mentor ─► [ Player (Protector) ] ◄── Mutual Respect ──► [ Tsharp ]
    (Lead SOC Analyst)                       ▲                                 (0xLagos Researcher)
                                             │ Professional Referrals                   │
                                             ▼                                          ▼
-                                   [ Folake Davies ]                         [ Kemi Adeyemi ]
+                                   [ Goodness ]                         [ Mary ]
                                    (Talent Liaison)                         (Investigative Press)
                                             │                                          │
                    ┌────────────────────────┴────────────────────────┐                 ▼
-                   ▼                                                 ▼       [ Babatunde Lawal ]
-           [ Mama Nkechi ]                                    [ Uncle Segun ]     (NDSRC Regulator)
+                   ▼                                                 ▼       [ Daniel ]
+           [ Mama Esther ]                                    [ Uncle Segun ]     (NDSRC Regulator)
        (Balogun Trade Leader)                              (Tinubu Civic Elder)
 ```
 
@@ -32,7 +32,7 @@ Cyberlife features an interconnected ensemble cast rooted in the social fabric o
 
 ---
 
-### 2.1 Temitope Blessing ("Amina")
+### 2.1 Blessing
 - **Stable ID**: `npc_amina`
 - **Role**: Lead Security Analyst, Cedarline Services Ltd.
 - **Affiliation**: Cedarline Services (SOC Team)
@@ -42,18 +42,18 @@ Cyberlife features an interconnected ensemble cast rooted in the social fabric o
   - Motivated by procedural discipline, forensic rigor, and preventing real-world harm.
 - **Public Persona vs. Private Concerns**:
   - *Public*: The unflappable rock of the SOC; demands strict adherence to chain of custody and incident response phases.
-  - *Private*: Deeply worried that executive shortcuts and political infighting are compromising the team's defensive integrity; feels protective of Marcus despite his mistakes.
+  - *Private*: Deeply worried that executive shortcuts and political infighting are compromising the team's defensive integrity; feels protective of Barry despite his mistakes.
 - **Knowledge Boundaries**:
   - *Knows*: Exact telemetry timestamps, SIEM alert thresholds, incident lifecycle protocols, evidence hashing rules.
-  - *Believes*: Marcus made an honest, pressured error, but svc-aster's over-scoping must be formally contained.
-  - *Cannot Know*: The full content of executive board meetings or external broker transactions between Femi Martins and Krest IR.
+  - *Believes*: Barry made an honest, pressured error, but svc-aster's over-scoping must be formally contained.
+  - *Cannot Know*: The full content of executive board meetings or external broker transactions between Michael and Krest IR.
 - **Story Progression**:
   - If player behaves procedurally: Promotes player to official incident lead; writes glowing professional evaluations.
   - If player uncovers executive cover-up: Reaches an agonizing moral crossroads—defend Cedarline's corporate survival or stand with the truth.
 
 ---
 
-### 2.2 Marcus Adebayo
+### 2.2 Barry
 - **Stable ID**: `npc_marcus`
 - **Role**: Junior Infrastructure Administrator, Cedarline Services Ltd.
 - **Affiliation**: Cedarline Infrastructure Operations
@@ -73,9 +73,9 @@ Cyberlife features an interconnected ensemble cast rooted in the social fabric o
 
 ---
 
-### 2.3 Dr. Elena Chen
+### 2.3 Mercy
 - **Stable ID**: `npc_elena`
-- **Role**: Lead AI Engineer & Architect, Cedarline Services Ltd.
+- **Role**: Lead AI Engineer & Architect, Cedarline Services Ltd. (Nigerian applied ML specialist)
 - **Affiliation**: Applied Machine Learning Division
 - **Primary Venue**: Engineering Lab, Marina Tower; evening walks along Marina Seawall.
 - **Background & Motivations**:
@@ -91,7 +91,7 @@ Cyberlife features an interconnected ensemble cast rooted in the social fabric o
 
 ---
 
-### 2.4 Femi Martins
+### 2.4 Michael
 - **Stable ID**: `npc_femi`
 - **Role**: VP of Technology & Operations, Cedarline Services Ltd.
 - **Affiliation**: Executive Management
@@ -111,7 +111,7 @@ Cyberlife features an interconnected ensemble cast rooted in the social fabric o
 
 ---
 
-### 2.5 Mama Nkechi
+### 2.5 Mama Esther
 - **Stable ID**: `npc_nkechi`
 - **Role**: Chairwoman & Merchant Matriarch, Balogun Traders Electronic Union
 - **Primary Venue**: Central Electronics Stall, Balogun Market.
@@ -142,7 +142,7 @@ Cyberlife features an interconnected ensemble cast rooted in the social fabric o
 
 ---
 
-### 2.7 Folake Davies
+### 2.7 Goodness
 - **Stable ID**: `npc_folake`
 - **Role**: Senior Technology Talent Liaison, Eko Tech Partners
 - **Primary Venue**: Broad Street Sidewalk Café / Co-working Lounge.
@@ -153,7 +153,7 @@ Cyberlife features an interconnected ensemble cast rooted in the social fabric o
 
 ---
 
-### 2.8 Tunde "ZeroDay" Bakare
+### 2.8 Tsharp
 - **Stable ID**: `npc_tunde`
 - **Role**: Independent Security Researcher & Bounty Hunter, 0xLagos Syndicate
 - **Primary Venue**: Marina Seawall Promenade (leaning against railings with laptop).
@@ -164,7 +164,7 @@ Cyberlife features an interconnected ensemble cast rooted in the social fabric o
 
 ---
 
-### 2.9 Kemi Adeyemi (Narrative Arc 2/3 Extension)
+### 2.9 Mary (Narrative Arc 2/3 Extension)
 - **Stable ID**: `npc_kemi`
 - **Role**: Chief Investigative Editor, *The Lagos Inquirer*
 - **Primary Venue**: Heritage Building Newsroom, Tinubu Square.
@@ -172,7 +172,7 @@ Cyberlife features an interconnected ensemble cast rooted in the social fabric o
 
 ---
 
-### 2.10 Babatunde Lawal (Narrative Arc 2/3 Extension)
+### 2.10 Daniel (Narrative Arc 2/3 Extension)
 - **Stable ID**: `npc_babatunde`
 - **Role**: Chief Compliance Inspector, NDSRC
 - **Primary Venue**: Federal Secretariat Offices, Marina.

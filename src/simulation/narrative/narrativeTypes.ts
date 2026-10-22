@@ -59,7 +59,7 @@ export interface FactionDefinition {
 // ============================================================================
 
 export type InvestigativeConclusionType =
-  | 'PROCEDURAL_FAULT'         // Marcus/admin error under pressure
+  | 'PROCEDURAL_FAULT'         // Barry/admin error under pressure
   | 'MALICIOUS_INTRUSION'       // Targeted prompt injection & data exfiltration
   | 'SUPPLY_CHAIN_TAMPERING'    // Compromised third-party agent weights or APIs
   | 'EXECUTIVE_COVERUP'         // Management rushed launch, concealed vulnerability

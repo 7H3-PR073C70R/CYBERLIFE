@@ -204,14 +204,14 @@ async function run() {
         }
 
         const characters = [
-          { name: 'Temitope Blessing', preferredGender: 'female' },
-          { name: 'Marcus Adebayo', preferredGender: 'male' },
-          { name: 'Dr. Elena Chen', preferredGender: 'female' },
-          { name: 'Femi Martins', preferredGender: 'male' },
-          { name: 'Mama Nkechi', preferredGender: 'female' },
+          { name: 'Blessing', preferredGender: 'female' },
+          { name: 'Barry', preferredGender: 'male' },
+          { name: 'Mercy', preferredGender: 'female' },
+          { name: 'Michael', preferredGender: 'male' },
+          { name: 'Mama Esther', preferredGender: 'female' },
           { name: 'Uncle Segun', preferredGender: 'male' },
-          { name: 'Folake Davies', preferredGender: 'female' },
-          { name: 'Tunde Bakare', preferredGender: 'male' },
+          { name: 'Goodness', preferredGender: 'female' },
+          { name: 'Tsharp', preferredGender: 'male' },
           { name: 'Cipher', preferredGender: 'male' },
           { name: 'Aster SIEM Bot', preferredGender: 'male' },
         ];
@@ -320,14 +320,14 @@ async function run() {
         }
 
         const characters = [
-          { name: 'Temitope Blessing', preferredGender: 'female', voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena', 'samantha'] },
-          { name: 'Marcus Adebayo', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'oliver', 'george'] },
-          { name: 'Dr. Elena Chen', preferredGender: 'female', voiceHints: ['female', 'en-gb', 'en-us', 'karen', 'serena'] },
-          { name: 'Femi Martins', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'george'] },
-          { name: 'Mama Nkechi', preferredGender: 'female', voiceHints: ['en-ng', 'nigeria', 'female', 'serena'] },
+          { name: 'Blessing', preferredGender: 'female', voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena', 'samantha'] },
+          { name: 'Barry', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'oliver', 'george'] },
+          { name: 'Mercy', preferredGender: 'female', voiceHints: ['female', 'en-gb', 'en-us', 'karen', 'serena'] },
+          { name: 'Michael', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'daniel', 'george'] },
+          { name: 'Mama Esther', preferredGender: 'female', voiceHints: ['en-ng', 'nigeria', 'female', 'serena'] },
           { name: 'Uncle Segun', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'george', 'daniel'] },
-          { name: 'Folake Davies', preferredGender: 'female', voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena'] },
-          { name: 'Tunde Bakare', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'oliver', 'alex'] },
+          { name: 'Goodness', preferredGender: 'female', voiceHints: ['en-ng', 'nigeria', 'female', 'victoria', 'serena'] },
+          { name: 'Tsharp', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'oliver', 'alex'] },
           { name: 'Cipher', preferredGender: 'male', voiceHints: ['en-ng', 'nigeria', 'male', 'daniel'] },
           { name: 'Aster SIEM Bot', preferredGender: 'male', voiceHints: ['synth', 'robot', 'bad news', 'cellos', 'whisper', 'albert', 'fred'] },
         ];

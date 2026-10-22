@@ -32,7 +32,7 @@ Five foundational narrative design documents were authored in `docs/narrative/`,
 | **World Bible** | [`docs/narrative/cyberlife-world-bible.md`](file:///Users/protector/Documents/projects/cyberlife/docs/narrative/cyberlife-world-bible.md) | Lagos Island socio-technological setting; Broad Street, Marina, Balogun Market, Tinubu Square, and CMS Transit; technology rules (no sci-fi magic; grounded Linux, RBAC, OAuth2, BGP, SCADA); socio-economic pressures (rent, power outages, local data sovereignty, fuel costs). |
 | **Central Mystery & Arcs** | [`docs/narrative/central-mystery-and-story-arcs.md`](file:///Users/protector/Documents/projects/cyberlife/docs/narrative/central-mystery-and-story-arcs.md) | The *Eko Nexus Pipeline* breach; 4 competing hypotheses (Corporate Cover-Up, Financial Espionage, Phantom Weaver APT contagion, Whistleblower Forced Audit); 3 overarching story arcs; 8 progression chapters. |
 | **Factions & Organizations** | [`docs/narrative/factions-and-organizations.md`](file:///Users/protector/Documents/projects/cyberlife/docs/narrative/factions-and-organizations.md) | 8 original, non-binary factions: Cedarline Solutions, Eko Atlantic Financial, Krest Incident Response, 0xLagos Hackerspace, The Broad Street Inquirer, CRCII, Balogun Market Traders Union, NDSRC. Standing range: [-100, +100] across 5 reputation bands. |
-| **Recurring Characters** | [`docs/narrative/recurring-characters-and-relationships.md`](file:///Users/protector/Documents/projects/cyberlife/docs/narrative/recurring-characters-and-relationships.md) | 11 recurring characters (Amina, Marcus, Elena, Femi, Nkechi, Segun, Folake, Tunde, Kemi, Babatunde, Chidi); strict knowledge boundaries, personal stakes, schedule routines, and venue associations. |
+| **Recurring Characters** | [`docs/narrative/recurring-characters-and-relationships.md`](file:///Users/protector/Documents/projects/cyberlife/docs/narrative/recurring-characters-and-relationships.md) | 11 recurring characters (Blessing, Barry, Mercy, Michael, Mama Esther, Uncle Segun, Goodness, Tsharp, Mary, Daniel, Choker); strict knowledge boundaries, personal stakes, schedule routines, and venue associations. |
 | **Player Agency & Consequences** | [`docs/narrative/player-agency-and-consequences.md`](file:///Users/protector/Documents/projects/cyberlife/docs/narrative/player-agency-and-consequences.md) | 4 professional ethical alignments (Strict Procedural, Ethical Mentor, Uncompromising Truth, Pragmatic Commercial); evidence cryptographic integrity; multi-faction consequence matrices; non-lethal failure recovery paths. |
 
 ---
@@ -166,7 +166,7 @@ A comprehensive gameplay and browser-level audit was conducted to verify that Mi
 
 ### 6.1 Real Player Entry Point & Feedback Loop
 
-The player's journey begins on Lagos Island, engaging directly with **Lead Security Analyst Temitope Blessing (Amina)** at Cedarline Services Ltd.:
+The player's journey begins on Lagos Island, engaging directly with **Lead Security Analyst Blessing** at Cedarline Services Ltd.:
 - **Interactive Entry Points:** Tested via in-world interaction (`WorldViewport` NPC proximity prompt) and direct URL deep-linking (`/?skipIntro=1&npc=npc_amina`).
 - **Affiliation & Stature:** The dialogue header displays the character's name, organizational affiliation (`Cedarline Services Ltd.`), role (`Lead Security Analyst`), and dynamic relationship badge (`Friendly (+20)` / `Neutral (+10)`).
 - **Procedural Choice Selection:** Choosing formal incident protocol (`amina_greet_procedure`) dispatches `SelectDialogueChoice`, awarding `+5` relationship with Amina and `+5` standing with `faction_cedarline`.
@@ -174,7 +174,7 @@ The player's journey begins on Lagos Island, engaging directly with **Lead Secur
 
 ### 6.2 Two Distinct, Reproducible Narrative Branches from a Shared State
 
-To prove authentic player agency, two mutually exclusive narrative branches were executed and verified from a shared baseline conversation with **Infrastructure Engineer Marcus Adebayo** (`npc_marcus`):
+To prove authentic player agency, two mutually exclusive narrative branches were executed and verified from a shared baseline conversation with **Infrastructure Engineer Barry** (`npc_marcus`):
 
 | Metric / Dimension | Baseline Shared State | Branch 1: Empathy & Protection (`marcus_empathy` → `marcus_request_memo`) | Branch 2: Accusation & Scapegoating (`marcus_accusation`) |
 |---|---|---|---|
@@ -183,7 +183,7 @@ To prove authentic player agency, two mutually exclusive narrative branches were
 | **Cedarline Standing** | Neutral (`10`) | `+10` (`20` - Favored) | `-5` (`5` - Neutral/Unfavorable) |
 | **0xLagos Syndicate** | Neutral (`5`) | `+10` (`15` - Favored) | `0` (Unchanged) |
 | **World Flags Set** | None | `flag_marcus_protected = true` | `flag_marcus_exposed = true` |
-| **Forensic Evidence** | None | Unlocks & records `EVD-2026-004` (*Marcus Adebayo Emergency Escalation Memo*) with cryptographic hash | No evidence gained; Marcus clams up defensively |
+| **Forensic Evidence** | None | Unlocks & records `EVD-2026-004` (*Barry Emergency Escalation Memo*) with cryptographic hash | No evidence gained; Marcus clams up defensively |
 | **Next Dialogue State** | Initial confrontation | Cooperative consultation; offers technical breadcrumbs on Aster | Refuses further conversation; alerts corporate HR/legal |
 | **UI Toast Feedback** | None | Toast: `+10 Trust`, `+10 Standing (0xLagos)` | Toast: `-20 Trust`, `-5 Standing (Cedarline)` |
 
@@ -223,11 +223,11 @@ All screenshots were generated in live headless Chrome (1440×900 viewport, port
 
 | Screenshot File | Description & Visual Artifacts Confirmed |
 |---|---|
-| [`01_entry_point_dialogue.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/01_entry_point_dialogue.png) | Dialogue overlay opened with Lead Analyst Temitope Blessing; Cedarline badge; Neutral (+10) standing badge; initial 3 dialogue options visible. |
+| [`01_entry_point_dialogue.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/01_entry_point_dialogue.png) | Dialogue overlay opened with Lead Analyst Blessing; Cedarline badge; Neutral (+10) standing badge; initial 3 dialogue options visible. |
 | [`02_branch1_procedural_selected.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/02_branch1_procedural_selected.png) | Amina confirming procedural priorities (5-stage incident lifecycle); toast delta feedback; acknowledgment choice. |
 | [`03_contacts_factions_tab.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/03_contacts_factions_tab.png) | Orion OS desktop with ContactsApp active on Factions & Standing tab; displays Arc 1, Chapter 1, 8 faction cards with progress bars, perks, and audit log. |
-| [`04_marcus_branch1_empathy.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/04_marcus_branch1_empathy.png) | Marcus Adebayo dialogue showing Friendly (+25) badge; toast showing `+10 Trust`, `+10 Standing (0xLagos)`; Marcus sharing whistleblower memo. |
-| [`05_marcus_branch2_accusation.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/05_marcus_branch2_accusation.png) | Marcus Adebayo dialogue showing Distrustful (-20) badge; toast showing `-20 Trust`, `-5 Standing (Cedarline)`; defensive dialogue response. |
+| [`04_marcus_branch1_empathy.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/04_marcus_branch1_empathy.png) | Barry dialogue showing Friendly (+25) badge; toast showing `+10 Trust`, `+10 Standing (0xLagos)`; Marcus sharing whistleblower memo. |
+| [`05_marcus_branch2_accusation.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/05_marcus_branch2_accusation.png) | Barry dialogue showing Distrustful (-20) badge; toast showing `-20 Trust`, `-5 Standing (Cedarline)`; defensive dialogue response. |
 | [`06_evidence_dependent_branch.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/06_evidence_dependent_branch.png) | Amina acknowledging EVD-2026-001 SHA-256 hash; dilemma choices displayed (Quiet Internal Containment vs Regulatory Disclosure). |
 | [`07_save_load_verification.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/07_save_load_verification.png) | Save / Load Manager modal open over the game world showing encrypted IndexedDB slot management, status, and quick save. |
 

@@ -83,7 +83,7 @@ export const URBAN_ENVIRONMENT_PROFILES: readonly UrbanEnvironmentProfile[] = [
       'Taking phone calls on outdoor patio',
     ],
     conversationalContext:
-      'Talent recruitment interviews with Anjola, independent bug bounty collaborations, discreet laptop screen peeking.',
+      'Talent recruitment interviews with Goodness, independent bug bounty collaborations, discreet laptop screen peeking.',
   },
 
   // 4. Restaurants & Food Venues
@@ -134,7 +134,7 @@ export const URBAN_ENVIRONMENT_PROFILES: readonly UrbanEnvironmentProfile[] = [
       'Relaxing after intense incident response shifts',
     ],
     conversationalContext:
-      'Underground hacker alibis, high-stakes freelance contracts, unrecorded conversations with Tsharp "ZeroDay" Bakare.',
+      'Underground hacker alibis, high-stakes freelance contracts, unrecorded conversations with Tsharp.',
   },
 
   // 6. Corporate Offices & Reception Areas
@@ -212,7 +212,7 @@ export const URBAN_ENVIRONMENT_PROFILES: readonly UrbanEnvironmentProfile[] = [
       'Conducting formal incident triage meetings',
     ],
     conversationalContext:
-      'High-stakes incident investigations with Blessing, root cause technical debriefs with Dr. Elizabeth, formal evidence handover.',
+      'High-stakes incident investigations with Blessing, root cause technical debriefs with Mercy, formal evidence handover.',
   },
 
   // 9. Transit Areas & Public Streets

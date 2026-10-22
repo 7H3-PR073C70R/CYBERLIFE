@@ -94,7 +94,7 @@ export const INITIAL_PROXY_TRANSACTIONS: readonly ProxyTransaction[] = [
       body: JSON.stringify(
         {
           id: 'EMP-104',
-          name: 'Biodun Adebayo',
+          name: 'Biodun',
           title: 'Junior Accounts Associate',
           department: 'Finance',
           email: 'biodun.ade@cedarline.corp.local',

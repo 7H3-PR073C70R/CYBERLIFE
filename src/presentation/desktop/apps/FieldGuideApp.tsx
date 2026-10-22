@@ -173,9 +173,9 @@ export const FieldGuideApp: React.FC = () => {
                 your command.
               </p>
               <div className="example-block">
-                <span className="ex-prompt">tade@cedarline:~$ </span>
+                <span className="ex-prompt">protector@cedarline:~$ </span>
                 <span className="ex-cmd">whoami</span>
-                <div className="ex-output">tade_adebayo (Security Analyst Intern)</div>
+                <div className="ex-output">protector (Security Analyst Intern)</div>
               </div>
             </div>
 
