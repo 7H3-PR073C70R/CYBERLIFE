@@ -187,8 +187,8 @@ $ npm run test
 > vitest run
 
 Test Files:  127 passed (127)
-Tests:       1,107 passed (1,107)
-Duration:    19.47s
+Tests:       1,108 passed (1,108)
+Duration:    17.24s
 # Exit code: 0 (100% pass rate)
 
 $ npm run build

@@ -20,7 +20,7 @@ import type {
   ActivityObjective,
   ActivityEvaluationHistoryRecord,
 } from './types';
-import { AUTHORED_ACTIVITIES } from './activityCatalogue';
+import { AUTHORED_ACTIVITIES, generateProceduralContract } from './activityCatalogue';
 import { creditPlayerMoney, debitPlayerMoney } from '../systems/playerSystem';
 import { awardSkillXp } from '../career/skillDefinitions';
 import type { SkillId } from '../career/types';
@@ -416,6 +416,16 @@ export function prioritizeOpportunities(
     }
 
     scoredList.push({ id, score });
+  }
+
+  // If available opportunities are running low (e.g. post-story sandbox play), generate a fresh procedural contract
+  if (scoredList.length < 2) {
+    const playerCareerLevel = state.career?.currentLevel ?? 1;
+    const careerPath = state.career?.currentPathId;
+    const count = (directorState.completedHistory.length ?? 0) + 1;
+    const procedural = generateProceduralContract(count, playerCareerLevel, careerPath);
+    (catalogue as Record<string, ActivityDefinition>)[procedural.id] = procedural;
+    scoredList.push({ id: procedural.id, score: 75 });
   }
 
   // Sort descending by score

@@ -194,4 +194,20 @@ describe('ActivityDirectorM20 Simulation Engine', () => {
     expect(contract2.id).not.toBe(contract1.id);
     expect(contract2.title).not.toBe(contract1.title);
   });
+
+  it('automatically replenishes opportunities when available contracts run low (post-story mode)', () => {
+    const engine = createSimulationEngine();
+    const state = engine.getState();
+    const director = state.activityDirector!;
+
+    // Depleted catalogue simulating post-story state where all authored missions are completed
+    const depletedCatalogue: Record<string, any> = {};
+
+    const prioritized = prioritizeOpportunities(state, director, depletedCatalogue);
+
+    expect(prioritized.primaryObjectiveId).toBeDefined();
+    expect(Object.keys(depletedCatalogue).length).toBeGreaterThan(0);
+    const generatedId = Object.keys(depletedCatalogue)[0]!;
+    expect(depletedCatalogue[generatedId].id).toContain('procedural_contract');
+  });
 });

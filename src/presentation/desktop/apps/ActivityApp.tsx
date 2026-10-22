@@ -186,6 +186,7 @@ export const ActivityApp: React.FC<ActivityAppProps> = ({
     const count = (director?.completedHistory.length ?? 0) + 1;
     const proceduralDef = generateProceduralContract(count, playerLevel, careerPath);
     (AUTHORED_ACTIVITIES as Record<string, ActivityDefinition>)[proceduralDef.id] = proceduralDef;
+    sim.engine.dispatch({ type: 'SetActivityGuidanceFilter', filter: director?.guidanceFilter ?? 'ALL' });
     setActionFeedback(`New Commercial Contract generated: "${proceduralDef.title}"`);
     setTimeout(() => setActionFeedback(null), 4000);
   };
