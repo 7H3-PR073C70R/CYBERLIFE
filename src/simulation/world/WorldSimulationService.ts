@@ -259,7 +259,7 @@ export class WorldSimulationService {
 
     const locationLabel = locationLabels[locationId] ?? locationId;
 
-    let lines: string[] = [
+    const lines: string[] = [
       `It is ${timeLabel} at ${locationLabel}.`,
     ];
 

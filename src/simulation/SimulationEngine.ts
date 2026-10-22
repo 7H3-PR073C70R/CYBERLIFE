@@ -104,7 +104,7 @@ export class SimulationEngine {
 
     const result = handleCommand(this._state, command);
 
-    if (result.success && !result.isNoOp && result.events.length > 0) {
+    if (result.success && !result.isNoOp) {
       // Commit the new state
       this._state = result.state;
 

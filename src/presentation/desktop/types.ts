@@ -28,7 +28,8 @@ export type AppId =
   | 'socialPretext'
   | 'defensiveOps'
   | 'redTeam'
-  | 'bountyHub';
+  | 'bountyHub'
+  | 'humanIntel';
 
 
 export interface AppDefinition {
@@ -293,6 +294,16 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
       'Open-market bug bounty portal and freelance cybersecurity contract marketplace. Discover opportunities, evaluate scopes of engagement, execute authorized security assessments, submit verified evidence, and build independent professional reputation.',
     defaultSize: { width: 960, height: 640 },
     minSize: { width: 520, height: 400 },
+  },
+  humanIntel: {
+    id: 'humanIntel',
+    title: 'Human Intelligence & Physical Security Portal',
+    shortTitle: 'Human Intel',
+    icon: 'humanIntel',
+    description:
+      'Witness interviews, testimony-evidence comparison, social engineering triage, and physical security assessment.',
+    defaultSize: { width: 940, height: 620 },
+    minSize: { width: 480, height: 380 },
   },
 };
 

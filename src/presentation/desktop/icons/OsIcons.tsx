@@ -44,7 +44,8 @@ export type OsIconName =
   | 'webProxy'
   | 'socialPretext'
   | 'defensiveOps'
-  | 'bountyHub';
+  | 'bountyHub'
+  | 'humanIntel';
 
 
 export interface OsIconProps extends React.SVGProps<SVGSVGElement> {
@@ -540,6 +541,28 @@ export const OsIcon: React.FC<OsIconProps> = ({
           <circle cx="12" cy="12" r="5" stroke={color} strokeWidth="1.25" strokeDasharray="2 2" />
           <path d="M12 1v3M12 20v3M1 12h3M20 12h3" stroke={color} strokeWidth="2" strokeLinecap="round" />
           <polygon points="12,9 13,11 15,11.3 13.5,12.7 14,15 12,13.8 10,15 10.5,12.7 9,11.3 11,11" fill={color} />
+        </svg>
+      );
+
+    case 'humanIntel':
+      return (
+        <svg {...commonProps}>
+          {/* Shield outline with human biometric / badge silhouette */}
+          <path
+            d="M12 2L4 5v6.5C4 17 7.5 21 12 22c4.5-1 8-5 8-10.5V5l-8-3z"
+            fill="none"
+            stroke={color}
+            strokeWidth="1.75"
+            strokeLinejoin="round"
+          />
+          <circle cx="12" cy="10" r="3" stroke={color} strokeWidth="1.5" fill="none" />
+          <path
+            d="M7.5 17c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            fill="none"
+          />
         </svg>
       );
 

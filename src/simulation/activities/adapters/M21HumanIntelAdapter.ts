@@ -19,7 +19,7 @@ export class M21HumanIntelAdapter {
 
     const flags = state.flags;
 
-    let objectives = activity.objectives.map(obj => {
+    const objectives = activity.objectives.map(obj => {
       if (obj.isCompleted) return obj;
 
       // ── Scenario A: Conflicting Accounts ─────────────────────────────────

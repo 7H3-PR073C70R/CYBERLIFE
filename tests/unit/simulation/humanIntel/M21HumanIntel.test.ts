@@ -302,7 +302,7 @@ describe('M21 Scenario A: Conflicting Accounts', () => {
   });
 
   it('PresentEvidenceToNpc unlocks evidence-gated questions via flag', () => {
-    let s = handleStartInterview(state, {
+    const s = handleStartInterview(state, {
       type: 'StartInterview', npcId: 'npc_marcus', activityId: 'act_m21_conflicting_accounts',
     }).state as SimulationState;
     const sessionId = Object.keys(s.humanIntel!.interviewSessions)[0]!;
@@ -463,7 +463,7 @@ describe('M21 Scenario A: Conflicting Accounts', () => {
     s = acceptResult.state as SimulationState;
 
     // Conduct a complete interview with Marcus
-    let r = handleStartInterview(s, { type: 'StartInterview', npcId: 'npc_marcus', activityId: 'act_m21_conflicting_accounts' });
+    const r = handleStartInterview(s, { type: 'StartInterview', npcId: 'npc_marcus', activityId: 'act_m21_conflicting_accounts' });
     s = r.state as SimulationState;
     const sessionId = Object.keys(s.humanIntel!.interviewSessions)[0]!;
     s = handleAskInterviewQuestion(s, { type: 'AskInterviewQuestion', sessionId, questionId: 'q_a_marcus_whereabouts' }).state as SimulationState;

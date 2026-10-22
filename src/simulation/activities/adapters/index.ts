@@ -4,3 +4,4 @@ export * from './M17RedTeamAdapter';
 export * from './M18DefensiveOpsAdapter';
 export * from './M19BountyAdapter';
 export * from './M21HumanIntelAdapter';
+export * from './M23ProfessionsAdapter';

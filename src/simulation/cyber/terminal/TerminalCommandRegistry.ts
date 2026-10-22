@@ -49,6 +49,7 @@ import {
 import { forensicsCommand } from './forensicsCommand';
 import { soctriageCommand } from './soctriageCommand';
 import { complianceauditCommand } from './complianceauditCommand';
+import { humintCommand } from './humintCommand';
 
 export class TerminalCommandRegistry {
   private handlers = new Map<string, TerminalCommandHandler>();
@@ -2019,6 +2020,9 @@ export function createDefaultCommandRegistry(): TerminalCommandRegistry {
   // M19 Bounty Hunting & Freelance Contracts CLI tool
   registry.register(bountyCommand);
 
+  // M21 Human Intelligence & Physical Security tool
+  registry.register(humintCommand);
+
   // M23 Additional Playable Professions CLI tools
   registry.register(forensicsCommand);
   registry.register(soctriageCommand);
@@ -2035,5 +2039,6 @@ export function createDefaultCommandRegistry(): TerminalCommandRegistry {
 export { forensicsCommand } from './forensicsCommand';
 export { soctriageCommand } from './soctriageCommand';
 export { complianceauditCommand } from './complianceauditCommand';
+export { humintCommand } from './humintCommand';
 
 

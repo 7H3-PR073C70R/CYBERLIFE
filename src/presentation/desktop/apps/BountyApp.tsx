@@ -21,6 +21,8 @@ import {
   ContractCategoryFilter,
   ContractDifficulty,
   ActiveContractState,
+  ContractObjective,
+  AcceptanceCheckResult,
 } from '@/simulation/cyber/contracts/types';
 import { CONTRACT_CATALOGUE } from '@/simulation/cyber/contracts/contractCatalogue';
 
@@ -1239,7 +1241,7 @@ export const BountyApp: React.FC = () => {
                     </h3>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-                      {activeContractState.objectives.map((obj: any) => {
+                      {activeContractState.objectives.map((obj: ContractObjective) => {
                         const isDone = obj.isCompleted;
                         return (
                           <div
@@ -2157,7 +2159,7 @@ export const BountyApp: React.FC = () => {
                   </h3>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
-                    {activeContractState.latestReviewResult.itemizedChecks.map((crit: any, idx: number) => (
+                    {activeContractState.latestReviewResult.itemizedChecks.map((crit: AcceptanceCheckResult, idx: number) => (
                       <div
                         key={idx}
                         style={{

@@ -146,7 +146,7 @@ export const EXPLORATION_DISCOVERIES: readonly ExplorationDiscovery[] = [
     category: 'NPC_INTEL',
     title: "Blessing's Investigation Whiteboard",
     description:
-      "On Blessing's desk is a printed sticky note with three internal IP ranges circled in red marker: 10.0.4.15, 10.0.4.20, and 10.0.4.88. These match the lateral movement signatures in the Aster incident logs. She\'s already narrowed the attack surface.",
+      "On Blessing's desk is a printed sticky note with three internal IP ranges circled in red marker: 10.0.4.15, 10.0.4.20, and 10.0.4.88. These match the lateral movement signatures in the Aster incident logs. She's already narrowed the attack surface.",
     requiredLocationId: 'cedarline_interior',
     requiredNpcId: 'npc_amina',
     availableHours: [8, 20],

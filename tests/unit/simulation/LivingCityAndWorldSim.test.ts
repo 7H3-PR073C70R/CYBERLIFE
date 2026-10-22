@@ -377,7 +377,7 @@ describe('M22 — WorldSimulationService State Mutations', () => {
   });
 
   it('claimDiscovery: removes from pendingDiscoveryIds when claimed', () => {
-    let state = WorldSimulationService.queueNewDiscoveries(emptyState, 'neighborhood', 10, {});
+    const state = WorldSimulationService.queueNewDiscoveries(emptyState, 'neighborhood', 10, {});
     expect(state.pendingDiscoveryIds).toContain('disc_noticeboard_cyber_warning');
 
     const { nextWorldState } =
@@ -493,7 +493,7 @@ describe('M22 — Venue Operating Hours & Access Control', () => {
 
 describe('M22 — Command Execution & World State Integration', () => {
   it('SetLogicalPlayerLocation automatically logs visit and queues discoveries', () => {
-    let state = createInitialSimulationState({
+    const state = createInitialSimulationState({
       locationId: 'apartment_interior',
     });
 
@@ -516,7 +516,7 @@ describe('M22 — Command Execution & World State Integration', () => {
   });
 
   it('moving between locations tracks visit counts accurately', () => {
-    let state = createInitialSimulationState({ locationId: 'apartment_interior' });
+    const state = createInitialSimulationState({ locationId: 'apartment_interior' });
 
     // Visit neighborhood
     let res = handleCommand(state, { type: 'SetLogicalPlayerLocation', locationId: 'neighborhood' });
@@ -546,7 +546,7 @@ describe('M22 — Command Execution & World State Integration', () => {
 
   it('ClaimExplorationDiscovery claims discovery, sets flags, unlocks activities, and emits event', () => {
     // Player is in neighborhood at day time
-    let state = createInitialSimulationState({ locationId: 'neighborhood' });
+    const state = createInitialSimulationState({ locationId: 'neighborhood' });
 
     const result = handleCommand(state, {
       type: 'ClaimExplorationDiscovery',
@@ -560,7 +560,7 @@ describe('M22 — Command Execution & World State Integration', () => {
 
     const event = result.events.find(e => e.type === 'EXPLORATION_DISCOVERY_CLAIMED');
     expect(event).toBeDefined();
-    expect((event as any).payload.discoveryId).toBe('disc_noticeboard_cyber_warning');
+    expect((event as unknown as { payload: { discoveryId: string } }).payload.discoveryId).toBe('disc_noticeboard_cyber_warning');
   });
 
   it('ClaimExplorationDiscovery rejects claiming when player is at the wrong location', () => {
@@ -577,7 +577,7 @@ describe('M22 — Command Execution & World State Integration', () => {
   });
 
   it('ClaimExplorationDiscovery rejects duplicate claims of non-repeatable discoveries', () => {
-    let state = createInitialSimulationState({ locationId: 'neighborhood' });
+    const state = createInitialSimulationState({ locationId: 'neighborhood' });
 
     const first = handleCommand(state, {
       type: 'ClaimExplorationDiscovery',
@@ -644,11 +644,11 @@ describe('M22 — Persistence Round-Trip for World State', () => {
 
     // Construct a legacy-like state where worldSim is undefined
     const base = createInitialSimulationState();
-    const { worldSim: _, ...legacyStateWithoutWorldSim } = base as any;
+    const { worldSim: _, ...legacyStateWithoutWorldSim } = base as unknown as Record<string, unknown>;
 
     const sourceEngine = new SimulationEngine({ initialState: base });
     // Manually force state without worldSim
-    (sourceEngine as any)._state = legacyStateWithoutWorldSim;
+    (sourceEngine as unknown as { _state: unknown })._state = legacyStateWithoutWorldSim;
 
     const sourceSaveManager = new SaveManager({ engine: sourceEngine, storage, enableAutosave: false });
     await sourceSaveManager.init();

@@ -30,6 +30,7 @@ import {
   M18DefensiveOpsAdapter,
   M19BountyAdapter,
   M21HumanIntelAdapter,
+  M23ProfessionsAdapter,
 } from './adapters';
 
 function makeFailure(
@@ -76,6 +77,12 @@ export function syncAllActivitiesWithAdapters(
       id === 'act_m21_facility_audit'
     ) {
       synced = M21HumanIntelAdapter.syncHumanIntelActivity(state, synced);
+    } else if (
+      id === 'act_forensics_marina_breach' ||
+      id === 'act_soc_triage_interbank' ||
+      id === 'act_audit_fintech_compliance'
+    ) {
+      synced = M23ProfessionsAdapter.syncProfessionsActivity(state, synced);
     }
     nextActivities[id] = synced;
   }

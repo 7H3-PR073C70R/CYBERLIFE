@@ -171,7 +171,7 @@ export const forensicsCommand: TerminalCommandHandler = {
           `[+] Computed Hash:  ${artifact.expectedSha256}`,
           `[+] Reference Hash: ${artifact.expectedSha256}`,
           `[+] INTEGRITY VERIFICATION: PASSED [MATCH 100%]`,
-          `[+] Chain of Custody record #COC-7741 updated by ${context.currentUser.displayName} (${context.currentUser.organization}).`,
+          `[+] Chain of Custody record #COC-7741 updated by ${context.currentUser?.displayName ?? 'Lead Analyst'} (${context.currentUser?.organization ?? 'EkoSec Forensics Unit'}).`,
           '',
           'Next Step: Run "forensics mft" to reconstruct the filesystem timeline and inspect metadata.',
         ],

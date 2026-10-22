@@ -85,7 +85,7 @@ export function evaluatePrerequisites(
   // Prohibited world flags
   if (prereqs.prohibitedFlags) {
     for (const flag of prereqs.prohibitedFlags) {
-      if (Boolean(state.flags[flag])) {
+      if (state.flags[flag]) {
         return {
           eligible: false,
           reason: `Incompatible with active condition: ${flag}`,
@@ -158,10 +158,25 @@ export function isActivityObjectiveSatisfied(
       if (target === 'procedural_scan') {
         return ((state.flags['cyber_tools_executed_count'] as number) ?? 0) > 0;
       }
+      if (target === 'forensics') {
+        return Boolean(state.flags['m23_forensics_hash_verified'] || state.flags['m23_forensics_completed']);
+      }
+      if (target === 'soctriage') {
+        return Boolean(state.flags['m23_soctriage_started'] || state.flags['m23_soctriage_completed']);
+      }
+      if (target === 'complianceaudit') {
+        return Boolean(state.flags['m23_compliance_scanned'] || state.flags['m23_complianceaudit_completed']);
+      }
       return false;
     }
 
     case 'RECORD_FINDING': {
+      if (target === 'forensics') {
+        return Boolean(state.flags['m23_forensics_mft_analyzed'] || state.flags['m23_forensics_completed']);
+      }
+      if (target === 'complianceaudit') {
+        return Boolean(state.flags['m23_compliance_remediated'] || state.flags['m23_complianceaudit_completed']);
+      }
       if (target === 'threat_correlation') {
         const threatFindings = (state.networkInvestigation?.correlatedIndicatorIds.length ?? 0);
         return threatFindings > 0 || state.flags['broad_street_intel_verified'] === true;
@@ -197,6 +212,15 @@ export function isActivityObjectiveSatisfied(
     }
 
     case 'SUBMIT_REPORT': {
+      if (target === 'forensics') {
+        return Boolean(state.flags['m23_forensics_completed']);
+      }
+      if (target === 'soctriage') {
+        return Boolean(state.flags['m23_soctriage_completed']);
+      }
+      if (target === 'complianceaudit') {
+        return Boolean(state.flags['m23_complianceaudit_completed']);
+      }
       if (target === 'incident_report') {
         return Boolean(state.mission?.incidentReport || state.mission?.isCompleted);
       }
@@ -219,6 +243,9 @@ export function isActivityObjectiveSatisfied(
     }
 
     case 'EXECUTE_ACTION': {
+      if (target === 'soctriage') {
+        return Boolean(state.flags['m23_soctriage_action_taken'] || state.flags['m23_soctriage_completed']);
+      }
       if (target === 'containment_policy') {
         return Boolean(state.mission?.isContained || state.mission?.isRemediated);
       }
@@ -453,7 +480,7 @@ export function resolveActivityOutcome(
   const simTime = state.time.simulationTimeSeconds;
   let nextPlayer = state.player;
   let nextCareer = state.career;
-  let nextSkills = state.skills ? { ...state.skills } : undefined;
+  const nextSkills = state.skills ? { ...state.skills } : undefined;
   const nextFlags = { ...state.flags };
   let payoutKobo = 0;
   let careerXpEarned = 0;
