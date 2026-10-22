@@ -259,6 +259,25 @@ export class WorldEnvironment {
       const palm = LagosProps.createPalmTree(px, 15, 6.0);
       this.group.add(palm);
     });
+
+    // Real 3D trees along Marina Promenade boulevard
+    AssetLoader.getInstance()
+      .loadGLTF('/assets/environment/quiver_tree_01.glb')
+      .then(treeModel => {
+        treeModel.traverse(node => {
+          if (node instanceof THREE.Mesh) {
+            node.castShadow = true;
+            node.receiveShadow = true;
+          }
+        });
+        [-22, -2, 22].forEach(tx => {
+          const clone = treeModel.clone();
+          clone.position.set(tx, 0, 15.2);
+          clone.scale.set(2.4, 2.4, 2.4);
+          this.group.add(clone);
+        });
+      })
+      .catch(() => {});
   }
 
   /**
@@ -572,6 +591,22 @@ export class WorldEnvironment {
       );
     }
 
+    // Real 3D civic fountain mesh in Tinubu Square plaza apron
+    AssetLoader.getInstance()
+      .loadGLTF('/assets/environment/plaza_fountain_01.glb')
+      .then(fountainModel => {
+        fountainModel.position.set(plazaCenterX, 0.08, plazaCenterZ + 3.2);
+        fountainModel.scale.set(3.0, 3.0, 3.0);
+        fountainModel.traverse(node => {
+          if (node instanceof THREE.Mesh) {
+            node.castShadow = true;
+            node.receiveShadow = true;
+          }
+        });
+        this.group.add(fountainModel);
+      })
+      .catch(() => {});
+
     // 3. Royal Palm Trees surrounding the square
     const palmOffsets: [number, number][] = [
       [plazaCenterX - 6, plazaCenterZ - 6],
@@ -745,6 +780,22 @@ export class WorldEnvironment {
       }
     });
 
+    // Real 3D market vendor canopy cluster along Balogun Market lane
+    AssetLoader.getInstance()
+      .loadGLTF('/assets/environment/market_canopy_01.glb')
+      .then(canopyModel => {
+        canopyModel.position.set(19, 0, -8);
+        canopyModel.scale.set(0.75, 0.75, 0.75);
+        canopyModel.traverse(node => {
+          if (node instanceof THREE.Mesh) {
+            node.castShadow = true;
+            node.receiveShadow = true;
+          }
+        });
+        this.group.add(canopyModel);
+      })
+      .catch(() => {});
+
     // 4. Modern Lagos Bus Shelter with Google AdMob Digital Billboard Kiosk (West Sidewalk Danfo Stop)
     const busShelter = LagosProps.createBusShelterWithAd(-7.3, 0.02, -8.0, Math.PI / 2, 'admob_bus_shelter_danfo');
     this.group.add(busShelter.mesh);
@@ -841,6 +892,8 @@ export class WorldEnvironment {
     const lampHeadGeo = new THREE.BoxGeometry(0.5, 0.25, 0.5);
     const lampHeadMat = new THREE.MeshBasicMaterial({ color: 0xfef08a }); // Warm tropical streetlight
 
+    const lampGroups: THREE.Group[] = [];
+
     streetlightCoords.forEach(([lx, lz]) => {
       const lampGroup = new THREE.Group();
       lampGroup.position.set(lx, 0, lz);
@@ -859,9 +912,35 @@ export class WorldEnvironment {
       lampGroup.add(light);
 
       this.group.add(lampGroup);
+      lampGroups.push(lampGroup);
 
       this.collisionWorld.addObstacle(lx - 0.3, lx + 0.3, lz - 0.3, lz + 0.3, 'Streetlight');
     });
+
+    // Asynchronously load authentic Victorian street lamp GLB model to replace procedural cylinder/box lampheads
+    AssetLoader.getInstance()
+      .loadGLTF('/assets/environment/street_lamp_01.glb')
+      .then(lampModel => {
+        lampModel.traverse(node => {
+          if (node instanceof THREE.Mesh) {
+            node.castShadow = true;
+            node.receiveShadow = true;
+          }
+        });
+        lampGroups.forEach(group => {
+          // Remove procedural pole and box head, keeping point light
+          const toRemove = group.children.filter(c => !(c instanceof THREE.Light));
+          toRemove.forEach(c => group.remove(c));
+
+          const clone = lampModel.clone();
+          clone.position.set(0, 0, 0);
+          clone.scale.set(1.08, 1.08, 1.08); // Height matches ~4.18m
+          group.add(clone);
+        });
+      })
+      .catch(() => {
+        // Retains procedural pole and head fallback
+      });
   }
 
   /**

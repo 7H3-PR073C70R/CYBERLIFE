@@ -151,6 +151,19 @@ export class TrafficSystem {
     );
     this.vehicles.push(v4);
     this.group.add(v4.group);
+
+    // 5. Authentic Lagos Okada commercial motorcycle (x = 1.9, heading -Z: z = 42 to -52)
+    const v5 = this.createVehicleInstance(
+      'DELIVERY',
+      'broad_north_okada',
+      new THREE.Vector3(1.9, 0, 42),
+      new THREE.Vector3(1.9, 0, -52),
+      new THREE.Vector3(0, 0, -1),
+      8.5,
+      new THREE.Vector3(1.9, 0, -14)
+    );
+    this.vehicles.push(v5);
+    this.group.add(v5.group);
   }
 
   /**
@@ -220,17 +233,30 @@ export class TrafficSystem {
   private async loadRealisticModel(v: TrafficVehicle): Promise<void> {
     try {
       if (v.type === 'DANFO') {
-        // High-fidelity Lagos Danfo with authentic sliding door cutout, runner step, and interior
-        const danfoProp = LagosProps.createDanfoMinibus(0, 0, 0, {
-          withDoorCutout: true,
-          withConductorStep: true,
-        });
+        let danfoModel: THREE.Group;
+        try {
+          danfoModel = await AssetLoader.getInstance().loadGLTF('/assets/vehicles/danfo_realistic.glb');
+          danfoModel.scale.set(4.4, 4.4, 4.4);
+          danfoModel.traverse(node => {
+            if (node instanceof THREE.Mesh) {
+              node.castShadow = true;
+              node.receiveShadow = true;
+            }
+          });
+        } catch {
+          // Fallback to high-fidelity Lagos Danfo with door cutout
+          const danfoProp = LagosProps.createDanfoMinibus(0, 0, 0, {
+            withDoorCutout: true,
+            withConductorStep: true,
+          });
+          danfoModel = danfoProp.mesh;
+        }
 
         while (v.bodyRoot.children.length > 0) {
           const c = v.bodyRoot.children[0];
           if (c) v.bodyRoot.remove(c);
         }
-        v.bodyRoot.add(danfoProp.mesh);
+        v.bodyRoot.add(danfoModel);
 
         // Attach authentic Rigged Pedestrian Conductor standing on the door runner step
         const conductor = new RiggedPedestrian({
@@ -262,10 +288,12 @@ export class TrafficSystem {
           ? '/assets/vehicles/suv_realistic.glb'
           : v.type === 'SEDAN'
           ? '/assets/vehicles/sedan.glb'
+          : v.type === 'DELIVERY'
+          ? '/assets/vehicles/motorcycle_okada.glb'
           : '/assets/vehicles/sedan-sports.glb';
 
       const model = await AssetLoader.getInstance().loadGLTF(glbUrl);
-      const scale = v.type === 'SUV' ? 4.5 : 2.0;
+      const scale = v.type === 'SUV' ? 4.5 : v.type === 'DELIVERY' ? 3.2 : 2.0;
       model.scale.set(scale, scale, scale);
 
       const newMaterials: THREE.Material[] = [];

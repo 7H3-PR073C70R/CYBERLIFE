@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { AABB } from '../CollisionWorld';
 import { LagosProps } from './LagosProps';
+import { AssetLoader } from '../AssetLoader';
 
 export type LagosArchitecturalStyle =
   'COMMERCIAL_TOWER' | 'AFRO_BRAZILIAN' | 'MARKET_STOREFRONT' | 'MODERN_OFFICE';
@@ -257,6 +258,25 @@ export class Building {
 
     // Upper Floor Windows
     this.addWindowAccents(options, groundH + 1.6);
+
+    // 4. Real 3D Storefront Shop Module
+    const storeAsset = options.name.includes('Electronics')
+      ? '/assets/environment/building_store_01.glb'
+      : '/assets/environment/building_store_02.glb';
+    AssetLoader.getInstance()
+      .loadGLTF(storeAsset)
+      .then(storeModel => {
+        storeModel.position.set(0, 0, halfD + 0.05);
+        storeModel.scale.set(3.2, 3.2, 3.2);
+        storeModel.traverse(node => {
+          if (node instanceof THREE.Mesh) {
+            node.castShadow = true;
+            node.receiveShadow = true;
+          }
+        });
+        this.group.add(storeModel);
+      })
+      .catch(() => {});
   }
 
   /**

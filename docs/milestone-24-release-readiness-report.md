@@ -215,8 +215,16 @@ Verification was performed using automated headless Chromium (`--headless=new`, 
 | **05: Post-Story Career Loop** | `docs/graphics/milestone24/05_m24_post_story_career_progression.png` | 885 KB | Activity Director HUD and Career Hub continuing into post-story sandbox assignments. |
 | **06: Red Team Assessment** | `docs/graphics/milestone24/06_m24_red_team_offensive_assessment.png` | 884 KB | Red Team assessment portal with Rules of Engagement gate, scope validation, and finding records. |
 
-### Performance Metrics
-- **Frame Rate**: Steady 60 FPS maintained in 3D canvas with shadows, animated vehicle lights, and particle fountains.
+### Performance Metrics & Real-World 3D Asset Standard
+- **Frame Rate**: Steady 60 FPS maintained in 3D canvas with PBR materials, dynamic shadows, animated vehicle lights, and real-world 3D meshes.
+- **Real-World 3D Meshes Integrated (Zero Box Geometry Standard)**:
+  - **Victorian Historic Street Lamps (`street_lamp_01.glb`, 2.1 MB)**: Replaced procedural cylinder poles and box lamp heads with authentic cast-iron ornate street lamps and warm glowing lantern point lights.
+  - **Realistic Lagos Danfo Minibus (`danfo_realistic.glb` & `danfo_van_realistic_nodraco.glb`, 4.3 MB)**: Replaced box chassis with authentic yellow commercial transit minibuses and rigged conductor on door runner.
+  - **Lagos Okada Commercial Motorcycle (`motorcycle_okada.glb`, 97 KB)**: Added authentic two-wheeler motorcycle transit to Broad Street traffic.
+  - **Tinubu Square Civic Plaza Fountain (`plaza_fountain_01.glb`, 14 KB)**: Integrated real 3D carved stone water fountain in Tinubu Square plaza apron.
+  - **Balogun Market Vendor Canopies (`market_canopy_01.glb`, 168 KB)**: Integrated real 3D striped market stall canopies along Balogun Market Lane.
+  - **Commercial Storefront Modules (`building_store_01.glb`–`03.glb`, 160 KB total)**: Integrated real 3D retail shopfront facades into Balogun Market Street buildings.
+  - **Marina Boulevard Quiver Trees (`quiver_tree_01.glb`, 8.6 MB)**: Integrated real 3D tropical flora alongside royal palm trees on Marina Promenade.
 - **Initial Load Time**: < 1.2s to first interactive frame on standard modern hardware.
 - **Memory Footprint**: ~140 MB heap consumption during sustained gameplay across multiple scene switches.
 
