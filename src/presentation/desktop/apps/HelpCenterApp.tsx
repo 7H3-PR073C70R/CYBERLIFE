@@ -45,6 +45,15 @@ const HELP_TOPICS: readonly HelpTopic[] = [
       'Interactive locations glow with circular floor beacons. When within range, a center-screen prompt indicates what will happen. Press [E] to talk, boot your workstation, read community bulletins, or enter buildings.',
   },
   {
+    id: 'help_controls_workstation_orientation',
+    category: 'controls',
+    title: 'Workstation Operations & Field Tips',
+    keywords: ['workstation', 'terminal', 'hotkeys', 'orientation', 'sandbox', 'desktop', 'keyboard'],
+    summary: 'Orientation guide for operating the physical cybersecurity workstation.',
+    details:
+      'All terminal commands execute manually in the sandboxed virtual shell — zero commands run on your real machine. Type help, pwd, or ls -l to explore the virtual filesystem. Launch Packet Lens, Rev Lens, or Rule Tuner from the Applications menu or desktop icons. Press [Alt+F1] for the application menu, [Ctrl+Alt+T] for terminal, or [Esc] to stand up from the workstation.',
+  },
+  {
     id: 'help_cmd_netmap',
     category: 'commands',
     title: 'netmap — Subnet Host Discovery',

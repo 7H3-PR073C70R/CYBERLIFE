@@ -69,7 +69,7 @@ export const ActivityApp: React.FC<ActivityAppProps> = ({
       category: 'SECURITY',
       status: 'INFO',
       title: 'Console Session Established',
-      details: 'User tade_adebayo authenticated to terminal on ws-sec-04 (Marina Tower).',
+      details: 'User protector authenticated to terminal on ws-sec-04 (Marina Tower).',
     },
     {
       id: 'act-init-02',

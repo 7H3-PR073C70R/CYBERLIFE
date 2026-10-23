@@ -10,8 +10,8 @@ describe('Milestone 8: NPC Career & Job Dialogue Integration', () => {
     state = createInitialSimulationState();
   });
 
-  it('allows Amina to explain career advancement requirements', () => {
-    // 1. Start dialogue with Amina
+  it('allows Blessing to explain career advancement requirements', () => {
+    // 1. Start dialogue with Blessing
     const startRes = handleCommand(state, {
       type: 'StartNpcDialogue',
       npcId: 'npc_amina',
@@ -31,7 +31,7 @@ describe('Milestone 8: NPC Career & Job Dialogue Integration', () => {
   });
 
   it('allows accepting a job directly through NPC conversation', () => {
-    // 1. Start dialogue with Amina
+    // 1. Start dialogue with Blessing
     const startRes = handleCommand(state, {
       type: 'StartNpcDialogue',
       npcId: 'npc_amina',
@@ -111,7 +111,7 @@ describe('Milestone 8: NPC Career & Job Dialogue Integration', () => {
     expect(successChoice.state.activeDialogue?.currentNodeId).toBe('amina_job_triage_feedback');
   });
 
-  it('allows accepting Marina Port Audit contract through Femi conversation', () => {
+  it('allows accepting Marina Port Audit contract through Michael conversation', () => {
     const startRes = handleCommand(state, {
       type: 'StartNpcDialogue',
       npcId: 'npc_femi',

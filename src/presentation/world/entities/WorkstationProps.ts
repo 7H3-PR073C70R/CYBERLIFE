@@ -151,7 +151,30 @@ export class WorkstationProps {
             const mats = Array.isArray(child.material) ? child.material : [child.material];
             mats.forEach(mat => {
               if ('envMapIntensity' in mat) {
-                mat.envMapIntensity = 0.25;
+                mat.envMapIntensity = 0.12;
+              }
+              // Prevent blown-out emissive glow on propsDesk papers (PaletteMaterial002)
+              if ('emissive' in mat && (mat as THREE.MeshStandardMaterial).emissive) {
+                (mat as THREE.MeshStandardMaterial).emissive.setRGB(0, 0, 0);
+              }
+              if ('emissiveIntensity' in mat) {
+                (mat as THREE.MeshStandardMaterial).emissiveIntensity = 0;
+              }
+              // Prevent pure white blowout on classic_laptop casing & papers
+              if (mat.name === 'classic_laptop' && 'color' in mat && (mat as THREE.MeshStandardMaterial).color) {
+                (mat as THREE.MeshStandardMaterial).color.setHex(0xb2b9c2);
+                if ('roughness' in mat) (mat as THREE.MeshStandardMaterial).roughness = 0.55;
+              }
+              if (mat.name === 'PaletteMaterial002' && 'color' in mat && (mat as THREE.MeshStandardMaterial).color) {
+                (mat as THREE.MeshStandardMaterial).color.setHex(0xd6cbb0);
+                if ('roughness' in mat) (mat as THREE.MeshStandardMaterial).roughness = 0.95;
+              }
+              if (mat.name && mat.name.startsWith('PaletteMaterial') && 'color' in mat && (mat as THREE.MeshStandardMaterial).color) {
+                const c = (mat as THREE.MeshStandardMaterial).color;
+                if (c.r > 0.85 && c.g > 0.85 && c.b > 0.85) {
+                  c.setHex(0xd6cbb0);
+                  if ('roughness' in mat) (mat as THREE.MeshStandardMaterial).roughness = 0.95;
+                }
               }
             });
           }
@@ -325,12 +348,14 @@ export class WorkstationProps {
       metalness: 0.1,
     });
     const paperMat = new THREE.MeshStandardMaterial({
-      color: 0xfef08a,
-      roughness: 0.8,
+      color: 0xd6cbb0, // Warm manila paper tone to eliminate white blowout
+      roughness: 0.95,
+      metalness: 0.0,
     });
     const cyanNoteMat = new THREE.MeshStandardMaterial({
-      color: 0x67e8f9,
-      roughness: 0.8,
+      color: 0x38bdf8,
+      roughness: 0.9,
+      metalness: 0.0,
     });
     const ssdBumperMat = new THREE.MeshStandardMaterial({
       color: 0xf97316, // Orange rugged bumper

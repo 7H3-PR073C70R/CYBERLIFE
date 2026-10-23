@@ -57,7 +57,7 @@ export const KERNEL_STRING = '6.8.0-Orion x86_64';
 Changing `OS_NAME` automatically propagates to:
 - Top panel menus and title bars
 - Desktop watermark and orientation banners
-- Terminal prompt (`player@Orion-rig` / `tade@Orion-ws04`) and welcome message
+- Terminal prompt (`player@Orion-rig` / `protector@Orion-ws04`) and welcome message
 - System Information application
 - Three.js physical 3D laptop screen renderer
 

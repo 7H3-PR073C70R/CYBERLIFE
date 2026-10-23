@@ -26,12 +26,12 @@ export interface CharacterPalette {
  */
 export const PLAYER_PROTAGONIST_PALETTE: CharacterPalette = {
   name: 'Cyberlife Operative Protagonist',
-  skin: 0x523220, // Warm rich Nigerian bronze
+  skin: 0x643c28, // Warm Mahogany medium-brown skin tone
   jacket: 0x0f172a, // High-tech Obsidian Cyber Operative Jacket
   jacketTrim: 0x00f0ff, // Cyber Cyan edge piping
   pants: 0x1e293b, // Fitted Charcoal Tactical Slacks
   shoes: 0x06b6d4, // Cyber Cyan Tech Runners with White Soles
-  hair: 0x09090b, // Clean fade
+  hair: 0x111111, // Short dark hair
   accent: 0x00f0ff, // Cyber Cyan biometric comm-link
   style: 'CYBER_PROTAGONIST',
 };

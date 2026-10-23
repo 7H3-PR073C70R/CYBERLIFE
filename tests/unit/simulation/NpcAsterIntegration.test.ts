@@ -36,7 +36,7 @@ describe('Milestone 7: NPC Integration with The Aster Incident (M6)', () => {
       expect(rootNode?.text).toContain('svc-aster');
       expect(rootNode?.text).toContain('filesrv-01');
 
-      // Amina knows SOC procedures and alert details, but does NOT know the exact root cause yet
+      // Blessing knows SOC procedures and alert details, but does NOT know the exact root cause yet
       const aminaProfile = getNpcProfile('npc_amina');
       expect(aminaProfile?.knowledgeBoundaries.knownFacts).toContain(
         'Cedarline security policy mandates strict evidence preservation before any remediation.'

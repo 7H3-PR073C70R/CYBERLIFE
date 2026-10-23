@@ -73,7 +73,7 @@ src/simulation/cyber/
 ### 2.2 Web Application Security Proxy (`WebProxyEngine`)
 - **Transaction History**: Maintains synthetic HTTP transactions (`tx-001` through `tx-005`) targeting internal services (`app-portal.cedarline.corp.local:8080`).
 - **Interactive Replay & Tamper**: Allows modifying HTTP headers (`Authorization`, `Cookie`, `X-Forwarded-For`), URI query parameters, and JSON request bodies.
-- **Differential Analysis (`generateDiff`)**: Computes character-level and field-level diffs between original and modified transactions, flagging unauthorized data exposure (e.g. changing `EMP-104` to `EMP-001` extracting CISO Amina Okon's private records).
+- **Differential Analysis (`generateDiff`)**: Computes character-level and field-level diffs between original and modified transactions, flagging unauthorized data exposure (e.g. changing `EMP-104` to `EMP-001` extracting CISO Blessing's private records).
 - **Defense Mode**: Toggling to `patched` automatically enforces server-side object ownership checks (`403 Forbidden: Caller lacks authorization to view record EMP-001`).
 
 ### 2.3 Social Pretexting & Human Attack Surface (`SocialPretextEngine`)
@@ -97,7 +97,7 @@ Offensive security simulations in Cyberlife are governed by strict safety princi
 | **External Network Sockets** | No raw sockets, WebSocket tunnels, or external HTTP requests made by tools. | Monitored network sandbox unit tests |
 | **Malware & Exploits** | Exploit payloads are purely descriptive AST strings and mock byte arrays. | Code review & regex payload auditing |
 | **Phishing Infrastructure** | Social engineering is purely conversational text simulation with NPC interlocutors. | In-memory scenario fixture validation |
-| **Credential Harvesting** | All usernames, hashes, and employee IDs are synthetic fixtures (`EMP-001`, `tade_adebayo`). | Range data integrity assertions |
+| **Credential Harvesting** | All usernames, hashes, and employee IDs are synthetic fixtures (`EMP-001`, `protector`). | Range data integrity assertions |
 
 Automated boundary test `tests/unit/simulation/cyber/OffensiveSecurityBoundary.test.ts` strictly validates that running simulated attacks on `filesrv-01` or replay requests in `WebProxyEngine` never mutates host processes or creates real network sockets.
 

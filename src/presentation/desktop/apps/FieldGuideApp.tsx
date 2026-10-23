@@ -196,6 +196,24 @@ export const FieldGuideApp: React.FC = () => {
                 </li>
               </ul>
             </div>
+
+            <div className="guide-card">
+              <h3 className="card-heading">4. Workstation Shortcuts &amp; Operations</h3>
+              <ul>
+                <li>
+                  All terminal commands execute manually in a <strong>100% sandboxed virtual shell</strong> — zero commands touch your real machine.
+                </li>
+                <li>
+                  Press <kbd>Alt+F1</kbd> to open the Applications menu, or press <kbd>Ctrl+Alt+T</kbd> to launch a new Terminal.
+                </li>
+                <li>
+                  Launch <strong>Packet Lens</strong>, <strong>Rev Lens</strong>, or <strong>Rule Tuner</strong> from the desktop or top panel.
+                </li>
+                <li>
+                  Press <kbd>Esc</kbd> at any time to stand up and return to the 3D world view.
+                </li>
+              </ul>
+            </div>
           </section>
         )}
 

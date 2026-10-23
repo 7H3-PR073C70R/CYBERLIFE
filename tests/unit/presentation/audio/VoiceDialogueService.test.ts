@@ -20,7 +20,7 @@ describe('VoiceDialogueService', () => {
 
   describe('Text preprocessing & sanitization', () => {
     it('cleans technical jargon and acronyms for natural human speech', () => {
-      const raw = '*electronic audio static* Tade, check CVE-2026-445 on filesrv-01 and alert SOC ASAP!';
+      const raw = '*electronic audio static* Protector, check CVE-2026-445 on filesrv-01 and alert SOC ASAP!';
       const cleaned = voiceDialogueService.cleanTextForSpeech(raw);
 
       expect(cleaned).not.toContain('*');
@@ -63,7 +63,7 @@ describe('VoiceDialogueService', () => {
       const listener = vi.fn();
       const unsubscribe = voiceDialogueService.onSpeakingChange(listener);
 
-      voiceDialogueService.speak('Hello Tade', { speaker: 'Blessing' });
+      voiceDialogueService.speak('Hello Protector', { speaker: 'Blessing' });
 
       expect(listener).toHaveBeenCalled();
       unsubscribe();
@@ -73,11 +73,11 @@ describe('VoiceDialogueService', () => {
   describe('Sentence splitting (15-second Chrome cutoff prevention)', () => {
     it('splits multi-sentence text into individual sequential utterances', () => {
       const text =
-        'Tade, welcome to the SOC. We have an active incident on filesrv-01! Can you inspect the logs?';
+        'Protector, welcome to the SOC. We have an active incident on filesrv-01! Can you inspect the logs?';
       const sentences = splitIntoSentences(text);
 
       expect(sentences).toEqual([
-        'Tade, welcome to the SOC.',
+        'Protector, welcome to the SOC.',
         'We have an active incident on filesrv-01!',
         'Can you inspect the logs?',
       ]);

@@ -178,8 +178,8 @@ user@cedarline-telemetry:~$ █
 - Includes a `[Repeat Instructions]` button allowing players to re-read dialogue or mission briefings at any time.
 
 ### 5.2 3D Spatial Guidance & Waypoints
-- Highlighting interactable items (workstation chair, Marcus at cafe table) with a soft ambient outline when within line-of-sight.
-- Clear, accessible interaction prompts displaying the physical keybinding: `[E] Sit at Workstation`, `[E] Talk to Marcus`.
+- Highlighting interactable items (workstation chair, Barry at cafe table) with a soft ambient outline when within line-of-sight.
+- Clear, accessible interaction prompts displaying the physical keybinding: `[E] Sit at Workstation`, `[E] Talk to Barry`.
 
 ### 5.3 Desktop Visual Guidance
 - In Guided mode, the target desktop icon or window header displays an unobtrusive animated focus ring.
@@ -235,7 +235,7 @@ The following 10-step walkthrough illustrates the complete player guidance exper
   2. Press `E`. The camera smoothly zooms into the monitor, transitioning to the Virtual Desktop.
   3. Click the desktop icon labeled **"Cedarline Telemetry Terminal"**.
 - **What to look for**: The virtual desktop opens with a dark-mode desktop theme. A terminal window mounts with the prompt: `analyst@cedarline-investigation:~$`.
-- **How to interpret it**: You are now securely logged into Cedarline's internal telemetry environment through the credentials Marcus provided.
+- **How to interpret it**: You are now securely logged into Cedarline's internal telemetry environment through the credentials Barry provided.
 - **How to confirm success**: The terminal window is open and focused with a blinking cursor.
 - **What if I am stuck?**:
   - *Nudge*: "Walk up to the computer desk in your apartment and press E."
@@ -440,7 +440,7 @@ The following 10-step walkthrough illustrates the complete player guidance exper
   REPUTATION GAINED: +35 (Cedarline Services: Trusted Partner)
   ```
 - **How to interpret it**: You successfully solved the Aster Incident, protected customer privacy, taught Cedarline better security practices, and earned funds to pay your rent and upgrade your workstation.
-- **How to confirm success**: Bank balance increases by $2,500; Marcus sends a grateful thank-you email; mission status marks as **COMPLETED**.
+- **How to confirm success**: Bank balance increases by $2,500; Barry sends a grateful thank-you email; mission status marks as **COMPLETED**.
 - **What if I am stuck?**:
   - *Nudge*: "Open the Incident Report app from the desktop and click Sign & Submit."
   - *Explicit*: The Submit button is highlighted with an animated pointer.

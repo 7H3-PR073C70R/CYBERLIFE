@@ -87,7 +87,7 @@ The simulation unifies physical events and digital telemetry into a coherent for
 
 ```mermaid
 graph TD
-    A[Physical Badge Swipe: Amina Okon 08:14] --> C[Server Room 2B Access Granted]
+    A[Physical Badge Swipe: Blessing 08:14] --> C[Server Room 2B Access Granted]
     B[Tailgating Sensor: Door held 30s] --> C
     C --> D[Physical USB Inserted into WS-FIN-04]
     D --> E[Endpoint Event: rundll32.exe spawned]
@@ -126,7 +126,7 @@ To preserve 60 FPS browser performance while creating a vibrant city atmosphere,
 | **Tier 1** | `TIER_1_AMBIENT_CROWD` | ~55% of crowd | Inexpensive instanced meshes, simple path following, distance culling, no dialogue. | Ephemeral (despawns off-screen) | Market shoppers, street pedestrians, distance crowds. |
 | **Tier 2** | `TIER_2_ROUTINE_NPC` | ~30% of crowd | Diurnal schedules, specific destinations (work, market, home), basic greetings. | Session memory | Danfo conductors, office receptionists, street vendors. |
 | **Tier 3** | `TIER_3_INTERACTIVE_NPC` | ~12% of crowd | Branching dialogue trees, relationship tracking, services (hardware repair, gossip). | Persistent save file | Shop owners, IT sysadmins, security guards. |
-| **Tier 4** | `TIER_4_STORY_CRITICAL` | ~3% of crowd | Deep psychological profile, multi-phase quest state, consequential choices. | Fully serialized | Amina Okon, Marcus Vance, Femi Adebayo, Chidi Eze. |
+| **Tier 4** | `TIER_4_STORY_CRITICAL` | ~3% of crowd | Deep psychological profile, multi-phase quest state, consequential choices. | Fully serialized | Blessing, Barry, Michael, Choker. |
 
 ### 4.2 Nine Urban Environment Profiles
 Population density, attire styles, typical activities, and conversational contexts are governed by 9 regional urban profiles:
@@ -145,7 +145,7 @@ Venues are living spaces with defined operating hours and security checks:
 - **Player Apartment** (`venue_player_apartment`): 24-hour private safehouse with workstation desk and battery inverter.
 - **Cedarline Reception** (`venue_cedarline_reception`): Open 07:00–18:00, GUEST clearance required past security turnstiles.
 - **Cedarline SOC** (`venue_cedarline_soc`): 24-hour operational facility, Level 4 SECURE_VAULT badge required.
-- **Mama Nkechi Market Stall** (`venue_mama_nkechi_market`): Open 06:00–19:00, vibrant informal street commerce.
+- **Mama Esther Market Stall** (`venue_mama_nkechi_market`): Open 06:00–19:00, vibrant informal street commerce.
 - **Eko Tech Bistro** (`venue_eko_tech_bistro`): Open 08:00–22:00, laptop-friendly café with public Wi-Fi.
 - **Tinubu Cyber Lounge** (`venue_tinubu_cyber_lounge`): Open 12:00–02:00, evening gathering place for local tech workers.
 

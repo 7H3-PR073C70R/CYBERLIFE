@@ -195,7 +195,7 @@ export interface SimulationState {
    - `timeScale`: Progression rate multiplier (default `1.0`).
 3. **`player`**:
    - `id`: Stable string identifier (`player_01`).
-   - `displayName`: Human-readable name (`Tunde Balogun`).
+   - `displayName`: Human-readable name (`Protector`).
    - `health`: Clamped integer $[0, 100]$.
    - `energy`: Clamped integer $[0, 100]$.
    - `moneyKobo`: Non-negative integer representing funds in Nigerian kobo (100 kobo = ₦1.00 Naira).

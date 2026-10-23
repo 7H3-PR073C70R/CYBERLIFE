@@ -38,12 +38,12 @@ export const humintCommand: TerminalCommandHandler = {
           `ACTIVE SCENARIO:  The Server Room Discrepancy (Floor 4 Room 4B)`,
           '----------------------------------------------------------------------------------------',
           'HUMINT INVESTIGATION SUMMARY:',
-          '  * Witness 1: Tobi A. (Marcus) — Junior Infra Admin [Alibi vs. Badge Log Discrepancy]',
-          '  * Witness 2: Blessing (Amina) — Lead Security Analyst [Corroboration & Policy 4.2]',
+          '  * Witness 1: Barry — Junior Infra Admin [Alibi vs. Badge Log Discrepancy]',
+          '  * Witness 2: Blessing — Lead Security Analyst [Corroboration & Policy 4.2]',
           '  * Physical Access Record: Credential CED-2026-B-0247 swiped Tuesday 19:47 UTC',
           '',
           'AVAILABLE SUBCOMMANDS:',
-          '  humint interview [marcus|amina]   View witness testimony and interview logs',
+          '  humint interview [barry|blessing]  View witness testimony and interview logs',
           '  humint vendor                     Inspect third-party vendor request email & red flags',
           '  humint inspect [checkpoint]       Examine physical lobby/corridor security controls',
           '  humint report                     View physical security assessment findings & status',
@@ -54,11 +54,11 @@ export const humintCommand: TerminalCommandHandler = {
 
     if (sub === 'interview') {
       const target = args[1]?.toLowerCase();
-      if (!target || target === 'marcus' || target === 'tobi') {
+      if (!target || target === 'barry' || target === 'marcus' || target === 'tobi') {
         return {
           stdout: [
-            '=== Witness Interview Record: Tobi A. (Junior Infra Admin) ===',
-            'Subject: Marcus / Tobi (Credential: CED-2026-B-0247)',
+            '=== Witness Interview Record: Barry (Junior Infra Admin) ===',
+            'Subject: Barry (Credential: CED-2026-B-0247)',
             'Location: Marina Tower / Server Enclosure Corridor',
             '----------------------------------------------------------------------------------------',
             ...SCENARIO_A_MARCUS_QUESTIONS.map(q => [
@@ -69,17 +69,17 @@ export const humintCommand: TerminalCommandHandler = {
             'KEY CONTRADICTION IDENTIFIED:',
             '  * Initial claim: Left building at 18:00 UTC.',
             '  * Badge log: Credential recorded at Room 4B reader at 19:47 UTC.',
-            '  * Admitted explanation: Lent badge and PIN to Femi for emergency patch cable.',
+            '  * Admitted explanation: Lent badge and PIN to Michael for emergency patch cable.',
             '  * Policy breach: Violates Cedarline Physical Security Policy Section 4.2.',
           ],
         };
       }
 
-      if (target === 'amina' || target === 'blessing') {
+      if (target === 'blessing' || target === 'amina') {
         return {
           stdout: [
             '=== Witness Interview Record: Blessing (Lead Security Analyst) ===',
-            'Subject: Amina / Blessing',
+            'Subject: Blessing',
             'Location: Cedarline Corporate SOC Workstation 04',
             '----------------------------------------------------------------------------------------',
             ...SCENARIO_A_AMINA_QUESTIONS.map(q => [

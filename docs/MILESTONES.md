@@ -359,7 +359,7 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 - **Purpose**: Implement structured NPC knowledge, memory, conditional dialogue, and organization-level reactions to the player's investigation outcomes.
 - **Scope**:
   - NPC entity model: knowledge flags, mood, trust level towards player, routine schedules.
-  - Cedarline employees: Marcus (frightened sysadmin), Elena (lead AI engineer), and external observers.
+  - Cedarline employees: Barry (frightened sysadmin), Mercy (lead AI engineer), and external observers.
   - Reactive dialogue: NPCs acknowledge whether the incident was resolved quietly, escalated, or bungled.
   - In-game news alerts and simulated email inbox updates reflecting the aftermath of the incident.
 - **Dependencies**: M4, M6.
@@ -368,7 +368,7 @@ This document establishes the official sequential milestone roadmap for Cyberlif
   - Email client application (`CedarMail`) on virtual desktop.
   - Dynamic dialogue scripts responding to player's mission score and choices.
 - **Acceptance Criteria**:
-  - Talking to Marcus after solving the Aster Incident triggers new dialogue thanking the player and providing future leads.
+  - Talking to Barry after solving the Aster Incident triggers new dialogue thanking the player and providing future leads.
   - Failing to contain the incident before reporting results in reputational damage and critical emails.
   - World states persist across player transitions between buildings.
 - **Explicit Exclusions**:
@@ -717,7 +717,7 @@ This document establishes the official sequential milestone roadmap for Cyberlif
 - **Scope**:
   - **Living Simulation Layer** (`src/simulation/world/`): Pure, headless `WorldSimulationService` querying live NPC routine snapshots, ambient pedestrian/traffic density, venue operating hours, and authored exploration discoveries.
   - **Authored Exploration Catalogue** (`src/simulation/world/explorationDiscoveries.ts`): 12 authored discoveries across all 3 game locations (Broad Street/Tinubu Square, Cedarline HQ, Player Apartment) and 6 discovery categories (`CONTRACT_LEAD`, `NPC_INTEL`, `ENVIRONMENTAL_CLUE`, `AMBIENT_RUMOR`, `VENUE_UNLOCK`, `SKILL_PRACTICE`).
-  - **Diurnal NPC Routines** (`src/simulation/actors/npcProfiles.ts`, `npcSchedules.ts`): Full 24-hour schedules for all 8 named characters (Blessing, Femi, Mama Esther, Uncle Ola, Anjola, Tsharp, Bank Security Lead, Marcus) with location transitions, animations, and interaction eligibility.
+  - **Diurnal NPC Routines** (`src/simulation/actors/npcProfiles.ts`, `npcSchedules.ts`): Full 24-hour schedules for all 8 named characters (Blessing, Michael, Mama Esther, Uncle Ola, Goodness, Tsharp, Bank Security Lead, Barry) with location transitions, animations, and interaction eligibility.
   - **World Integration & Command Set**: Commands `ClaimExplorationDiscovery` and `RecordLocationVisit`, with automatic visit and discovery queuing upon `SetLogicalPlayerLocation` location changes.
   - **M20 Shared Activity Framework Integration**: Exploration leads dynamically unlock contracts and story activities (`act_blue_broad_street_triage`, `act_story_broad_street_intel`, `act_freelance_paystack_bounty`) without creating a separate quest system.
   - **Persistence & Reconciliation**: `worldSim` state (`locationVisits`, `claimedDiscoveries`, `pendingDiscoveryIds`, `explorationUnlockedActivityIds`) persists via `SaveManager` with legacy save backfilling.

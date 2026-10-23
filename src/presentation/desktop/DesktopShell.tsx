@@ -51,7 +51,7 @@ import { INITIAL_CHAT_THREADS } from '@/simulation/cyber/chat/chatData';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { CameraMode } from '../world/worldConfig';
 import { ScreenDesktopState } from '../world/ScreenRenderer';
-import { OS_NAME, OS_VERSION, OS_BRANDING, KERNEL_STRING } from './osBranding';
+import { OS_NAME, OS_VERSION, KERNEL_STRING } from './osBranding';
 import { getWallpaperDataUrl } from './wallpaper';
 import { OsIcon, OsIconName } from './icons/OsIcons';
 
@@ -896,116 +896,53 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
             </div>
           )}
 
-          {/* First-Time Welcome & Guidance Banner */}
+          {/* First-Time Non-Blocking Workstation Orientation Hint */}
           {showWelcomeBanner && (
-            <div
+            <aside
               className="desktop-welcome-banner hud-interactive"
-              role="dialog"
-              aria-label="Workstation Orientation"
+              role="status"
+              aria-live="polite"
+              aria-label="Workstation Orientation Hint"
               data-testid="desktop-welcome-banner"
             >
               <div className="welcome-banner-header">
                 <span className="welcome-icon" aria-hidden="true">
-                  <OsIcon name="osLogo" size={24} color="#00e5ff" />
+                  <OsIcon name="osLogo" size={18} color="#00e5ff" />
                 </span>
                 <div className="welcome-title-group">
-                  <h3 className="welcome-title">{OS_NAME} Cybersecurity Workstation</h3>
-                  <span className="welcome-tag">{OS_BRANDING.welcomeTag}</span>
+                  <h4 className="welcome-title" style={{ fontSize: '0.85rem', margin: 0 }}>
+                    Workstation Ready
+                  </h4>
                 </div>
                 <button
                   type="button"
                   className="welcome-btn-close"
                   onClick={() => setShowWelcomeBanner(false)}
-                  aria-label="Close orientation banner"
+                  aria-label="Close orientation hint"
                   data-testid="btn-welcome-close"
                 >
                   ✕
                 </button>
               </div>
 
-              <div className="welcome-banner-body">
-                <p>
-                  You are seated at the physical security workstation. All terminal commands are
-                  typed manually into the sandboxed virtual shell — zero commands run on your real
-                  machine.
+              <div className="welcome-banner-body" style={{ fontSize: '0.75rem', lineHeight: 1.4 }}>
+                <p style={{ margin: '0 0 6px 0', color: '#94a3b8' }}>
+                  Commands run in a sandboxed virtual shell. Press <kbd>Esc</kbd> to stand up. Comprehensive guides available in <strong>Help Center</strong> &amp; <strong>Field Guide</strong>.
                 </p>
-                <div className="welcome-checklist">
-                  {hasActiveIncident && (
-                    <div
-                      className="check-item"
-                      style={{
-                        borderLeft: '3px solid var(--color-accent-amber)',
-                        background: 'rgba(245, 158, 11, 0.08)',
-                      }}
-                    >
-                      <span
-                        className="check-bullet"
-                        style={{ background: 'var(--color-accent-amber)', color: '#020617' }}
-                      >
-                        !
-                      </span>
-                      <span>
-                        <strong>Active SOC Case:</strong> Launch the{' '}
-                        <strong>Incident Portal</strong> to review Case #2026-AST-01 and follow the
-                        9-step investigation checklist from top to bottom.
-                      </span>
-                    </div>
-                  )}
-                  <div className="check-item">
-                    <span className="check-bullet">1</span>
-                    <span>
-                      Type <code>help</code>, <code>pwd</code>, or <code>ls -l</code> to explore the
-                      virtual filesystem. Typing animates your character&apos;s hands!
-                    </span>
-                  </div>
-                  <div className="check-item">
-                    <span className="check-bullet">2</span>
-                    <span>
-                      Launch <strong>Packet Lens</strong>, <strong>Rev Lens</strong>, or{' '}
-                      <strong>Rule Tuner</strong> from the desktop or {OS_NAME} Applications menu.
-                    </span>
-                  </div>
-                  <div className="check-item">
-                    <span className="check-bullet">3</span>
-                    <span>
-                      Press <kbd>Alt+F1</kbd> for the menu, <kbd>Ctrl+Alt+T</kbd> for terminal, or{' '}
-                      <kbd>Esc</kbd> to stand up safely.
-                    </span>
-                  </div>
-                </div>
               </div>
 
-              <div className="welcome-banner-footer" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                {hasActiveIncident && (
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={() => {
-                      setShowWelcomeBanner(false);
-                      openApp('incident');
-                      focusWindow('incident');
-                    }}
-                    data-testid="btn-welcome-open-incident"
-                    style={{
-                      backgroundColor: 'rgba(56, 189, 248, 0.2)',
-                      borderColor: 'var(--color-accent-cyan)',
-                      color: 'var(--color-accent-cyan)',
-                    }}
-                  >
-                    📋 Open Incident Report &amp; Checklist
-                  </button>
-                )}
+              <div className="welcome-banner-footer" style={{ display: 'flex', gap: '6px', marginTop: '6px' }}>
                 <button
                   type="button"
                   className="btn-primary"
                   onClick={() => setShowWelcomeBanner(false)}
                   data-testid="btn-welcome-dismiss"
-                  style={{ backgroundColor: '#1e293b' }}
+                  style={{ backgroundColor: '#1e293b', fontSize: '0.72rem', padding: '3px 8px' }}
                 >
-                  Got It — Use Security Station
+                  Dismiss
                 </button>
               </div>
-            </div>
+            </aside>
           )}
 
           {/* Application Windows */}
@@ -1171,7 +1108,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 marginTop: '12px',
               }}
             >
-              [ Authenticated session initialized for tade_adebayo ]
+              [ Authenticated session initialized for protector ]
             </div>
             <div
               style={{

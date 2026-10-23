@@ -270,7 +270,7 @@ describe('M21 Scenario A: Conflicting Accounts', () => {
     expect(r2.errorCode).toBe('DIALOGUE_CONDITION_NOT_MET');
   });
 
-  it('Asking q_a_marcus_badge after prerequisites reveals Femi lead', () => {
+  it('Asking q_a_marcus_badge after prerequisites reveals Michael lead', () => {
     let s = handleStartInterview(state, {
       type: 'StartInterview', npcId: 'npc_marcus', activityId: 'act_m21_conflicting_accounts',
     }).state as SimulationState;
@@ -462,7 +462,7 @@ describe('M21 Scenario A: Conflicting Accounts', () => {
     expect(acceptResult.success).toBe(true);
     s = acceptResult.state as SimulationState;
 
-    // Conduct a complete interview with Marcus
+    // Conduct a complete interview with Barry
     const r = handleStartInterview(s, { type: 'StartInterview', npcId: 'npc_marcus', activityId: 'act_m21_conflicting_accounts' });
     s = r.state as SimulationState;
     const sessionId = Object.keys(s.humanIntel!.interviewSessions)[0]!;

@@ -21,7 +21,7 @@ describe('Milestone 14 — Narrative Persistence & Save/Load Invariants', () => 
       type: 'ChangeFactionStanding',
       factionId: 'faction_cedarline',
       delta: 25,
-      reason: 'Assisted Lead Analyst Amina with triage',
+      reason: 'Assisted Lead Analyst Blessing with triage',
     });
 
     engine1.dispatch({
@@ -66,7 +66,7 @@ describe('Milestone 14 — Narrative Persistence & Save/Load Invariants', () => 
     expect(cedarline.standing).toBe(35); // 10 initial + 25 delta
     expect(cedarline.band).toBe('FAVORED');
     expect(cedarline.history.length).toBe(1);
-    expect(cedarline.history[0]?.reason).toContain('Assisted Lead Analyst Amina');
+    expect(cedarline.history[0]?.reason).toContain('Assisted Lead Analyst Blessing');
 
     // Verify Evidence Vault restored
     const evidenceItem = restoredState.narrative!.evidenceVault['EVD-2026-001']!;

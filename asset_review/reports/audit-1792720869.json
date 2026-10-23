@@ -1,0 +1,3280 @@
+{
+  "id": "audit-1792720869",
+  "timestamp": "2026-10-23T02:01:09Z",
+  "files_scanned": 1227,
+  "extension_counts": {
+    ".bin": 2,
+    ".cjs": 6,
+    ".css": 4,
+    ".fbx": 11,
+    ".glb": 124,
+    ".gltf": 2,
+    ".html": 99,
+    ".jpg": 29,
+    ".js": 4,
+    ".json": 9,
+    ".md": 83,
+    ".mjs": 60,
+    ".mp3": 101,
+    ".opus": 26,
+    ".png": 195,
+    ".py": 8,
+    ".ts": 329,
+    ".tsx": 93,
+    ".txt": 1,
+    ".wav": 26,
+    "[no extension]": 15
+  },
+  "assets": [
+    {
+      "path": "assets_incoming/workstation/drawer_cabinet.glb",
+      "kind": "model",
+      "bytes": 1140032
+    },
+    {
+      "path": "assets_incoming/workstation/chair.glb",
+      "kind": "model",
+      "bytes": 102964
+    },
+    {
+      "path": "assets_incoming/workstation/power_box_01.glb",
+      "kind": "model",
+      "bytes": 2723832
+    },
+    {
+      "path": "assets_incoming/workstation/metal_office_desk.glb",
+      "kind": "model",
+      "bytes": 1600260
+    },
+    {
+      "path": "assets_incoming/workstation/desk_lamp_arm_01.glb",
+      "kind": "model",
+      "bytes": 2874180
+    },
+    {
+      "path": "assets_incoming/workstation/modular_electric_cables.glb",
+      "kind": "model",
+      "bytes": 5979060
+    },
+    {
+      "path": "assets_incoming/workstation/vintage_day_bed.glb",
+      "kind": "model",
+      "bytes": 2424744
+    },
+    {
+      "path": "assets_incoming/workstation/hanging_picture_frame_01.glb",
+      "kind": "model",
+      "bytes": 483412
+    },
+    {
+      "path": "assets_incoming/workstation/computer.glb",
+      "kind": "model",
+      "bytes": 623832
+    },
+    {
+      "path": "assets_incoming/workstation/ceiling_fan.glb",
+      "kind": "model",
+      "bytes": 1870612
+    },
+    {
+      "path": "assets_incoming/workstation/office_notepads.glb",
+      "kind": "model",
+      "bytes": 1325564
+    },
+    {
+      "path": "assets_incoming/workstation/classic_laptop.glb",
+      "kind": "model",
+      "bytes": 2180780
+    },
+    {
+      "path": "assets_incoming/workstation/wooden_bookshelf_worn.glb",
+      "kind": "model",
+      "bytes": 2776140
+    },
+    {
+      "path": "assets_incoming/workstation/stationery_supplies.glb",
+      "kind": "model",
+      "bytes": 1979796
+    },
+    {
+      "path": "assets_incoming/workstation/exterior_aircon_unit.glb",
+      "kind": "model",
+      "bytes": 7664272
+    },
+    {
+      "path": "assets_incoming/workstation/circuit_board.glb",
+      "kind": "model",
+      "bytes": 4142692
+    },
+    {
+      "path": "assets_incoming/workstation/props_desk.glb",
+      "kind": "model",
+      "bytes": 1593820
+    },
+    {
+      "path": "assets_incoming/workstation/textures/white_plaster_02/white_plaster_02_arm_1k.jpg",
+      "kind": "texture",
+      "bytes": 191017
+    },
+    {
+      "path": "assets_incoming/workstation/textures/white_plaster_02/white_plaster_02_normal_1k.jpg",
+      "kind": "texture",
+      "bytes": 652310
+    },
+    {
+      "path": "assets_incoming/workstation/textures/white_plaster_02/white_plaster_02_diffuse_1k.jpg",
+      "kind": "texture",
+      "bytes": 527219
+    },
+    {
+      "path": "assets_incoming/workstation/textures/floor_tiles_06/floor_tiles_06_diffuse_1k.jpg",
+      "kind": "texture",
+      "bytes": 356257
+    },
+    {
+      "path": "assets_incoming/workstation/textures/floor_tiles_06/floor_tiles_06_normal_1k.jpg",
+      "kind": "texture",
+      "bytes": 121299
+    },
+    {
+      "path": "assets_incoming/workstation/textures/floor_tiles_06/floor_tiles_06_arm_1k.jpg",
+      "kind": "texture",
+      "bytes": 54871
+    },
+    {
+      "path": "assets_incoming/workstation/textures/painted_plaster_wall/painted_plaster_wall_diffuse_1k.jpg",
+      "kind": "texture",
+      "bytes": 686726
+    },
+    {
+      "path": "assets_incoming/workstation/textures/painted_plaster_wall/painted_plaster_wall_normal_1k.jpg",
+      "kind": "texture",
+      "bytes": 900461
+    },
+    {
+      "path": "assets_incoming/workstation/textures/painted_plaster_wall/painted_plaster_wall_arm_1k.jpg",
+      "kind": "texture",
+      "bytes": 511105
+    },
+    {
+      "path": "assets_incoming/characters/Typing.fbx",
+      "kind": "model",
+      "bytes": 1606320
+    },
+    {
+      "path": "assets_incoming/characters/Stand To Sit.fbx",
+      "kind": "model",
+      "bytes": 512944
+    },
+    {
+      "path": "assets_incoming/characters/Sitting Idle.fbx",
+      "kind": "model",
+      "bytes": 588896
+    },
+    {
+      "path": "assets_incoming/characters/Idle.fbx",
+      "kind": "model",
+      "bytes": 788144
+    },
+    {
+      "path": "assets_incoming/characters/Sit To Stand.fbx",
+      "kind": "model",
+      "bytes": 519136
+    },
+    {
+      "path": "assets_incoming/characters/Walking.fbx",
+      "kind": "model",
+      "bytes": 365888
+    },
+    {
+      "path": "assets_incoming/characters/Running.fbx",
+      "kind": "model",
+      "bytes": 332400
+    },
+    {
+      "path": "assets_incoming/characters/player_male/player_male_1.fbx",
+      "kind": "model",
+      "bytes": 54869760
+    },
+    {
+      "path": "assets_incoming/characters/player_male/player_male_2.fbx",
+      "kind": "model",
+      "bytes": 45325872
+    },
+    {
+      "path": "assets_incoming/characters/player_male/player_male_1.fbm/Ch01_1001_Diffuse.png",
+      "kind": "texture",
+      "bytes": 20140637
+    },
+    {
+      "path": "assets_incoming/characters/player_male/player_male_1.fbm/Ch01_1001_Specular.png",
+      "kind": "texture",
+      "bytes": 478831
+    },
+    {
+      "path": "assets_incoming/characters/player_male/player_male_1.fbm/Ch01_1001_Glossiness.png",
+      "kind": "texture",
+      "bytes": 7103219
+    },
+    {
+      "path": "assets_incoming/characters/player_male/player_male_1.fbm/Ch01_1001_Normal.png",
+      "kind": "texture",
+      "bytes": 24611101
+    },
+    {
+      "path": "assets_incoming/characters/player_male/player_male_2.fbm/Ch12_1001_Glossiness.png",
+      "kind": "texture",
+      "bytes": 5690019
+    },
+    {
+      "path": "assets_incoming/characters/player_male/player_male_2.fbm/Ch12_1001_Normal.png",
+      "kind": "texture",
+      "bytes": 22532929
+    },
+    {
+      "path": "assets_incoming/characters/player_male/player_male_2.fbm/Ch12_1001_Diffuse.png",
+      "kind": "texture",
+      "bytes": 14523457
+    },
+    {
+      "path": "assets_incoming/characters/player_male/player_male_2.fbm/Ch12_1001_Specular.png",
+      "kind": "texture",
+      "bytes": 65896
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_1.fbx",
+      "kind": "model",
+      "bytes": 50037856
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_2.fbx",
+      "kind": "model",
+      "bytes": 56196816
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_1.fbm/Ch02_1001_Specular.png",
+      "kind": "texture",
+      "bytes": 58789
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_1.fbm/Ch02_1001_Normal.png",
+      "kind": "texture",
+      "bytes": 20150787
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_1.fbm/Ch02_1001_Glossiness.png",
+      "kind": "texture",
+      "bytes": 6365991
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_1.fbm/Ch02_1001_Diffuse.png",
+      "kind": "texture",
+      "bytes": 14472808
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_1.fbm/Ch02_1002_Normal.png",
+      "kind": "texture",
+      "bytes": 2272406
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_1.fbm/Ch02_1002_Diffuse.png",
+      "kind": "texture",
+      "bytes": 3927727
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_2.fbm/Ch26_1001_Normal.png",
+      "kind": "texture",
+      "bytes": 24623452
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_2.fbm/Ch26_1002_Diffuse.png",
+      "kind": "texture",
+      "bytes": 2489191
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_2.fbm/Ch26_1002_Normal.png",
+      "kind": "texture",
+      "bytes": 2249178
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_2.fbm/Ch26_1001_Diffuse.png",
+      "kind": "texture",
+      "bytes": 17941559
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_2.fbm/Ch26_1001_Specular.png",
+      "kind": "texture",
+      "bytes": 60012
+    },
+    {
+      "path": "assets_incoming/characters/player_female/player_female_2.fbm/Ch26_1001_Glossiness.png",
+      "kind": "texture",
+      "bytes": 6113293
+    },
+    {
+      "path": "docs/graphics/onion_chat_and_active_call.png",
+      "kind": "texture",
+      "bytes": 1617263
+    },
+    {
+      "path": "docs/graphics/tor_browser_circuit_and_market.png",
+      "kind": "texture",
+      "bytes": 1662626
+    },
+    {
+      "path": "docs/graphics/terminal_green_on_black.png",
+      "kind": "texture",
+      "bytes": 1948779
+    },
+    {
+      "path": "docs/graphics/desktop_cascading_security_menu.png",
+      "kind": "texture",
+      "bytes": 1862824
+    },
+    {
+      "path": "docs/graphics/terminal_gtk_menubar.png",
+      "kind": "texture",
+      "bytes": 1610380
+    },
+    {
+      "path": "docs/graphics/desktop_parrot_mate_layout.png",
+      "kind": "texture",
+      "bytes": 1878594
+    },
+    {
+      "path": "docs/graphics/desktop_custom_wallpaper.png",
+      "kind": "texture",
+      "bytes": 1913002
+    },
+    {
+      "path": "docs/graphics/step3/before/street_pedestrians.png",
+      "kind": "texture",
+      "bytes": 288648
+    },
+    {
+      "path": "docs/graphics/step3/after/street_pedestrian_near_interaction_target.png",
+      "kind": "texture",
+      "bytes": 264510
+    },
+    {
+      "path": "docs/graphics/step3/after/street_pedestrians_closeup.png",
+      "kind": "texture",
+      "bytes": 283980
+    },
+    {
+      "path": "docs/graphics/step3/after/street_pedestrians_crowd_mid_distance.png",
+      "kind": "texture",
+      "bytes": 346294
+    },
+    {
+      "path": "docs/graphics/step3/after/story_npc_executive_suit.png",
+      "kind": "texture",
+      "bytes": 365723
+    },
+    {
+      "path": "docs/graphics/step3/after/elite_pedestrian_suit_and_shoes.png",
+      "kind": "texture",
+      "bytes": 187243
+    },
+    {
+      "path": "docs/graphics/os_redesign/06_bounded_layout.png",
+      "kind": "texture",
+      "bytes": 1164848
+    },
+    {
+      "path": "docs/graphics/os_redesign/05_fullscreen_layout.png",
+      "kind": "texture",
+      "bytes": 577503
+    },
+    {
+      "path": "docs/graphics/os_redesign/09_overlay_view.png",
+      "kind": "texture",
+      "bytes": 1059440
+    },
+    {
+      "path": "docs/graphics/os_redesign/02_terminal_open.png",
+      "kind": "texture",
+      "bytes": 575781
+    },
+    {
+      "path": "docs/graphics/os_redesign/09_overlay_vs_3d_screen_comparison.png",
+      "kind": "texture",
+      "bytes": 872813
+    },
+    {
+      "path": "docs/graphics/os_redesign/03_two_windows_focused.png",
+      "kind": "texture",
+      "bytes": 616300
+    },
+    {
+      "path": "docs/graphics/os_redesign/04_applications_menu_open.png",
+      "kind": "texture",
+      "bytes": 605666
+    },
+    {
+      "path": "docs/graphics/os_redesign/08_desk_screen_closeup_night.png",
+      "kind": "texture",
+      "bytes": 1065131
+    },
+    {
+      "path": "docs/graphics/os_redesign/07_desk_screen_closeup_day.png",
+      "kind": "texture",
+      "bytes": 1106970
+    },
+    {
+      "path": "docs/graphics/os_redesign/01_desktop_no_windows.png",
+      "kind": "texture",
+      "bytes": 587078
+    },
+    {
+      "path": "docs/graphics/step2/before/street_third_person.png",
+      "kind": "texture",
+      "bytes": 328749
+    },
+    {
+      "path": "docs/graphics/step2/before/player_seated_at_desk.png",
+      "kind": "texture",
+      "bytes": 591364
+    },
+    {
+      "path": "docs/graphics/step2/after/male_third_person_run.png",
+      "kind": "texture",
+      "bytes": 281940
+    },
+    {
+      "path": "docs/graphics/step2/after/male_third_person_walk.png",
+      "kind": "texture",
+      "bytes": 312904
+    },
+    {
+      "path": "docs/graphics/step2/after/female_third_person_walk.png",
+      "kind": "texture",
+      "bytes": 282696
+    },
+    {
+      "path": "docs/graphics/step2/after/female_seated_typing.png",
+      "kind": "texture",
+      "bytes": 658647
+    },
+    {
+      "path": "docs/graphics/step2/after/male_first_person.png",
+      "kind": "texture",
+      "bytes": 235229
+    },
+    {
+      "path": "docs/graphics/step2/after/female_seated_idle.png",
+      "kind": "texture",
+      "bytes": 752749
+    },
+    {
+      "path": "docs/graphics/step2/after/female_third_person_run.png",
+      "kind": "texture",
+      "bytes": 278800
+    },
+    {
+      "path": "docs/graphics/step2/after/female_first_person.png",
+      "kind": "texture",
+      "bytes": 237110
+    },
+    {
+      "path": "docs/graphics/step2/after/male_seated_typing.png",
+      "kind": "texture",
+      "bytes": 657968
+    },
+    {
+      "path": "docs/graphics/step2/after/female_third_person_idle.png",
+      "kind": "texture",
+      "bytes": 273923
+    },
+    {
+      "path": "docs/graphics/step2/after/male_seated_idle.png",
+      "kind": "texture",
+      "bytes": 725175
+    },
+    {
+      "path": "docs/graphics/step2/after/male_third_person_idle.png",
+      "kind": "texture",
+      "bytes": 329177
+    },
+    {
+      "path": "docs/graphics/stepB/before/workstation_desktop_open.png",
+      "kind": "texture",
+      "bytes": 933805
+    },
+    {
+      "path": "docs/graphics/stepB/before/player_seated_at_workstation_3d.png",
+      "kind": "texture",
+      "bytes": 1130970
+    },
+    {
+      "path": "docs/graphics/stepB/before/player_in_street.png",
+      "kind": "texture",
+      "bytes": 306976
+    },
+    {
+      "path": "docs/graphics/stepB/after/workstation_desktop_open.png",
+      "kind": "texture",
+      "bytes": 951917
+    },
+    {
+      "path": "docs/graphics/stepB/after/player_seated_at_workstation_3d.png",
+      "kind": "texture",
+      "bytes": 1099254
+    },
+    {
+      "path": "docs/graphics/stepB/after/player_in_street.png",
+      "kind": "texture",
+      "bytes": 345496
+    },
+    {
+      "path": "docs/graphics/milestone23/05_m23_digital_forensics_workflow.png",
+      "kind": "texture",
+      "bytes": 1081060
+    },
+    {
+      "path": "docs/graphics/milestone23/04_m23_seated_workstation_aligned.png",
+      "kind": "texture",
+      "bytes": 1045417
+    },
+    {
+      "path": "docs/graphics/milestone23/02_m23_cedarline_soc_corporate.png",
+      "kind": "texture",
+      "bytes": 1110663
+    },
+    {
+      "path": "docs/graphics/milestone23/01_m23_lagos_streetscape_polished.png",
+      "kind": "texture",
+      "bytes": 393397
+    },
+    {
+      "path": "docs/graphics/milestone23/03_m23_apartment_residence_warm.png",
+      "kind": "texture",
+      "bytes": 1235968
+    },
+    {
+      "path": "docs/graphics/milestone23/06_m23_career_professions_hub.png",
+      "kind": "texture",
+      "bytes": 940539
+    },
+    {
+      "path": "docs/graphics/milestone24/04_m24_digital_forensics_soc_terminal.png",
+      "kind": "texture",
+      "bytes": 1072941
+    },
+    {
+      "path": "docs/graphics/milestone24/05_m24_post_story_career_progression.png",
+      "kind": "texture",
+      "bytes": 884610
+    },
+    {
+      "path": "docs/graphics/milestone24/02_m24_workstation_desktop_suite.png",
+      "kind": "texture",
+      "bytes": 1046360
+    },
+    {
+      "path": "docs/graphics/milestone24/03_m24_human_intel_investigation.png",
+      "kind": "texture",
+      "bytes": 842537
+    },
+    {
+      "path": "docs/graphics/milestone24/06_m24_red_team_offensive_assessment.png",
+      "kind": "texture",
+      "bytes": 883642
+    },
+    {
+      "path": "docs/graphics/milestone24/01_m24_full_game_lagos_world.png",
+      "kind": "texture",
+      "bytes": 375764
+    },
+    {
+      "path": "docs/graphics/milestone22/03_m22_apartment_interior_residence.png",
+      "kind": "texture",
+      "bytes": 370758
+    },
+    {
+      "path": "docs/graphics/milestone22/05_m22_workstation_virtual_desktop.png",
+      "kind": "texture",
+      "bytes": 1021452
+    },
+    {
+      "path": "docs/graphics/milestone22/02_m22_cedarline_interior_workplace.png",
+      "kind": "texture",
+      "bytes": 370612
+    },
+    {
+      "path": "docs/graphics/milestone22/01_m22_lagos_island_neighborhood.png",
+      "kind": "texture",
+      "bytes": 370616
+    },
+    {
+      "path": "docs/graphics/milestone22/04_m22_npc_dialogue_routine.png",
+      "kind": "texture",
+      "bytes": 333236
+    },
+    {
+      "path": "docs/graphics/milestone22/06_m22_city_opportunities_feed.png",
+      "kind": "texture",
+      "bytes": 883079
+    },
+    {
+      "path": "docs/graphics/milestone14/01_ekosec_desktop.png",
+      "kind": "texture",
+      "bytes": 1030092
+    },
+    {
+      "path": "docs/graphics/milestone14/07_social_pretext_scenarios.png",
+      "kind": "texture",
+      "bytes": 1015714
+    },
+    {
+      "path": "docs/graphics/milestone14/09_cyber_catalogue_m14.png",
+      "kind": "texture",
+      "bytes": 932415
+    },
+    {
+      "path": "docs/graphics/milestone14/10_m14_world_exploration.png",
+      "kind": "texture",
+      "bytes": 392526
+    },
+    {
+      "path": "docs/graphics/milestone14/01_initial_load.png",
+      "kind": "texture",
+      "bytes": 200768
+    },
+    {
+      "path": "docs/graphics/milestone14/03_exploit_lab_simulation.png",
+      "kind": "texture",
+      "bytes": 933912
+    },
+    {
+      "path": "docs/graphics/milestone14/02_exploit_lab_scope.png",
+      "kind": "texture",
+      "bytes": 898549
+    },
+    {
+      "path": "docs/graphics/milestone14/11_m14_hud_workstation.png",
+      "kind": "texture",
+      "bytes": 1030342
+    },
+    {
+      "path": "docs/graphics/milestone14/06_web_proxy_diff_and_idor.png",
+      "kind": "texture",
+      "bytes": 909237
+    },
+    {
+      "path": "docs/graphics/milestone14/05_web_proxy_transactions.png",
+      "kind": "texture",
+      "bytes": 886964
+    },
+    {
+      "path": "docs/graphics/milestone14/02_exploit_lab.png",
+      "kind": "texture",
+      "bytes": 906738
+    },
+    {
+      "path": "docs/graphics/milestone14/04_exploit_lab_blocked_scope.png",
+      "kind": "texture",
+      "bytes": 928771
+    },
+    {
+      "path": "docs/graphics/milestone14/08_social_pretext_encounter.png",
+      "kind": "texture",
+      "bytes": 1020500
+    },
+    {
+      "path": "docs/graphics/milestone14/narrative-validation/07_save_load_verification.png",
+      "kind": "texture",
+      "bytes": 224641
+    },
+    {
+      "path": "docs/graphics/milestone14/narrative-validation/05_marcus_branch2_accusation.png",
+      "kind": "texture",
+      "bytes": 463464
+    },
+    {
+      "path": "docs/graphics/milestone14/narrative-validation/06_evidence_dependent_branch.png",
+      "kind": "texture",
+      "bytes": 473660
+    },
+    {
+      "path": "docs/graphics/milestone14/narrative-validation/02_branch1_procedural_selected.png",
+      "kind": "texture",
+      "bytes": 463373
+    },
+    {
+      "path": "docs/graphics/milestone14/narrative-validation/04_marcus_branch1_empathy.png",
+      "kind": "texture",
+      "bytes": 465823
+    },
+    {
+      "path": "docs/graphics/milestone14/narrative-validation/03_contacts_factions_tab.png",
+      "kind": "texture",
+      "bytes": 1649188
+    },
+    {
+      "path": "docs/graphics/milestone14/narrative-validation/01_entry_point_dialogue.png",
+      "kind": "texture",
+      "bytes": 460396
+    },
+    {
+      "path": "docs/graphics/milestone13/06_partial_tool_limitations.png",
+      "kind": "texture",
+      "bytes": 617404
+    },
+    {
+      "path": "docs/graphics/milestone13/03_arsenal_search.png",
+      "kind": "texture",
+      "bytes": 610940
+    },
+    {
+      "path": "docs/graphics/milestone13/05_playable_tool_inspection.png",
+      "kind": "texture",
+      "bytes": 614308
+    },
+    {
+      "path": "docs/graphics/milestone13/01_workstation_sitdown.png",
+      "kind": "texture",
+      "bytes": 610940
+    },
+    {
+      "path": "docs/graphics/milestone13/09_app_switching.png",
+      "kind": "texture",
+      "bytes": 602079
+    },
+    {
+      "path": "docs/graphics/milestone13/08_learning_objectives.png",
+      "kind": "texture",
+      "bytes": 613404
+    },
+    {
+      "path": "docs/graphics/milestone13/04_arsenal_filters.png",
+      "kind": "texture",
+      "bytes": 613161
+    },
+    {
+      "path": "docs/graphics/milestone13/07_planned_and_ref_tools.png",
+      "kind": "texture",
+      "bytes": 608450
+    },
+    {
+      "path": "docs/graphics/milestone13/02_catalogue_overview.png",
+      "kind": "texture",
+      "bytes": 614000
+    },
+    {
+      "path": "docs/graphics/milestone13/10_exploration_restored.png",
+      "kind": "texture",
+      "bytes": 322444
+    },
+    {
+      "path": "docs/graphics/step1b/before/cedarline_office.png",
+      "kind": "texture",
+      "bytes": 585851
+    },
+    {
+      "path": "docs/graphics/step1b/before/player_seated_at_desk.png",
+      "kind": "texture",
+      "bytes": 806385
+    },
+    {
+      "path": "docs/graphics/step1b/before/street_from_spawn.png",
+      "kind": "texture",
+      "bytes": 373172
+    },
+    {
+      "path": "docs/graphics/step1b/after/cedarline_office.png",
+      "kind": "texture",
+      "bytes": 321636
+    },
+    {
+      "path": "docs/graphics/step1b/after/player_seated_at_desk.png",
+      "kind": "texture",
+      "bytes": 591312
+    },
+    {
+      "path": "docs/graphics/step1b/after/street_from_spawn.png",
+      "kind": "texture",
+      "bytes": 328013
+    },
+    {
+      "path": "docs/graphics/interaction_fixes/05_mobile_responsive_hud.png",
+      "kind": "texture",
+      "bytes": 260827
+    },
+    {
+      "path": "docs/graphics/interaction_fixes/06_bookshelf_close_up.png",
+      "kind": "texture",
+      "bytes": 427514
+    },
+    {
+      "path": "docs/graphics/interaction_fixes/02_cybersecurity_desk_details.png",
+      "kind": "texture",
+      "bytes": 427134
+    },
+    {
+      "path": "docs/graphics/interaction_fixes/07_electrical_conduits_breaker_box.png",
+      "kind": "texture",
+      "bytes": 426590
+    },
+    {
+      "path": "docs/graphics/interaction_fixes/04_parrotsec_threat_news_app.png",
+      "kind": "texture",
+      "bytes": 954296
+    },
+    {
+      "path": "docs/graphics/interaction_fixes/03_chair_standup_clearance.png",
+      "kind": "texture",
+      "bytes": 458839
+    },
+    {
+      "path": "docs/graphics/interaction_fixes/01_apartment_interior_props.png",
+      "kind": "texture",
+      "bytes": 429046
+    },
+    {
+      "path": "docs/graphics/step1/before/cedarline_office.png",
+      "kind": "texture",
+      "bytes": 531727
+    },
+    {
+      "path": "docs/graphics/step1/before/player_seated_at_desk.png",
+      "kind": "texture",
+      "bytes": 742886
+    },
+    {
+      "path": "docs/graphics/step1/before/street_from_spawn.png",
+      "kind": "texture",
+      "bytes": 263681
+    },
+    {
+      "path": "docs/graphics/step1/after/cedarline_office.png",
+      "kind": "texture",
+      "bytes": 586038
+    },
+    {
+      "path": "docs/graphics/step1/after/player_seated_at_desk.png",
+      "kind": "texture",
+      "bytes": 802304
+    },
+    {
+      "path": "docs/graphics/step1/after/street_from_spawn.png",
+      "kind": "texture",
+      "bytes": 372987
+    },
+    {
+      "path": "docs/graphics/milestone16/06_m16_investigation_briefing_and_objectives.png",
+      "kind": "texture",
+      "bytes": 972987
+    },
+    {
+      "path": "docs/graphics/milestone16/05_m16_threat_intel_correlation.png",
+      "kind": "texture",
+      "bytes": 992745
+    },
+    {
+      "path": "docs/graphics/milestone16/03_m16_packet_lens_dissection_hex.png",
+      "kind": "texture",
+      "bytes": 990728
+    },
+    {
+      "path": "docs/graphics/milestone16/02_m16_packet_lens_traffic_stream.png",
+      "kind": "texture",
+      "bytes": 981658
+    },
+    {
+      "path": "docs/graphics/milestone16/01_m16_packet_lens_topology.png",
+      "kind": "texture",
+      "bytes": 969899
+    },
+    {
+      "path": "docs/graphics/milestone16/04_m16_threat_intel_registry.png",
+      "kind": "texture",
+      "bytes": 996410
+    },
+    {
+      "path": "docs/graphics/milestone16/07_m16_investigation_evaluation_approved.png",
+      "kind": "texture",
+      "bytes": 941229
+    },
+    {
+      "path": "docs/graphics/milestone18/03_m18_alert_queue.png",
+      "kind": "texture",
+      "bytes": 904526
+    },
+    {
+      "path": "docs/graphics/milestone18/04_m18_investigation_workspace.png",
+      "kind": "texture",
+      "bytes": 829516
+    },
+    {
+      "path": "docs/graphics/milestone18/05_m18_defensive_response.png",
+      "kind": "texture",
+      "bytes": 818375
+    },
+    {
+      "path": "docs/graphics/milestone18/06_m18_purple_team_studio.png",
+      "kind": "texture",
+      "bytes": 863250
+    },
+    {
+      "path": "docs/graphics/milestone18/01_m18_telemetry_stream.png",
+      "kind": "texture",
+      "bytes": 878818
+    },
+    {
+      "path": "docs/graphics/milestone18/02_m18_detection_rules.png",
+      "kind": "texture",
+      "bytes": 873573
+    },
+    {
+      "path": "docs/graphics/milestone18/07_m18_operation_lagos_shield.png",
+      "kind": "texture",
+      "bytes": 860949
+    },
+    {
+      "path": "docs/graphics/milestone20/05_m20_hud_objective_tracker.png",
+      "kind": "texture",
+      "bytes": 151318
+    },
+    {
+      "path": "docs/graphics/milestone20/02_m20_opportunity_director.png",
+      "kind": "texture",
+      "bytes": 882961
+    },
+    {
+      "path": "docs/graphics/milestone20/01_m20_active_mission.png",
+      "kind": "texture",
+      "bytes": 868314
+    },
+    {
+      "path": "docs/graphics/milestone20/03_m20_career_progression_goals.png",
+      "kind": "texture",
+      "bytes": 856890
+    },
+    {
+      "path": "docs/graphics/milestone20/04_m20_audit_history_ledger.png",
+      "kind": "texture",
+      "bytes": 856285
+    },
+    {
+      "path": "docs/graphics/milestone20/06_m20_integrated_ecosystem.png",
+      "kind": "texture",
+      "bytes": 855457
+    },
+    {
+      "path": "docs/graphics/enhancements/07_danfo_sidewalk_boarding_alighting.png",
+      "kind": "texture",
+      "bytes": 414010
+    },
+    {
+      "path": "docs/graphics/enhancements/03_broad_street_welcome_arch.png",
+      "kind": "texture",
+      "bytes": 284620
+    },
+    {
+      "path": "docs/graphics/enhancements/06_danfo_van_cutout_conductor.png",
+      "kind": "texture",
+      "bytes": 377029
+    },
+    {
+      "path": "docs/graphics/enhancements/02b_player_full_body_unique.png",
+      "kind": "texture",
+      "bytes": 356297
+    },
+    {
+      "path": "docs/graphics/enhancements/08_traffic_flow_no_collision.png",
+      "kind": "texture",
+      "bytes": 410819
+    },
+    {
+      "path": "docs/graphics/enhancements/04_commercial_billboards.png",
+      "kind": "texture",
+      "bytes": 268255
+    },
+    {
+      "path": "docs/graphics/enhancements/02_unique_player_character.png",
+      "kind": "texture",
+      "bytes": 420262
+    },
+    {
+      "path": "docs/graphics/enhancements/05b_vehicle_yielding_crossing.png",
+      "kind": "texture",
+      "bytes": 295979
+    },
+    {
+      "path": "docs/graphics/enhancements/01b_feet_and_shoes_sidewalk_zoom.png",
+      "kind": "texture",
+      "bytes": 487781
+    },
+    {
+      "path": "docs/graphics/enhancements/05_vehicles_and_traffic.png",
+      "kind": "texture",
+      "bytes": 306776
+    },
+    {
+      "path": "docs/graphics/enhancements/01_shoes_sidewalk_closeup.png",
+      "kind": "texture",
+      "bytes": 426776
+    },
+    {
+      "path": "docs/graphics/milestone19/06_m19_reputation_ledger.png",
+      "kind": "texture",
+      "bytes": 678983
+    },
+    {
+      "path": "docs/graphics/milestone19/01_m19_bounty_marketplace.png",
+      "kind": "texture",
+      "bytes": 678968
+    },
+    {
+      "path": "docs/graphics/milestone19/04_m19_submission_studio.png",
+      "kind": "texture",
+      "bytes": 679085
+    },
+    {
+      "path": "docs/graphics/milestone19/05_m19_client_review_debrief.png",
+      "kind": "texture",
+      "bytes": 679045
+    },
+    {
+      "path": "docs/graphics/milestone19/03_m19_active_workspace.png",
+      "kind": "texture",
+      "bytes": 679021
+    },
+    {
+      "path": "docs/graphics/milestone19/02_m19_contract_scope_roe.png",
+      "kind": "texture",
+      "bytes": 679049
+    },
+    {
+      "path": "docs/graphics/milestone17/05_m17_redteam_findings_validation.png",
+      "kind": "texture",
+      "bytes": 895362
+    },
+    {
+      "path": "docs/graphics/milestone17/02_m17_redteam_target_inventory.png",
+      "kind": "texture",
+      "bytes": 845048
+    },
+    {
+      "path": "docs/graphics/milestone17/06_m17_redteam_evidence_vault.png",
+      "kind": "texture",
+      "bytes": 863488
+    },
+    {
+      "path": "docs/graphics/milestone17/01_m17_redteam_briefing_scope.png",
+      "kind": "texture",
+      "bytes": 864856
+    },
+    {
+      "path": "docs/graphics/milestone17/03_m17_redteam_console_execution.png",
+      "kind": "texture",
+      "bytes": 869704
+    },
+    {
+      "path": "docs/graphics/milestone17/07_m17_redteam_report_approved.png",
+      "kind": "texture",
+      "bytes": 847690
+    },
+    {
+      "path": "docs/graphics/milestone17/04_m17_redteam_scope_rejection.png",
+      "kind": "texture",
+      "bytes": 854626
+    },
+    {
+      "path": "docs/graphics/workstation_assets/desk_screen_closeup_night.png",
+      "kind": "texture",
+      "bytes": 1926252
+    },
+    {
+      "path": "docs/graphics/workstation_assets/apartment_wide_day.png",
+      "kind": "texture",
+      "bytes": 2966469
+    },
+    {
+      "path": "docs/graphics/workstation_assets/desk_seated_third_person_night.png",
+      "kind": "texture",
+      "bytes": 2184592
+    },
+    {
+      "path": "docs/graphics/workstation_assets/desk_screen_closeup_day.png",
+      "kind": "texture",
+      "bytes": 1800182
+    },
+    {
+      "path": "docs/graphics/workstation_assets/apartment_wide_night.png",
+      "kind": "texture",
+      "bytes": 2680649
+    },
+    {
+      "path": "docs/graphics/workstation_assets/desk_seated_third_person_day.png",
+      "kind": "texture",
+      "bytes": 2367790
+    },
+    {
+      "path": "docs/graphics/camera_states/05_screen_fullscreen.png",
+      "kind": "texture",
+      "bytes": 1604876
+    },
+    {
+      "path": "docs/graphics/camera_states/02_sitting_down.png",
+      "kind": "texture",
+      "bytes": 377236
+    },
+    {
+      "path": "docs/graphics/camera_states/03_seated_third_person.png",
+      "kind": "texture",
+      "bytes": 381246
+    },
+    {
+      "path": "docs/graphics/camera_states/04_dolly_to_screen.png",
+      "kind": "texture",
+      "bytes": 1615419
+    },
+    {
+      "path": "docs/graphics/camera_states/06_peek_out.png",
+      "kind": "texture",
+      "bytes": 393098
+    },
+    {
+      "path": "docs/graphics/camera_states/07_standing_up.png",
+      "kind": "texture",
+      "bytes": 590145
+    },
+    {
+      "path": "docs/graphics/camera_states/01_walking.png",
+      "kind": "texture",
+      "bytes": 550623
+    },
+    {
+      "path": "scratch/babylon_car.glb",
+      "kind": "model",
+      "bytes": 167272
+    },
+    {
+      "path": "scratch/ao_met_rough_Ch12_1001_Glossiness.png",
+      "kind": "texture",
+      "bytes": 1597803
+    },
+    {
+      "path": "scratch/car_rgb.png",
+      "kind": "texture",
+      "bytes": 1902972
+    },
+    {
+      "path": "scratch/van_colormap.png",
+      "kind": "texture",
+      "bytes": 12371
+    },
+    {
+      "path": "scratch/van_rgb.png",
+      "kind": "texture",
+      "bytes": 1949816
+    },
+    {
+      "path": "scratch/van_decoded.glb",
+      "kind": "model",
+      "bytes": 4356992
+    },
+    {
+      "path": "scratch/Ch12_1001_Normal.png.png",
+      "kind": "texture",
+      "bytes": 22532929
+    },
+    {
+      "path": "scratch/van-prop.glb",
+      "kind": "model",
+      "bytes": 4117024
+    },
+    {
+      "path": "scratch/Ch12_1001_Diffuse.png.png",
+      "kind": "texture",
+      "bytes": 14523457
+    },
+    {
+      "path": "scratch/car_decoded.glb",
+      "kind": "model",
+      "bytes": 4164256
+    },
+    {
+      "path": "scratch/car-prop.glb",
+      "kind": "model",
+      "bytes": 3954332
+    },
+    {
+      "path": "scratch/temp_street_lamp/street_lamp_01_1k.gltf",
+      "kind": "model",
+      "bytes": 6419
+    },
+    {
+      "path": "scratch/temp_street_lamp/textures/street_lamp_01_nor_gl_1k.jpg",
+      "kind": "texture",
+      "bytes": 438623
+    },
+    {
+      "path": "scratch/temp_street_lamp/textures/street_lamp_01_arm_1k.jpg",
+      "kind": "texture",
+      "bytes": 664324
+    },
+    {
+      "path": "scratch/temp_street_lamp/textures/street_lamp_01_diff_1k.jpg",
+      "kind": "texture",
+      "bytes": 307889
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_female_2_simp.glb",
+      "kind": "model",
+      "bytes": 48165688
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_male_2_norm.glb",
+      "kind": "model",
+      "bytes": 78083724
+    },
+    {
+      "path": "scratch/pipeline_tmp/animations_resampled.glb",
+      "kind": "model",
+      "bytes": 590320
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_female_2_pruned.glb",
+      "kind": "model",
+      "bytes": 1888728
+    },
+    {
+      "path": "scratch/pipeline_tmp/animations_pruned.glb",
+      "kind": "model",
+      "bytes": 588864
+    },
+    {
+      "path": "scratch/pipeline_tmp/anim_Idle.glb",
+      "kind": "model",
+      "bytes": 201336
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_male_2_webp.glb",
+      "kind": "model",
+      "bytes": 1728508
+    },
+    {
+      "path": "scratch/pipeline_tmp/anim_SitIdle.glb",
+      "kind": "model",
+      "bytes": 91860
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_female_2_norm.glb",
+      "kind": "model",
+      "bytes": 49080732
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_male_2_simp.glb",
+      "kind": "model",
+      "bytes": 77166984
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_male_2_res.glb",
+      "kind": "model",
+      "bytes": 7546276
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_male_2_opt.glb",
+      "kind": "model",
+      "bytes": 458628
+    },
+    {
+      "path": "scratch/pipeline_tmp/female_res.glb",
+      "kind": "model",
+      "bytes": 19291540
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_female_2_dedup.glb",
+      "kind": "model",
+      "bytes": 1888728
+    },
+    {
+      "path": "scratch/pipeline_tmp/male_res.glb",
+      "kind": "model",
+      "bytes": 30149924
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_female_2_webp.glb",
+      "kind": "model",
+      "bytes": 1888728
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_female_2_raw.glb",
+      "kind": "model",
+      "bytes": 49093772
+    },
+    {
+      "path": "scratch/pipeline_tmp/animations_dedup.glb",
+      "kind": "model",
+      "bytes": 590320
+    },
+    {
+      "path": "scratch/pipeline_tmp/anim_StandToSit.glb",
+      "kind": "model",
+      "bytes": 76540
+    },
+    {
+      "path": "scratch/pipeline_tmp/female_norm.glb",
+      "kind": "model",
+      "bytes": 41780384
+    },
+    {
+      "path": "scratch/pipeline_tmp/animations_merged.glb",
+      "kind": "model",
+      "bytes": 920648
+    },
+    {
+      "path": "scratch/pipeline_tmp/anim_Typing.glb",
+      "kind": "model",
+      "bytes": 360104
+    },
+    {
+      "path": "scratch/pipeline_tmp/male_simp.glb",
+      "kind": "model",
+      "bytes": 92818744
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_male_2_dedup.glb",
+      "kind": "model",
+      "bytes": 1607912
+    },
+    {
+      "path": "scratch/pipeline_tmp/female_webp.glb",
+      "kind": "model",
+      "bytes": 3532940
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_female_2_weld.glb",
+      "kind": "model",
+      "bytes": 49080384
+    },
+    {
+      "path": "scratch/pipeline_tmp/anim_Run.glb",
+      "kind": "model",
+      "bytes": 39716
+    },
+    {
+      "path": "scratch/pipeline_tmp/male_raw.glb",
+      "kind": "model",
+      "bytes": 48228328
+    },
+    {
+      "path": "scratch/pipeline_tmp/female_simp.glb",
+      "kind": "model",
+      "bytes": 41271184
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_female_2_res.glb",
+      "kind": "model",
+      "bytes": 5832864
+    },
+    {
+      "path": "scratch/pipeline_tmp/male_webp.glb",
+      "kind": "model",
+      "bytes": 3175372
+    },
+    {
+      "path": "scratch/pipeline_tmp/anim_SitToStand.glb",
+      "kind": "model",
+      "bytes": 77376
+    },
+    {
+      "path": "scratch/pipeline_tmp/male_norm.glb",
+      "kind": "model",
+      "bytes": 92967712
+    },
+    {
+      "path": "scratch/pipeline_tmp/male_dedup.glb",
+      "kind": "model",
+      "bytes": 2379036
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_male_2_raw.glb",
+      "kind": "model",
+      "bytes": 41037332
+    },
+    {
+      "path": "scratch/pipeline_tmp/female_raw.glb",
+      "kind": "model",
+      "bytes": 41793408
+    },
+    {
+      "path": "scratch/pipeline_tmp/female_dedup.glb",
+      "kind": "model",
+      "bytes": 3532792
+    },
+    {
+      "path": "scratch/pipeline_tmp/anim_Walk.glb",
+      "kind": "model",
+      "bytes": 45220
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_male_2_weld.glb",
+      "kind": "model",
+      "bytes": 78082484
+    },
+    {
+      "path": "scratch/pipeline_tmp/ped_male_2_pruned.glb",
+      "kind": "model",
+      "bytes": 1607912
+    },
+    {
+      "path": "scratch/pipeline_tmp/male_pruned.glb",
+      "kind": "model",
+      "bytes": 2379036
+    },
+    {
+      "path": "scratch/pipeline_tmp/female_pruned.glb",
+      "kind": "model",
+      "bytes": 3531608
+    },
+    {
+      "path": "scratch/temp_quiver_tree/quiver_tree_01_1k.gltf",
+      "kind": "model",
+      "bytes": 5080
+    },
+    {
+      "path": "scratch/temp_quiver_tree/textures/quiver_tree_01_trunk_diff_1k.jpg",
+      "kind": "texture",
+      "bytes": 741115
+    },
+    {
+      "path": "scratch/temp_quiver_tree/textures/quiver_tree_01_leaf_arm_1k.jpg",
+      "kind": "texture",
+      "bytes": 737159
+    },
+    {
+      "path": "scratch/temp_quiver_tree/textures/quiver_tree_01_trunk_nor_gl_1k.jpg",
+      "kind": "texture",
+      "bytes": 940495
+    },
+    {
+      "path": "scratch/temp_quiver_tree/textures/quiver_tree_01_trunk_arm_1k.jpg",
+      "kind": "texture",
+      "bytes": 492139
+    },
+    {
+      "path": "scratch/temp_quiver_tree/textures/quiver_tree_01_leaf_diff_1k.jpg",
+      "kind": "texture",
+      "bytes": 652456
+    },
+    {
+      "path": "scratch/temp_quiver_tree/textures/quiver_tree_01_leaf_nor_gl_1k.jpg",
+      "kind": "texture",
+      "bytes": 898833
+    },
+    {
+      "path": "scratch/gltf_test/Walking.glb",
+      "kind": "model",
+      "bytes": 45220
+    },
+    {
+      "path": "scratch/gltf_test/Sit To Stand.glb",
+      "kind": "model",
+      "bytes": 77376
+    },
+    {
+      "path": "scratch/gltf_test/Running.glb",
+      "kind": "model",
+      "bytes": 39716
+    },
+    {
+      "path": "scratch/gltf_test/player_male_1.glb",
+      "kind": "model",
+      "bytes": 48228328
+    },
+    {
+      "path": "scratch/gltf_test/female_step3.glb",
+      "kind": "model",
+      "bytes": 3482176
+    },
+    {
+      "path": "scratch/gltf_test/female_step2.glb",
+      "kind": "model",
+      "bytes": 19240772
+    },
+    {
+      "path": "scratch/gltf_test/female_step1.glb",
+      "kind": "model",
+      "bytes": 41220424
+    },
+    {
+      "path": "scratch/gltf_test/female_step5.glb",
+      "kind": "model",
+      "bytes": 3480848
+    },
+    {
+      "path": "scratch/gltf_test/player_female_1.glb",
+      "kind": "model",
+      "bytes": 41793408
+    },
+    {
+      "path": "scratch/gltf_test/female_step4.glb",
+      "kind": "model",
+      "bytes": 3482032
+    },
+    {
+      "path": "scratch/gltf_test/female_step6.glb",
+      "kind": "model",
+      "bytes": 2244976
+    },
+    {
+      "path": "scratch/gltf_test/Typing.glb",
+      "kind": "model",
+      "bytes": 360104
+    },
+    {
+      "path": "scratch/gltf_test/Stand To Sit.glb",
+      "kind": "model",
+      "bytes": 76540
+    },
+    {
+      "path": "scratch/gltf_test/Idle.glb",
+      "kind": "model",
+      "bytes": 201336
+    },
+    {
+      "path": "scratch/gltf_test/male_resized.glb",
+      "kind": "model",
+      "bytes": 30299168
+    },
+    {
+      "path": "scratch/gltf_test/male_webp.glb",
+      "kind": "model",
+      "bytes": 3324616
+    },
+    {
+      "path": "scratch/gltf_test/male_meshopt.glb",
+      "kind": "model",
+      "bytes": 1277284
+    },
+    {
+      "path": "scratch/gltf_test/animations.glb",
+      "kind": "model",
+      "bytes": 920648
+    },
+    {
+      "path": "scratch/gltf_test/male_dedup.glb",
+      "kind": "model",
+      "bytes": 2528280
+    },
+    {
+      "path": "scratch/gltf_test/Sitting Idle.glb",
+      "kind": "model",
+      "bytes": 91860
+    },
+    {
+      "path": "scratch/gltf_test/female_simplified.glb",
+      "kind": "model",
+      "bytes": 41220424
+    },
+    {
+      "path": "scratch/gltf_test/male_pruned.glb",
+      "kind": "model",
+      "bytes": 2528280
+    },
+    {
+      "path": "public/assets/props/room_bed.glb",
+      "kind": "model",
+      "bytes": 458992
+    },
+    {
+      "path": "public/assets/props/chair.glb",
+      "kind": "model",
+      "bytes": 17952
+    },
+    {
+      "path": "public/assets/props/room_cables.glb",
+      "kind": "model",
+      "bytes": 947168
+    },
+    {
+      "path": "public/assets/props/room_cabinet.glb",
+      "kind": "model",
+      "bytes": 247792
+    },
+    {
+      "path": "public/assets/props/room_ac.glb",
+      "kind": "model",
+      "bytes": 1277860
+    },
+    {
+      "path": "public/assets/props/computer.glb",
+      "kind": "model",
+      "bytes": 95800
+    },
+    {
+      "path": "public/assets/props/room_fan.glb",
+      "kind": "model",
+      "bytes": 243352
+    },
+    {
+      "path": "public/assets/props/room_art.glb",
+      "kind": "model",
+      "bytes": 105464
+    },
+    {
+      "path": "public/assets/props/desk.glb",
+      "kind": "model",
+      "bytes": 178500
+    },
+    {
+      "path": "public/assets/props/room_bookshelf.glb",
+      "kind": "model",
+      "bytes": 565032
+    },
+    {
+      "path": "public/assets/props/room_inverter.glb",
+      "kind": "model",
+      "bytes": 379248
+    },
+    {
+      "path": "public/assets/props/props_desk.glb",
+      "kind": "model",
+      "bytes": 221248
+    },
+    {
+      "path": "public/assets/environment/plaza_fountain_01.glb",
+      "kind": "model",
+      "bytes": 14076
+    },
+    {
+      "path": "public/assets/environment/street_lamp_01.glb",
+      "kind": "model",
+      "bytes": 2162976
+    },
+    {
+      "path": "public/assets/environment/island_tree_01.glb",
+      "kind": "model",
+      "bytes": 66333792
+    },
+    {
+      "path": "public/assets/environment/market_canopy_01.glb",
+      "kind": "model",
+      "bytes": 168004
+    },
+    {
+      "path": "public/assets/environment/building_store_03.glb",
+      "kind": "model",
+      "bytes": 70088
+    },
+    {
+      "path": "public/assets/environment/quiver_tree_01.glb",
+      "kind": "model",
+      "bytes": 8878532
+    },
+    {
+      "path": "public/assets/environment/building_store_02.glb",
+      "kind": "model",
+      "bytes": 49764
+    },
+    {
+      "path": "public/assets/environment/building_store_01.glb",
+      "kind": "model",
+      "bytes": 39660
+    },
+    {
+      "path": "public/assets/environment/textures/white_plaster_02/white_plaster_02_arm_1k.jpg",
+      "kind": "texture",
+      "bytes": 191017
+    },
+    {
+      "path": "public/assets/environment/textures/white_plaster_02/white_plaster_02_normal_1k.jpg",
+      "kind": "texture",
+      "bytes": 652310
+    },
+    {
+      "path": "public/assets/environment/textures/white_plaster_02/white_plaster_02_diffuse_1k.jpg",
+      "kind": "texture",
+      "bytes": 527219
+    },
+    {
+      "path": "public/assets/environment/textures/floor_tiles_06/floor_tiles_06_diffuse_1k.jpg",
+      "kind": "texture",
+      "bytes": 356257
+    },
+    {
+      "path": "public/assets/environment/textures/floor_tiles_06/floor_tiles_06_normal_1k.jpg",
+      "kind": "texture",
+      "bytes": 121299
+    },
+    {
+      "path": "public/assets/environment/textures/floor_tiles_06/floor_tiles_06_arm_1k.jpg",
+      "kind": "texture",
+      "bytes": 54871
+    },
+    {
+      "path": "public/assets/environment/textures/painted_plaster_wall/painted_plaster_wall_diffuse_1k.jpg",
+      "kind": "texture",
+      "bytes": 686726
+    },
+    {
+      "path": "public/assets/environment/textures/painted_plaster_wall/painted_plaster_wall_normal_1k.jpg",
+      "kind": "texture",
+      "bytes": 900461
+    },
+    {
+      "path": "public/assets/environment/textures/painted_plaster_wall/painted_plaster_wall_arm_1k.jpg",
+      "kind": "texture",
+      "bytes": 511105
+    },
+    {
+      "path": "public/assets/vehicles/van.glb",
+      "kind": "model",
+      "bytes": 187952
+    },
+    {
+      "path": "public/assets/vehicles/wheel-dark.glb",
+      "kind": "model",
+      "bytes": 41512
+    },
+    {
+      "path": "public/assets/vehicles/sedan.glb",
+      "kind": "model",
+      "bytes": 184504
+    },
+    {
+      "path": "public/assets/vehicles/sedan-sports.glb",
+      "kind": "model",
+      "bytes": 189920
+    },
+    {
+      "path": "public/assets/vehicles/danfo_van_realistic_nodraco.glb",
+      "kind": "model",
+      "bytes": 4356992
+    },
+    {
+      "path": "public/assets/vehicles/taxi.glb",
+      "kind": "model",
+      "bytes": 187896
+    },
+    {
+      "path": "public/assets/vehicles/motorcycle_okada.glb",
+      "kind": "model",
+      "bytes": 97172
+    },
+    {
+      "path": "public/assets/vehicles/danfo_van_realistic.glb",
+      "kind": "model",
+      "bytes": 4117024
+    },
+    {
+      "path": "public/assets/vehicles/suv.glb",
+      "kind": "model",
+      "bytes": 219840
+    },
+    {
+      "path": "public/assets/vehicles/suv_realistic.glb",
+      "kind": "model",
+      "bytes": 520208
+    },
+    {
+      "path": "public/assets/vehicles/wheel-default.glb",
+      "kind": "model",
+      "bytes": 39220
+    },
+    {
+      "path": "public/assets/vehicles/delivery.glb",
+      "kind": "model",
+      "bytes": 252504
+    },
+    {
+      "path": "public/assets/vehicles/danfo_realistic.glb",
+      "kind": "model",
+      "bytes": 573996
+    },
+    {
+      "path": "public/assets/os/Orion_security_wallpaper.jpg",
+      "kind": "texture",
+      "bytes": 676123
+    },
+    {
+      "path": "public/assets/os/heron_security_wallpaper.jpg",
+      "kind": "texture",
+      "bytes": 676123
+    },
+    {
+      "path": "public/assets/characters/ped_male_2.glb",
+      "kind": "model",
+      "bytes": 458436
+    },
+    {
+      "path": "public/assets/characters/player_male.glb",
+      "kind": "model",
+      "bytes": 1251004
+    },
+    {
+      "path": "public/assets/characters/ped_female_2.glb",
+      "kind": "model",
+      "bytes": 807924
+    },
+    {
+      "path": "public/assets/characters/player_female.glb",
+      "kind": "model",
+      "bytes": 2254740
+    },
+    {
+      "path": "public/assets/characters/animations.glb",
+      "kind": "model",
+      "bytes": 265388
+    },
+    {
+      "path": "coverage/favicon.png",
+      "kind": "texture",
+      "bytes": 445
+    },
+    {
+      "path": "coverage/sort-arrow-sprite.png",
+      "kind": "texture",
+      "bytes": 138
+    }
+  ],
+  "source_references": [
+    {
+      "source": "docs/audio/headless_verification_report.json",
+      "reference": "headless_title_screen.png"
+    },
+    {
+      "source": "docs/audio/headless_verification_report.json",
+      "reference": "headless_audio_settings.png"
+    },
+    {
+      "source": "docs/audio/headless_verification_report.json",
+      "reference": "headless_in_game_world.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/characters/player_male.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/step1b/after/player_seated_at_desk.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/characters/player_female.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/step2/after/female_seated_typing.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/characters/ped_male_2.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/step3/after/street_pedestrian_near_interaction_target.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/characters/ped_female_2.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/step3/after/street_pedestrians_closeup.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/characters/animations.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/camera_states/03_seated_third_person.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/props/desk.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/interaction_fixes/02_cybersecurity_desk_details.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/props/chair.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/interaction_fixes/03_chair_standup_clearance.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/props/computer.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/camera_states/05_screen_fullscreen.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/props/props_desk.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/interaction_fixes/02_cybersecurity_desk_details.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/props/room_inverter.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/interaction_fixes/07_electrical_conduits_breaker_box.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/props/room_fan.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/interaction_fixes/01_apartment_interior_props.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/props/room_ac.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/interaction_fixes/01_apartment_interior_props.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/props/room_bed.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/workstation_assets/apartment_wide_day.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/props/room_bookshelf.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/interaction_fixes/06_bookshelf_close_up.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/props/room_cabinet.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/interaction_fixes/01_apartment_interior_props.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/props/room_art.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/interaction_fixes/01_apartment_interior_props.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/vehicles/danfo_realistic.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/enhancements/06_danfo_van_cutout_conductor.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/vehicles/suv_realistic.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/enhancements/05_vehicles_and_traffic.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/vehicles/motorcycle_okada.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/environment/island_tree_01.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/environment/quiver_tree_01.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/environment/street_lamp_01.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/environment/plaza_fountain_01.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/environment/market_canopy_01.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/environment/building_store_01.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/environment/building_store_02.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "public/assets/environment/building_store_03.glb"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/step1b/after/street_from_spawn.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/step1b/after/cedarline_office.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/enhancements/04_commercial_billboards.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/enhancements/03_broad_street_welcome_arch.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/enhancements/05_vehicles_and_traffic.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/step3/after/street_pedestrians_crowd_mid_distance.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/milestone23/01_m23_lagos_streetscape_polished.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/milestone23/02_m23_cedarline_soc_corporate.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/milestone23/02_m23_cedarline_soc_corporate.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/milestone23/03_m23_apartment_residence_warm.png"
+    },
+    {
+      "source": "public/assets/asset_manifest.json",
+      "reference": "docs/graphics/milestone23/02_m23_cedarline_soc_corporate.png"
+    },
+    {
+      "source": "coverage/index.html",
+      "reference": "favicon.png"
+    },
+    {
+      "source": "coverage/app/index.html",
+      "reference": "../favicon.png"
+    },
+    {
+      "source": "coverage/app/App.tsx.html",
+      "reference": "../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/SimulationEngine.ts.html",
+      "reference": "../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/index.html",
+      "reference": "../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/index.ts.html",
+      "reference": "../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/types.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/index.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/CyberToolRegistry.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/index.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/logview/index.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/logview/LogviewTool.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/evidence/index.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/evidence/EvidenceTool.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/netmap/index.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/netmap/NetmapTool.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/data/index.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/data/fictionalHosts.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/data/fictionalEvidence.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/data/fictionalLogs.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/data/fictionalServices.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/svcscan/index.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/svcscan/SvcscanTool.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/terminal/types.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/terminal/index.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/terminal/TerminalCommandParser.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/terminal/index.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/terminal/TerminalCommandRegistry.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/core/types.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/core/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/core/initialState.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/core/stateUtils.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/core/invariants.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/time/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/time/calendar.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/time/timerManager.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/commands/types.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/commands/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/commands/commandHandler.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/events/types.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/events/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/events/eventFactory.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/systems/inventorySystem.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/systems/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/systems/playerSystem.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/systems/worldFlagsSystem.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/types.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/SimulationContext.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/useSimulation.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/SimulationProvider.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/index.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/context.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/domain/common/Money.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/domain/common/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/domain/errors/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/domain/errors/DomainError.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/WorldSceneManager.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/CollisionWorld.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/InteractionRegistry.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/LocationTransitionController.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/PlayerController.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/WorldEnvironment.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/WorldCameraController.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/worldConfig.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/WorldViewport.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/index.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/PedestrianSystem.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/WorkstationProps.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/HumanoidCharacter.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/PlayerAvatar.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/InteractableMarker.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/Building.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/LagosProps.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/TrafficSystem.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/types.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/index.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/DesktopShell.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/useWindowManager.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/WindowFrame.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/Taskbar.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/apps/index.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/apps/ActivityApp.tsx.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/apps/TerminalApp.tsx.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/apps/SystemInfoApp.tsx.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/apps/FieldGuideApp.tsx.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/apps/NotesApp.tsx.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/StatusOverlay.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/HUDShell.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/InteractionHelpPrompt.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/ObjectiveTrackerHUD.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/DevSimulationDrawer.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/MovementHelp.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/InteractionPrompt.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "src/simulation/cyber/humanPhysical/fixtures.ts",
+      "reference": "cctv-fl5-corridor-1142.png"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/environment/quiver_tree_01.glb"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/environment/plaza_fountain_01.glb"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/environment/market_canopy_01.glb"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/environment/street_lamp_01.glb"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/environment/textures/floor_tiles_06/floor_tiles_06_diffuse_1k.jpg"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/environment/textures/floor_tiles_06/floor_tiles_06_normal_1k.jpg"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/environment/textures/painted_plaster_wall/painted_plaster_wall_diffuse_1k.jpg"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/environment/textures/painted_plaster_wall/painted_plaster_wall_normal_1k.jpg"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/props/room_bed.glb"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/props/room_cabinet.glb"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/props/room_bookshelf.glb"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/props/room_inverter.glb"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/props/room_fan.glb"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/props/room_ac.glb"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "/assets/props/room_art.glb"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "room_ac.glb"
+    },
+    {
+      "source": "src/presentation/world/ScreenRenderer.ts",
+      "reference": "/assets/os/Orion_security_wallpaper.jpg"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/characters/player_male.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/step1b/after/player_seated_at_desk.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/characters/player_female.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/step2/after/female_seated_typing.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/characters/ped_male_2.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/step3/after/street_pedestrian_near_interaction_target.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/characters/ped_female_2.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/step3/after/street_pedestrians_closeup.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/characters/animations.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/camera_states/03_seated_third_person.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/props/desk.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/interaction_fixes/02_cybersecurity_desk_details.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/props/chair.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/interaction_fixes/03_chair_standup_clearance.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/props/computer.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/camera_states/05_screen_fullscreen.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/props/props_desk.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/interaction_fixes/02_cybersecurity_desk_details.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/props/room_inverter.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/interaction_fixes/07_electrical_conduits_breaker_box.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/props/room_fan.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/interaction_fixes/01_apartment_interior_props.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/props/room_ac.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/interaction_fixes/01_apartment_interior_props.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/props/room_bed.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/workstation_assets/apartment_wide_day.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/props/room_bookshelf.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/interaction_fixes/06_bookshelf_close_up.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/props/room_cabinet.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/interaction_fixes/01_apartment_interior_props.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/props/room_art.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/interaction_fixes/01_apartment_interior_props.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/vehicles/danfo_realistic.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/enhancements/06_danfo_van_cutout_conductor.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/vehicles/suv_realistic.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/enhancements/05_vehicles_and_traffic.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/vehicles/motorcycle_okada.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/environment/island_tree_01.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/environment/quiver_tree_01.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/environment/street_lamp_01.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/environment/plaza_fountain_01.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/environment/market_canopy_01.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/environment/building_store_01.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/environment/building_store_02.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "public/assets/environment/building_store_03.glb"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/step1b/after/street_from_spawn.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/step1b/after/cedarline_office.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/enhancements/04_commercial_billboards.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/enhancements/03_broad_street_welcome_arch.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/enhancements/05_vehicles_and_traffic.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/step3/after/street_pedestrians_crowd_mid_distance.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/milestone23/01_m23_lagos_streetscape_polished.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/milestone23/02_m23_cedarline_soc_corporate.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/milestone23/02_m23_cedarline_soc_corporate.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/milestone23/03_m23_apartment_residence_warm.png"
+    },
+    {
+      "source": "src/presentation/world/assets/AssetManifest.ts",
+      "reference": "docs/graphics/milestone23/02_m23_cedarline_soc_corporate.png"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedPedestrian.ts",
+      "reference": "/assets/characters/animations.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedPedestrian.ts",
+      "reference": "/assets/characters/player_male.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedPedestrian.ts",
+      "reference": "/assets/characters/ped_male_2.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedPedestrian.ts",
+      "reference": "/assets/characters/player_female.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedPedestrian.ts",
+      "reference": "/assets/characters/ped_female_2.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedHumanoidCharacter.ts",
+      "reference": "/assets/characters/player_female.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedHumanoidCharacter.ts",
+      "reference": "/assets/characters/player_male.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedHumanoidCharacter.ts",
+      "reference": "/assets/characters/animations.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/TrafficSystem.ts",
+      "reference": "/assets/vehicles/danfo_realistic.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/TrafficSystem.ts",
+      "reference": "/assets/vehicles/suv_realistic.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/TrafficSystem.ts",
+      "reference": "/assets/vehicles/sedan.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/TrafficSystem.ts",
+      "reference": "/assets/vehicles/motorcycle_okada.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/TrafficSystem.ts",
+      "reference": "/assets/vehicles/sedan-sports.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/WorkstationProps.ts",
+      "reference": "/assets/props/desk.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/WorkstationProps.ts",
+      "reference": "/assets/props/chair.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/WorkstationProps.ts",
+      "reference": "/assets/props/computer.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/WorkstationProps.ts",
+      "reference": "/assets/props/props_desk.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedNpcCharacter.ts",
+      "reference": "/assets/characters/animations.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedNpcCharacter.ts",
+      "reference": "/assets/characters/player_male.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedNpcCharacter.ts",
+      "reference": "/assets/characters/ped_male_2.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedNpcCharacter.ts",
+      "reference": "/assets/characters/player_female.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/RiggedNpcCharacter.ts",
+      "reference": "/assets/characters/ped_female_2.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/Building.ts",
+      "reference": "/assets/environment/building_store_01.glb"
+    },
+    {
+      "source": "src/presentation/world/entities/Building.ts",
+      "reference": "/assets/environment/building_store_02.glb"
+    },
+    {
+      "source": "src/presentation/desktop/wallpaper.ts",
+      "reference": "/assets/os/Orion_security_wallpaper.jpg"
+    }
+  ],
+  "possible_missing_references": [
+    {
+      "source": "docs/audio/headless_verification_report.json",
+      "reference": "headless_title_screen.png"
+    },
+    {
+      "source": "docs/audio/headless_verification_report.json",
+      "reference": "headless_audio_settings.png"
+    },
+    {
+      "source": "docs/audio/headless_verification_report.json",
+      "reference": "headless_in_game_world.png"
+    },
+    {
+      "source": "coverage/index.html",
+      "reference": "favicon.png"
+    },
+    {
+      "source": "coverage/app/index.html",
+      "reference": "../favicon.png"
+    },
+    {
+      "source": "coverage/app/App.tsx.html",
+      "reference": "../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/SimulationEngine.ts.html",
+      "reference": "../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/index.html",
+      "reference": "../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/index.ts.html",
+      "reference": "../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/types.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/index.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/CyberToolRegistry.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/index.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/logview/index.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/logview/LogviewTool.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/evidence/index.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/evidence/EvidenceTool.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/netmap/index.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/netmap/NetmapTool.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/data/index.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/data/fictionalHosts.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/data/fictionalEvidence.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/data/fictionalLogs.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/data/fictionalServices.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/svcscan/index.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/tools/svcscan/SvcscanTool.ts.html",
+      "reference": "../../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/terminal/types.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/terminal/index.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/terminal/TerminalCommandParser.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/terminal/index.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/cyber/terminal/TerminalCommandRegistry.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/core/types.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/core/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/core/initialState.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/core/stateUtils.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/core/invariants.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/time/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/time/calendar.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/time/timerManager.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/commands/types.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/commands/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/commands/commandHandler.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/events/types.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/events/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/events/eventFactory.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/systems/inventorySystem.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/systems/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/systems/playerSystem.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/simulation/systems/worldFlagsSystem.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/types.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/SimulationContext.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/useSimulation.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/SimulationProvider.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/index.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/application/simulation/context.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/domain/common/Money.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/domain/common/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/domain/errors/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/domain/errors/DomainError.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/WorldSceneManager.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/CollisionWorld.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/InteractionRegistry.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/LocationTransitionController.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/PlayerController.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/WorldEnvironment.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/WorldCameraController.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/worldConfig.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/WorldViewport.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/index.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/PedestrianSystem.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/WorkstationProps.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/HumanoidCharacter.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/PlayerAvatar.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/InteractableMarker.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/Building.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/LagosProps.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/world/entities/TrafficSystem.ts.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/types.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/index.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/DesktopShell.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/useWindowManager.ts.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/WindowFrame.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/Taskbar.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/apps/index.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/apps/ActivityApp.tsx.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/apps/TerminalApp.tsx.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/apps/SystemInfoApp.tsx.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/apps/FieldGuideApp.tsx.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/desktop/apps/NotesApp.tsx.html",
+      "reference": "../../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/index.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/StatusOverlay.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/HUDShell.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/InteractionHelpPrompt.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/ObjectiveTrackerHUD.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/DevSimulationDrawer.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/MovementHelp.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "coverage/presentation/hud/InteractionPrompt.tsx.html",
+      "reference": "../../favicon.png"
+    },
+    {
+      "source": "src/simulation/cyber/humanPhysical/fixtures.ts",
+      "reference": "cctv-fl5-corridor-1142.png"
+    },
+    {
+      "source": "src/presentation/world/WorldEnvironment.ts",
+      "reference": "room_ac.glb"
+    }
+  ],
+  "large_files_over_100mb": [],
+  "findings": [
+    {
+      "priority": "medium",
+      "finding": "No HDR/EXR environment maps found",
+      "suggestion": "Consider an HDRI if image-based lighting fits the current renderer."
+    },
+    {
+      "priority": "high",
+      "finding": "102 possible missing asset references",
+      "suggestion": "Review the references manually; aliases and runtime-generated paths may be false positives."
+    }
+  ]
+}

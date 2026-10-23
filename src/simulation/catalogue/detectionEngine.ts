@@ -93,7 +93,7 @@ export const PURPLE_SMB_LATERAL_SCENARIO: readonly AdversaryScenarioStep[] = [
 
 /**
  * Benign background noise fixture used to measure false positive rate.
- * Normal operations from authorized users (Goodness, Protector, Chidi).
+ * Normal operations from authorized users (Goodness, Protector, Choker).
  */
 export const BENIGN_NOISE_FIXTURE: readonly FictionalLogEntry[] = [
   {
@@ -103,8 +103,8 @@ export const BENIGN_NOISE_FIXTURE: readonly FictionalLogEntry[] = [
     severity: 'INFO',
     eventType: 'AUTH_SUCCESS',
     hostId: 'ws-finance-02',
-    user: 'folake_alabi',
-    message: 'User folake_alabi authenticated successfully.',
+    user: 'goodness_alabi',
+    message: 'User goodness_alabi authenticated successfully.',
     details: 'Interactive Windows login.',
   },
   {
@@ -124,7 +124,7 @@ export const BENIGN_NOISE_FIXTURE: readonly FictionalLogEntry[] = [
     severity: 'INFO',
     eventType: 'AUTH_SUCCESS',
     hostId: 'ws-sec-04',
-    user: 'tade_adebayo',
+    user: 'protector',
     message: 'Analyst session active.',
     details: 'Terminal session.',
   },

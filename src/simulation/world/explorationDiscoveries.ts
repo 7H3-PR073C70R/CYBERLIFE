@@ -66,7 +66,7 @@ export const EXPLORATION_DISCOVERIES: readonly ExplorationDiscovery[] = [
     category: 'NPC_INTEL',
     title: 'Tsharp at the Marina Seawall',
     description:
-      'Tsharp (Tunde) is leaning on the Marina seawall railings at dusk, scrolling on a hardened laptop. He spots you and discreetly mentions a Tor-routed darknet listing that appeared this week offering Cedarline credential dumps. He can share the onion address.',
+      'Tsharp is leaning on the Marina seawall railings at dusk, scrolling on a hardened laptop. He spots you and discreetly mentions a Tor-routed darknet listing that appeared this week offering Cedarline credential dumps. He can share the onion address.',
     requiredLocationId: 'neighborhood',
     requiredNpcId: 'npc_tunde',
     availableHours: [19, 24],

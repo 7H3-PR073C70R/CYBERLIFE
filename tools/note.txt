@@ -1,0 +1,17 @@
+# Inspect the project
+python3 tools/asset_manager/asset_manager.py audit
+
+# Discover candidate assets
+python3 tools/asset_manager/asset_manager.py discover
+
+# Preview the download plan
+python3 tools/asset_manager/asset_manager.py download --dry-run
+
+# Review candidates and approve or reject them
+python3 tools/asset_manager/asset_manager.py review --interactive
+
+# Download approved candidates
+python3 tools/asset_manager/asset_manager.py download --approved
+
+# Generate a status report
+python3 tools/asset_manager/asset_manager.py report

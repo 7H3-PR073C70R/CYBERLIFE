@@ -1784,30 +1784,29 @@ body,
 /* First-Time Welcome & Guidance Banner */
 .desktop-welcome-banner {
   position: absolute;
-  top: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 620px;
-  background: rgba(15, 22, 36, 0.94);
+  bottom: 3.5rem;
+  right: 1.5rem;
+  width: auto;
+  max-width: 320px;
+  background: rgba(15, 23, 42, 0.94);
   backdrop-filter: blur(16px);
-  border: 1px solid var(--color-accent-cyan);
-  box-shadow: var(--shadow-lg), var(--shadow-glow-cyan);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem 1.5rem;
-  z-index: 100;
-  animation: slideDown 250ms var(--ease-out);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 12px rgba(0, 229, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.9rem;
+  z-index: 50;
+  animation: toastFadeIn 250ms var(--ease-out);
 }
 
-@keyframes slideDown {
+@keyframes toastFadeIn {
   from {
     opacity: 0;
-    transform: translate(-50%, -15px);
+    transform: translateY(10px);
   }
 
   to {
     opacity: 1;
-    transform: translate(-50%, 0);
+    transform: translateY(0);
   }
 }
 

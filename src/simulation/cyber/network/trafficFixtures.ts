@@ -326,7 +326,7 @@ export const SYNTHETIC_TRAFFIC_EVENTS: readonly SyntheticTrafficEvent[] = [
       ethernetLayer: 'Ethernet II, Src: 00:50:56:a4:02:22, Dst: 00:50:56:a4:03:50',
       ipLayer: 'IPv4, Src: 10.0.4.22 (ws-finance-02), Dst: 10.0.4.50 (filesrv-01)',
       transportLayer: 'TCP, Src Port: 51214, Dst Port: 445 (microsoft-ds)',
-      applicationLayer: 'SMB2: Create Request File: payroll\\october_salary_calculations.xlsx, User: folake_alabi@CORP.LOCAL',
+      applicationLayer: 'SMB2: Create Request File: payroll\\october_salary_calculations.xlsx, User: goodness_alabi@CORP.LOCAL',
     },
     hexDump: [
       '0000  fe 53 4d 42 40 00 00 00  00 00 00 00 05 00 00 00  .SMB@...........',
@@ -338,10 +338,10 @@ export const SYNTHETIC_TRAFFIC_EVENTS: readonly SyntheticTrafficEvent[] = [
       command: 'CREATE',
       sharePath: '\\\\filesrv-01\\finance',
       filename: 'payroll\\october_salary_calculations.xlsx',
-      userPrincipal: 'folake_alabi@CORP.LOCAL',
+      userPrincipal: 'goodness_alabi@CORP.LOCAL',
       status: 'STATUS_SUCCESS',
     },
-    educationalContext: 'Legitimate corporate file access: Director of Accounting Folake opening scheduled payroll worksheet over SMB2.',
+    educationalContext: 'Legitimate corporate file access: Director of Accounting Goodness opening scheduled payroll worksheet over SMB2.',
   },
 
   // ==========================================================================
@@ -852,7 +852,7 @@ export const SYNTHETIC_CONVERSATIONS: readonly TrafficConversation[] = [
     durationSeconds: 0.0,
     classification: 'BENIGN_ROUTINE',
     packetIds: ['pkt-006'],
-    summarySnippet: 'Folake opening payroll/october_salary_calculations.xlsx',
+    summarySnippet: 'Goodness opening payroll/october_salary_calculations.xlsx',
   },
   {
     id: 'conv-siem-audit-scan',

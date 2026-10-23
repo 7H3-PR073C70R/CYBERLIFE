@@ -75,9 +75,9 @@ All handlers are pure: they return a new frozen state and events, and return a t
 
 ### Scenario A — The Server Room Discrepancy (`act_m21_conflicting_accounts`)
 - **Unlock:** `m21_humint_unlocked`, set when the Aster Incident is completed.
-- **Witnesses:** `npc_marcus` (junior infra admin, "Tobi A." in the evidence text) and `npc_amina` (lead security analyst, "Blessing" in dialogue).
-- **Flow:** Marcus denies being in Room 4B → the badge log shows his credential at 19:47 → when confronted he admits lending his badge to Femi → Amina confirms the badge-sharing policy breach.
-- **Graded steps:** comparing Marcus's alibi with the badge log (correct verdict: `CONTRADICTED`); final conclusion (`conc_a_badge_lending_policy_breach` = `SUPPORTED`; `conc_a_marcus_insider_threat` = `CONTRADICTED`, sets `m21a_premature_accusation`).
+- **Witnesses:** `npc_marcus` (junior infra admin, "Barry" in the evidence text) and `npc_amina` (lead security analyst, "Blessing" in dialogue).
+- **Flow:** Barry denies being in Room 4B → the badge log shows his credential at 19:47 → when confronted he admits lending his badge to Michael → Blessing confirms the badge-sharing policy breach.
+- **Graded steps:** comparing Barry's alibi with the badge log (correct verdict: `CONTRADICTED`); final conclusion (`conc_a_badge_lending_policy_breach` = `SUPPORTED`; `conc_a_marcus_insider_threat` = `CONTRADICTED`, sets `m21a_premature_accusation`).
 - **Reward:** ₦3,500 · 180 XP · 40 reputation · unlocks Scenario C.
 
 ### Scenario B — Unusual Vendor Access Request (`act_m21_vendor_request`)
@@ -125,7 +125,7 @@ flags by hand). Both are now set by real gameplay, and covered by the "Reachabil
 |---|---|
 | Catalogue & Initial State | Activity definitions, objective counts, prerequisites, deadline, initial slice. |
 | Reachability from normal gameplay | M21 locked at start; Aster reward unlocks A/B; every interview-question gate flag is settable. |
-| Scenario A | Sessions, evidence injection, gated/duplicate questions, Femi lead, comparison grading, conclusions, adapter sync. |
+| Scenario A | Sessions, evidence injection, gated/duplicate questions, Michael lead, comparison grading, conclusions, adapter sync. |
 | Scenario B | All five decisions, ratings, reputation, consequence flags, adapter sync. |
 | Scenario C | Inspection idempotency, findings, report scoring and risk rating, adapter sync. |
 | Command Handler Dispatch | All M21 commands route through the main `commandHandler`. |

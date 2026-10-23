@@ -1061,8 +1061,8 @@ export class WorldEnvironment {
     this.group.add(interiorFillLight);
     this.group.add(interiorFillLight.target);
 
-    // 3. Warm Desk Lamp point light located directly over workstation
-    this.interiorDeskLamp = new THREE.PointLight(0xffb347, 1.8, 6.0, 1.2);
+    // 3. Warm Desk Lamp point light located directly over workstation (calibrated to prevent blowout)
+    this.interiorDeskLamp = new THREE.PointLight(0xffb347, 0.75, 6.0, 1.2);
     this.interiorDeskLamp.position.set(-0.65, 1.25, -3.54);
     this.interiorDeskLamp.castShadow = true;
     this.group.add(this.interiorDeskLamp);
@@ -2125,14 +2125,14 @@ export class WorldEnvironment {
       // Natural daylight pouring into the room
       this.interiorSunLight.intensity = 0.95;
       this.interiorSunLight.color.setHex(0xfffaed);
-      this.interiorDeskLamp.intensity = 0.85;
+      this.interiorDeskLamp.intensity = 0.55;
       this.interiorAmbient.intensity = 0.78;
       if (this.interiorLight) this.interiorLight.intensity = 0.95;
     } else {
       // Atmospheric nighttime with warm desk lamp halogen glow and moonlight fill
       this.interiorSunLight.intensity = 0.08;
       this.interiorSunLight.color.setHex(0x38bdf8);
-      this.interiorDeskLamp.intensity = 1.8;
+      this.interiorDeskLamp.intensity = 0.75;
       this.interiorDeskLamp.color.setHex(0xffaa44);
       this.interiorAmbient.intensity = 0.52;
       if (this.interiorLight) this.interiorLight.intensity = 0.3;

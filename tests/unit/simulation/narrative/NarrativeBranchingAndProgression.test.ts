@@ -122,7 +122,7 @@ describe('Milestone 14 — Narrative Branching & Progression Architecture', () =
       const result = engine.dispatch({
         type: 'FailNarrativeMission',
         missionId: 'miss_audit_credentials',
-        reason: 'Marcus panicked and fled during interview',
+        reason: 'Barry panicked and fled during interview',
       });
 
       expect(result.success).toBe(true);
@@ -133,7 +133,7 @@ describe('Milestone 14 — Narrative Branching & Progression Architecture', () =
       expect(failEvent).toBeDefined();
       expect(failEvent.payload).toMatchObject({
         missionId: 'miss_audit_credentials',
-        reason: 'Marcus panicked and fled during interview',
+        reason: 'Barry panicked and fled during interview',
       });
     });
   });

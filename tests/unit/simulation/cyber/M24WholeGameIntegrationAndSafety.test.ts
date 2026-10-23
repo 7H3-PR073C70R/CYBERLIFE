@@ -199,7 +199,7 @@ describe('M24: Complete Whole-Game Integration & Release Validation', () => {
         activityId: 'act_m21_conflicting_accounts',
       });
 
-      // 1. Start interview session with Marcus
+      // 1. Start interview session with Barry
       const startRes = engine.dispatch({
         type: 'StartInterview',
         npcId: 'npc_marcus',
@@ -242,7 +242,7 @@ describe('M24: Complete Whole-Game Integration & Release Validation', () => {
         type: 'SubmitM21Conclusion',
         activityId: 'act_m21_conflicting_accounts',
         conclusionId: 'conc_a_badge_lending_policy_breach',
-        hypothesisText: 'Marcus lent badge to Femi to fetch patch cables in Room 4B.',
+        hypothesisText: 'Barry lent badge to Michael to fetch patch cables in Room 4B.',
         playerConclusionType: 'SUPPORTED',
         supportingStatementIds: [question!.id],
         supportingEvidenceIds: [M21_SCENARIO_A_EVIDENCE[0]!.evidenceId],

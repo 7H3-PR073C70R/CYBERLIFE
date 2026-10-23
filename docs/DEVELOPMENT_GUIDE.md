@@ -230,7 +230,7 @@ Missions are authored declaratively in JSON with runtime Zod validation:
    this.interactionRegistry.register({
      id: 'interact_cafe_entrance',
      name: 'Corner Cyber Cafe',
-     promptAction: 'enter the cafe to meet Marcus [E]',
+     promptAction: 'enter the cafe to meet Barry [E]',
      description: 'A bustling neighborhood cafe popular with Cedarline engineering staff.',
      position: [x, 0, z],
      radius: 2.5,

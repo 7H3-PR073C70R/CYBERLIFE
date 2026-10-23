@@ -24,14 +24,14 @@ export class M21HumanIntelAdapter {
 
       // ── Scenario A: Conflicting Accounts ─────────────────────────────────
       if (activity.definitionId === 'act_m21_conflicting_accounts') {
-        // Objective: Interview Barry (Marcus)
+        // Objective: Interview Barry
         if (
           obj.id === 'obj_m21a_interview_marcus' &&
           flags['m21_interview_completed_npc_marcus_act_m21_conflicting_accounts']
         ) {
           return { ...obj, isCompleted: true };
         }
-        // Objective: Interview Blessing (Amina)
+        // Objective: Interview Blessing
         if (
           obj.id === 'obj_m21a_interview_amina' &&
           flags['m21_interview_completed_npc_amina_act_m21_conflicting_accounts']

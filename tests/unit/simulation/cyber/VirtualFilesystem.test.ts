@@ -21,7 +21,7 @@ describe('VirtualFilesystem & Terminal File Commands', () => {
       dayOfWeek: 'Monday',
     },
     currentUser: {
-      username: 'tade_adebayo',
+      username: 'protector',
       displayName: 'Protector',
       role: 'Security Analyst Intern',
       organization: 'Cedarline Services',

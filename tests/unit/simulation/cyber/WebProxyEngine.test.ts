@@ -54,7 +54,7 @@ describe('WebProxyEngine', () => {
 
     const responseJson = JSON.parse(result.transaction.modifiedResponse?.body ?? '{}');
     expect(responseJson.id).toBe('EMP-001');
-    expect(responseJson.name).toContain('Amina Okonjo');
+    expect(responseJson.name).toContain('Blessing');
 
     expect(result.transaction.finding).toBeDefined();
     expect(result.transaction.finding?.cve).toBe('CWE-639');

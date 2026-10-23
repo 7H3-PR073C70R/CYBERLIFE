@@ -95,7 +95,7 @@ describe('Shared Fictional Cyber Range', () => {
     expect(analyst?.clearanceTier).toBe(1);
     expect(analyst?.assignedHostId).toBe('ws-sec-04');
 
-    const lead = identities.find(i => i.username === 'chidi.okafor');
+    const lead = identities.find(i => i.username === 'michael.lead');
     expect(lead?.clearanceTier).toBe(2);
 
     const serviceAcct = identities.find(i => i.username === 'svc-aster');

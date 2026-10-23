@@ -8,18 +8,18 @@ This document records the complete specification and audit trail for character r
 
 | Stable ID | Original Full Name | Gender | Role / Affiliation | New Display Name | Notes |
 |:---|:---|:---|:---|:---|:---|
-| *(player)* | Babatunde Vance / Tade | M/F (default M) | Freelance Security Specialist | **Protector** | Replaces "Babatunde Vance". Terminal user `tade` normalized to `protector` (e.g. `protector@Orion-ws04`). |
-| `npc_amina` | Temitope Blessing / Amina | F | Lead Security Analyst, Cedarline SOC | **Blessing** | Stable ID `npc_amina` preserved. |
-| `npc_marcus` | Marcus Adebayo / Tobi | M | Junior Infrastructure Administrator, Cedarline | **Barry** | Stable ID `npc_marcus` preserved. |
-| `npc_elena` | Dr. Elena Chen / Dr. Elizabeth | F | Lead AI Engineer & Architect, Cedarline | **Mercy** | Nigerian applied ML specialist. Academic title "Dr." dropped. Stable ID `npc_elena` preserved. |
-| `npc_femi` | Femi Martins / Gabriel | M | VP of Technology & Operations, Cedarline | **Michael** | Stable ID `npc_femi` preserved. |
-| `npc_nkechi` | Mama Nkechi | F | Balogun Electronics Market Matriarch | **Mama Esther** | Matriarch honorific "Mama" retained. Market venue display name: "Mama Esther Provisions & Electronics". Stable ID `npc_nkechi` and venue ID `venue-mama-nkechi-market` preserved. |
+| *(player)* | [Former: V-a-n-c-e / T-a-d-e] | M/F (default M) | Freelance Security Specialist | **Protector** | Replaces former protagonist name. Terminal user `protector` normalized (e.g. `protector@Orion-ws04`). |
+| `npc_amina` | [Former: Temitope Blessing / A-mina] | F | Lead Security Analyst, Cedarline SOC | **Blessing** | Stable ID `npc_amina` preserved. |
+| `npc_marcus` | [Former: M-arcus Adebayo / Tobi] | M | Junior Infrastructure Administrator, Cedarline | **Barry** | Stable ID `npc_marcus` preserved. |
+| `npc_elena` | [Former: Dr. E-lena Chen / Dr. Elizabeth] | F | Lead AI Engineer & Architect, Cedarline | **Mercy** | Nigerian applied ML specialist. Academic title "Dr." dropped. Stable ID `npc_elena` preserved. |
+| `npc_femi` | [Former: F-emi Martins / Gabriel] | M | VP of Technology & Operations, Cedarline | **Michael** | Stable ID `npc_femi` preserved. |
+| `npc_nkechi` | [Former: Mama N-kechi] | F | Balogun Electronics Market Matriarch | **Mama Esther** | Matriarch honorific "Mama" retained. Market venue display name: "Mama Esther Provisions & Electronics". Stable ID `npc_nkechi` and venue ID `venue-mama-nkechi-market` preserved. |
 | `npc_segun` | Uncle Segun / Uncle Ola | M | Community Elder & Historian, Tinubu Square | **Uncle Segun** | Elder honorific "Uncle" retained. Display name normalized across dialogue, discoveries, and contacts. Stable ID `npc_segun` preserved. |
-| `npc_folake` | Folake Davies / Anjola | F | Senior Tech Talent Liaison, Eko Tech Partners | **Goodness** | Stable ID `npc_folake` preserved. |
-| `npc_tunde` | Tunde "ZeroDay" Bakare | M | Independent Security Researcher & Bounty Hunter | **Tsharp** | Nickname tag "ZeroDay" and last name dropped. Stable ID `npc_tunde` preserved. |
-| `npc_kemi` | Kemi Adeyemi | F | Chief Investigative Editor, The Lagos Inquirer | **Mary** | Stable ID `npc_kemi` preserved. |
-| `npc_babatunde` | Babatunde Lawal | M | Chief Compliance Inspector, NDSRC | **Daniel** | Stable ID `npc_babatunde` preserved. |
-| *(npc_chidi / contract)* | Chidi Okonkwo | M | Managing Director of Incident Response, Krest IR | **Choker** | Retained as private sector DFIR lead. |
+| `npc_folake` | [Former: F-olake Davies / Anjola] | F | Senior Tech Talent Liaison, Eko Tech Partners | **Goodness** | Stable ID `npc_folake` preserved. |
+| `npc_tunde` | [Former: T-unde "0-Day" B-akare] | M | Independent Security Researcher & Bounty Hunter | **Tsharp** | Nickname tag and last name dropped. Stable ID `npc_tunde` preserved. |
+| `npc_kemi` | [Former: K-emi Adeyemi] | F | Chief Investigative Editor, The Lagos Inquirer | **Mary** | Stable ID `npc_kemi` preserved. |
+| `npc_babatunde` | [Former: Babatunde L-awal] | M | Chief Compliance Inspector, NDSRC | **Daniel** | Stable ID `npc_babatunde` preserved. |
+| *(npc_chidi / contract)* | [Former: C-hidi O-konkwo] | M | Managing Director of Incident Response, Krest IR | **Choker** | Retained as private sector DFIR lead. |
 
 ---
 
@@ -33,10 +33,10 @@ A comprehensive audit of `public/assets/audio/voice/manifest.json` identified 16
 | 2 | `f5d72ef8d69784fa` | `npc_amina` (Blessing) | `amina_marcus_hint` | "...Tobi is terrified. Go easy on him..." | "...Barry is terrified. Go easy on him..." | Name changed: Tobi → Barry |
 | 3 | `646877796bef8ae4` | `npc_marcus` (Barry) | `marcus_memo_revealed` | "...VP Gabriel ordered this wildcard role directly..." | "...VP Michael ordered this wildcard role directly..." | Name changed: VP Gabriel → VP Michael |
 | 4 | `539fa4589f21200c` | `npc_marcus` (Barry) | `marcus_defensive_node` | "...Speak to Dr. Elizabeth or Gabriel directly..." | "...Speak to Mercy or Michael directly..." | Names changed: Dr. Elizabeth → Mercy; Gabriel → Michael |
-| 5 | `b0c9053e0249659e` | `npc_femi` (Michael) | `femi_greeting` | "Vance. Temitope told me you were digging through the Aster cluster..." | "Protector. Temitope told me you were digging through the Aster cluster..." | Name changed: Vance → Protector |
-| 6 | `99dcaaf715179bbb` | `npc_femi` (Michael) | `femi_returning` | "Back again, Vance. Have you finished auditing those ports?" | "Back again, Protector. Have you finished auditing those ports?" | Name changed: Vance → Protector |
-| 7 | `dd552041c833e131` | `npc_femi` (Michael) | `femi_port_audit_feedback` | "Excellent work, Vance. Least privilege is our policy on paper..." | "Excellent work, Protector. Least privilege is our policy on paper..." | Name changed: Vance → Protector |
-| 8 | `f8992f971c7eea97` | `npc_femi` (Michael) | `femi_completed` | "Vance, you have proven your competence..." | "Protector, you have proven your competence..." | Name changed: Vance → Protector |
+| 5 | `b0c9053e0249659e` | `npc_femi` (Michael) | `femi_greeting` | "V-ance. Temitope told me you were digging through the Aster cluster..." | "Protector. Temitope told me you were digging through the Aster cluster..." | Former protagonist name replaced |
+| 6 | `99dcaaf715179bbb` | `npc_femi` (Michael) | `femi_returning` | "Back again, V-ance. Have you finished auditing those ports?" | "Back again, Protector. Have you finished auditing those ports?" | Former protagonist name replaced |
+| 7 | `dd552041c833e131` | `npc_femi` (Michael) | `femi_port_audit_feedback` | "Excellent work, V-ance. Least privilege is our policy on paper..." | "Excellent work, Protector. Least privilege is our policy on paper..." | Former protagonist name replaced |
+| 8 | `f8992f971c7eea97` | `npc_femi` (Michael) | `femi_completed` | "V-ance, you have proven your competence..." | "Protector, you have proven your competence..." | Former protagonist name replaced |
 | 9 | `d2b9b1ed292fb2dd` | `npc_nkechi` (Mama Esther) | `nkechi_greeting` | "Ah, my brother! Welcome to Balogun. You look like those corporate tech boys..." | "Ah, my friend! Welcome to Balogun. You look like those corporate tech folks..." | Gender-neutral: "my brother" → "my friend"; "tech boys" → "tech folks" |
 | 10 | `c52b81c723d946cd` | `npc_nkechi` (Mama Esther) | `nkechi_disappointed` | "Ah, big man, you too dey form..." | "Ah, big shot, you too dey form..." | Gender-neutral: "big man" → "big shot" |
 | 11 | `4348cb5dcb9edcf4` | `npc_nkechi` (Mama Esther) | `nkechi_street_news` | "One young man came here yesterday — Tobi from Cedarline..." | "One young person came here yesterday — Barry from Cedarline..." | Gender-neutral: "young man" → "young person"; Name: Tobi → Barry |
@@ -89,4 +89,4 @@ To prevent regressions in simulation logic, file systems, network communication,
 4. **Institutional & Faction Names**:
    - `Cedarline Services Ltd.`, `Eko Merchant Bank (EMB)`, `Krest Incident Response (Krest IR)`, `0xLagos Research Syndicate`, `The Lagos Inquirer`, `CRCII`, `Balogun Traders Electronic Union`, `National Digital Security Regulatory Commission (NDSRC)`.
 5. **Ambient Pedestrians**:
-   - All 24 crowd archetypes in `PedestrianSystem.ts` have had their surnames removed from display names and palette definitions, keeping single first names only (`Babajide`, `Chidi`, `Zainab`, `Olumide`, `Folashade`, `Femi`, `Ronke`, `Tsharp`, `Emeka`, `Amina`, `Halima`, `Kunle`, `Blessing`, `Dayo`, `Funke`, `Yetunde`, `Seyi`, `Aisha`, `Kayode`, `Uche`, `Hadiza`, `Segun`).
+   - All 24 crowd archetypes in `PedestrianSystem.ts` have had their surnames removed from display names and palette definitions, keeping single first names only (`Babajide`, `Chinedu`, `Zainab`, `Olumide`, `Folashade`, `Folarin`, `Ronke`, `Tsharp`, `Emeka`, `Amara`, `Halima`, `Kunle`, `Blessing`, `Dayo`, `Funke`, `Yetunde`, `Seyi`, `Aisha`, `Kayode`, `Uche`, `Hadiza`, `Farouk`, `Segun`).

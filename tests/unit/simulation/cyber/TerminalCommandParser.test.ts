@@ -23,7 +23,7 @@ describe('TerminalCommandParser & Registry', () => {
       dayOfWeek: 'Monday',
     },
     currentUser: {
-      username: 'tade_adebayo',
+      username: 'protector',
       displayName: 'Protector',
       role: 'Security Analyst Intern',
       organization: 'Cedarline Services',
@@ -111,7 +111,7 @@ describe('TerminalCommandParser & Registry', () => {
     const result = parser.parseAndExecute('whoami', mockContext);
 
     expect(result.isError).toBeFalsy();
-    expect(result.stdout).toContain('tade_adebayo');
+    expect(result.stdout).toContain('protector');
     expect(result.stdout.some(line => line.includes('Cedarline Services'))).toBe(true);
     expect(result.stdout.some(line => line.includes('Security Analyst Intern'))).toBe(true);
   });
@@ -161,7 +161,7 @@ describe('TerminalCommandParser & Registry', () => {
 
     const result2 = parser.parseAndExecute('WhoAmI', mockContext);
     expect(result2.isError).toBeFalsy();
-    expect(result2.stdout).toContain('tade_adebayo');
+    expect(result2.stdout).toContain('protector');
   });
 
   it('handles empty or whitespace-only inputs without output or errors', () => {

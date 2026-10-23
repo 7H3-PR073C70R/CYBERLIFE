@@ -76,7 +76,7 @@ This guide explains how spoken dialogue audio is generated, structured, cached, 
    - **Speaker Name**: Pulled directly from `profile.name` or `thread.contactName`.
    - **Gender**: Pulled from `profile.voice.gender` (female maps to `en-NG-EzinneNeural`, male maps to `en-NG-AbeoNeural`).
    - **Rate & Pitch**: Computed from `profile.voice.rate` and `profile.voice.pitch` (e.g. rate `1.04` maps to `+4%`).
-4. If you rename a character (e.g., from `"Marcus Adebayo"` to `"Marcus Adeleke"`), simply rerun `npm run voice:generate`. The manifest metadata will update automatically without needing to re-synthesize audio if the voice parameters and text remain identical.
+4. If you rename a character (e.g., from `"Barry"` to `"Barry Adeleke"`), simply rerun `npm run voice:generate`. The manifest metadata will update automatically without needing to re-synthesize audio if the voice parameters and text remain identical.
 
 ---
 

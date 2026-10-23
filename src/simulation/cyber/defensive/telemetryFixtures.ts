@@ -30,11 +30,11 @@ export const SYNTHETIC_TELEMETRY_EVENTS: readonly TelemetryEvent[] = [
     destinationPort: 88, // Kerberos
     eventSource: 'auth-daemon',
     title: 'Workstation Interactive Logon Succeeded',
-    summary: 'Analyst tade_adebayo authenticated via Kerberos ticket grant from workstation.',
+    summary: 'Analyst protector authenticated via Kerberos ticket grant from workstation.',
     isKnownBenign: true,
     tags: ['auth', 'kerberos', 'login', 'routine'],
     auth: {
-      userPrincipal: 'tade_adebayo@corp.local',
+      userPrincipal: 'protector@corp.local',
       logonType: 'INTERACTIVE',
       authStatus: 'SUCCESS',
       clientIp: '10.0.4.15',
@@ -274,11 +274,11 @@ export const SYNTHETIC_TELEMETRY_EVENTS: readonly TelemetryEvent[] = [
     sourceIp: '10.0.4.15',
     eventSource: 'auth-daemon',
     title: 'Authorized Sudo Command Executed by Analyst',
-    summary: 'Analyst tade_adebayo executed systemctl status suricata with valid sudo credentials.',
+    summary: 'Analyst protector executed systemctl status suricata with valid sudo credentials.',
     isKnownBenign: true,
     tags: ['privilege', 'sudo', 'routine'],
     privilege: {
-      userPrincipal: 'tade_adebayo',
+      userPrincipal: 'protector',
       action: 'SUDO_EXECUTION',
       scopeSummary: 'systemctl status suricata',
       isUnsanctionedWildcard: false,

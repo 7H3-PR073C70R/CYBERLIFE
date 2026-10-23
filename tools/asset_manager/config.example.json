@@ -1,0 +1,22 @@
+{
+  "providers": [
+    "polyhaven"
+  ],
+  "candidate_count": 5,
+  "max_download_bytes": 262144000,
+  "timeout_seconds": 25,
+  "retries": 2,
+  "search_terms": [
+    "abandoned industrial",
+    "concrete",
+    "asphalt",
+    "vegetation",
+    "urban props"
+  ],
+  "asset_categories": [
+    "models",
+    "textures",
+    "hdris"
+  ],
+  "production_assets_dir": "public/assets"
+}

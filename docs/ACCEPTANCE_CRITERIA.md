@@ -156,7 +156,7 @@ Every milestone deliverable must satisfy the following baseline quality gates:
 ---
 
 ### Milestone M7: NPCs & Persistent World Consequences
-- [ ] Key NPCs (Marcus, Elena) exhibit memory of incident outcome.
+- [ ] Key NPCs (Barry, Mercy) exhibit memory of incident outcome.
 - [ ] Post-incident dialogue branches reflect player performance (clean resolution vs. data leak).
 - [ ] In-game emails and simulated news feeds publish responsive articles based on incident resolution.
 - [ ] NPC relationships persist across building transitions and save reloads.

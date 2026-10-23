@@ -109,7 +109,7 @@ Output:
 - `InvestigativeConclusions.test.ts`: 5 tests passed (evidence vault preservation, missing evidence rejection, weighted confidence scoring).
 - `NarrativeBranchingAndProgression.test.ts`: 7 tests passed (arc transitions, chapter progression, prerequisite enforcement).
 - `InvestigationNarrative.test.ts`: 5 tests passed (dialogue branching based on evidence and faction standing).
-- `StorySliceEndToEnd.test.ts`: 1 test passed (playable vertical slice from Aster triage to Marcus confrontation).
+- `StorySliceEndToEnd.test.ts`: 1 test passed (playable vertical slice from Aster triage to Barry confrontation).
 - `NarrativePersistence.test.ts`: 2 tests passed (schema validation, FNV-1a checksums, round-trip state restoration).
 
 **Narrative Test Suite Summary:** 7 test files, 35 tests, 0 failures.
@@ -169,7 +169,7 @@ A comprehensive gameplay and browser-level audit was conducted to verify that Mi
 The player's journey begins on Lagos Island, engaging directly with **Lead Security Analyst Blessing** at Cedarline Services Ltd.:
 - **Interactive Entry Points:** Tested via in-world interaction (`WorldViewport` NPC proximity prompt) and direct URL deep-linking (`/?skipIntro=1&npc=npc_amina`).
 - **Affiliation & Stature:** The dialogue header displays the character's name, organizational affiliation (`Cedarline Services Ltd.`), role (`Lead Security Analyst`), and dynamic relationship badge (`Friendly (+20)` / `Neutral (+10)`).
-- **Procedural Choice Selection:** Choosing formal incident protocol (`amina_greet_procedure`) dispatches `SelectDialogueChoice`, awarding `+5` relationship with Amina and `+5` standing with `faction_cedarline`.
+- **Procedural Choice Selection:** Choosing formal incident protocol (`amina_greet_procedure`) dispatches `SelectDialogueChoice`, awarding `+5` relationship with Blessing and `+5` standing with `faction_cedarline`.
 - **In-Game Consequence Toast:** An immediate toast notification (`[data-testid="dialogue-faction-delta"]`) appears at the top of the dialogue box (`CEDARLINE: +5`), accompanied by trust delta feedback.
 
 ### 6.2 Two Distinct, Reproducible Narrative Branches from a Shared State
@@ -178,12 +178,12 @@ To prove authentic player agency, two mutually exclusive narrative branches were
 
 | Metric / Dimension | Baseline Shared State | Branch 1: Empathy & Protection (`marcus_empathy` → `marcus_request_memo`) | Branch 2: Accusation & Scapegoating (`marcus_accusation`) |
 |---|---|---|---|
-| **Player Action** | Approached Marcus at server rack | Listened to Marcus's crisis and offered legal/whistleblower protection | Accused Marcus of negligence and unauthorized credential creation |
+| **Player Action** | Approached Barry at server rack | Listened to Barry's crisis and offered legal/whistleblower protection | Accused Barry of negligence and unauthorized credential creation |
 | **Relationship Delta** | Neutral (`10`) | `+15` Trust (elevates to **Friendly (+25)**) | `-20` Trust (drops to **Distrustful (-20)**) |
 | **Cedarline Standing** | Neutral (`10`) | `+10` (`20` - Favored) | `-5` (`5` - Neutral/Unfavorable) |
 | **0xLagos Syndicate** | Neutral (`5`) | `+10` (`15` - Favored) | `0` (Unchanged) |
 | **World Flags Set** | None | `flag_marcus_protected = true` | `flag_marcus_exposed = true` |
-| **Forensic Evidence** | None | Unlocks & records `EVD-2026-004` (*Barry Emergency Escalation Memo*) with cryptographic hash | No evidence gained; Marcus clams up defensively |
+| **Forensic Evidence** | None | Unlocks & records `EVD-2026-004` (*Barry Emergency Escalation Memo*) with cryptographic hash | No evidence gained; Barry clams up defensively |
 | **Next Dialogue State** | Initial confrontation | Cooperative consultation; offers technical breadcrumbs on Aster | Refuses further conversation; alerts corporate HR/legal |
 | **UI Toast Feedback** | None | Toast: `+10 Trust`, `+10 Standing (0xLagos)` | Toast: `-20 Trust`, `-5 Standing (Cedarline)` |
 
@@ -193,10 +193,10 @@ Both branches were executed in the running browser and captured in screenshots [
 
 Investigative findings directly gate narrative progression and moral decisions:
 1. **Forensic Evidence Collection:** The player investigates `app-portal-01` and preserves forensic artifact `EVD-2026-001` (*svc-aster IAM Role Wildcard Policy Definition*, SHA-256: `9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08`) via terminal command `evidence preserve EVD-2026-001` or investigative workflows.
-2. **Gated Dialogue Unlock:** When returning to Amina (`amina_returning`), choice `amina_return_evidence_branch` is conditionally unlocked if and only if `EVD-2026-001` exists in `evidenceVault`.
-3. **The Ethical Crossroads (`amina_evidence_dilemma`):** Amina validates the SHA-256 hash and confronts the player with an ethical and corporate dilemma:
-   - **Branch A (Quiet Internal Containment):** Restrict `svc-aster` to `kb-assistant` internally. Consequences: `+15` Cedarline standing, `+10` Amina trust, sets `flag_aster_quiet_remediation`, advances story to Chapter 2 (`ch_infrastructure_dilemma`).
-   - **Branch B (Regulatory Disclosure):** Report the wildcard breach to the Civic Rights & Cyber Integrity Initiative (CRCII). Consequences: `+20` CRCII standing, `-10` Cedarline standing, `+5` Amina trust (respect for ethical stance), sets `flag_regulatory_disclosure_chosen`, advances story to Chapter 2.
+2. **Gated Dialogue Unlock:** When returning to Blessing (`amina_returning`), choice `amina_return_evidence_branch` is conditionally unlocked if and only if `EVD-2026-001` exists in `evidenceVault`.
+3. **The Ethical Crossroads (`amina_evidence_dilemma`):** Blessing validates the SHA-256 hash and confronts the player with an ethical and corporate dilemma:
+   - **Branch A (Quiet Internal Containment):** Restrict `svc-aster` to `kb-assistant` internally. Consequences: `+15` Cedarline standing, `+10` Blessing trust, sets `flag_aster_quiet_remediation`, advances story to Chapter 2 (`ch_infrastructure_dilemma`).
+   - **Branch B (Regulatory Disclosure):** Report the wildcard breach to the Civic Rights & Cyber Integrity Initiative (CRCII). Consequences: `+20` CRCII standing, `-10` Cedarline standing, `+5` Blessing trust (respect for ethical stance), sets `flag_regulatory_disclosure_chosen`, advances story to Chapter 2.
 
 Captured in real browser screenshot [`06_evidence_dependent_branch.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/06_evidence_dependent_branch.png).
 
@@ -224,11 +224,11 @@ All screenshots were generated in live headless Chrome (1440×900 viewport, port
 | Screenshot File | Description & Visual Artifacts Confirmed |
 |---|---|
 | [`01_entry_point_dialogue.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/01_entry_point_dialogue.png) | Dialogue overlay opened with Lead Analyst Blessing; Cedarline badge; Neutral (+10) standing badge; initial 3 dialogue options visible. |
-| [`02_branch1_procedural_selected.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/02_branch1_procedural_selected.png) | Amina confirming procedural priorities (5-stage incident lifecycle); toast delta feedback; acknowledgment choice. |
+| [`02_branch1_procedural_selected.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/02_branch1_procedural_selected.png) | Blessing confirming procedural priorities (5-stage incident lifecycle); toast delta feedback; acknowledgment choice. |
 | [`03_contacts_factions_tab.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/03_contacts_factions_tab.png) | Orion OS desktop with ContactsApp active on Factions & Standing tab; displays Arc 1, Chapter 1, 8 faction cards with progress bars, perks, and audit log. |
-| [`04_marcus_branch1_empathy.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/04_marcus_branch1_empathy.png) | Barry dialogue showing Friendly (+25) badge; toast showing `+10 Trust`, `+10 Standing (0xLagos)`; Marcus sharing whistleblower memo. |
+| [`04_marcus_branch1_empathy.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/04_marcus_branch1_empathy.png) | Barry dialogue showing Friendly (+25) badge; toast showing `+10 Trust`, `+10 Standing (0xLagos)`; Barry sharing whistleblower memo. |
 | [`05_marcus_branch2_accusation.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/05_marcus_branch2_accusation.png) | Barry dialogue showing Distrustful (-20) badge; toast showing `-20 Trust`, `-5 Standing (Cedarline)`; defensive dialogue response. |
-| [`06_evidence_dependent_branch.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/06_evidence_dependent_branch.png) | Amina acknowledging EVD-2026-001 SHA-256 hash; dilemma choices displayed (Quiet Internal Containment vs Regulatory Disclosure). |
+| [`06_evidence_dependent_branch.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/06_evidence_dependent_branch.png) | Blessing acknowledging EVD-2026-001 SHA-256 hash; dilemma choices displayed (Quiet Internal Containment vs Regulatory Disclosure). |
 | [`07_save_load_verification.png`](file:///Users/protector/Documents/projects/cyberlife/docs/graphics/milestone14/narrative-validation/07_save_load_verification.png) | Save / Load Manager modal open over the game world showing encrypted IndexedDB slot management, status, and quick save. |
 
 ### 6.7 Verification Methodology Breakdown

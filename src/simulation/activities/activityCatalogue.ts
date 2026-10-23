@@ -499,7 +499,7 @@ export const AUTHORED_ACTIVITIES: Readonly<Record<string, ActivityDefinition>> =
         type: 'TALK_TO_NPC',
         target: 'npc_amina',
         isCompleted: false,
-        hint: 'Open Contacts app on the desktop or initiate dialogue with Amina Bello.',
+        hint: 'Open Contacts app on the desktop or initiate dialogue with Blessing.',
         actionPrompt: 'Engage with professional contact.',
       },
     ],

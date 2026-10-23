@@ -74,7 +74,7 @@ The initial vertical slice centers on **The Aster Incident** at fictional compan
 
 ```
 [Physical World]
-Neighborhood Cafe ──▶ Talk to Cedarline Sysadmin (Marcus) ──▶ Receive Suspicious Alert Tip-off
+Neighborhood Cafe ──▶ Talk to Cedarline Sysadmin (Barry) ──▶ Receive Suspicious Alert Tip-off
                                                                       │
                                                                       ▼
 [Virtual Desktop]

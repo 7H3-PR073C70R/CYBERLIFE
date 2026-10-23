@@ -48,10 +48,10 @@ export const FICTIONAL_EVIDENCE: readonly FictionalEvidenceItem[] = [
     ],
     artifactSnippet: [
       'timestamp,principal,client_ip,server_ip,auth_method,result,notes',
-      '07:35:45,tade_adebayo@CORP.LOCAL,10.0.4.15,10.0.4.15,PAM_LOCAL,SUCCESS,Console session opened',
-      '07:44:22,folake_alabi@CORP.LOCAL,10.0.4.22,10.0.4.80,HTTP_FORM,FAILURE,Invalid password hash',
-      '07:45:03,folake_alabi@CORP.LOCAL,10.0.4.22,10.0.4.80,HTTP_FORM,SUCCESS,Retry accepted',
-      '07:50:51,folake_alabi@CORP.LOCAL,10.0.4.22,10.0.4.50,KERBEROS,SUCCESS,SMB share access',
+      '07:35:45,protector@CORP.LOCAL,10.0.4.15,10.0.4.15,PAM_LOCAL,SUCCESS,Console session opened',
+      '07:44:22,goodness_alabi@CORP.LOCAL,10.0.4.22,10.0.4.80,HTTP_FORM,FAILURE,Invalid password hash',
+      '07:45:03,goodness_alabi@CORP.LOCAL,10.0.4.22,10.0.4.80,HTTP_FORM,SUCCESS,Retry accepted',
+      '07:50:51,goodness_alabi@CORP.LOCAL,10.0.4.22,10.0.4.50,KERBEROS,SUCCESS,SMB share access',
     ],
   },
   {

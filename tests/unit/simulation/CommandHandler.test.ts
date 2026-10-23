@@ -426,7 +426,7 @@ describe('Authoritative Command Handler', () => {
         type: 'ScheduleTimer',
         id: 't_meeting',
         durationSeconds: 300,
-        label: 'Marcus Briefing',
+        label: 'Barry Briefing',
       });
       state = scheduleRes.state;
 

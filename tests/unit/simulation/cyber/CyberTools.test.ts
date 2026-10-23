@@ -17,7 +17,7 @@ describe('Milestone 5 Cybersecurity Tools', () => {
       dayOfWeek: 'Monday',
     },
     currentUser: {
-      username: 'tade_adebayo',
+      username: 'protector',
       displayName: 'Protector',
       role: 'Security Analyst Intern',
       organization: 'Cedarline Services',
@@ -182,7 +182,7 @@ describe('Milestone 5 Cybersecurity Tools', () => {
       const result = parser.parseAndExecute('logview inspect LOG-2026-104', mockContext);
       expect(result.isError).toBeFalsy();
       expect(result.stdout.some(l => l.includes('EVENT INSPECTION: LOG-2026-104'))).toBe(true);
-      expect(result.stdout.some(l => l.includes('folake_alabi'))).toBe(true);
+      expect(result.stdout.some(l => l.includes('goodness_alabi'))).toBe(true);
       expect(result.stdout.some(l => l.includes('ANALYST INTERPRETATION'))).toBe(true);
     });
 

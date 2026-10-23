@@ -3,9 +3,9 @@
  *
  * Comprehensive end-to-end presentation and simulation integration test suite verifying:
  * 1. Narrative entry point, character dialogue display, and real UI selection.
- * 2. Meaningful branching: Tobi (Empathy vs Accusation) producing divergent
+ * 2. Meaningful branching: Barry (Empathy vs Accusation) producing divergent
  *    relationship, faction, flag, and evidence consequences.
- * 3. Evidence-dependent investigation: Amina dialogue gating choices based on preserved vault evidence.
+ * 3. Evidence-dependent investigation: Blessing dialogue gating choices based on preserved vault evidence.
  * 4. Faction standing and UI consequence verification in ContactsApp.
  * 5. Save/Load persistence: serialization and deserialization of narrative and dialogue state.
  */
@@ -76,11 +76,11 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
   // --------------------------------------------------------------------------
   // 2. Meaningful Branching: Tobi (Empathy vs Accusation)
   // --------------------------------------------------------------------------
-  it('Branch 1: Marcus Empathy path grants trust, Cedarline standing, whistleblower memo, and 0xLagos rep', () => {
+  it('Branch 1: Barry Empathy path grants trust, Cedarline standing, whistleblower memo, and 0xLagos rep', () => {
     const engine = createSimulationEngine();
     const handleClose = vi.fn();
 
-    // Advance story to Chapter 2 so Marcus dialogue is in context
+    // Advance story to Chapter 2 so Barry dialogue is in context
     engine.dispatch({
       type: 'AdvanceStoryChapter',
       chapterId: 'ch_infrastructure_dilemma',
@@ -92,11 +92,11 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
       </SimulationProvider>
     );
 
-    // Marcus initial state
+    // Barry initial state
     expect(screen.getByTestId('dialogue-npc-name')).toHaveTextContent('Barry');
     expect(screen.getByTestId('npc-relationship-badge')).toHaveTextContent('Neutral (0)');
 
-    // Choose Branch 1: Empathy / De-escalation ("Take a breath, Marcus...")
+    // Choose Branch 1: Empathy / De-escalation ("Take a breath, Barry...")
     const choiceEmpathy = screen.getByTestId('dialogue-choice-0');
     expect(choiceEmpathy).toHaveTextContent(/Barry, breathe/i);
     fireEvent.click(choiceEmpathy);
@@ -113,7 +113,7 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
     expect(state.flags['flag_marcus_protected']).toBe(true);
     expect(state.flags['flag_marcus_exposed']).toBeUndefined();
 
-    // Now Marcus offers the memo request option
+    // Now Barry offers the memo request option
     const choiceRequestMemo = screen.getByTestId('dialogue-choice-0');
     expect(choiceRequestMemo).toHaveTextContent(/documentation of Michael ordering this bypass/i);
     fireEvent.click(choiceRequestMemo);
@@ -132,7 +132,7 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
     expect(state.narrative?.evidenceVault['EVD-2026-004']?.title).toBe('Executive Emergency Deployment Memo');
   });
 
-  it('Branch 2: Marcus Accusation path breaks trust, reduces standing, sets exposed flag, and denies memo', () => {
+  it('Branch 2: Barry Accusation path breaks trust, reduces standing, sets exposed flag, and denies memo', () => {
     const engine = createSimulationEngine();
     const handleClose = vi.fn();
 
@@ -169,18 +169,18 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
     // Evidence is NOT handed over
     expect(state.narrative?.evidenceVault['EVD-2026-004']).toBeUndefined();
 
-    // Marcus clammed up and conversation ends defensively
+    // Barry clammed up and conversation ends defensively
     expect(screen.getByTestId('dialogue-speech-text')).toHaveTextContent(/I followed the deployment checklist/i);
   });
 
   // --------------------------------------------------------------------------
-  // 3. Evidence-Dependent Investigation: Amina Returning Dilemma
+  // 3. Evidence-Dependent Investigation: Blessing Returning Dilemma
   // --------------------------------------------------------------------------
   it('gates the evidence dilemma choice behind physical evidence preservation in the vault', () => {
     const engine = createSimulationEngine();
     const handleClose = vi.fn();
 
-    // Move Amina to returning node
+    // Move Blessing to returning node
     engine.dispatch({
       type: 'StartNpcDialogue',
       npcId: 'npc_amina',
@@ -395,7 +395,7 @@ describe('Playable Narrative End-to-End Gameplay & Branching Audit', () => {
       </SimulationProvider>
     );
 
-    // Marcus relationship badge reflects restored trust (15 = Neutral (+15))
+    // Barry relationship badge reflects restored trust (15 = Neutral (+15))
     expect(screen.getByTestId('npc-relationship-badge')).toHaveTextContent('Neutral (+15)');
   });
 });

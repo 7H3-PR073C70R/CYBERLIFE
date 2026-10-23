@@ -167,8 +167,9 @@ describe('DesktopShell Component', () => {
     const incidentShortcut = screen.getByTestId('desktop-shortcut-incident');
     expect(incidentShortcut).toHaveClass('shortcut-active-incident');
 
-    // Welcome banner shows active case
-    expect(screen.getByText(/Active SOC Case:/i)).toBeInTheDocument();
+    // Non-blocking orientation hint is present
+    expect(screen.getByTestId('desktop-welcome-banner')).toBeInTheDocument();
+    expect(screen.getByText(/Workstation Ready/i)).toBeInTheDocument();
   });
 
   it('does NOT render incident banner or yellow flow on incident icon when incident is completed', () => {

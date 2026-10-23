@@ -19,8 +19,8 @@ describe('VoicePlayer', () => {
         speaker: 'Blessing',
         speakerId: 'npc_amina',
         nodeId: 'amina_greeting',
-        text: 'Tade, welcome to the SOC. We have an active incident underway.',
-        cleanText: 'Tade, welcome to the sock. We have an active incident underway.',
+        text: 'Protector, welcome to the SOC. We have an active incident underway.',
+        cleanText: 'Protector, welcome to the sock. We have an active incident underway.',
         textHash: 'texthash_amina_1',
         fileHash: 'hash_amina_greet',
         duration: 4.25,
@@ -55,8 +55,8 @@ describe('VoicePlayer', () => {
         speaker: 'Blessing',
         speakerId: 'npc_amina',
         nodeId: 'amina_greeting',
-        text: 'Tade, welcome to the SOC. We have an active incident underway.',
-        cleanText: 'Tade, welcome to the sock. We have an active incident underway.',
+        text: 'Protector, welcome to the SOC. We have an active incident underway.',
+        cleanText: 'Protector, welcome to the sock. We have an active incident underway.',
         textHash: 'texthash_amina_1',
         fileHash: 'hash_amina_greet',
         duration: 4.25,
@@ -100,7 +100,7 @@ describe('VoicePlayer', () => {
 
   describe('Text Normalization & Pidgin Rules', () => {
     it('normalizes acronyms and strips stage descriptors for standard dialogue', () => {
-      const raw = '*static* Tade, review CVE-2026-445 on filesrv-01 and alert SOC ASAP!';
+      const raw = '*static* Protector, review CVE-2026-445 on filesrv-01 and alert SOC ASAP!';
       const clean = player.cleanTextForSpeech(raw, false);
 
       expect(clean).not.toContain('*static*');
@@ -111,13 +111,13 @@ describe('VoicePlayer', () => {
     });
 
     it('preserves Nigerian Pidgin phrasing without corruptive English phonetic respelling', () => {
-      const raw = 'Kedu! Eh-heh! Iya Basira dey panic about BVN scam, my brother!';
+      const raw = 'Kedu! Eh-heh! Iya Basira dey panic about BVN scam, my friend!';
       const clean = player.cleanTextForSpeech(raw, true);
 
       expect(clean).toContain('Kedu!');
       expect(clean).toContain('Eh-heh!');
       expect(clean).toContain('dey panic');
-      expect(clean).toContain('my brother!');
+      expect(clean).toContain('my friend!');
     });
 
     it('returns empty string for bracketed stage note lines', () => {
@@ -130,7 +130,7 @@ describe('VoicePlayer', () => {
     it('finds existing pre-rendered clip by speakerId and text', () => {
       const clip = player.findClip(
         'npc_amina',
-        'Tade, welcome to the SOC. We have an active incident underway.'
+        'Protector, welcome to the SOC. We have an active incident underway.'
       );
       expect(clip).not.toBeNull();
       expect(clip?.fileName).toBe('hash_amina_greet.mp3');
@@ -187,9 +187,9 @@ describe('VoicePlayer', () => {
     it('routes phone calls through phoneFilterChain and enables line noise', () => {
       const noiseStartSpy = vi.spyOn(phoneFilterChain, 'startCallNoise');
 
-      player.playVoice('Tade, can you hear me? Secure line established.', {
+      player.playVoice('Protector, can you hear me? Secure line established.', {
         speaker: 'Blessing',
-        speakerId: 'amina-okonjo',
+        speakerId: 'npc_amina',
         isPhoneCall: true,
       });
 

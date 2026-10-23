@@ -22,7 +22,7 @@ describe('Milestone 14 — Playable Narrative Story Slice: The Aster Anomaly', (
     const initialMoney = state.player.moneyKobo;
 
     // ------------------------------------------------------------------------
-    // Step 2: Dialogue with Mentor Amina (Blessing)
+    // Step 2: Dialogue with Mentor Blessing
     // ------------------------------------------------------------------------
     const startAminaDiag = engine.dispatch({
       type: 'StartNpcDialogue',
@@ -40,7 +40,7 @@ describe('Milestone 14 — Playable Narrative Story Slice: The Aster Anomaly', (
     expect(chooseAminaPriority.success).toBe(true);
     state = engine.getState();
 
-    // Amina's relationship increases, memory is recorded
+    // Blessing's relationship increases, memory is recorded
     const aminaNpc = state.npcs!['npc_amina']!;
     expect(aminaNpc.relationship).toBe(25); // Initial 20 + 5
     expect(aminaNpc.memory.topicsDiscussed).toContain('incident_priorities');
@@ -97,7 +97,7 @@ describe('Milestone 14 — Playable Narrative Story Slice: The Aster Anomaly', (
     // Money credited: ₦1,000.00 (100,000 kobo)
     expect(state.player.moneyKobo).toBe(initialMoney + 100_000);
 
-    // Cedarline standing increases from 10 + 5 (Amina dialog) + 5 (Triage mission) = 20 -> Band shifts to FAVORED!
+    // Cedarline standing increases from 10 + 5 (Blessing dialog) + 5 (Triage mission) = 20 -> Band shifts to FAVORED!
     const cedarlineFaction = state.narrative!.factions['faction_cedarline']!;
     expect(cedarlineFaction.standing).toBe(20);
     expect(cedarlineFaction.band).toBe('FAVORED');
@@ -115,9 +115,9 @@ describe('Milestone 14 — Playable Narrative Story Slice: The Aster Anomaly', (
     expect(state.narrative!.completedChapterIds).toContain('ch_triage_broad_street');
 
     // ------------------------------------------------------------------------
-    // Step 5: Interpersonal Consequence: Protecting Tobi
+    // Step 5: Interpersonal Consequence: Protecting Barry
     // ------------------------------------------------------------------------
-    // Player meets Marcus and collaborates quietly, setting narrative flag
+    // Player meets Barry and collaborates quietly, setting narrative flag
     engine.dispatch({
       type: 'SetWorldFlag',
       key: 'flag_marcus_protected',
@@ -135,7 +135,7 @@ describe('Milestone 14 — Playable Narrative Story Slice: The Aster Anomaly', (
     expect(state.flags['flag_marcus_protected']).toBe(true);
     expect(state.npcs!['npc_marcus']!.relationship).toBe(30);
 
-    // Marcus secretly hands over the executive deployment order trace
+    // Barry secretly hands over the executive deployment order trace
     const preserveEv4 = engine.dispatch({
       type: 'RecordInvestigativeEvidence',
       evidenceId: 'EVD-2026-004',

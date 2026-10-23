@@ -68,7 +68,7 @@ describe('ContactsApp Component', () => {
       </SimulationProvider>
     );
 
-    // Select Marcus
+    // Select Barry
     fireEvent.click(screen.getByTestId('contact-item-npc_marcus'));
     expect(screen.getByTestId('relationship-value-display')).toHaveTextContent('Neutral (0)');
 

@@ -35,10 +35,10 @@ export const PEDESTRIAN_ARCHETYPES: PedestrianArchetype[] = [
     role: 'Senior Commercial Legal Counsel',
     bodyType: 'female_1',
   },
-  // 3. Chidi - Executive Chairman, Eko Maritime (Elite Executive)
+  // 3. Chinedu - Executive Chairman, Eko Maritime (Elite Executive)
   {
     id: 'marina_executive_chairman',
-    name: 'Chidi',
+    name: 'Chinedu',
     role: 'Executive Chairman, Eko Maritime',
     bodyType: 'male_2',
   },
@@ -63,10 +63,10 @@ export const PEDESTRIAN_ARCHETYPES: PedestrianArchetype[] = [
     role: 'Senior Partner, Maritime Law',
     bodyType: 'female_1',
   },
-  // 7. Femi - Chief Risk Officer, Broad Street Interbank (Elite Executive)
+  // 7. Folarin - Chief Risk Officer, Broad Street Interbank (Elite Executive)
   {
     id: 'interbank_risk_director',
-    name: 'Femi',
+    name: 'Folarin',
     role: 'Chief Risk Officer, Interbank',
     bodyType: 'male_2',
   },
@@ -91,10 +91,10 @@ export const PEDESTRIAN_ARCHETYPES: PedestrianArchetype[] = [
     role: 'Balogun Market Merchant',
     bodyType: 'male_2',
   },
-  // 11. Amina - Broad Street Cyber Researcher (Smart Casual)
+  // 11. Amara - Broad Street Cyber Researcher (Smart Casual)
   {
     id: 'broad_street_cyber_researcher',
-    name: 'Amina',
+    name: 'Amara',
     role: 'Broad Street Cyber Researcher',
     bodyType: 'female_2',
   },
@@ -133,10 +133,10 @@ export const PEDESTRIAN_ARCHETYPES: PedestrianArchetype[] = [
     role: 'Fintech Systems Architect',
     bodyType: 'female_1',
   },
-  // 17. Femi - Balogun Textile Designer (Vibrant Ankara)
+  // 17. Farouk - Balogun Textile Designer (Vibrant Ankara)
   {
     id: 'balogun_textile_designer',
-    name: 'Femi',
+    name: 'Farouk',
     role: 'Balogun Textile Designer',
     bodyType: 'male_2',
   },
@@ -232,7 +232,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x451a03, // Polished dark mahogany leather
     hair: 0x1c1917,
   },
-  // 2. Chidi - Executive Chairman (Elite: Executive Obsidian Black Suit + Black Monk-Straps)
+  // 2. Chinedu - Executive Chairman (Elite: Executive Obsidian Black Suit + Black Monk-Straps)
   {
     style: 'ELITE_SUIT',
     skin: 0x482818, // Deep Espresso
@@ -268,7 +268,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x3b0713, // Italian cordovan burgundy leather
     hair: 0x141414,
   },
-  // 6. Femi - Chief Risk Officer (Elite: Sapphire Banker Navy Suit + Cordovan Loafers)
+  // 6. Folarin - Chief Risk Officer (Elite: Sapphire Banker Navy Suit + Cordovan Loafers)
   {
     style: 'ELITE_SUIT',
     skin: 0x523220, // Deep Warm Umber
@@ -304,7 +304,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x451a03, // Rich cognac dress loafers
     hair: 0x0f0f0f,
   },
-  // 10. Amina - Cyber Researcher (Deep Dark Ebony + Sunset Terracotta + Modern Tech Runners)
+  // 10. Amara - Cyber Researcher (Deep Dark Ebony + Sunset Terracotta + Modern Tech Runners)
   {
     style: 'SMART_CASUAL',
     skin: 0x3a2012,
@@ -358,7 +358,7 @@ const NPC_PALETTES: CharacterPalette[] = [
     shoes: 0x581c87, // Royal violet patent heels
     hair: 0x1c1917,
   },
-  // 16. Femi - Textile Designer (Warm Cocoa + Ochre Gold Ankara + Chestnut Monk-Straps)
+  // 16. Farouk - Textile Designer (Warm Cocoa + Ochre Gold Ankara + Chestnut Monk-Straps)
   {
     style: 'VIBRANT_ANKARA',
     skin: 0x5c3826,

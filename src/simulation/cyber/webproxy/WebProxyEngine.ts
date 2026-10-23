@@ -231,15 +231,15 @@ export class WebProxyEngine {
           body: JSON.stringify(
             {
               id: 'EMP-001',
-              name: 'Amina Okonjo',
+              name: 'Blessing',
               title: 'Chief Information Security Officer (CISO)',
               department: 'Executive InfoSec',
-              email: 'amina.okonjo@cedarline.corp.local',
+              email: 'blessing@cedarline.corp.local',
               grade: 'E1',
               salaryNaira: '₦28,500,000 / year',
               clearanceLevel: 'RESTRICTED_TIER_2',
               privatePhone: '+234 803 555 0199',
-              manager: 'Gabriel (VP)',
+              manager: 'Michael (VP)',
             },
             null,
             2
@@ -566,7 +566,7 @@ export class WebProxyEngine {
         artifactSnippet: [
           `REQUEST: GET /api/v1/employees?dept=FIN&id=EMP-001 HTTP/1.1`,
           `RESPONSE: 200 OK`,
-          `{"id":"EMP-001","name":"Amina Okonjo","salaryNaira":"₦28,500,000 / year"}`,
+          `{"id":"EMP-001","name":"Blessing","salaryNaira":"₦28,500,000 / year"}`,
         ],
       };
 

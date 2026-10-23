@@ -56,11 +56,11 @@ export class RiggedHumanoidCharacter {
   ) {
     this.gender = gender;
     this.palette = palette ?? {
-      skin: 0x523220, // Warm cocoa Nigerian melanin
+      skin: 0x643c28, // Warm Mahogany medium-brown skin tone
       jacket: 0x0f172a, // Obsidian Cyber Operative Jacket
       pants: 0x1e293b, // Tactical Charcoal Denim
       shoes: 0x06b6d4, // Cyber Cyan Tech Runners
-      hair: 0x09090b,
+      hair: 0x111111, // Short dark hair
     };
     this.group = new THREE.Group();
     this.group.name = `RiggedHumanoidCharacter_${gender}`;
@@ -160,6 +160,34 @@ export class RiggedHumanoidCharacter {
         }
       }
     });
+
+    // Ensure character has hair mesh (attach procedural short dark hair if GLB has none, e.g. player_male.glb)
+    let hasHairMesh = false;
+    this.modelRoot.traverse(child => {
+      if (child instanceof THREE.Mesh) {
+        const name = (child.name || '').toLowerCase();
+        if (name.includes('hair')) {
+          hasHairMesh = true;
+        }
+      }
+    });
+
+    if (!hasHairMesh && this.headBone) {
+      const hairGeo = new THREE.SphereGeometry(0.128, 18, 16, 0, Math.PI * 2, 0, Math.PI * 0.65);
+      hairGeo.scale(0.98, 1.08, 1.08);
+      const hairMat = new THREE.MeshStandardMaterial({
+        color: this.palette.hair ?? 0x111111,
+        roughness: 0.95,
+        metalness: 0.05,
+      });
+      const hairMesh = new THREE.Mesh(hairGeo, hairMat);
+      hairMesh.name = 'player_hair_mesh';
+      hairMesh.position.set(0, 0.082, 0.005);
+      hairMesh.castShadow = true;
+      hairMesh.receiveShadow = true;
+      this.headBone.add(hairMesh);
+      this.hiddenFirstPersonMeshes.push(hairMesh);
+    }
 
     // Apply authentic Nigerian skin tone & clothing customization
     applyCharacterCustomization(this.modelRoot, this.palette);

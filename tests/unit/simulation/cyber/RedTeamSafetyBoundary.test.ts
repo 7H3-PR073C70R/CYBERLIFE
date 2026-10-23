@@ -29,7 +29,7 @@ describe('Red Team Simulation Safety Boundary & Isolation', () => {
       dayOfWeek: 'Monday',
     },
     currentUser: {
-      username: 'tade_adebayo',
+      username: 'protector',
       displayName: 'Protector',
       role: 'Security Assessor',
       organization: 'Cedarline Services',
