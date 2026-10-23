@@ -24,8 +24,8 @@ class AssetManager:
         self.project = Path(project_root).expanduser().resolve()
         if not self.project.is_dir():
             raise ValueError(f"Project root is not a directory: {self.project}")
-        self.review = Path(review_dir).expanduser().resolve() if review_dir else self.project / "asset_review"
-        self.review.mkdir(parents=True, exist_ok=True)
+        self.review_dir = Path(review_dir).expanduser().resolve() if review_dir else self.project / "asset_review"
+        self.review_dir.mkdir(parents=True, exist_ok=True)
         self.config = {
             "providers": ["polyhaven"],
             "candidate_count": 5,
@@ -40,10 +40,10 @@ class AssetManager:
         if config_path:
             cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
             self.config.update(cfg)
-        self.review.mkdir(parents=True, exist_ok=True)
+        self.review_dir.mkdir(parents=True, exist_ok=True)
         for d in ("reports", "manifests", "models", "textures", "hdris", "references", "quarantine", "downloads"):
-            (self.review / d).mkdir(exist_ok=True)
-        self.manifest_path = self.review / "manifests" / "manifest.json"
+            (self.review_dir / d).mkdir(exist_ok=True)
+        self.manifest_path = self.review_dir / "manifests" / "manifest.json"
         self.manifest = self._load_manifest()
 
     def _load_manifest(self):
@@ -71,7 +71,7 @@ class AssetManager:
 
     def _walk_files(self):
         for base, dirs, names in os.walk(self.project):
-            dirs[:] = [d for d in dirs if d not in IGNORED_DIRS and (Path(base) / d).resolve() != self.review]
+            dirs[:] = [d for d in dirs if d not in IGNORED_DIRS and (Path(base) / d).resolve() != self.review_dir]
             for name in names:
                 p = Path(base) / name
                 try:
@@ -127,7 +127,7 @@ class AssetManager:
                "possible_missing_references": missing_refs, "large_files_over_100mb": large_files, "findings": findings}
         self.manifest["audit_runs"].append(run)
         self.manifest["requirements"] = self._build_requirements(run)
-        (self.review / "reports" / f"{run['id']}.json").write_text(json.dumps(run, indent=2), encoding="utf-8")
+        (self.review_dir / "reports" / f"{run['id']}.json").write_text(json.dumps(run, indent=2), encoding="utf-8")
         self._save()
         return {"audit_id": run["id"], "files_scanned": len(all_files), "asset_counts": {
             "models": model_count, "textures": texture_count, "environment_maps": env_count},
@@ -276,7 +276,7 @@ class AssetManager:
                 filtered = self._select_files(flat, category)
                 if not filtered:
                     raise ValueError("No suitable downloadable files in provider response")
-                group_dir = self.review / category / cid
+                group_dir = self.review_dir / category / cid
                 group_dir.mkdir(parents=True, exist_ok=True)
                 saved = []
                 for item in filtered:
@@ -286,7 +286,7 @@ class AssetManager:
                         info = {"bytes": dest.stat().st_size, "sha256": sha256_file(dest), "skipped_existing": True}
                     else:
                         info = self._download_url(item["url"], dest)
-                    saved.append({"path": dest.relative_to(self.review).as_posix(), "source_path": item["path"], **info})
+                    saved.append({"path": dest.relative_to(self.review_dir).as_posix(), "source_path": item["path"], **info})
                 candidate["files"] = saved
                 candidate["status"] = "downloaded" if candidate.get("status") != "approved" else "approved"
                 candidate["downloaded_at"] = self._now()
@@ -346,7 +346,7 @@ class AssetManager:
         if not saved:
             issues.append("No files downloaded")
         for item in saved:
-            p = self.review / item["path"]
+            p = self.review_dir / item["path"]
             if not p.exists() or p.stat().st_size <= 0:
                 issues.append(f"Missing or empty file: {item['path']}")
             elif p.suffix.lower() == ".gltf":
@@ -394,17 +394,17 @@ class AssetManager:
         c = self._candidate(candidate_id)
         moved = []
         for item in c.get("files", []):
-            src = (self.review / item["path"]).resolve()
+            src = (self.review_dir / item["path"]).resolve()
             if not src.exists():
                 continue
-            if self.review not in src.parents:
+            if self.review_dir not in src.parents:
                 raise ValueError("Refusing to move a file outside review root")
-            dest = self.review / "quarantine" / candidate_id / src.name
+            dest = self.review_dir / "quarantine" / candidate_id / src.name
             dest.parent.mkdir(parents=True, exist_ok=True)
             if dest.exists():
                 raise FileExistsError(f"Quarantine destination exists: {dest}")
             shutil.move(str(src), str(dest))
-            item["quarantined_path"] = dest.relative_to(self.review).as_posix()
+            item["quarantined_path"] = dest.relative_to(self.review_dir).as_posix()
             moved.append(item["quarantined_path"])
         c["status"] = "quarantined"
         c["quarantined_at"] = self._now()
@@ -418,9 +418,9 @@ class AssetManager:
             qpath = item.get("quarantined_path")
             if not qpath:
                 continue
-            src = (self.review / qpath).resolve()
-            original = (self.review / item["path"]).resolve()
-            if self.review not in src.parents or self.review not in original.parents:
+            src = (self.review_dir / qpath).resolve()
+            original = (self.review_dir / item["path"]).resolve()
+            if self.review_dir not in src.parents or self.review_dir not in original.parents:
                 raise ValueError("Refusing path outside review root")
             if not src.exists():
                 continue
@@ -441,12 +441,12 @@ class AssetManager:
         if c.get("status") != "quarantined":
             raise ValueError("Only quarantined candidates can be permanently deleted")
         removed = []
-        base = (self.review / "quarantine" / candidate_id).resolve()
-        if self.review not in base.parents:
+        base = (self.review_dir / "quarantine" / candidate_id).resolve()
+        if self.review_dir not in base.parents:
             raise ValueError("Refusing path outside review root")
         if base.exists():
             shutil.rmtree(base)
-            removed.append(str(base.relative_to(self.review)))
+            removed.append(str(base.relative_to(self.review_dir)))
         for item in c.get("files", []):
             item.pop("quarantined_path", None)
         c["files"] = []
@@ -462,6 +462,6 @@ class AssetManager:
             s = c.get("status", "unknown")
             statuses[s] = statuses.get(s, 0) + 1
         latest = self.manifest["audit_runs"][-1] if self.manifest["audit_runs"] else None
-        return {"project_root": str(self.project), "review_dir": str(self.review), "latest_audit": latest,
+        return {"project_root": str(self.project), "review_dir": str(self.review_dir), "latest_audit": latest,
                 "candidate_count": len(candidates), "candidate_statuses": statuses,
                 "requirements": self.manifest.get("requirements", []), "manifest": str(self.manifest_path)}

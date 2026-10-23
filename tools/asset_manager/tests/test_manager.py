@@ -32,13 +32,13 @@ class ManagerTests(unittest.TestCase):
 
     def test_delete_requires_confirmation_and_quarantine(self):
         c_id = "polyhaven-models-example"
-        folder = self.manager.review / "models" / c_id
+        folder = self.manager.review_dir / "models" / c_id
         folder.mkdir(parents=True)
         asset = folder / "example.glb"
         asset.write_bytes(b"glTF" + b"\0" * 8)
         self.manager.manifest["candidates"][c_id] = {
             "id": c_id, "name": "example", "category": "models", "status": "downloaded",
-            "files": [{"path": asset.relative_to(self.manager.review).as_posix()}]
+            "files": [{"path": asset.relative_to(self.manager.review_dir).as_posix()}]
         }
         self.manager._save()
         self.manager.quarantine(c_id)

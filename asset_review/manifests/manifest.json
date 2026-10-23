@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "created_at": "2026-10-23T02:01:09Z",
-  "updated_at": "2026-10-23T02:04:08Z",
+  "updated_at": "2026-10-23T02:10:14Z",
   "audit_runs": [
     {
       "id": "audit-1792720869",
@@ -3305,10 +3305,11 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 1,
-      "status": "discovered",
+      "status": "failed",
       "files": [],
       "created_at": "2026-10-23T02:02:07Z",
-      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
+      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata.",
+      "last_error": "No suitable downloadable files in provider response"
     },
     "polyhaven-models-concrete_road_barrier": {
       "id": "polyhaven-models-concrete_road_barrier",
@@ -3321,10 +3322,11 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 1,
-      "status": "discovered",
+      "status": "failed",
       "files": [],
       "created_at": "2026-10-23T02:02:07Z",
-      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
+      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata.",
+      "last_error": "No suitable downloadable files in provider response"
     },
     "polyhaven-models-concrete_road_barrier_02": {
       "id": "polyhaven-models-concrete_road_barrier_02",
@@ -3337,10 +3339,11 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 1,
-      "status": "discovered",
+      "status": "failed",
       "files": [],
       "created_at": "2026-10-23T02:02:07Z",
-      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
+      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata.",
+      "last_error": "No suitable downloadable files in provider response"
     },
     "polyhaven-models-adjustable_wrench": {
       "id": "polyhaven-models-adjustable_wrench",
@@ -3353,10 +3356,11 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 0,
-      "status": "discovered",
+      "status": "failed",
       "files": [],
       "created_at": "2026-10-23T02:02:07Z",
-      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
+      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata.",
+      "last_error": "No suitable downloadable files in provider response"
     },
     "polyhaven-models-alarm_clock_01": {
       "id": "polyhaven-models-alarm_clock_01",
@@ -3369,10 +3373,11 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 0,
-      "status": "discovered",
+      "status": "failed",
       "files": [],
       "created_at": "2026-10-23T02:02:07Z",
-      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
+      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata.",
+      "last_error": "No suitable downloadable files in provider response"
     },
     "polyhaven-textures-asphalt_floor": {
       "id": "polyhaven-textures-asphalt_floor",
@@ -3385,10 +3390,53 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 2,
-      "status": "discovered",
-      "files": [],
+      "status": "approved",
+      "files": [
+        {
+          "path": "textures/polyhaven-textures-asphalt_floor/exr",
+          "source_path": "AO/2k/exr",
+          "bytes": 3100569,
+          "sha256": "aa61b270d868a26000614f840bc3d4ff5e57c342319d2aabaee6f8b81d9b7ffa"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_floor/jpg",
+          "source_path": "AO/2k/jpg",
+          "bytes": 3215333,
+          "sha256": "bd45952b46e605495ec3f384a1b1cf200798b3b57ef25bec74dea456993503c0"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_floor/png",
+          "source_path": "AO/2k/png",
+          "bytes": 10303659,
+          "sha256": "06685567652b06a16cfd38d1f588f6526ec3a7c3948d76de13a84c0b843ada63"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_floor/gltf",
+          "source_path": "gltf/2k/gltf",
+          "bytes": 2695,
+          "sha256": "f45219906f1e9904b2b785a4d983d740df51a3fea0b165f9a6483e258796bb72"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_floor/mtlx",
+          "source_path": "mtlx/2k/mtlx",
+          "bytes": 4716,
+          "sha256": "d70f6078155cc79e0ac1f6281cd269aa30eb993e880aee40525f8055a35597d3"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_floor/blend",
+          "source_path": "blend/2k/blend",
+          "bytes": 225585,
+          "sha256": "633142ae370df6b57547ad01630aca9dae56c576b080db18d41a6d4db3f874b3"
+        }
+      ],
       "created_at": "2026-10-23T02:02:09Z",
-      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
+      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata.",
+      "downloaded_at": "2026-10-23T02:08:23Z",
+      "validation": {
+        "valid": true,
+        "issues": [],
+        "category": "textures"
+      }
     },
     "polyhaven-textures-aerial_asphalt_01": {
       "id": "polyhaven-textures-aerial_asphalt_01",
@@ -3401,10 +3449,53 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 1,
-      "status": "discovered",
-      "files": [],
+      "status": "approved",
+      "files": [
+        {
+          "path": "textures/polyhaven-textures-aerial_asphalt_01/exr",
+          "source_path": "AO/2k/exr",
+          "bytes": 4134468,
+          "sha256": "015a710e1958c8d09356b336dbe30cf8ace723d384f308d91c8f207a93df86a1"
+        },
+        {
+          "path": "textures/polyhaven-textures-aerial_asphalt_01/jpg",
+          "source_path": "AO/2k/jpg",
+          "bytes": 1929805,
+          "sha256": "fb9da6e73cbfca310032ee113389be2f084c4d28cd688f663952e4747d5532d0"
+        },
+        {
+          "path": "textures/polyhaven-textures-aerial_asphalt_01/png",
+          "source_path": "AO/2k/png",
+          "bytes": 2714896,
+          "sha256": "d1bf4c70d58de95f8e994fd745687a043ca985eb90ef4ea996de3acdf699ea7b"
+        },
+        {
+          "path": "textures/polyhaven-textures-aerial_asphalt_01/gltf",
+          "source_path": "gltf/2k/gltf",
+          "bytes": 2741,
+          "sha256": "5e59166527ab8855c7d0b8f879886cee6a46083dcf772ccdda0b9583f342175e"
+        },
+        {
+          "path": "textures/polyhaven-textures-aerial_asphalt_01/mtlx",
+          "source_path": "mtlx/2k/mtlx",
+          "bytes": 4768,
+          "sha256": "7a43d8cb8304c10acf7d1c504126be2d1eb40bff7421072aad29af08900f568f"
+        },
+        {
+          "path": "textures/polyhaven-textures-aerial_asphalt_01/blend",
+          "source_path": "blend/2k/blend",
+          "bytes": 273171,
+          "sha256": "29f44e778d3e580846788094525489fd157c878bc06a818139de9a53af296794"
+        }
+      ],
       "created_at": "2026-10-23T02:02:09Z",
-      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
+      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata.",
+      "downloaded_at": "2026-10-23T02:08:54Z",
+      "validation": {
+        "valid": true,
+        "issues": [],
+        "category": "textures"
+      }
     },
     "polyhaven-textures-anti_slip_concrete": {
       "id": "polyhaven-textures-anti_slip_concrete",
@@ -3417,10 +3508,53 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 1,
-      "status": "discovered",
-      "files": [],
+      "status": "approved",
+      "files": [
+        {
+          "path": "textures/polyhaven-textures-anti_slip_concrete/exr",
+          "source_path": "AO/2k/exr",
+          "bytes": 2616672,
+          "sha256": "4d4cc3e810d881f2780c23795ed575bb5d7bca076a92ce6765d45038a6aa80a5"
+        },
+        {
+          "path": "textures/polyhaven-textures-anti_slip_concrete/jpg",
+          "source_path": "AO/2k/jpg",
+          "bytes": 2656686,
+          "sha256": "acfae877deb119d50d9152c3bfc8e9068a9cf8253b90f7b67fd8e115e1d58323"
+        },
+        {
+          "path": "textures/polyhaven-textures-anti_slip_concrete/png",
+          "source_path": "AO/2k/png",
+          "bytes": 7394395,
+          "sha256": "93bf70975c631d91ab33249c4bdc9035b0fcd9f296a6af7cf1723976af1179c4"
+        },
+        {
+          "path": "textures/polyhaven-textures-anti_slip_concrete/gltf",
+          "source_path": "gltf/2k/gltf",
+          "bytes": 2829,
+          "sha256": "261e6a3001983ddcebf8fad954981be43b2241f81326ae4c03e1a89106af0526"
+        },
+        {
+          "path": "textures/polyhaven-textures-anti_slip_concrete/mtlx",
+          "source_path": "mtlx/2k/mtlx",
+          "bytes": 4781,
+          "sha256": "3b4213478a97bee36ddabe4cf1abcd6b71e68b433b86c2aa7474843e21ea3912"
+        },
+        {
+          "path": "textures/polyhaven-textures-anti_slip_concrete/blend",
+          "source_path": "blend/2k/blend",
+          "bytes": 216679,
+          "sha256": "664ffecaaed42ced6f4a4426c04bec709174395ca3ac1a221c2e103f6a37ce3e"
+        }
+      ],
       "created_at": "2026-10-23T02:02:09Z",
-      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
+      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata.",
+      "downloaded_at": "2026-10-23T02:09:26Z",
+      "validation": {
+        "valid": true,
+        "issues": [],
+        "category": "textures"
+      }
     },
     "polyhaven-textures-asphalt_01": {
       "id": "polyhaven-textures-asphalt_01",
@@ -3433,10 +3567,53 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 1,
-      "status": "discovered",
-      "files": [],
+      "status": "approved",
+      "files": [
+        {
+          "path": "textures/polyhaven-textures-asphalt_01/exr",
+          "source_path": "AO/2k/exr",
+          "bytes": 5511335,
+          "sha256": "0acc3a1b2e4164e9925eb24562b776bf918966376bc74741c35d47f4dd48be45"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_01/jpg",
+          "source_path": "AO/2k/jpg",
+          "bytes": 4048107,
+          "sha256": "0cbbf5252a632482c9ce15fd53b26a6b468250114b8e3fef20d0393d139d2611"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_01/png",
+          "source_path": "AO/2k/png",
+          "bytes": 8034042,
+          "sha256": "c77378ebf6851ab9033564d2bbc9f5b94dcb5bb71bbbd0668dd487de2371c5b1"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_01/gltf",
+          "source_path": "gltf/2k/gltf",
+          "bytes": 2540,
+          "sha256": "c95dd85a268629839dfce40e9cb71e15dda3024f3883744c5146102ebb2696f0"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_01/mtlx",
+          "source_path": "mtlx/2k/mtlx",
+          "bytes": 4677,
+          "sha256": "4f033c65b1a775709d38e2e864475aaead6ea7308b4d5c09bc86a82d85156bd5"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_01/blend",
+          "source_path": "blend/2k/blend",
+          "bytes": 231415,
+          "sha256": "918f29292a1975ca48316346de8c6a4a864e39f2a9054388c8dca37bcbd9ba6f"
+        }
+      ],
       "created_at": "2026-10-23T02:02:09Z",
-      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
+      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata.",
+      "downloaded_at": "2026-10-23T02:09:57Z",
+      "validation": {
+        "valid": true,
+        "issues": [],
+        "category": "textures"
+      }
     },
     "polyhaven-textures-asphalt_02": {
       "id": "polyhaven-textures-asphalt_02",
@@ -3449,10 +3626,53 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 1,
-      "status": "discovered",
-      "files": [],
+      "status": "approved",
+      "files": [
+        {
+          "path": "textures/polyhaven-textures-asphalt_02/exr",
+          "source_path": "AO/2k/exr",
+          "bytes": 4423968,
+          "sha256": "c947f07a8c8ffbd535599bd1412d0d8f44b7328d5c032ff530c150054a481998"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_02/jpg",
+          "source_path": "AO/2k/jpg",
+          "bytes": 2039487,
+          "sha256": "5fe1737cbbcd55f2fec3632d6170762e5733f24bbc7a7816afb22a23c710b11f"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_02/png",
+          "source_path": "AO/2k/png",
+          "bytes": 2850540,
+          "sha256": "51fdd35bd09b51f4563e021d5ccab5d2511758d4f4feb1e0acb01b72eb9028ae"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_02/gltf",
+          "source_path": "gltf/2k/gltf",
+          "bytes": 2683,
+          "sha256": "133d706a9b305aae6f8abb4e4d93f1ae7c0575c83ede5bc5f244d4c1a25c2d05"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_02/mtlx",
+          "source_path": "mtlx/2k/mtlx",
+          "bytes": 4677,
+          "sha256": "59ab76bdd0d2532aca7880a5c5671ec7f55589425492dbfc7b5c4e3cb8d4d66a"
+        },
+        {
+          "path": "textures/polyhaven-textures-asphalt_02/blend",
+          "source_path": "blend/2k/blend",
+          "bytes": 273236,
+          "sha256": "51fcf3c22c17c45f3a7ae3b7b997317da861c99fd6ebd7fd9fa0c163773d1d42"
+        }
+      ],
       "created_at": "2026-10-23T02:02:09Z",
-      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
+      "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata.",
+      "downloaded_at": "2026-10-23T02:10:14Z",
+      "validation": {
+        "valid": true,
+        "issues": [],
+        "category": "textures"
+      }
     },
     "polyhaven-hdris-concrete_tunnel": {
       "id": "polyhaven-hdris-concrete_tunnel",
@@ -3465,7 +3685,7 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 1,
-      "status": "discovered",
+      "status": "approved",
       "files": [],
       "created_at": "2026-10-23T02:02:12Z",
       "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
@@ -3481,7 +3701,7 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 1,
-      "status": "discovered",
+      "status": "approved",
       "files": [],
       "created_at": "2026-10-23T02:02:12Z",
       "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
@@ -3497,7 +3717,7 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 1,
-      "status": "discovered",
+      "status": "approved",
       "files": [],
       "created_at": "2026-10-23T02:02:12Z",
       "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
@@ -3513,7 +3733,7 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 1,
-      "status": "discovered",
+      "status": "approved",
       "files": [],
       "created_at": "2026-10-23T02:02:12Z",
       "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
@@ -3529,7 +3749,7 @@
       "license_url": "https://polyhaven.com/license",
       "author": null,
       "score": 1,
-      "status": "discovered",
+      "status": "approved",
       "files": [],
       "created_at": "2026-10-23T02:02:12Z",
       "license_note": "Poly Haven assets are generally CC0; verify current provider terms and asset metadata."
