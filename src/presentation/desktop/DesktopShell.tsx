@@ -42,6 +42,7 @@ import { DefensiveOpsApp } from './apps/DefensiveOpsApp';
 import { RedTeamApp } from './apps/RedTeamApp';
 import { BountyApp } from './apps/BountyApp';
 import { HumanIntelApp } from './apps/HumanIntelApp';
+import { JournalApp } from './apps/JournalApp';
 import { BottomPanel } from './BottomPanel';
 
 import { HackerCallOverlay } from './HackerCallOverlay';
@@ -166,6 +167,43 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
     audioSfx.playConnect();
   };
 
+  // Listen for episode urgent VoIP calls
+  useEffect(() => {
+    const episodeCall = sim?.state.episode?.activeCall;
+    if (episodeCall) {
+      const dialogueLines = episodeCall.dialogue.map(d => ({
+        text: d.text,
+        delayMs: d.delayMs ?? 3000,
+      }));
+      const dynamicThread: ChatThread = {
+        id: `thread-${episodeCall.callerId}`,
+        contactId: episodeCall.callerId,
+        contactName: episodeCall.callerName,
+        contactRole: episodeCall.callerRole,
+        contactOrg: episodeCall.callerOrg ?? 'Cedarline SecOps',
+        contactAvatarColor: '#f59e0b',
+        isOnline: true,
+        securityClearance: 'SEC-VOIP // EPISODE STREAM',
+        unreadCount: 0,
+        canCall: true,
+        callDialogue: dialogueLines,
+        messages: [],
+      };
+      setActiveCallThread(dynamicThread);
+      setCallState({
+        id: episodeCall.id,
+        callerId: episodeCall.callerId,
+        callerName: episodeCall.callerName,
+        callerRole: episodeCall.callerRole,
+        callerOrg: episodeCall.callerOrg ?? 'Cedarline SecOps',
+        status: 'ringing',
+        durationSeconds: 0,
+        currentSubtitleIndex: 0,
+        isMuted: false,
+      });
+    }
+  }, [sim?.state.episode?.activeCall]);
+
   const handleAcceptCall = () => {
     if (!callState) return;
     setCallState(prev => (prev ? { ...prev, status: 'active' } : null));
@@ -173,12 +211,18 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
   };
 
   const handleDeclineCall = () => {
+    if (sim?.state.episode?.activeCall && callState?.id === sim.state.episode.activeCall.id) {
+      sim.dispatch({ type: 'CompleteEpisodeBeat', beatId: sim.state.episode.activeCall.id });
+    }
     setCallState(null);
     setActiveCallThread(null);
     audioSfx.playDisconnect();
   };
 
   const handleEndCall = () => {
+    if (sim?.state.episode?.activeCall && callState?.id === sim.state.episode.activeCall.id) {
+      sim.dispatch({ type: 'CompleteEpisodeBeat', beatId: sim.state.episode.activeCall.id });
+    }
     setCallState(null);
     setActiveCallThread(null);
     audioSfx.playDisconnect();
@@ -1023,6 +1067,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
                 {appId === 'redTeam' && <RedTeamApp />}
                 {appId === 'bountyHub' && <BountyApp />}
                 {appId === 'humanIntel' && <HumanIntelApp />}
+                {appId === 'journal' && <JournalApp />}
               </WindowFrame>
 
             );

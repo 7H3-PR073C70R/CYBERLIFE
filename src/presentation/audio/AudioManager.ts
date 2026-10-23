@@ -767,6 +767,54 @@ export class AudioManager {
   }
 
   /**
+   * Synthesize an inverter warning alarm tone (1000 Hz) for blackout beats.
+   * Uses Web Audio API oscillator routed to sfx bus.
+   */
+  public synthesizeInverterAlarm(durationSeconds = 3.5): { stop: () => void } {
+    const ctx = this.getContext();
+    if (!ctx) return { stop: () => {} };
+
+    try {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const now = ctx.currentTime;
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(1000, now);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.18, now + 0.05);
+      gain.gain.setValueAtTime(0.18, now + durationSeconds - 0.2);
+      gain.gain.linearRampToValueAtTime(0.001, now + durationSeconds);
+
+      const sfxBus = this.getBus('sfx') ?? this.masterGain;
+      if (sfxBus) {
+        osc.connect(gain);
+        gain.connect(sfxBus);
+      }
+
+      osc.start(now);
+      osc.stop(now + durationSeconds);
+
+      let stopped = false;
+      return {
+        stop: () => {
+          if (stopped) return;
+          stopped = true;
+          try {
+            gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+            osc.stop(ctx.currentTime + 0.06);
+          } catch {
+            // Ignore
+          }
+        },
+      };
+    } catch {
+      return { stop: () => {} };
+    }
+  }
+
+  /**
    * Get active source count (for testing/diagnostics).
    */
   public getActiveSourceCount(): number {

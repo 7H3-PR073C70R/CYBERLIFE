@@ -1,6 +1,7 @@
 import { WorldFlagValue, SimulationState } from '../core/types';
 import { SimulationEvent } from '../events/types';
 import { BoundedAttribute } from '../systems/playerSystem';
+import type { EpisodeGuidanceMode } from '../narrative/episodeTypes';
 
 export type SimulationErrorCode =
   | 'INVALID_COMMAND'
@@ -54,6 +55,9 @@ export type SimulationErrorCode =
   | 'DISCOVERY_NOT_FOUND'
   | 'DISCOVERY_ALREADY_CLAIMED'
   | 'DISCOVERY_CONDITIONS_NOT_MET'
+  | 'EPISODE_NOT_FOUND'
+  | 'BEAT_NOT_FOUND'
+  | 'BEAT_PREREQUISITES_NOT_MET'
   | 'INVARIANT_VIOLATION';
 
 
@@ -418,7 +422,15 @@ export type SimulationCommand =
   | RaiseAssessmentFindingCommand
   | SubmitPhysicalAssessmentReportCommand
   | ClaimExplorationDiscoveryCommand
-  | RecordLocationVisitCommand;
+  | RecordLocationVisitCommand
+  | StartEpisodeCommand
+  | AdvanceEpisodeBeatCommand
+  | CompleteEpisodeBeatCommand
+  | DismissEpisodeTitleCardCommand
+  | TriggerBlackoutBeatCommand
+  | DismissEpisodeBlackoutCommand
+  | SetEpisodeGuidanceModeCommand
+  | UnlockJournalEntryCommand;
 
 import type { ThreatReviewStatus } from '../cyber/threatintel/types';
 import type { InvestigationConclusionSubmission } from '../cyber/investigation/types';
@@ -698,3 +710,42 @@ export type {
   RaiseAssessmentFindingCommand,
   SubmitPhysicalAssessmentReportCommand,
 };
+
+export interface StartEpisodeCommand {
+  readonly type: 'StartEpisode';
+  readonly episodeId: string;
+}
+
+export interface AdvanceEpisodeBeatCommand {
+  readonly type: 'AdvanceEpisodeBeat';
+  readonly beatId?: string;
+}
+
+export interface CompleteEpisodeBeatCommand {
+  readonly type: 'CompleteEpisodeBeat';
+  readonly beatId: string;
+}
+
+export interface DismissEpisodeTitleCardCommand {
+  readonly type: 'DismissEpisodeTitleCard';
+}
+
+export interface TriggerBlackoutBeatCommand {
+  readonly type: 'TriggerBlackoutBeat';
+  readonly beatId?: string;
+}
+
+export interface DismissEpisodeBlackoutCommand {
+  readonly type: 'DismissEpisodeBlackout';
+}
+
+export interface SetEpisodeGuidanceModeCommand {
+  readonly type: 'SetEpisodeGuidanceMode';
+  readonly mode: EpisodeGuidanceMode;
+}
+
+export interface UnlockJournalEntryCommand {
+  readonly type: 'UnlockJournalEntry';
+  readonly entryId: string;
+}
+

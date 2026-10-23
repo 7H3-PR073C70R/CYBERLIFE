@@ -12,9 +12,10 @@ import {
   FactionDefinition,
   InvestigativeConclusion,
 } from './narrativeTypes';
+import { EpisodeDefinition } from './episodeTypes';
 
 export interface NarrativeValidationError {
-  readonly entityType: 'ARC' | 'CHAPTER' | 'MISSION' | 'OBJECTIVE' | 'FACTION' | 'CONCLUSION';
+  readonly entityType: 'ARC' | 'CHAPTER' | 'MISSION' | 'OBJECTIVE' | 'FACTION' | 'CONCLUSION' | 'EPISODE' | 'BEAT';
   readonly entityId: string;
   readonly code:
     | 'MISSING_FIELD'
@@ -22,7 +23,9 @@ export interface NarrativeValidationError {
     | 'MISSING_REFERENCE'
     | 'INVALID_RANGE'
     | 'CIRCULAR_TRANSITION'
-    | 'ORPHANED_ENTITY';
+    | 'ORPHANED_ENTITY'
+    | 'UNREACHABLE_BEAT'
+    | 'UNKNOWN_FLAG';
   readonly message: string;
 }
 
@@ -37,6 +40,7 @@ export interface NarrativeDataCatalog {
   readonly missions: readonly NarrativeMissionDefinition[];
   readonly factions: readonly FactionDefinition[];
   readonly conclusions: readonly InvestigativeConclusion[];
+  readonly episodes?: readonly EpisodeDefinition[];
 }
 
 /**
@@ -347,8 +351,208 @@ export function validateNarrativeDataCatalog(
     }
   }
 
+  // 6. Validate Episodes if present
+  if (catalog.episodes && catalog.episodes.length > 0) {
+    const episodeIds = new Set<string>();
+    for (const ep of catalog.episodes) {
+      if (episodeIds.has(ep.id)) {
+        errors.push({
+          entityType: 'EPISODE',
+          entityId: ep.id,
+          code: 'DUPLICATE_ID',
+          message: `Duplicate episode ID "${ep.id}".`,
+        });
+      }
+      episodeIds.add(ep.id);
+      errors.push(...validateEpisodeDefinition(ep));
+    }
+  }
+
   return {
     isValid: errors.length === 0,
     errors,
   };
+}
+
+/**
+ * Validates an authored Episode Definition:
+ * - Checks missing or invalid fields (id, title, episodeHash, season, episodeNumber, beats)
+ * - Checks for duplicate beat IDs
+ * - Checks for unreachable beats (e.g. trigger 'previousBeatFinished' pointing to a non-existent or subsequent beat)
+ * - Checks for unknown or invalid flags
+ * - Checks journal entry references and ticket/blackout ranges
+ */
+export function validateEpisodeDefinition(
+  episode: EpisodeDefinition,
+  knownFlags?: ReadonlySet<string>
+): NarrativeValidationError[] {
+  const errors: NarrativeValidationError[] = [];
+
+  if (!episode.id || episode.id.trim().length === 0) {
+    errors.push({
+      entityType: 'EPISODE',
+      entityId: 'UNKNOWN',
+      code: 'MISSING_FIELD',
+      message: 'Episode is missing required id.',
+    });
+  }
+
+  if (!episode.title || episode.title.trim().length === 0) {
+    errors.push({
+      entityType: 'EPISODE',
+      entityId: episode.id || 'UNKNOWN',
+      code: 'MISSING_FIELD',
+      message: `Episode "${episode.id}" has an empty title.`,
+    });
+  }
+
+  // SHA-256 hash validation: must be 64-char hexadecimal string
+  const sha256Regex = /^[a-f0-9]{64}$/i;
+  if (!episode.episodeHash || !sha256Regex.test(episode.episodeHash)) {
+    errors.push({
+      entityType: 'EPISODE',
+      entityId: episode.id || 'UNKNOWN',
+      code: 'MISSING_FIELD',
+      message: `Episode "${episode.id}" episodeHash must be a valid 64-character hexadecimal SHA-256 string.`,
+    });
+  }
+
+  if (!Array.isArray(episode.beats) || episode.beats.length === 0) {
+    errors.push({
+      entityType: 'EPISODE',
+      entityId: episode.id || 'UNKNOWN',
+      code: 'MISSING_FIELD',
+      message: `Episode "${episode.id}" must contain at least one beat in beats array.`,
+    });
+    return errors;
+  }
+
+  const beatIds = new Set<string>();
+
+  for (let i = 0; i < episode.beats.length; i++) {
+    const beat = episode.beats[i]!;
+
+    if (!beat.id || beat.id.trim().length === 0) {
+      errors.push({
+        entityType: 'BEAT',
+        entityId: `index_${i}`,
+        code: 'MISSING_FIELD',
+        message: `Episode "${episode.id}" beat at index ${i} is missing id.`,
+      });
+      continue;
+    }
+
+    if (beatIds.has(beat.id)) {
+      errors.push({
+        entityType: 'BEAT',
+        entityId: beat.id,
+        code: 'DUPLICATE_ID',
+        message: `Duplicate beat ID "${beat.id}" in episode "${episode.id}".`,
+      });
+    }
+
+    if (!beat.title || beat.title.trim().length === 0) {
+      errors.push({
+        entityType: 'BEAT',
+        entityId: beat.id,
+        code: 'MISSING_FIELD',
+        message: `Beat "${beat.id}" in episode "${episode.id}" has an empty title.`,
+      });
+    }
+
+    // Trigger validation
+    const trigger = beat.trigger;
+    if (!trigger || !trigger.type) {
+      errors.push({
+        entityType: 'BEAT',
+        entityId: beat.id,
+        code: 'MISSING_FIELD',
+        message: `Beat "${beat.id}" is missing trigger or trigger type.`,
+      });
+    } else {
+      if (trigger.type === 'previousBeatFinished') {
+        if (!trigger.previousBeatId) {
+          errors.push({
+            entityType: 'BEAT',
+            entityId: beat.id,
+            code: 'MISSING_FIELD',
+            message: `Beat "${beat.id}" has trigger 'previousBeatFinished' but missing previousBeatId.`,
+          });
+        } else if (!beatIds.has(trigger.previousBeatId) || trigger.previousBeatId === beat.id) {
+          errors.push({
+            entityType: 'BEAT',
+            entityId: beat.id,
+            code: 'UNREACHABLE_BEAT',
+            message: `Beat "${beat.id}" is unreachable: previousBeatId "${trigger.previousBeatId}" has not appeared prior to this beat.`,
+          });
+        }
+      }
+
+      if (trigger.type === 'flag') {
+        if (!trigger.flag || !trigger.flag.flagKey) {
+          errors.push({
+            entityType: 'BEAT',
+            entityId: beat.id,
+            code: 'MISSING_FIELD',
+            message: `Beat "${beat.id}" has flag trigger but missing flagKey.`,
+          });
+        } else if (knownFlags && !knownFlags.has(trigger.flag.flagKey)) {
+          errors.push({
+            entityType: 'BEAT',
+            entityId: beat.id,
+            code: 'UNKNOWN_FLAG',
+            message: `Beat "${beat.id}" trigger references unknown flag "${trigger.flag.flagKey}".`,
+          });
+        }
+      }
+    }
+
+    // Effects validation
+    if (beat.effects.unlockJournalEntryId && episode.initialJournalEntries) {
+      const exists = episode.initialJournalEntries.some(j => j.id === beat.effects.unlockJournalEntryId);
+      if (!exists) {
+        errors.push({
+          entityType: 'BEAT',
+          entityId: beat.id,
+          code: 'MISSING_REFERENCE',
+          message: `Beat "${beat.id}" unlocks journal entry "${beat.effects.unlockJournalEntryId}" which is not defined in initialJournalEntries.`,
+        });
+      }
+    }
+
+    if (beat.effects.ticket) {
+      if (!beat.effects.ticket.ticketId || !beat.effects.ticket.ticketId.startsWith('TKT-')) {
+        errors.push({
+          entityType: 'BEAT',
+          entityId: beat.id,
+          code: 'INVALID_RANGE',
+          message: `Beat "${beat.id}" ticketId "${beat.effects.ticket.ticketId}" must follow 'TKT-2026-xxxx' format.`,
+        });
+      }
+    }
+
+    if (beat.effects.blackout) {
+      if (beat.effects.blackout.durationSeconds <= 0) {
+        errors.push({
+          entityType: 'BEAT',
+          entityId: beat.id,
+          code: 'INVALID_RANGE',
+          message: `Beat "${beat.id}" blackout durationSeconds must be > 0.`,
+        });
+      }
+      if (beat.effects.blackout.clockSkipSeconds < 0) {
+        errors.push({
+          entityType: 'BEAT',
+          entityId: beat.id,
+          code: 'INVALID_RANGE',
+          message: `Beat "${beat.id}" blackout clockSkipSeconds must be >= 0.`,
+        });
+      }
+    }
+
+    // Record as seen for subsequent beats
+    beatIds.add(beat.id);
+  }
+
+  return errors;
 }

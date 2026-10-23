@@ -76,7 +76,8 @@ describe('TerminalCommandParser & Registry', () => {
     expect(registry.has('forensics')).toBe(true);
     expect(registry.has('soctriage')).toBe(true);
     expect(registry.has('complianceaudit')).toBe(true);
-    expect(registry.getAll().length).toBe(34);
+    expect(registry.has('journal')).toBe(true);
+    expect(registry.getAll().length).toBe(35);
   });
 
   it('executes help command returning available commands and beginner tips', () => {

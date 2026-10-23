@@ -79,7 +79,20 @@ export type SimulationEventType =
   | 'ACTIVITY_ABANDONED'
   | 'ACTIVITY_REWARD_CLAIMED'
   | 'EXPLORATION_DISCOVERY_CLAIMED'
-  | 'LOCATION_VISIT_RECORDED';
+  | 'LOCATION_VISIT_RECORDED'
+  | 'EPISODE_STARTED'
+  | 'EPISODE_TITLE_CARD_TRIGGERED'
+  | 'EPISODE_TITLE_CARD_DISMISSED'
+  | 'EPISODE_BEAT_TRIGGERED'
+  | 'EPISODE_BEAT_COMPLETED'
+  | 'EPISODE_TICKET_DELIVERED'
+  | 'EPISODE_MESSAGE_DELIVERED'
+  | 'EPISODE_CALL_INITIATED'
+  | 'EPISODE_BLACKOUT_TRIGGERED'
+  | 'EPISODE_BLACKOUT_ENDED'
+  | 'EPISODE_JOURNAL_UNLOCKED'
+  | 'EPISODE_COMPLETED'
+  | 'EPISODE_GUIDANCE_MODE_CHANGED';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -497,8 +510,136 @@ export type SimulationEvent =
   | ActivityAbandonedEvent
   | ActivityRewardClaimedEvent
   | ExplorationDiscoveryClaimedEvent
-  | LocationVisitRecordedEvent;
+  | LocationVisitRecordedEvent
+  | EpisodeStartedEvent
+  | EpisodeBeatTriggeredEvent
+  | EpisodeBeatCompletedEvent
+  | EpisodeTicketDeliveredEvent
+  | EpisodeMessageDeliveredEvent
+  | EpisodeCallInitiatedEvent
+  | EpisodeBlackoutTriggeredEvent
+  | EpisodeBlackoutEndedEvent
+  | EpisodeJournalUnlockedEvent
+  | EpisodeCompletedEvent
+  | EpisodeGuidanceModeChangedEvent
+  | EpisodeTitleCardTriggeredEvent
+  | EpisodeTitleCardDismissedEvent;
 
+export type EpisodeTitleCardTriggeredEvent = BaseSimulationEvent<
+  'EPISODE_TITLE_CARD_TRIGGERED',
+  {
+    readonly episodeId: string;
+    readonly title: string;
+    readonly hash: string;
+  }
+>;
+
+export type EpisodeTitleCardDismissedEvent = BaseSimulationEvent<
+  'EPISODE_TITLE_CARD_DISMISSED',
+  {
+    readonly episodeId: string;
+  }
+>;
+
+export type EpisodeGuidanceModeChangedEvent = BaseSimulationEvent<
+  'EPISODE_GUIDANCE_MODE_CHANGED',
+  {
+    readonly previousMode: string;
+    readonly newMode: string;
+  }
+>;
+
+export type EpisodeStartedEvent = BaseSimulationEvent<
+  'EPISODE_STARTED',
+  {
+    readonly episodeId: string;
+    readonly title: string;
+    readonly hash: string;
+    readonly season: number;
+    readonly episodeNumber: number;
+  }
+>;
+
+export type EpisodeBeatTriggeredEvent = BaseSimulationEvent<
+  'EPISODE_BEAT_TRIGGERED',
+  {
+    readonly episodeId: string;
+    readonly beatId: string;
+    readonly beatType: string;
+    readonly beatTitle: string;
+  }
+>;
+
+export type EpisodeBeatCompletedEvent = BaseSimulationEvent<
+  'EPISODE_BEAT_COMPLETED',
+  {
+    readonly episodeId: string;
+    readonly beatId: string;
+    readonly beatType: string;
+  }
+>;
+
+export type EpisodeTicketDeliveredEvent = BaseSimulationEvent<
+  'EPISODE_TICKET_DELIVERED',
+  {
+    readonly ticketId: string;
+    readonly title: string;
+    readonly requester: string;
+    readonly severity: string;
+  }
+>;
+
+export type EpisodeMessageDeliveredEvent = BaseSimulationEvent<
+  'EPISODE_MESSAGE_DELIVERED',
+  {
+    readonly messageId: string;
+    readonly contactId: string;
+    readonly contactName: string;
+    readonly text: string;
+    readonly isMentorHint?: boolean;
+  }
+>;
+
+export type EpisodeCallInitiatedEvent = BaseSimulationEvent<
+  'EPISODE_CALL_INITIATED',
+  {
+    readonly callId: string;
+    readonly callerId: string;
+    readonly callerName: string;
+  }
+>;
+
+export type EpisodeBlackoutTriggeredEvent = BaseSimulationEvent<
+  'EPISODE_BLACKOUT_TRIGGERED',
+  {
+    readonly beatId: string;
+    readonly durationSeconds: number;
+    readonly clockSkipSeconds: number;
+    readonly newCalendarIso: string;
+  }
+>;
+
+export type EpisodeBlackoutEndedEvent = BaseSimulationEvent<
+  'EPISODE_BLACKOUT_ENDED',
+  {
+    readonly beatId: string;
+  }
+>;
+
+export type EpisodeJournalUnlockedEvent = BaseSimulationEvent<
+  'EPISODE_JOURNAL_UNLOCKED',
+  {
+    readonly journalEntryId: string;
+  }
+>;
+
+export type EpisodeCompletedEvent = BaseSimulationEvent<
+  'EPISODE_COMPLETED',
+  {
+    readonly episodeId: string;
+    readonly title: string;
+  }
+>;
 
 export type ThreatIndicatorCorrelatedEvent = BaseSimulationEvent<
   'THREAT_INDICATOR_CORRELATED',

@@ -29,7 +29,8 @@ export type AppId =
   | 'defensiveOps'
   | 'redTeam'
   | 'bountyHub'
-  | 'humanIntel';
+  | 'humanIntel'
+  | 'journal';
 
 
 export interface AppDefinition {
@@ -304,6 +305,16 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
       'Witness interviews, testimony-evidence comparison, social engineering triage, and physical security assessment.',
     defaultSize: { width: 940, height: 620 },
     minSize: { width: 480, height: 380 },
+  },
+  journal: {
+    id: 'journal',
+    title: 'Encrypted Journal & Vault',
+    shortTitle: 'Journal',
+    icon: 'documents',
+    description:
+      'Personal encrypted reflection vault and forensic assertion ledger (~/.vault/journal.enc).',
+    defaultSize: { width: 880, height: 580 },
+    minSize: { width: 560, height: 380 },
   },
 };
 

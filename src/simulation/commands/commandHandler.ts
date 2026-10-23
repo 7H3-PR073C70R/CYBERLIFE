@@ -127,6 +127,15 @@ import {
   handleRecordLocationVisit,
 } from '../world/worldCommandHandler';
 import { WorldSimulationService } from '../world/WorldSimulationService';
+import {
+  startEpisode,
+  completeEpisodeBeat,
+  dismissTitleCard,
+  dismissBlackout,
+  triggerBlackoutBeat,
+  setGuidanceMode,
+  unlockJournalEntry,
+} from '../narrative/episodeDirector';
 
 
 function makeFailure(
@@ -151,6 +160,20 @@ function makeNoOp(state: Readonly<SimulationState>, message: string): CommandRes
     events: [],
     message,
     isNoOp: true,
+  };
+}
+
+function makeSuccess(
+  state: Readonly<SimulationState>,
+  events: ReadonlyArray<SimulationEvent>,
+  message: string
+): CommandResult {
+  return {
+    success: true,
+    state,
+    events,
+    message,
+    isNoOp: false,
   };
 }
 
@@ -2600,6 +2623,48 @@ export function handleCommand(
 
       case 'RecordLocationVisit': {
         return handleRecordLocationVisit(currentState, command);
+      }
+
+      case 'StartEpisode': {
+        const result = startEpisode(currentState, command.episodeId);
+        return makeSuccess(result.state, result.events, `Episode "${command.episodeId}" started`);
+      }
+
+      case 'AdvanceEpisodeBeat': {
+        if (!currentState.episode?.activeEpisodeId) {
+          return makeFailure(currentState, 'EPISODE_NOT_FOUND', 'No active episode to advance');
+        }
+        return makeSuccess(currentState, [], 'Episode beat evaluated');
+      }
+
+      case 'CompleteEpisodeBeat': {
+        const result = completeEpisodeBeat(currentState, command.beatId);
+        return makeSuccess(result.state, result.events, `Episode beat "${command.beatId}" completed`);
+      }
+
+      case 'DismissEpisodeTitleCard': {
+        const result = dismissTitleCard(currentState);
+        return makeSuccess(result.state, result.events, 'Episode title card dismissed');
+      }
+
+      case 'TriggerBlackoutBeat': {
+        const result = triggerBlackoutBeat(currentState, command.beatId);
+        return makeSuccess(result.state, result.events, 'Blackout beat triggered');
+      }
+
+      case 'DismissEpisodeBlackout': {
+        const result = dismissBlackout(currentState);
+        return makeSuccess(result.state, result.events, 'Episode blackout dismissed');
+      }
+
+      case 'SetEpisodeGuidanceMode': {
+        const result = setGuidanceMode(currentState, command.mode);
+        return makeSuccess(result.state, result.events, `Episode guidance mode set to "${command.mode}"`);
+      }
+
+      case 'UnlockJournalEntry': {
+        const result = unlockJournalEntry(currentState, command.entryId);
+        return makeSuccess(result.state, result.events, `Journal entry "${command.entryId}" unlocked`);
       }
 
       default: {

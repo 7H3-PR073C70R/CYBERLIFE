@@ -45,6 +45,39 @@ const INITIAL_VIRTUAL_FILES: Record<string, VirtualFileEntry> = {
     modifiedDate: '2026-10-12 08:00',
     readOnly: false,
   },
+  '/home/analyst/.vault': {
+    name: '.vault',
+    path: '/home/analyst/.vault',
+    type: 'directory',
+    sizeBytes: 4096,
+    permissions: 'drwx------',
+    owner: 'analyst',
+    group: 'analyst',
+    modifiedDate: '2026-10-12 08:00',
+    readOnly: false,
+  },
+  '/tmp': {
+    name: 'tmp',
+    path: '/tmp',
+    type: 'directory',
+    sizeBytes: 4096,
+    permissions: 'drwxrwxrwt',
+    owner: 'root',
+    group: 'root',
+    modifiedDate: '2026-10-12 06:00',
+    readOnly: false,
+  },
+  '/evidence': {
+    name: 'evidence',
+    path: '/evidence',
+    type: 'directory',
+    sizeBytes: 4096,
+    permissions: 'drwxr-xr-x',
+    owner: 'analyst',
+    group: 'analyst',
+    modifiedDate: '2026-10-12 08:00',
+    readOnly: false,
+  },
   '/home/analyst/downloads': {
     name: 'downloads',
     path: '/home/analyst/downloads',
@@ -670,6 +703,35 @@ class VirtualFilesystemManager {
 
     this.files.set(norm, newEntry);
     return { success: true, entry: newEntry };
+  }
+
+  /**
+   * Creates a directory at path if parent is writable.
+   */
+  public mkdir(dirPath: string): { success: boolean; error?: string } {
+    const norm = normalizeVirtualPath(dirPath);
+    if (this.files.has(norm)) {
+      return { success: true };
+    }
+    const parentDir = norm.slice(0, norm.lastIndexOf('/')) || '/';
+    const parent = this.files.get(parentDir);
+    if (!parent) {
+      // Create parent recursively
+      this.mkdir(parentDir);
+    }
+    const name = norm.slice(norm.lastIndexOf('/') + 1);
+    this.files.set(norm, {
+      name,
+      path: norm,
+      type: 'directory',
+      sizeBytes: 4096,
+      permissions: 'drwxr-xr-x',
+      owner: 'analyst',
+      group: 'analyst',
+      modifiedDate: new Date().toISOString().slice(0, 16).replace('T', ' '),
+      readOnly: false,
+    });
+    return { success: true };
   }
 }
 

@@ -42,6 +42,7 @@ export function createInitialWindows(
     redTeam: { x: 90, y: 40 },
     bountyHub: { x: 95, y: 45 },
     humanIntel: { x: 105, y: 50 },
+    journal: { x: 115, y: 55 },
   };
 
   const windows: Partial<Record<AppId, WindowState>> = {};

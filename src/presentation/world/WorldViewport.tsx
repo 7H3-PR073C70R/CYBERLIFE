@@ -19,6 +19,8 @@ import { sfxController } from '../audio/SfxController';
 
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { Money } from '@/domain/common/Money';
+import { TitleCardOverlay } from '../narrative/TitleCardOverlay';
+import { BlackoutOverlay } from '../narrative/BlackoutOverlay';
 
 export interface WorldViewportProps {
   onInitialized?: () => void;
@@ -611,6 +613,27 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
           setIsMainMenuOpen(false);
         }}
       />
+
+      {/* Episode Title Card Overlay (Cold-open, episode start) */}
+      {sim?.state.episode?.activeTitleCard && (
+        <TitleCardOverlay
+          titleCard={sim.state.episode.activeTitleCard}
+          onDismiss={() => {
+            sim.dispatch({ type: 'DismissEpisodeTitleCard' });
+          }}
+        />
+      )}
+
+      {/* Episode Blackout Overlay (Brownout flicker, inverter siren, battery HUD) */}
+      {sim?.state.episode?.activeBlackout && (
+        <BlackoutOverlay
+          blackout={sim.state.episode.activeBlackout}
+          reduceMotion={workstationSettings.reduceMotion}
+          onDismiss={() => {
+            sim.dispatch({ type: 'DismissEpisodeBlackout' });
+          }}
+        />
+      )}
     </div>
   );
 };

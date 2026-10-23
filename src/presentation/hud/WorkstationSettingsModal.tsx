@@ -5,13 +5,14 @@ export interface WorkstationSettings {
   reduceMotion: boolean;
   skipSitAfterFirst: boolean;
   showKeyHints: boolean;
+  guidanceMode?: 'Guided' | 'Immersive';
 }
 
 const SETTINGS_STORAGE_KEY = 'cyberlife_workstation_settings_v1';
 
 export function getStoredWorkstationSettings(): WorkstationSettings {
   if (typeof window === 'undefined') {
-    return { reduceMotion: false, skipSitAfterFirst: false, showKeyHints: true };
+    return { reduceMotion: false, skipSitAfterFirst: false, showKeyHints: true, guidanceMode: 'Guided' };
   }
   try {
     const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
@@ -21,12 +22,13 @@ export function getStoredWorkstationSettings(): WorkstationSettings {
         reduceMotion: Boolean(parsed.reduceMotion),
         skipSitAfterFirst: Boolean(parsed.skipSitAfterFirst),
         showKeyHints: parsed.showKeyHints !== false,
+        guidanceMode: parsed.guidanceMode === 'Immersive' ? 'Immersive' : 'Guided',
       };
     }
   } catch {
     // Ignore storage errors
   }
-  return { reduceMotion: false, skipSitAfterFirst: false, showKeyHints: true };
+  return { reduceMotion: false, skipSitAfterFirst: false, showKeyHints: true, guidanceMode: 'Guided' };
 }
 
 export function saveStoredWorkstationSettings(settings: WorkstationSettings): void {
@@ -517,6 +519,120 @@ export const WorkstationSettingsModal: React.FC<WorkstationSettingsModalProps> =
               data-testid="setting-show-key-hints"
             />
           </label>
+
+          {/* Narrative Guidance Mode Section */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              borderBottom: '1px solid rgba(148, 163, 184, 0.2)',
+              paddingBottom: '0.45rem',
+              marginTop: '0.5rem',
+            }}
+          >
+            <span style={{ fontSize: '1rem' }}>🧭</span>
+            <span style={{ fontWeight: 700, color: '#94a3b8', fontSize: '0.92rem' }}>
+              Story & Guidance Mode
+            </span>
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.6rem',
+              padding: '0.8rem 1rem',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(15, 23, 42, 0.6)',
+              border: '1px solid rgba(148, 163, 184, 0.2)',
+            }}
+          >
+            <div style={{ fontWeight: 600, color: '#f8fafc', fontSize: '0.9rem' }}>
+              Episode Delivery & Objective HUD
+            </div>
+            <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+              Control whether the on-screen objective tracker banner is displayed or hidden in favor of pure diegetic story cues (Incident tickets, Onion Chat messages, and mentor hints).
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.35rem' }}>
+              <label
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 0.75rem',
+                  borderRadius: '6px',
+                  backgroundColor:
+                    (settings.guidanceMode ?? 'Guided') === 'Guided'
+                      ? 'rgba(0, 229, 255, 0.12)'
+                      : 'rgba(15, 23, 42, 0.4)',
+                  border:
+                    (settings.guidanceMode ?? 'Guided') === 'Guided'
+                      ? '1px solid #00e5ff'
+                      : '1px solid rgba(148, 163, 184, 0.3)',
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="radio"
+                  name="guidanceMode"
+                  value="Guided"
+                  checked={(settings.guidanceMode ?? 'Guided') === 'Guided'}
+                  onChange={() => updateSetting('guidanceMode', 'Guided')}
+                  style={{ accentColor: '#00e5ff', cursor: 'pointer' }}
+                  data-testid="setting-guidance-guided"
+                />
+                <div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#f8fafc' }}>
+                    Guided (Default)
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                    HUD objective checklist visible
+                  </div>
+                </div>
+              </label>
+
+              <label
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 0.75rem',
+                  borderRadius: '6px',
+                  backgroundColor:
+                    settings.guidanceMode === 'Immersive'
+                      ? 'rgba(0, 229, 255, 0.12)'
+                      : 'rgba(15, 23, 42, 0.4)',
+                  border:
+                    settings.guidanceMode === 'Immersive'
+                      ? '1px solid #00e5ff'
+                      : '1px solid rgba(148, 163, 184, 0.3)',
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="radio"
+                  name="guidanceMode"
+                  value="Immersive"
+                  checked={settings.guidanceMode === 'Immersive'}
+                  onChange={() => updateSetting('guidanceMode', 'Immersive')}
+                  style={{ accentColor: '#00e5ff', cursor: 'pointer' }}
+                  data-testid="setting-guidance-immersive"
+                />
+                <div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#f8fafc' }}>
+                    Immersive
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                    Diegetic tickets &amp; mentor hints only
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
         </div>
 
         <div

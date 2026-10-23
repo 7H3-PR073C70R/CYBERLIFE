@@ -47,6 +47,8 @@ export const HUDShell: React.FC<HUDShellProps> = ({
     sim?.state.mission?.isCompleted || sim?.state.flags?.mission_aster_completed
   );
   const hasActiveIncident = Boolean(sim?.state.mission && !isMissionDone);
+  const isImmersiveMode = sim?.state.episode?.guidanceMode === 'Immersive';
+  const showObjectiveTracker = hasActiveIncident && !isImmersiveMode;
 
   const [isMovementHelpOpen, setIsMovementHelpOpen] = useState<boolean>(false);
   const [isDevDrawerOpen, setIsDevDrawerOpen] = useState<boolean>(false);
@@ -127,7 +129,7 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         onToggleControls={() => setIsControlsModalOpen(true)}
         onToggleSettings={() => setIsSettingsOpen(prev => !prev)}
         onToggleIncidentChecklist={
-          hasActiveIncident ? () => setIsObjectiveExpanded(prev => !prev) : undefined
+          showObjectiveTracker ? () => setIsObjectiveExpanded(prev => !prev) : undefined
         }
         onOpenMainMenu={onOpenMainMenu}
         isHelpOpen={isMovementHelpOpen}
@@ -136,8 +138,8 @@ export const HUDShell: React.FC<HUDShellProps> = ({
         isSettingsOpen={isSettingsOpen}
       />
 
-      {/* Top Objective Tracker Bar (Collapsible at top, clean unobstructed view) */}
-      {hasActiveIncident && (
+      {/* Top Objective Tracker Bar (Collapsible at top, clean unobstructed view; hidden in Immersive mode) */}
+      {showObjectiveTracker && (
         <div
           className="hud-top-objective-wrapper"
           style={{
@@ -208,7 +210,12 @@ export const HUDShell: React.FC<HUDShellProps> = ({
       <WorkstationSettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
-        onSettingsChanged={onSettingsChanged}
+        onSettingsChanged={settings => {
+          if (settings.guidanceMode && sim) {
+            sim.dispatch({ type: 'SetEpisodeGuidanceMode', mode: settings.guidanceMode });
+          }
+          onSettingsChanged?.(settings);
+        }}
       />
     </div>
   );

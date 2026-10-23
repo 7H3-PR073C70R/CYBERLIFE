@@ -168,6 +168,12 @@ const Orion_SECURITY_CATEGORIES: SecuritySubCategory[] = [
         icon: 'files',
         desc: 'Forensic artifacts storage',
       },
+      {
+        id: 'journal',
+        name: 'Encrypted Vault Journal',
+        icon: 'notes',
+        desc: 'Classified enclave log reader',
+      },
     ],
   },
   {

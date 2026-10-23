@@ -25,7 +25,13 @@ import {
 import { CommandCopyChip } from '../components/CommandCopyChip';
 
 export type IncidentAppTab =
-  'overview' | 'briefing' | 'rootcause' | 'containment' | 'verification' | 'report';
+  | 'overview'
+  | 'tickets'
+  | 'briefing'
+  | 'rootcause'
+  | 'containment'
+  | 'verification'
+  | 'report';
 
 export const OBJECTIVE_COMMANDS: Record<string, string[]> = {
   'obj-assess-01': ['netmap hosts'],
@@ -48,6 +54,7 @@ export const OBJECTIVE_COMMANDS: Record<string, string[]> = {
 export const IncidentApp: React.FC = () => {
   const sim = useOptionalSimulation();
   const mission = sim?.state.mission;
+  const activeTickets = sim?.state.episode?.activeTickets ?? [];
 
   const [activeTab, setActiveTab] = useState<IncidentAppTab>('overview');
   const [reportCopied, setReportCopied] = useState<boolean>(false);
@@ -361,6 +368,16 @@ ${reportForm.recommendations}
         </button>
         <button
           type="button"
+          className={`incident-tab-btn ${activeTab === 'tickets' ? 'tab-active' : ''}`}
+          role="tab"
+          aria-selected={activeTab === 'tickets'}
+          onClick={() => setActiveTab('tickets')}
+          data-testid="incident-tab-tickets"
+        >
+          🎫 Dispatch &amp; Tickets {activeTickets.length > 0 && `(${activeTickets.length})`}
+        </button>
+        <button
+          type="button"
           className={`incident-tab-btn ${activeTab === 'briefing' ? 'tab-active' : ''}`}
           role="tab"
           aria-selected={activeTab === 'briefing'}
@@ -482,6 +499,88 @@ ${reportForm.recommendations}
                 );
               })}
             </div>
+          </div>
+        )}
+
+        {/* TAB: Dispatch & Tickets */}
+        {activeTab === 'tickets' && (
+          <div className="incident-panel" data-testid="incident-panel-tickets">
+            <div className="panel-intro-card">
+              <h3 className="panel-card-title">SecOps Incident Dispatch &amp; Assigned Tickets</h3>
+              <p>
+                Incoming tickets dispatched by SecOps Leadership and automated perimeter monitors.
+              </p>
+            </div>
+            {activeTickets.length === 0 ? (
+              <div style={{ padding: '2rem', textAlign: 'center', color: '#64748b' }}>
+                No active tickets in current queue.
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+                {activeTickets.map(ticket => (
+                  <div
+                    key={ticket.ticketId}
+                    style={{
+                      background: 'rgba(15, 23, 42, 0.7)',
+                      border: '1px solid rgba(0, 229, 255, 0.3)',
+                      borderRadius: '8px',
+                      padding: '1.2rem',
+                    }}
+                    data-testid={`incident-ticket-${ticket.ticketId}`}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                        <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#00e5ff', fontSize: '1rem' }}>
+                          {ticket.ticketId}
+                        </span>
+                        <span style={{
+                          fontSize: '0.72rem',
+                          padding: '2px 8px',
+                          borderRadius: '4px',
+                          textTransform: 'uppercase',
+                          fontWeight: 700,
+                          background: ticket.severity === 'CRITICAL' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+                          color: ticket.severity === 'CRITICAL' ? '#ef4444' : '#f59e0b',
+                          border: `1px solid ${ticket.severity === 'CRITICAL' ? '#ef4444' : '#f59e0b'}`,
+                        }}>
+                          {ticket.severity}
+                        </span>
+                      </div>
+                      <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                        Scope: {ticket.scope}
+                      </span>
+                    </div>
+
+                    <h4 style={{ margin: '0.6rem 0 0.4rem', color: '#f8fafc', fontSize: '1.05rem' }}>
+                      {ticket.title}
+                    </h4>
+
+                    <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.78rem', color: '#94a3b8', margin: '0.4rem 0 0.8rem' }}>
+                      <span><strong>Target System:</strong> {ticket.targetSystem}</span>
+                      <span><strong>Requester:</strong> {ticket.requester}</span>
+                      <span><strong>Organization:</strong> {ticket.organization}</span>
+                    </div>
+
+                    <p style={{ color: '#cbd5e1', fontSize: '0.85rem', lineHeight: 1.5, whiteSpace: 'pre-line' }}>
+                      {ticket.description}
+                    </p>
+
+                    {ticket.instructions && ticket.instructions.length > 0 && (
+                      <div style={{ marginTop: '0.8rem' }}>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#94a3b8', marginBottom: '0.3rem' }}>
+                          Investigation Instructions:
+                        </div>
+                        <ul style={{ margin: 0, paddingLeft: '1.2rem', color: '#94a3b8', fontSize: '0.8rem' }}>
+                          {ticket.instructions.map((inst, i) => (
+                            <li key={i}>{inst}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

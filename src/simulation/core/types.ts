@@ -79,6 +79,7 @@ import type { BountyHubState } from '../cyber/contracts/types';
 import type { ActivityDirectorState } from '../activities/types';
 import type { HumanIntelState } from '../humanIntel/types';
 import type { WorldSimulationState } from '../world/types';
+import type { EpisodeDirectorState } from '../narrative/episodeTypes';
 
 export interface SimulationState {
   readonly metadata: SimulationMetadata;
@@ -107,6 +108,8 @@ export interface SimulationState {
   readonly humanIntel?: HumanIntelState;
   /** M22: Living city — location visit history, exploration discoveries, NPC routine state. */
   readonly worldSim?: WorldSimulationState;
+  /** Episode delivery framework state: title cards, diegetic tickets, calls, messages, journal, blackouts. */
+  readonly episode?: EpisodeDirectorState;
 }
 
 

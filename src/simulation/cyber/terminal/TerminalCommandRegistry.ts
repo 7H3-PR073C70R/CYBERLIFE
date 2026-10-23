@@ -529,6 +529,52 @@ export const catCommand: TerminalCommandHandler = {
   },
 };
 
+export const journalCommand: TerminalCommandHandler = {
+  name: 'journal',
+  description: 'Inspects decrypted reflections and forensic assertions from ~/.vault/journal.enc.',
+  usage: 'journal [list | read <entry_id>]',
+  execute(args: string[], _context: TerminalExecutionContext): TerminalCommandResult {
+    const journalPath = '/home/analyst/.vault/journal.enc';
+    const file = virtualFilesystem.readFile(journalPath);
+    if (!file || !file.content) {
+      return {
+        stdout: [
+          'Encrypted Journal: ~/.vault/journal.enc not initialized or empty.',
+          'No decrypted entries currently unlocked.',
+        ],
+      };
+    }
+
+    if (args.length === 0 || args[0] === 'list') {
+      return {
+        stdout: file.content.split('\n'),
+      };
+    }
+
+    if (args[0] === 'read' && args[1]) {
+      const targetId = args[1];
+      const lines = file.content.split('\n');
+      const startIdx = lines.findIndex(l => l.includes(`[DECRYPTED ENTRY: ${targetId}]`));
+      if (startIdx === -1) {
+        return {
+          stdout: [],
+          stderr: [`journal: entry "${targetId}" not found in decrypted enclave.`],
+          isError: true,
+        };
+      }
+      const nextIdx = lines.findIndex((l, idx) => idx > startIdx && l.startsWith('--- [DECRYPTED ENTRY:'));
+      const entryLines = nextIdx === -1 ? lines.slice(startIdx) : lines.slice(startIdx, nextIdx);
+      return {
+        stdout: entryLines,
+      };
+    }
+
+    return {
+      stdout: file.content.split('\n'),
+    };
+  },
+};
+
 export const grepCommand: TerminalCommandHandler = {
   name: 'grep',
   description: 'Searches for matching patterns inside a virtual file.',
@@ -1995,6 +2041,7 @@ export function createDefaultCommandRegistry(): TerminalCommandRegistry {
   registry.register(lsCommand);
   registry.register(cdCommand);
   registry.register(catCommand);
+  registry.register(journalCommand);
   registry.register(grepCommand);
   registry.register(fileCommand);
 

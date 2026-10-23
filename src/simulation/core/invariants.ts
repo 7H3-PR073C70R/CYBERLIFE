@@ -763,6 +763,29 @@ export function validateSimulationState(state: SimulationState): void {
       throw new InvariantViolationError('worldSim.explorationUnlockedActivityIds must be an array');
     }
   }
+
+  // 22. Episode Delivery Framework invariants
+  const { episode } = state;
+  if (episode) {
+    if (!Array.isArray(episode.completedBeatIds)) {
+      throw new InvariantViolationError('episode.completedBeatIds must be an array');
+    }
+    if (!Array.isArray(episode.completedEpisodeIds)) {
+      throw new InvariantViolationError('episode.completedEpisodeIds must be an array');
+    }
+    if (!Array.isArray(episode.unlockedJournalEntryIds)) {
+      throw new InvariantViolationError('episode.unlockedJournalEntryIds must be an array');
+    }
+    if (!Array.isArray(episode.activeTickets)) {
+      throw new InvariantViolationError('episode.activeTickets must be an array');
+    }
+    if (!Array.isArray(episode.deliveredMessages)) {
+      throw new InvariantViolationError('episode.deliveredMessages must be an array');
+    }
+    if (episode.guidanceMode !== 'Guided' && episode.guidanceMode !== 'Immersive') {
+      throw new InvariantViolationError('episode.guidanceMode must be "Guided" or "Immersive"');
+    }
+  }
 }
 
 export function checkSimulationInvariants(state: SimulationState): string[] {

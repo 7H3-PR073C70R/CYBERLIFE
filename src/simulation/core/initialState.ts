@@ -26,6 +26,8 @@ import { ActivityDirectorState } from '../activities/types';
 import { createInitialActivityDirectorState } from '../activities/activityCatalogue';
 import { HumanIntelState, createInitialHumanIntelState } from '../humanIntel/types';
 import { WorldSimulationState, createInitialWorldSimulationState } from '../world/types';
+import { EpisodeDirectorState } from '../narrative/episodeTypes';
+import { createInitialEpisodeDirectorState } from '../narrative/episodeDirector';
 
 export interface InitialStateOverrides {
   readonly schemaVersion?: number;
@@ -57,6 +59,7 @@ export interface InitialStateOverrides {
   readonly activityDirector?: ActivityDirectorState;
   readonly humanIntel?: HumanIntelState;
   readonly worldSim?: WorldSimulationState;
+  readonly episode?: EpisodeDirectorState;
 }
 
 
@@ -182,6 +185,8 @@ export function createInitialSimulationState(
       overrides?.humanIntel ?? createInitialHumanIntelState(),
     worldSim:
       overrides?.worldSim ?? createInitialWorldSimulationState(),
+    episode:
+      overrides?.episode ?? createInitialEpisodeDirectorState(),
   };
 
 

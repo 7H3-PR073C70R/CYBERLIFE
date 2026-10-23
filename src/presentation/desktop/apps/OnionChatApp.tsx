@@ -9,7 +9,7 @@
  * - One-click Secure VoIP audio call launcher
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   INITIAL_CHAT_THREADS,
   CONTACT_AUTO_RESPONSES,
@@ -17,6 +17,7 @@ import {
   ChatMessage,
   audioSfx,
 } from '@/simulation/cyber/chat';
+import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { OsIcon } from '../icons/OsIcons';
 
 export interface OnionChatAppProps {
@@ -24,10 +25,81 @@ export interface OnionChatAppProps {
 }
 
 export const OnionChatApp: React.FC<OnionChatAppProps> = ({ onStartCall }) => {
+  const sim = useOptionalSimulation();
+  const deliveredMessages = sim?.state.episode?.deliveredMessages;
+
   const [threads, setThreads] = useState<ChatThread[]>(INITIAL_CHAT_THREADS);
   const [activeThreadId, setActiveThreadId] = useState<string>(INITIAL_CHAT_THREADS[0]?.id ?? '');
   const [inputMessage, setInputMessage] = useState<string>('');
   const [isTypingRemote, setIsTypingRemote] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!deliveredMessages || deliveredMessages.length === 0) return;
+
+    setThreads(prevThreads => {
+      const nextThreads = [...prevThreads];
+      let updated = false;
+
+      for (const epMsg of deliveredMessages) {
+        const msgId = `ep-msg-${epMsg.id}`;
+        const existingThreadIndex = nextThreads.findIndex(t => t.contactId === epMsg.contactId);
+
+        if (existingThreadIndex >= 0) {
+          const targetThread = nextThreads[existingThreadIndex]!;
+          if (!targetThread.messages.some(m => m.id === msgId)) {
+            const newChatMsg: ChatMessage = {
+              id: msgId,
+              senderId: epMsg.contactId,
+              senderName: epMsg.contactName,
+              senderRole: 'Onion Relay Contact',
+              text: epMsg.text,
+              timestamp: epMsg.timestampString || '10:20 AM',
+              isEncrypted: true,
+              isFromPlayer: false,
+              gpgFingerprint: '0x3D8F 8891 CA22',
+            };
+            nextThreads[existingThreadIndex] = {
+              ...targetThread,
+              unreadCount: targetThread.unreadCount + 1,
+              messages: [...targetThread.messages, newChatMsg],
+            };
+            updated = true;
+          }
+        } else {
+          const newThread: ChatThread = {
+            id: `thread-${epMsg.contactId}`,
+            contactId: epMsg.contactId,
+            contactName: epMsg.contactName,
+            contactRole: 'Onion Relay Contact',
+            contactOrg: 'Classified Onion Relay',
+            contactAvatarColor: epMsg.contactId === 'unknown' ? '#ef4444' : '#10b981',
+            isOnline: true,
+            securityClearance: 'ONION // GPG VERIFIED',
+            unreadCount: 1,
+            canCall: false,
+            callDialogue: [],
+            messages: [
+              {
+                id: msgId,
+                senderId: epMsg.contactId,
+                senderName: epMsg.contactName,
+                senderRole: 'Onion Relay Contact',
+                text: epMsg.text,
+                timestamp: epMsg.timestampString || '10:20 AM',
+                isEncrypted: true,
+                isFromPlayer: false,
+                gpgFingerprint: '0x3D8F 8891 CA22',
+              },
+            ],
+          };
+          nextThreads.push(newThread);
+          updated = true;
+        }
+      }
+
+      return updated ? nextThreads : prevThreads;
+    });
+  }, [deliveredMessages]);
 
   const activeThread = threads.find(t => t.id === activeThreadId) ?? threads[0]!;
 

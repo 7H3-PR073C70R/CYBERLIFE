@@ -91,10 +91,10 @@ describe('M24: Complete Whole-Game Integration & Release Validation', () => {
         expect(typeof tool.execute).toBe('function');
       }
 
-      // Verify Terminal Command Registry contains all 34 virtual tools
+      // Verify Terminal Command Registry contains all 35 virtual tools
       const registry = createDefaultCommandRegistry();
       const allCommands = registry.getAll();
-      expect(allCommands.length).toBe(34);
+      expect(allCommands.length).toBe(35);
 
       // Execute simulated terminal commands and ensure outputs are purely synthetic strings
       const statusResult = registry.get('status')?.execute([], mockContext);
