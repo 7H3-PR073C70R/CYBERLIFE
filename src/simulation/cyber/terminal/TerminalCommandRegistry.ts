@@ -50,6 +50,7 @@ import { forensicsCommand } from './forensicsCommand';
 import { soctriageCommand } from './soctriageCommand';
 import { complianceauditCommand } from './complianceauditCommand';
 import { humintCommand } from './humintCommand';
+import { traceCommand } from './traceCommand';
 
 export class TerminalCommandRegistry {
   private handlers = new Map<string, TerminalCommandHandler>();
@@ -534,8 +535,9 @@ export const journalCommand: TerminalCommandHandler = {
   description: 'Inspects decrypted reflections and forensic assertions from ~/.vault/journal.enc.',
   usage: 'journal [list | read <entry_id>]',
   execute(args: string[], _context: TerminalExecutionContext): TerminalCommandResult {
-    const journalPath = '/home/analyst/.vault/journal.enc';
-    const file = virtualFilesystem.readFile(journalPath);
+    const file =
+      virtualFilesystem.readFile('/home/protector/.vault/journal.enc') ||
+      virtualFilesystem.readFile('/home/analyst/.vault/journal.enc');
     if (!file || !file.content) {
       return {
         stdout: [
@@ -2075,6 +2077,9 @@ export function createDefaultCommandRegistry(): TerminalCommandRegistry {
   registry.register(soctriageCommand);
   registry.register(complianceauditCommand);
 
+  // Operational Security, Trace & RoE Management CLI tool
+  registry.register(traceCommand);
+
   // M5 simulated cybersecurity tools
   for (const tool of createDefaultCyberTools()) {
     registry.register(createToolCommandHandler(tool));
@@ -2087,5 +2092,6 @@ export { forensicsCommand } from './forensicsCommand';
 export { soctriageCommand } from './soctriageCommand';
 export { complianceauditCommand } from './complianceauditCommand';
 export { humintCommand } from './humintCommand';
+export { traceCommand } from './traceCommand';
 
 

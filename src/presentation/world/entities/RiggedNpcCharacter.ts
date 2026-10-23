@@ -115,6 +115,18 @@ export function getNpcCustomPalette(profile: NpcProfile): CharacterPalette {
         skin: 0x3b2219, // Dark Roast Cocoa
       };
 
+    // 9. David - International Cyber Risk Auditor (Fair Expat Tone)
+    case 'npc_expat_auditor':
+      return {
+        ...base,
+        style: 'ELITE_SUIT',
+        jacket: 0x1e293b, // Charcoal European tailored suit
+        pants: 0x1e293b,
+        shoes: 0x0f172a,
+        skin: 0xf5d0b5, // Fair peach ivory expat skin tone
+        isExpat: true,
+      };
+
     default:
       return base;
   }
@@ -182,11 +194,13 @@ export class RiggedNpcCharacter {
     this.modelRoot = modelData.scene;
     this.modelRoot.name = `NPCModel_${this.profile.id}`;
 
-    // Proportions & scale: female ~1.65m, male ~1.76m
-    const isFemale = this.bodyType === 'female_1' || this.bodyType === 'female_2';
-    const scale = isFemale ? 0.936 : 1.0;
-    this.modelRoot.scale.set(scale, scale, scale);
-    this.modelRoot.position.set(0, 0.02, 0); // Elevation matches sidewalk/road surface so shoes are 100% visible
+    // Proportions & scale: preserve exact metric stature if normalized by ModelNormalizer
+    if (!this.modelRoot.userData.__modelNormalized) {
+      const isFemale = this.bodyType === 'female_1' || this.bodyType === 'female_2';
+      const scale = isFemale ? 0.936 : 1.0;
+      this.modelRoot.scale.set(scale, scale, scale);
+      this.modelRoot.position.set(0, 0.02, 0); // Elevation matches sidewalk/road surface so shoes are 100% visible
+    }
     this.modelRoot.rotation.y = this.currentYaw;
 
     // Apply authentic Nigerian skin tone & tailored outfit customization
@@ -215,15 +229,36 @@ export class RiggedNpcCharacter {
   }
 
   private getModelUrl(): string {
-    switch (this.bodyType) {
-      case 'male_1':
-        return '/assets/characters/player_male.glb';
-      case 'male_2':
-        return '/assets/characters/ped_male_2.glb';
-      case 'female_1':
+    switch (this.profile.id) {
+      case 'npc_femi': // Michael - VP of Technology & Operations (Cedarline Executive)
+        return '/assets/characters/corporate_director_male.glb';
+      case 'npc_marcus': // Barry - Junior SysAdmin (Cedarline Infrastructure)
+        return '/assets/characters/barry_tech_male.glb';
+      case 'npc_amina': // Blessing - Lead Security Analyst
+        return '/assets/characters/blessing_exec_female.glb';
+      case 'npc_elena': // Mercy - Lead AI Engineer
+        return '/assets/characters/amina_chic_female.glb';
+      case 'npc_folake': // Goodness - Tech Talent Liaison
+        return '/assets/characters/amina_chic_female.glb';
+      case 'npc_tunde': // Tsharp - Independent Security Researcher
+        return '/assets/characters/syndicate_hacker_male.glb';
+      case 'npc_expat_auditor': // David - International Cyber Risk Auditor
+        return '/assets/characters/expat_consultant_male.glb';
+      case 'npc_nkechi': // Mama Esther - Traditional Merchant
         return '/assets/characters/player_female.glb';
-      case 'female_2':
-        return '/assets/characters/ped_female_2.glb';
+      case 'npc_segun': // Uncle Segun - Community Elder
+        return '/assets/characters/player_male.glb';
+      default:
+        switch (this.bodyType) {
+          case 'male_1':
+            return '/assets/characters/player_male.glb';
+          case 'male_2':
+            return '/assets/characters/ped_male_2.glb';
+          case 'female_1':
+            return '/assets/characters/player_female.glb';
+          case 'female_2':
+            return '/assets/characters/ped_female_2.glb';
+        }
     }
   }
 

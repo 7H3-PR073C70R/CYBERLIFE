@@ -34,7 +34,8 @@
     "voice:dry-run": "node scripts/generate-voice.mjs --dry-run",
     "voice:force": "node scripts/generate-voice.mjs --force",
     "voice:clean": "node scripts/generate-voice.mjs --clean-unused",
-    "voice:azure": "node scripts/generate-voice.mjs --backend azure"
+    "voice:azure": "node scripts/generate-voice.mjs --backend azure",
+    "voice:samples": "node scripts/generate-sample-pack.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",

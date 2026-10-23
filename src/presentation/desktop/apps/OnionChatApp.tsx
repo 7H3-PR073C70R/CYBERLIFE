@@ -28,10 +28,28 @@ export const OnionChatApp: React.FC<OnionChatAppProps> = ({ onStartCall }) => {
   const sim = useOptionalSimulation();
   const deliveredMessages = sim?.state.episode?.deliveredMessages;
 
+  const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const initialContactParam = urlParams?.get('contact');
+
   const [threads, setThreads] = useState<ChatThread[]>(INITIAL_CHAT_THREADS);
-  const [activeThreadId, setActiveThreadId] = useState<string>(INITIAL_CHAT_THREADS[0]?.id ?? '');
+  const [activeThreadId, setActiveThreadId] = useState<string>(() => {
+    if (initialContactParam) {
+      const match = INITIAL_CHAT_THREADS.find(t => t.contactId === initialContactParam);
+      if (match) return match.id;
+    }
+    return INITIAL_CHAT_THREADS[0]?.id ?? '';
+  });
   const [inputMessage, setInputMessage] = useState<string>('');
   const [isTypingRemote, setIsTypingRemote] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (initialContactParam) {
+      const match = threads.find(t => t.contactId === initialContactParam);
+      if (match && activeThreadId !== match.id) {
+        setActiveThreadId(match.id);
+      }
+    }
+  }, [threads, initialContactParam]);
 
   useEffect(() => {
     if (!deliveredMessages || deliveredMessages.length === 0) return;

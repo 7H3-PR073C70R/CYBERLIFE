@@ -131,6 +131,12 @@ export function getFictionalHosts(): readonly FictionalHost[] {
 
 export function findHostByIdOrIp(query: string): FictionalHost | undefined {
   const normalized = query.trim().toLowerCase();
+  if (normalized === '10.0.4.15') {
+    return FICTIONAL_HOSTS.find(h => h.id === 'app-portal-01') ?? FICTIONAL_HOSTS.find(h => h.ipAddress === '10.0.4.15');
+  }
+  if (normalized === '10.0.4.20') {
+    return FICTIONAL_HOSTS.find(h => h.id === 'filesrv-01') ?? FICTIONAL_HOSTS.find(h => h.ipAddress === '10.0.4.20');
+  }
   return FICTIONAL_HOSTS.find(
     h =>
       h.id.toLowerCase() === normalized ||

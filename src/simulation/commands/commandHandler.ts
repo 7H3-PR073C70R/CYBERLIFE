@@ -135,7 +135,19 @@ import {
   triggerBlackoutBeat,
   setGuidanceMode,
   unlockJournalEntry,
+  resolveEpisodeChoice,
 } from '../narrative/episodeDirector';
+import {
+  handleRecordActionNoise,
+  handleApplyOpsecAction,
+  handleDecayTrace,
+  handleSetJobScope,
+  handleRaiseScopeWarning,
+  handleAcknowledgeScopeWarning,
+  handleDismissDefenderResponse,
+  handleGenerateDefenderDebrief,
+  handleClearActiveDebrief,
+} from '../cyber/trace';
 
 
 function makeFailure(
@@ -2662,9 +2674,74 @@ export function handleCommand(
         return makeSuccess(result.state, result.events, `Episode guidance mode set to "${command.mode}"`);
       }
 
+      case 'ResolveEpisodeChoice': {
+        const result = resolveEpisodeChoice(currentState, command.optionId);
+        return makeSuccess(result.state, result.events, `Episode choice resolved with option "${command.optionId}"`);
+      }
+
       case 'UnlockJournalEntry': {
         const result = unlockJournalEntry(currentState, command.entryId);
         return makeSuccess(result.state, result.events, `Journal entry "${command.entryId}" unlocked`);
+      }
+
+      case 'RecordActionNoise': {
+        const result = handleRecordActionNoise(currentState, command.actionId, command.target);
+        return makeSuccess(result.state, result.events, `Recorded action noise for ${command.actionId} on ${command.target}`);
+      }
+
+      case 'ApplyOpsecAction': {
+        const action = command.opsecAction ?? (
+          command.useTor !== undefined ? (command.useTor ? 'TOR_ON' : 'TOR_OFF') :
+          command.useVpn !== undefined ? (command.useVpn ? 'VPN_ON' : 'VPN_OFF') :
+          command.logCleanup ? 'WIPE_LOGS' : 'TOR_ON'
+        );
+        const result = handleApplyOpsecAction(currentState, action);
+        return makeSuccess(result.state, result.events, `Applied OPSEC action: ${action}`);
+      }
+
+      case 'DecayTrace': {
+        const result = handleDecayTrace(currentState);
+        return makeSuccess(result.state, result.events, 'Trace meter decayed');
+      }
+
+      case 'SetJobScope': {
+        const result = handleSetJobScope(currentState, command.scope ?? null, command.isNightJob, command.jobId);
+        return makeSuccess(result.state, result.events, 'Job scope configuration updated');
+      }
+
+      case 'RaiseScopeWarning': {
+        const warning = command.warning ?? {
+          target: command.target ?? 'target',
+          attemptedAction: command.actionId ?? 'probe',
+          reason: `Target '${command.target}' is outside your authorized scope.`,
+          timestampSimTime: currentState.time.simulationTimeSeconds,
+          pendingActionPayload: {
+            actionId: command.actionId ?? 'scan_port_slow',
+            attemptedCommand: command.attemptedCommand,
+          },
+        };
+        const result = handleRaiseScopeWarning(currentState, warning);
+        return makeSuccess(result.state, result.events, `Scope warning raised for target ${warning.target}`);
+      }
+
+      case 'AcknowledgeScopeWarning': {
+        const result = handleAcknowledgeScopeWarning(currentState, command.proceed);
+        return makeSuccess(result.state, result.events, `Scope warning resolved (proceed: ${command.proceed})`);
+      }
+
+      case 'DismissDefenderResponse': {
+        const result = handleDismissDefenderResponse(currentState, command.responseId);
+        return makeSuccess(result.state, result.events, `Defender response ${command.responseId} dismissed`);
+      }
+
+      case 'GenerateDefenderDebrief': {
+        const result = handleGenerateDefenderDebrief(currentState, command.jobId);
+        return makeSuccess(result.state, result.events, `Generated Defender View debrief for job ${command.jobId}`);
+      }
+
+      case 'ClearActiveDebrief': {
+        const result = handleClearActiveDebrief(currentState);
+        return makeSuccess(result.state, result.events, 'Active debrief cleared');
       }
 
       default: {
@@ -2685,3 +2762,5 @@ export function handleCommand(
     return makeFailure(currentState, 'INVARIANT_VIOLATION', `Unexpected error: ${message}`);
   }
 }
+
+export const dispatchCommand = handleCommand;

@@ -515,6 +515,67 @@ export const NPC_PROFILES: readonly NpcProfile[] = [
       },
     ],
   },
+
+  // 9. International cyber risk consultant / external auditor (Expat fair tone)
+  {
+    id: 'npc_expat_auditor',
+    name: 'David',
+    role: 'International Cyber Risk Auditor',
+    organization: 'Krest Independent Risk / EMEA Advisory',
+    bio: 'Visiting international financial systems auditor reviewing cross-border SWIFT settlement gateways and regulatory resilience for Marina financial institutions.',
+    personality:
+      'Precise, diplomatic, sharp eye for compliance discrepancies, respects West African engineering talent.',
+    voiceTone: 'Polished international English, calm and deliberate.',
+    voice: {
+      gender: 'male',
+      pitch: 0.98,
+      rate: 1.0,
+      voiceHints: ['en-gb', 'british', 'male', 'oliver', 'daniel'],
+    },
+    palette: {
+      skin: 0xf5d0b5, // Fair / Expat peach tone
+      hair: 0x4a3728, // Brown hair
+      jacket: 0x1f2937, // Charcoal European tailored suit
+      jacketTrim: 0x3b82f6,
+      pants: 0x1f2937,
+      shoes: 0x111827,
+      accent: 0x3b82f6,
+      isExpat: true,
+    },
+    initialRelationship: 0,
+    knowledgeBoundaries: {
+      knownFacts: [
+        'Eko Merchant Bank and Cedarline are undergoing an unannounced cross-border compliance stress test.',
+        'International correspondent banks will freeze settlement routing if audit anomalies are detected.',
+      ],
+      suspectedFacts: [
+        'Suspects recent cloud migrations cut corners on identity and access management.',
+      ],
+      unknownFacts: [
+        'Does not know the internal details of the Aster AI service account.',
+      ],
+    },
+    schedule: [
+      {
+        startHour: 8,
+        endHour: 20,
+        locationId: 'neighborhood',
+        position: [-6.0, 0, -12.0],
+        yaw: Math.PI / 2,
+        activity: 'Conferring outside Eko Merchant Bank with executive risk briefs.',
+        animationState: 'IDLE',
+      },
+      {
+        startHour: 20,
+        endHour: 8,
+        locationId: 'neighborhood',
+        position: [-6.0, 0, -12.0],
+        yaw: Math.PI / 2,
+        activity: 'Reviewing audit telemetry notes.',
+        animationState: 'IDLE',
+      },
+    ],
+  },
 ];
 
 export function getNpcProfile(npcId: string): NpcProfile | undefined {

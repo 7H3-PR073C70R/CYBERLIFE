@@ -5,7 +5,7 @@ import { SimulationProvider } from '@/application/simulation/SimulationContext';
 import { createSimulationEngine } from '@/simulation';
 
 describe('ContactsApp Component', () => {
-  it('renders directory title, filter tabs, and all 8 contact entries', () => {
+  it('renders directory title, filter tabs, and all contact entries', () => {
     render(
       <SimulationProvider>
         <ContactsApp />
@@ -15,9 +15,9 @@ describe('ContactsApp Component', () => {
     expect(screen.getByTestId('contacts-app')).toBeInTheDocument();
     expect(screen.getByText(/Lagos Directory/i)).toBeInTheDocument();
 
-    // Verify all 8 contact items
+    // Verify all contact items
     const contactItems = screen.getAllByTestId(/^contact-item-/);
-    expect(contactItems.length).toBe(8);
+    expect(contactItems.length).toBe(9);
   });
 
   it('filters contacts by organization/category tabs', () => {

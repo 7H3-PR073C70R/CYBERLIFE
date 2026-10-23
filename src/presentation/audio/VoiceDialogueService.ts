@@ -19,6 +19,7 @@
 
 import { NpcVoiceConfig } from '../../simulation/actors/types';
 import { audioManager } from './AudioManager';
+import { normalizeTextForSpeech } from '../../content/audio/pronunciationDictionary';
 
 export interface VoiceSpeakerOptions {
   speaker?: string;
@@ -537,46 +538,10 @@ export class VoiceDialogueService {
   }
 
   /**
-   * Preprocess dialogue text to sound natural and non-robotic:
-   * - Strips sound effect descriptors like *electronic audio static* or [encrypted line...]
-   * - Expands technical acronyms (CVE, SOC, SMB, ZRTP) into natural spoken English
+   * Preprocess dialogue text to sound natural and non-robotic using the centralized pronunciation dictionary.
    */
   public cleanTextForSpeech(rawText: string): string {
-    if (!rawText) return '';
-
-    // If text is solely a bracketed stage note (e.g. "[Call encrypted line silent...]"), return empty
-    const trimmed = rawText.trim();
-    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-      return '';
-    }
-
-    const text = rawText
-      // Remove asterisks sound effects like *electronic audio static*
-      .replace(/\*[^*]+\*/g, '')
-      // Remove square bracket tags like [E] or [Info]
-      .replace(/\[[^\]]+\]/g, '')
-      // Normalize acronyms for natural human pronunciation
-      .replace(/\bCVE-(\d{4})-(\d+)\b/gi, 'C V E $1, $2')
-      .replace(/\bCVE\b/g, 'C V E')
-      .replace(/\bSOC\b/g, 'sock')
-      .replace(/\bIoC\b/gi, 'I o C')
-      .replace(/\bIoCs\b/gi, "I o C's")
-      .replace(/\bZRTP\b/gi, 'Z R T P')
-      .replace(/\bAES\b/gi, 'A E S')
-      .replace(/\bSMB\b/gi, 'S M B')
-      .replace(/\bIP\b/g, 'I P')
-      .replace(/\bIAM\b/gi, 'I A M')
-      .replace(/\bRCE\b/gi, 'R C E')
-      .replace(/\bSIEM\b/gi, 'seem')
-      .replace(/\bASAP\b/gi, 'as soon as possible')
-      .replace(/\bfilesrv-01\b/gi, 'file server 0 1')
-      .replace(/\bapp-portal-01\b/gi, 'app portal 0 1')
-      .replace(/\bsvc-aster\b/gi, 'service aster')
-      // Clean duplicate whitespace
-      .replace(/\s+/g, ' ')
-      .trim();
-
-    return text;
+    return normalizeTextForSpeech(rawText);
   }
 
   /**
@@ -641,8 +606,30 @@ export class VoiceDialogueService {
     const clampedRate = Math.max(0.9, Math.min(1.05, profile.rate));
     const selectedVoice = this.selectVoice(profile, speakerKey);
 
-    // Split text into sentences to bypass Chrome's 15-second speech cutoff
-    const sentences = splitIntoSentences(cleanText);
+    // Fallback speech chunking: Speak entire line as one utterance if <= 250 chars.
+    // Only chunk above 250 characters at sentence boundaries, with no added artificial gap.
+    let sentences: string[];
+    if (cleanText.length <= 250) {
+      sentences = [cleanText];
+    } else {
+      sentences = [];
+      const parts = splitIntoSentences(cleanText);
+      let currentChunk = '';
+      for (const p of parts) {
+        if (!currentChunk) {
+          currentChunk = p;
+        } else if (currentChunk.length + 1 + p.length <= 250) {
+          currentChunk += ' ' + p;
+        } else {
+          sentences.push(currentChunk);
+          currentChunk = p;
+        }
+      }
+      if (currentChunk) {
+        sentences.push(currentChunk);
+      }
+    }
+
     if (sentences.length === 0) {
       options.onStart?.();
       options.onEnd?.();
@@ -688,13 +675,9 @@ export class VoiceDialogueService {
           if (sessionToken !== this.currentToken) return;
 
           if (idx + 1 < sentences.length) {
-            // Natural pause between sentences (110ms)
-            this.pendingSentenceTimeout = setTimeout(() => {
-              if (sessionToken === this.currentToken) {
-                sentenceIndex++;
-                speakSentence(sentenceIndex);
-              }
-            }, 110);
+            // Immediate transition without artificial delay
+            sentenceIndex++;
+            speakSentence(sentenceIndex);
           } else {
             // Completed all sentences
             this.notifySpeaking(false);

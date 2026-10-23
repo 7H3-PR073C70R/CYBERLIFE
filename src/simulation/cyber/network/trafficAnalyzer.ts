@@ -71,25 +71,107 @@ export function filterTrafficEvents(
       }
     }
 
-    // 8. Text search query
+    // 8. Text search & Wireshark-style display filter query
     if (options.searchQuery && options.searchQuery.trim().length > 0) {
-      const q = options.searchQuery.toLowerCase().trim();
-      const matchSummary = event.summaryInfo.toLowerCase().includes(q);
-      const matchSrc = event.sourceIp.toLowerCase().includes(q) || event.sourceHostId.toLowerCase().includes(q);
-      const matchDst = event.destinationIp.toLowerCase().includes(q) || event.destinationHostId.toLowerCase().includes(q);
-      const matchProto = event.protocol.toLowerCase().includes(q);
-      const matchDns = event.dns?.queryName.toLowerCase().includes(q) ?? false;
-      const matchHttp = event.http?.uri.toLowerCase().includes(q) ?? false;
-      const matchTls = event.tls?.sni.toLowerCase().includes(q) ?? false;
-      const matchSmb = event.smb2?.filename?.toLowerCase().includes(q) ?? false;
-
-      if (!matchSummary && !matchSrc && !matchDst && !matchProto && !matchDns && !matchHttp && !matchTls && !matchSmb) {
+      if (!evaluateDisplayFilterExpression(event, options.searchQuery)) {
         return false;
       }
     }
 
     return true;
   });
+}
+
+/**
+ * Evaluates Wireshark-style display filter expressions and fallback text searches.
+ * Supports:
+ * - Compound filters with '&&' or 'and'
+ * - 'smb2.cmd == 5' (Tree Connect)
+ * - 'ip.addr == X.X.X.X'
+ * - 'ip.src == X.X.X.X', 'ip.dst == X.X.X.X'
+ * - 'tcp.port == X', 'udp.port == X'
+ * - Protocol keywords ('smb2', 'tls', 'dns', 'http', etc.)
+ * - General substring search across payloads and metadata
+ */
+export function evaluateDisplayFilterExpression(
+  event: SyntheticTrafficEvent,
+  filterStr: string
+): boolean {
+  const clauses = filterStr.split(/\s*(?:&&|\band\b)\s*/i);
+  for (const rawClause of clauses) {
+    const clause = rawClause.trim().toLowerCase();
+    if (!clause) continue;
+
+    // smb2.cmd == 5 (0x0005 = TREE_CONNECT)
+    const smb2CmdMatch = clause.match(/^smb2\.cmd\s*==?\s*(\d+)$/);
+    if (smb2CmdMatch) {
+      const code = parseInt(smb2CmdMatch[1] ?? '0', 10);
+      if (code === 5) {
+        if (event.protocol !== 'SMB2' || event.smb2?.command !== 'TREE_CONNECT') {
+          return false;
+        }
+        continue;
+      }
+    }
+
+    // ip.addr == 10.0.4.15
+    const ipAddrMatch = clause.match(/^ip\.addr\s*==?\s*([0-9a-f.:]+)$/);
+    if (ipAddrMatch) {
+      const targetIp = (ipAddrMatch[1] ?? '').toLowerCase();
+      if (event.sourceIp.toLowerCase() !== targetIp && event.destinationIp.toLowerCase() !== targetIp) {
+        return false;
+      }
+      continue;
+    }
+
+    // ip.src == ...
+    const ipSrcMatch = clause.match(/^ip\.src\s*==?\s*([0-9a-f.:]+)$/);
+    if (ipSrcMatch) {
+      const targetIp = (ipSrcMatch[1] ?? '').toLowerCase();
+      if (event.sourceIp.toLowerCase() !== targetIp) return false;
+      continue;
+    }
+
+    // ip.dst == ...
+    const ipDstMatch = clause.match(/^ip\.dst\s*==?\s*([0-9a-f.:]+)$/);
+    if (ipDstMatch) {
+      const targetIp = (ipDstMatch[1] ?? '').toLowerCase();
+      if (event.destinationIp.toLowerCase() !== targetIp) return false;
+      continue;
+    }
+
+    // tcp.port == 445
+    const tcpPortMatch = clause.match(/^tcp\.port\s*==?\s*(\d+)$/);
+    if (tcpPortMatch) {
+      const port = parseInt(tcpPortMatch[1] ?? '0', 10);
+      if (event.sourcePort !== port && event.destinationPort !== port) return false;
+      continue;
+    }
+
+    // Protocol exact keywords
+    if (['smb2', 'tls', 'dns', 'http', 'tcp', 'udp', 'arp'].includes(clause)) {
+      if (event.protocol.toLowerCase() !== clause) return false;
+      continue;
+    }
+
+    // Fallback: substring search across summary, IPs, hostnames, protocols, and metadata
+    const matchSummary = event.summaryInfo.toLowerCase().includes(clause);
+    const matchSrc = event.sourceIp.toLowerCase().includes(clause) || event.sourceHostId.toLowerCase().includes(clause);
+    const matchDst = event.destinationIp.toLowerCase().includes(clause) || event.destinationHostId.toLowerCase().includes(clause);
+    const matchProto = event.protocol.toLowerCase().includes(clause);
+    const matchDns = event.dns?.queryName.toLowerCase().includes(clause) ?? false;
+    const matchHttp = event.http?.uri.toLowerCase().includes(clause) ?? false;
+    const matchTls = event.tls?.sni.toLowerCase().includes(clause) ?? false;
+    const matchSmb =
+      (event.smb2?.filename?.toLowerCase().includes(clause) ||
+        event.smb2?.sharePath.toLowerCase().includes(clause)) ??
+      false;
+
+    if (!matchSummary && !matchSrc && !matchDst && !matchProto && !matchDns && !matchHttp && !matchTls && !matchSmb) {
+      return false;
+    }
+  }
+  return true;
 }
 
 export function searchTrafficEvents(

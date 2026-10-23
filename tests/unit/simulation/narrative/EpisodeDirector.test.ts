@@ -106,63 +106,50 @@ describe('Episode Delivery Framework — EpisodeDirector', () => {
       expect(rawEnc).toContain('ep01_claim_01');
 
       syncJournalToFilesystem(['ep01_journal_01']);
+      expect(virtualFilesystem.exists('/home/protector/.vault/journal.enc')).toBe(true);
       expect(virtualFilesystem.exists('/home/analyst/.vault/journal.enc')).toBe(true);
-      const file = virtualFilesystem.readFile('/home/analyst/.vault/journal.enc');
+      const file = virtualFilesystem.readFile('/home/protector/.vault/journal.enc');
       expect(file?.content).toContain('CYBERLIFE WORKSTATION SECURE ENCLAVE');
     });
   });
 
   describe('Beat Progression & Diegetic Delivery', () => {
-    it('dismisses title card and advances to next beat with ticket dispatch', () => {
+    it('dismisses title card and advances to morning Blessing call beat', () => {
       const result = startEpisode(simState, 'ep01_triage_init');
       let state = result.state;
 
-      // Dismissing title card automatically completes the title card beat and triggers next beat (ticket)
+      // Dismissing title card completes beat 1 and triggers beat 2 (Blessing call)
       const dismissResult = dismissTitleCard(state);
       state = dismissResult.state;
 
       expect(state.episode?.activeTitleCard).toBeNull();
       expect(state.episode?.completedBeatIds).toContain('ep01_beat_01_title');
+      expect(state.episode?.activeCall).not.toBeNull();
+      expect(state.episode?.activeCall?.callerId).toBe('npc_amina');
+      expect(state.episode?.activeCall?.callerName).toBe('Blessing');
+      expect(dismissResult.events.some(e => e.type === 'EPISODE_CALL_INITIATED')).toBe(true);
+    });
+
+    it('advances through commute Barry encounter to Cedarline ticket dispatch', () => {
+      let state = startEpisode(simState, 'ep01_triage_init').state;
+      state = dismissTitleCard(state).state;
+
+      // Complete beat 2 (morning call) -> advances to beat 3 (Barry commute encounter)
+      const completeCall1 = completeEpisodeBeat(state, 'ep01_beat_02_morning');
+      state = completeCall1.state;
+      expect(state.episode?.completedBeatIds).toContain('ep01_beat_02_morning');
+      expect(state.episode?.activeCall?.callerId).toBe('npc_marcus');
+
+      // Complete beat 3 (commute) -> advances to beat 4 (ticket ALT-2026-1012)
+      const completeCall2 = completeEpisodeBeat(state, 'ep01_beat_03_commute');
+      state = completeCall2.state;
+      expect(state.episode?.completedBeatIds).toContain('ep01_beat_03_commute');
       expect(state.episode?.activeTickets.length).toBe(1);
 
       const ticket = state.episode?.activeTickets[0];
-      expect(ticket?.ticketId).toBe('TKT-2026-1012');
+      expect(ticket?.ticketId).toBe('ALT-2026-1012');
       expect(ticket?.requester).toContain('Blessing');
-      expect(dismissResult.events.some(e => e.type === 'EPISODE_TICKET_DELIVERED')).toBe(true);
-    });
-
-    it('delivers Onion Chat ping and unlocks journal entry when ticket beat completes', () => {
-      let state = startEpisode(simState, 'ep01_triage_init').state;
-      state = dismissTitleCard(state).state;
-
-      // Complete ticket beat -> advances to onionMessage beat
-      const completeTicket = completeEpisodeBeat(state, 'ep01_beat_02_ticket');
-      state = completeTicket.state;
-
-      expect(state.episode?.completedBeatIds).toContain('ep01_beat_02_ticket');
-      expect(state.episode?.deliveredMessages.length).toBe(1);
-      const msg = state.episode?.deliveredMessages[0];
-      expect(msg?.contactId).toBe('tsharp');
-      expect(msg?.text).toContain('telemetry');
-      expect(completeTicket.events.some(e => e.type === 'EPISODE_MESSAGE_DELIVERED')).toBe(true);
-    });
-
-    it('triggers urgent VoIP call beat with dialogue sequence', () => {
-      let state = startEpisode(simState, 'ep01_triage_init').state;
-      state = dismissTitleCard(state).state;
-      state = completeEpisodeBeat(state, 'ep01_beat_02_ticket').state;
-      state = completeEpisodeBeat(state, 'ep01_beat_03_onion').state;
-
-      // Call beat is triggered
-      expect(state.episode?.activeCall).not.toBeNull();
-      expect(state.episode?.activeCall?.callerId).toBe('barry-adebayo');
-      expect(state.episode?.activeCall?.dialogue.length).toBeGreaterThan(0);
-
-      // Complete call beat
-      const completeCall = completeEpisodeBeat(state, 'ep01_beat_04_call');
-      state = completeCall.state;
-      expect(state.episode?.activeCall).toBeNull();
-      expect(completeCall.events.some(e => e.type === 'EPISODE_BEAT_COMPLETED')).toBe(true);
+      expect(completeCall2.events.some(e => e.type === 'EPISODE_TICKET_DELIVERED')).toBe(true);
     });
   });
 
@@ -172,7 +159,7 @@ describe('Episode Delivery Framework — EpisodeDirector', () => {
       state = dismissTitleCard(state).state;
 
       const initialTime = state.time.simulationTimeSeconds;
-      const blackoutResult = triggerBlackoutBeat(state, 'ep01_beat_06_blackout');
+      const blackoutResult = triggerBlackoutBeat(state, 'ep01_beat_12_cliffhanger');
       state = blackoutResult.state;
 
       expect(state.episode?.activeBlackout).not.toBeNull();
@@ -185,7 +172,7 @@ describe('Episode Delivery Framework — EpisodeDirector', () => {
       // Verify file dropped
       expect(virtualFilesystem.exists('/tmp/nexus_handshake_dump.pcap')).toBe(true);
       const file = virtualFilesystem.readFile('/tmp/nexus_handshake_dump.pcap');
-      expect(file?.content).toContain('TLS Handshake');
+      expect(file?.content).toContain('TLS 1.3 Handshake');
 
       // Verify flag set
       expect(state.flags['flag_nexus_discovered']).toBe(true);

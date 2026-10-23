@@ -14,6 +14,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { AppId, WindowState } from './types';
 import { OsIcon, OsIconName } from './icons/OsIcons';
 import { OS_NAME } from './osBranding';
+import { TraceMeterApplet } from './components/TraceMeterApplet';
 
 export interface TopPanelProps {
   windows: Record<AppId, WindowState>;
@@ -25,6 +26,7 @@ export interface TopPanelProps {
   onExitDesktop: () => void;
   onPeekOut?: () => void;
   isPeekAvailable?: boolean;
+  onOpenDebrief?: () => void;
 }
 
 type MenuType = 'applications' | 'places' | 'system' | null;
@@ -206,6 +208,7 @@ export const TopPanel: React.FC<TopPanelProps> = ({
   onExitDesktop,
   onPeekOut,
   isPeekAvailable = false,
+  onOpenDebrief,
 }) => {
   const [openMenu, setOpenMenu] = useState<MenuType>(null);
   const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
@@ -944,6 +947,9 @@ export const TopPanel: React.FC<TopPanelProps> = ({
           paddingLeft: '8px',
         }}
       >
+        {/* Trace & Legal Exposure Applet (Visible during night ops / elevated telemetry) */}
+        <TraceMeterApplet onOpenDebrief={onOpenDebrief} />
+
         {/* MATE System Monitor Applet (CPU / RAM graphs) */}
         <div
           title="MATE System Monitor — CPU (Green) & RAM (Cyan) Telemetry"

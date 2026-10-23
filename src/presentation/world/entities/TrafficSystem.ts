@@ -164,6 +164,19 @@ export class TrafficSystem {
     );
     this.vehicles.push(v5);
     this.group.add(v5.group);
+
+    // 6. High-Performance Sports Coupe on Marina Expressway (z = 28.5, heading +X: x = -52 to 52)
+    const v6 = this.createVehicleInstance(
+      'SPORTS',
+      'marina_east_sports',
+      new THREE.Vector3(-52, 0, 28.5),
+      new THREE.Vector3(52, 0, 28.5),
+      new THREE.Vector3(1, 0, 0),
+      9.6,
+      new THREE.Vector3(-38, 0, 28.5)
+    );
+    this.vehicles.push(v6);
+    this.group.add(v6.group);
   }
 
   /**
@@ -235,8 +248,7 @@ export class TrafficSystem {
       if (v.type === 'DANFO') {
         let danfoModel: THREE.Group;
         try {
-          danfoModel = await AssetLoader.getInstance().loadGLTF('/assets/vehicles/danfo_realistic.glb');
-          danfoModel.scale.set(4.4, 4.4, 4.4);
+          danfoModel = await AssetLoader.getInstance().loadNormalizedGLTF('/assets/vehicles/danfo_realistic.glb');
           danfoModel.traverse(node => {
             if (node instanceof THREE.Mesh) {
               node.castShadow = true;
@@ -258,43 +270,48 @@ export class TrafficSystem {
         }
         v.bodyRoot.add(danfoModel);
 
-        // Attach authentic Rigged Pedestrian Conductor standing on the door runner step
-        const conductor = new RiggedPedestrian({
-          bodyType: 'male_2',
-          palette: {
-            skin: 0x3d2314, // Nigerian rich warm brown
-            jacket: 0xfacc15, // Lagos yellow Danfo polo
-            pants: 0x1e3a8a, // Denim jeans
-            shoes: 0x111827, // Sneakers
-          },
-          randomScale: 0.98,
-        });
+        // Attach authentic photorealistic Nigerian Conductor standing on the door runner step
+        AssetLoader.getInstance()
+          .loadNormalizedGLTF('/assets/characters/conductor_trader_male.glb')
+          .then(conductorModel => {
+            conductorModel.position.set(-1.08, 0.22, 0.0);
+            conductorModel.rotation.y = Math.PI / 2;
+            v.bodyRoot.add(conductorModel);
+          })
+          .catch(() => {
+            const conductor = new RiggedPedestrian({
+              bodyType: 'male_2',
+              palette: {
+                skin: 0x3d2314, // Nigerian rich warm brown
+                jacket: 0xfacc15, // Lagos yellow Danfo polo
+                pants: 0x1e3a8a, // Denim jeans
+                shoes: 0x111827, // Sneakers
+              },
+              randomScale: 0.98,
+            });
 
-        conductor.load().then(() => {
-          const condMesh = conductor.getMesh();
-          // Position on the runner step of the door cutout on the right side (-X)
-          condMesh.position.set(-1.08, 0.22, 0.0);
-          // Face the Danfo (pointing +X directly into the interior of the van)
-          condMesh.rotation.y = Math.PI / 2;
-          v.bodyRoot.add(condMesh);
-          v.conductorPed = conductor;
-        }).catch(() => {});
+            conductor.load().then(() => {
+              const condMesh = conductor.getMesh();
+              condMesh.position.set(-1.08, 0.22, 0.0);
+              condMesh.rotation.y = Math.PI / 2;
+              v.bodyRoot.add(condMesh);
+              v.conductorPed = conductor;
+            }).catch(() => {});
+          });
 
         return;
       }
 
       const glbUrl =
         v.type === 'SUV'
-          ? '/assets/vehicles/suv_realistic.glb'
+          ? '/assets/vehicles/estate_hybrid_realistic.glb'
           : v.type === 'SEDAN'
-          ? '/assets/vehicles/sedan.glb'
+          ? '/assets/vehicles/taxi_mondeo_realistic.glb'
           : v.type === 'DELIVERY'
           ? '/assets/vehicles/motorcycle_okada.glb'
-          : '/assets/vehicles/sedan-sports.glb';
+          : '/assets/vehicles/mustang_coupe_realistic.glb';
 
-      const model = await AssetLoader.getInstance().loadGLTF(glbUrl);
-      const scale = v.type === 'SUV' ? 4.5 : v.type === 'DELIVERY' ? 3.2 : 2.0;
-      model.scale.set(scale, scale, scale);
+      const model = await AssetLoader.getInstance().loadNormalizedGLTF(glbUrl);
 
       const newMaterials: THREE.Material[] = [];
       const newBrakeLights: THREE.Mesh[] = [];
@@ -311,12 +328,6 @@ export class TrafficSystem {
                 m.transparent = true;
                 m.opacity = 1.0;
                 newMaterials.push(m);
-
-                if (v.type === 'SUV') {
-                  m.color.setHex(0x0f172a); // Obsidian black metallic
-                  m.roughness = 0.22;
-                  m.metalness = 0.85;
-                }
               }
             });
           }
@@ -379,29 +390,36 @@ export class TrafficSystem {
     const bus = danfoProp.mesh;
     bus.rotation.y = 0; // facing south (+Z)
 
-    // Attach authentic Rigged Pedestrian Conductor standing on the door runner step
-    const conductorPed = new RiggedPedestrian({
-      bodyType: 'male_2',
-      palette: {
-        skin: 0x3d2314, // Nigerian rich warm brown
-        jacket: 0xfacc15, // Yellow Danfo polo
-        pants: 0x1e3a8a, // Denim jeans
-        shoes: 0x111827, // Sneakers
-      },
-      randomScale: 0.98,
-    });
+    // Attach authentic Nigerian Conductor standing on the door runner step
+    AssetLoader.getInstance()
+      .loadNormalizedGLTF('/assets/characters/conductor_trader_male.glb')
+      .then(m => {
+        m.position.set(-1.08, 0.22, 0.0);
+        m.rotation.y = Math.PI / 2;
+        bus.add(m);
+      })
+      .catch(() => {
+        const conductorPed = new RiggedPedestrian({
+          bodyType: 'male_2',
+          palette: {
+            skin: 0x3d2314, // Nigerian rich warm brown
+            jacket: 0xfacc15, // Yellow Danfo polo
+            pants: 0x1e3a8a, // Denim jeans
+            shoes: 0x111827, // Sneakers
+          },
+          randomScale: 0.98,
+        });
 
-    conductorPed.load().then(() => {
-      const m = conductorPed.getMesh();
-      // Position on the runner step in the open doorway cutout on the right side (-X)
-      m.position.set(-1.08, 0.22, 0.0);
-      // Face the Danfo (pointing +X directly into the interior of the van)
-      m.rotation.y = Math.PI / 2;
-      bus.add(m);
-      if (this.busStopState) {
-        this.busStopState.conductorPed = conductorPed;
-      }
-    }).catch(() => {});
+        conductorPed.load().then(() => {
+          const m = conductorPed.getMesh();
+          m.position.set(-1.08, 0.22, 0.0);
+          m.rotation.y = Math.PI / 2;
+          bus.add(m);
+          if (this.busStopState) {
+            this.busStopState.conductorPed = conductorPed;
+          }
+        }).catch(() => {});
+      });
 
     // Left indicator blinker mesh (amber LED)
     const blinkerMat = new THREE.MeshBasicMaterial({ color: 0x332000 });
@@ -533,7 +551,7 @@ export class TrafficSystem {
     this.busStopState = {
       group: busStopGroup,
       busGroup: bus,
-      conductorPed,
+      conductorPed: undefined,
       passengers,
       passengerPeds: [],
       phase: 'ALIGHTING',

@@ -40,7 +40,7 @@ Episodes progress through an ordered list of beats:
 | `hackerCall` | High-urgency VoIP incoming ring with interactive dialogue | `onBeatComplete: 'ep01_beat_03_onion'` |
 | `journalUnlock` | Decrypts an entry in `~/.vault/journal.enc` | `onBeatComplete: 'ep01_beat_04_call'` |
 | `fileDrop` | Injects evidence file into virtual filesystem with desktop toast | `onBeatComplete: 'ep01_beat_05_daycase'` |
-| `blackout` | Loss of municipal power (EKEDC trip), clock jump, brownout flicker | `onBeatComplete: 'ep01_beat_05_daycase'` |
+| `blackout` | Loss of municipal power (LEDCo trip), clock jump, brownout flicker | `onBeatComplete: 'ep01_beat_05_daycase'` |
 | `investigationObjective`| Hooks into M6 investigative case objectives | `onWorldFlag: { flag: 'aster_triage_begun', value: true }` |
 | `mentorHint` | Contextual hint delivered diegetically via Onion Chat | `onGuidanceMode: 'Immersive'` |
 | `choiceDialogue` | Non-blocking narrative branching point | `onEvidenceFound: 'EVD-2026-001'` |
@@ -121,7 +121,7 @@ Simulates a sudden municipal grid failure across Lagos Island:
 3. **Lost Time Clock Skip**: `state.time.simulationTimeSeconds` advances by `clockSkipSeconds` (e.g. 5,400s / 90 minutes).
 4. **State & File Mutations**:
    - Volatile buffers reset.
-   - Physical flags updated (`ekedc_grid_active = false`, `inverter_active = true`).
+   - Physical flags updated (`ledco_grid_active = false`, `inverter_active = true`).
    - Surprise artifacts dropped into `/tmp/` or inbox during the darkness.
 5. **Accessibility**: Respects `reduceMotion` by disabling strobe/flicker and using static battery reserve telemetry.
 

@@ -49,81 +49,77 @@ This guide explains how spoken dialogue audio is generated, structured, cached, 
 | `npm run voice:force` | Forces re-generation of all audio clips even if cached on disk. |
 | `npm run voice:clean` | Scans `public/assets/audio/voice/` and removes obsolete `.mp3` files not referenced by active dialogue. |
 | `npm run voice:azure` | Generates clips using official Azure Cognitive Services Speech REST API (requires credentials in `.env.local`). |
+| `npm run voice:samples` | Generates side-by-side Stage A prosody review sample pack (Variant A vs B) to `docs/audio/samples/`. |
 
 ---
 
 ## 3. How to Update or Add Dialogue Lines
 
-### A. Editing Existing Text
+### A. Adding or Editing a Dialogue Line
 1. Open [src/content/dialogue/npcDialogueData.ts](file:///Users/protector/Documents/projects/cyberlife/src/content/dialogue/npcDialogueData.ts) or [src/simulation/cyber/chat/chatData.ts](file:///Users/protector/Documents/projects/cyberlife/src/simulation/cyber/chat/chatData.ts).
-2. Edit the dialogue `text`.
-3. Run:
-   ```bash
-   npm run voice:dry-run
+2. Set `text` for the written subtitle / typewriter display.
+3. *(Optional)* Set `speech` if the spoken version needs to differ from written text (e.g. rephrasing technical IDs or providing natural cadence):
+   ```ts
+   {
+     text: "Check ALT-2026-1012 and MITRE T1021.002 on filesrv-01.",
+     speech: "Check alert twenty twenty-six, ten twelve and SMB shares on file server 01.",
+     delivery: "urgent"
+   }
    ```
-   You will see that the edited line is identified as "Lines to generate: 1" because the new text produces a new SHA-256 hash.
-4. Run:
-   ```bash
-   npm run voice:generate
-   ```
-   This generates the new `.mp3` clip and updates `manifest.json`.
-5. *(Optional)* Run `npm run voice:clean` to remove the old, unreferenced `.mp3` file.
+4. *(Optional)* Set `delivery` tag to adjust character prosody:
+   - `neutral`: Baseline pacing
+   - `calm`: Slightly slower (-2%), lower pitch (-1%)
+   - `anxious`: Fast (+5%), higher pitch (+2.5%)
+   - `urgent`: Rapid (+7%), higher pitch (+3%)
+   - `tired`: Slower (-4%), lower pitch (-2%)
+   - `tense`: Brisk (+4%), tight pitch (+1%)
+5. *(Optional)* Insert `[beat]` for an author-intended dramatic pause (300-450 ms).
 
-### B. Adding a New Character or Changing a Name
-1. Character profiles are defined in [src/simulation/actors/npcProfiles.ts](file:///Users/protector/Documents/projects/cyberlife/src/simulation/actors/npcProfiles.ts).
-2. Chat contacts are defined in [src/simulation/cyber/chat/chatData.ts](file:///Users/protector/Documents/projects/cyberlife/src/simulation/cyber/chat/chatData.ts).
-3. The generator dynamically loads these modules:
-   - **Speaker Name**: Pulled directly from `profile.name` or `thread.contactName`.
-   - **Gender**: Pulled from `profile.voice.gender` (female maps to `en-NG-EzinneNeural`, male maps to `en-NG-AbeoNeural`).
-   - **Rate & Pitch**: Computed from `profile.voice.rate` and `profile.voice.pitch` (e.g. rate `1.04` maps to `+4%`).
-4. If you rename a character (e.g., from `"Barry"` to `"Barry Adeleke"`), simply rerun `npm run voice:generate`. The manifest metadata will update automatically without needing to re-synthesize audio if the voice parameters and text remain identical.
+### B. Pronunciation Dictionary
+All acronyms, technical IDs, and Nigerian proper nouns are managed centrally in [src/content/audio/pronunciationDictionary.ts](file:///Users/protector/Documents/projects/cyberlife/src/content/audio/pronunciationDictionary.ts).
+- Expands acronyms (e.g. `SMB` -> `S M B`, `SIEM` -> `seem`, `Sysmon` -> `sis-mon`, `PCAP` -> `pee-cap`).
+- Normalizes Nigerian names and locations (e.g. `Tsharp` -> `Tee-sharp`, `Eko` -> `Eh-ko`, `Lagos` -> `Lay-gos`).
+- Automatically eliminates long ellipses (`...`), em-dashes (`—`), and semicolons (` ; `) to prevent robotic pauses.
+- Preserves contractions (`don't`, `I'm`, `haven't`) for natural human delivery.
+- Protects Nigerian Pidgin phrases from corrupted English phonetic respelling.
+
+### C. Character Casting & Voice Prosody
+Character presets are defined in `CHARACTER_VOICE_CASTING` in `pronunciationDictionary.ts` and automatically receive the **Variant B project default rate boost (+3%)** for brisk, conversational flow:
+- **Blessing** (`npc_amina`): `en-NG-EzinneNeural`, base rate: -2% (effective +1%), pitch: -6Hz (confident, steady, slightly lower)
+- **Barry** (`npc_marcus`): `en-NG-AbeoNeural`, base rate: +5% (effective +8%), pitch: +7Hz (younger, faster, nervous)
+- **Michael** (`npc_femi`): `en-NG-AbeoNeural`, base rate: -5% (effective -2%), pitch: -10Hz (slower, deeper, controlled)
+- **Tsharp** (`npc_tunde`): `en-NG-AbeoNeural`, base rate: +3% (effective +6%), pitch: -2Hz (relaxed, quicker, casual)
+- **Mama Esther** (`npc_nkechi`): `en-NG-EzinneNeural`, base rate: -4% (effective -1%), pitch: +2Hz (older, warm matriarch)
+- **Choker**: `en-NG-AbeoNeural`, base rate: -6% (effective -3%), pitch: -12Hz (low, deliberate)
+- **Mercy** (`npc_elena`): `en-NG-EzinneNeural`, base rate: 0% (effective +3%), pitch: +3Hz
+- **Goodness** (`npc_folake`): `en-NG-EzinneNeural`, base rate: +2% (effective +5%), pitch: +4Hz
+- **Uncle Segun** (`npc_segun`): `en-NG-AbeoNeural`, base rate: -8% (effective -5%), pitch: -8Hz
+- **Aster SIEM Bot**: `en-US-ChristopherNeural`, rate: 0%, pitch: 0Hz (synthetic/flat, unboosted)
+
+### D. Audio Post-Processing & Quality Gate (Variant B Defaults)
+All episodes inherit the project defaults codified in `VOICE_PROJECT_DEFAULTS`:
+- **Target internal sentence gap**: **185 ms** (shortens pauses > 220 ms down to 185 ms with 10 ms crossfade; natural pauses ~85 ms at commas and ~185 ms at sentences)
+- **Author `[beat]` duration**: **300-450 ms** (exact author-intended pause)
+- **Leading silence**: Trimmed to **20-30 ms** (max allowable: 60 ms)
+- **Trailing silence**: Trimmed to **30-40 ms** (max allowable: 60 ms)
+- **Sequential call spacing**: **200 ms** between consecutive call speakers (150-300 ms range)
+- **Skip fadeout**: **70 ms** smooth gain rampdown when skipping or interrupting lines
+- **Loudness**: Normalized to **-16.0 LUFS** (±1.5 LU tolerance) with true-peak limited to **-1.5 dBFS**
+- **Automated Quality Gate**: Checks every clip; fails if internal silence > 260 ms outside author beats, leading/trailing > 80 ms, loudness outside [-17.5, -14.5] LUFS, clipping > -0.5 dBFS, or speaking rate outside 10.0-20.0 chars/sec. Prints top 5 worst offenders per check.
 
 ---
 
-## 4. Standalone Python Tool (`scripts/edge_tts_batch.py`)
-
-The repository includes a dedicated, zero-config Python tool at [scripts/edge_tts_batch.py](file:///Users/protector/Documents/projects/cyberlife/scripts/edge_tts_batch.py).
-
-### Running via `uv` (Recommended - No Global Installs Needed)
-If you have `uv` installed:
+## 4. Regeneration Workflow
 ```bash
-# List available Nigerian voices
-uv run --with edge-tts python3 scripts/edge_tts_batch.py --list-voices --lang en-NG
+# 1. Preview changes without generating
+npm run voice:dry-run
 
-# Synthesize a single custom line
-uv run --with edge-tts python3 scripts/edge_tts_batch.py \
-  --text "Analyst, we have incoming traffic on port 443." \
-  --voice en-NG-EzinneNeural \
-  --rate "+2%" \
-  --out /tmp/sample.mp3
+# 2. Generate side-by-side A/B sample pack for listen review
+npm run voice:samples
+
+# 3. Generate all new or modified dialogue clips
+npm run voice:generate
+
+# 4. Clean obsolete audio files
+npm run voice:clean
 ```
-
-### Running via standard `python3`
-Ensure `edge-tts` is installed:
-```bash
-pip install edge-tts
-python3 scripts/edge_tts_batch.py --help
-```
-
----
-
-## 5. Production Voice Generation (Azure Cognitive Services)
-
-For official production builds and distribution:
-1. Create a `.env.local` file in the project root:
-   ```bash
-   AZURE_SPEECH_KEY=your_azure_cognitive_services_key
-   AZURE_SPEECH_REGION=your_azure_region # e.g. eastus
-   ```
-2. Run:
-   ```bash
-   npm run voice:azure
-   ```
-3. The generator calls the Azure Cognitive Services Speech REST API directly via HTTPS `fetch` with SSML payloads.
-
----
-
-## 6. Runtime Fallback & Nigerian Pidgin Handling
-
-- **Missing Audio Fallback**: If an audio file is ever missing from `manifest.json`, [src/presentation/audio/VoicePlayer.ts](file:///Users/protector/Documents/projects/cyberlife/src/presentation/audio/VoicePlayer.ts) automatically falls back to browser `SpeechSynthesis` (`VoiceDialogueService`) so dialogue never breaks or halts.
-- **Nigerian Pidgin Lines**: Dialogue lines containing Nigerian Pidgin (e.g., Mama Esther's stall dialogues) are marked with `"needsHumanRecording": true` in `manifest.json`. When live voice actors record human takes, replace the corresponding `.mp3` files in `public/assets/audio/voice/` or update the file pointers in `manifest.json`.

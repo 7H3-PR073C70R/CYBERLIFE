@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
+import { ModelNormalizer } from './assets/ModelNormalizer';
 
 export class AssetLoader {
   private static instance: AssetLoader;
@@ -13,6 +15,9 @@ export class AssetLoader {
   private constructor() {
     this.gltfLoader = new GLTFLoader();
     this.gltfLoader.setMeshoptDecoder(MeshoptDecoder);
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+    this.gltfLoader.setDRACOLoader(dracoLoader);
     this.textureLoader = new THREE.TextureLoader();
   }
 
@@ -49,6 +54,19 @@ export class AssetLoader {
   }
 
   /**
+   * Loads a GLB/GLTF model and automatically normalizes its scale, pivot, and orientation
+   * using ModelNormalizer specifications.
+   */
+  public async loadNormalizedGLTF(url: string): Promise<THREE.Group> {
+    const rawGroup = await this.loadGLTF(url);
+    const wrapper = new THREE.Group();
+    wrapper.name = `Normalized_${url.split('/').pop()}`;
+    wrapper.add(rawGroup);
+    ModelNormalizer.normalize(url, rawGroup);
+    return wrapper;
+  }
+
+  /**
    * Loads a GLB/GLTF asset including both scene and animation clips with caching.
    * Clones the scene with SkeletonUtils.clone so separate instances do not mutate shared hierarchies.
    */
@@ -68,8 +86,10 @@ export class AssetLoader {
     }
 
     const gltf = await this.gltfFullCache.get(url)!;
+    const cloned = SkeletonUtils.clone(gltf.scene) as THREE.Group;
+    ModelNormalizer.normalize(url, cloned);
     return {
-      scene: SkeletonUtils.clone(gltf.scene) as THREE.Group,
+      scene: cloned,
       animations: gltf.animations ? [...gltf.animations] : [],
     };
   }

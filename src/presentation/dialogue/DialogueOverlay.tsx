@@ -119,6 +119,8 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
       role: profile.role,
       voice: profile.voice,
       isPhoneCall: false,
+      speech: currentNode.speech,
+      delivery: currentNode.delivery,
       onEnded: () => {
         if (!isCancelled) {
           setDisplayedText(fullText);
@@ -150,7 +152,7 @@ export const DialogueOverlay: React.FC<DialogueOverlayProps> = ({ npcId, onClose
       clearInterval(interval);
       voicePlayer.stop();
     };
-  }, [currentNode?.id, currentNode?.text, profile]);
+  }, [currentNode?.id, currentNode?.text, currentNode?.speech, currentNode?.delivery, profile]);
 
   const handleSkipTypewriter = useCallback(() => {
     if (currentNode?.text) {

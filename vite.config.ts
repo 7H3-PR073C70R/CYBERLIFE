@@ -32,6 +32,54 @@ function screenshotSaverPlugin() {
           });
         }
       });
+
+      // Stream incoming asset files from assets_incoming/new without copying to public/
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      server.middlewares.use('/api/assets-incoming/new', (req: any, res: any) => {
+        const cleanUrl = (req.url || '').split('?')[0];
+        const filename = path.basename(cleanUrl);
+        const filePath = path.resolve(__dirname, 'assets_incoming/new', filename);
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+          res.writeHead(200, {
+            'Content-Type': 'model/gltf-binary',
+            'Access-Control-Allow-Origin': '*',
+          });
+          fs.createReadStream(filePath).pipe(res);
+        } else {
+          res.writeHead(404, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: `Incoming asset not found: ${filename}` }));
+        }
+      });
+
+      // Save dev contact sheet images to docs/world/contact-sheets/
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      server.middlewares.use('/api/save-contact-sheet', (req: any, res: any) => {
+        if (req.method === 'POST') {
+          let body = '';
+          req.on('data', (chunk: Buffer | string) => {
+            body += chunk;
+          });
+          req.on('end', async () => {
+            try {
+              const { filename, dataUrl } = JSON.parse(body);
+              const base64Data = dataUrl.replace(/^data:image\/\w+;base64,/, '');
+              const buffer = Buffer.from(base64Data, 'base64');
+              const isCharSheet = filename.startsWith('characters/');
+              const cleanFilename = isCharSheet ? filename.replace('characters/', '') : filename;
+              const outDir = isCharSheet
+                ? path.resolve(__dirname, 'docs/characters/contact-sheets')
+                : path.resolve(__dirname, 'docs/world/contact-sheets');
+              await fs.promises.mkdir(outDir, { recursive: true });
+              await fs.promises.writeFile(path.join(outDir, cleanFilename), buffer);
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ ok: true, path: filename }));
+            } catch (err) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: String(err) }));
+            }
+          });
+        }
+      });
     },
   };
 }

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyberlife — Voice Prosody & Sentence Gap Review (Stage A)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111726;
+      --border: #1e293b;
+      --accent: #00e5ff;
+      --accent-b: #10b981;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Outfit', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      padding: 2.5rem 1.5rem;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    h1 span {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 1.25rem;
+      background: rgba(0, 229, 255, 0.1);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+    }
+    p.subtitle {
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      font-size: 1.05rem;
+    }
+    .sample-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .sample-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .sample-badge {
+      font-family: var(--mono);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .sample-header h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      flex-grow: 1;
+    }
+    .sample-speaker {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .sample-text {
+      background: rgba(0, 0, 0, 0.3);
+      border-left: 3px solid var(--accent);
+      padding: 0.75rem 1rem;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+    .sample-text p { margin-bottom: 0.35rem; }
+    .sample-text p:last-child { margin-bottom: 0; }
+    .spoken-text { color: #38bdf8; }
+    .variants-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .variant-col {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+    .variant-a { border-top: 3px solid var(--accent); }
+    .variant-b { border-top: 3px solid var(--accent-b); }
+    .variant-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .variant-header h4 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+    }
+    audio {
+      width: 100%;
+      height: 38px;
+      margin-bottom: 0.75rem;
+      border-radius: 4px;
+    }
+    .metrics-box {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem 0.8rem;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 0.6rem 0.8rem;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .metric {
+      display: flex;
+      justify-content: space-between;
+    }
+    .metric .lbl { color: var(--text-muted); }
+    .metric .val { color: #f8fafc; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Cyberlife <span>Audio Pipeline Stage A</span></h1>
+      <p class="subtitle">Side-by-side listening review for Nigerian English natural voice audio. Choose <strong>Variant A</strong> (Crisp Cadence, 140ms gaps) or <strong>Variant B</strong> (Brisk Flow, 185ms gaps, +3% rate).</p>
+    </header>
+
+    
+    <div class="sample-card">
+      <div class="sample-header">
+        <span class="sample-badge">#1</span>
+        <h3>1. Blessing — Calm Briefing</h3>
+        <span class="sample-speaker">Blessing (en-NG-EzinneNeural)</span>
+      </div>
+
+      <div class="sample-text">
+        <p class="display-text"><strong>Written:</strong> "The ticket is ALT-2026-1012. Michael doesn’t know yet—the alert was suppressed from the morning digest. We need to know if payroll leaked."</p>
+        <p class="spoken-text"><strong>Spoken:</strong> "The ticket is alert twenty twenty-six, ten twelve. Michael doesn't know yet, the alert was suppressed from the morning digest. We need to know if payroll leaked."</p>
+      </div>
+
+      <div class="variants-grid">
+        <!-- Variant A -->
+        <div class="variant-col variant-a">
+          <div class="variant-header">
+            <h4>Variant A (Crisp & Natural)</h4>
+            <span class="tag">Target Gap: 140ms | Rate: -4%</span>
+          </div>
+          <audio controls preload="auto" src="./sample_1_blessing_calm_A.mp3"></audio>
+          <div class="metrics-box">
+            <div class="metric"><span class="lbl">Duration</span><span class="val">9.09s</span></div>
+            <div class="metric"><span class="lbl">Lead / Trail</span><span class="val">0ms / 0ms</span></div>
+            <div class="metric"><span class="lbl">Internal Gaps</span><span class="val">none ms</span></div>
+            <div class="metric"><span class="lbl">Loudness</span><span class="val">-15.9 LUFS</span></div>
+            <div class="metric"><span class="lbl">True Peak</span><span class="val">-1.7 dBFS</span></div>
+            <div class="metric"><span class="lbl">Speed</span><span class="val">14.9 cps</span></div>
+          </div>
+        </div>
+
+        <!-- Variant B -->
+        <div class="variant-col variant-b">
+          <div class="variant-header">
+            <h4>Variant B (Brisk & Flowing)</h4>
+            <span class="tag">Target Gap: 185ms | Rate: -1%</span>
+          </div>
+          <audio controls preload="auto" src="./sample_1_blessing_calm_B.mp3"></audio>
+          <div class="metrics-box">
+            <div class="metric"><span class="lbl">Duration</span><span class="val">8.99s</span></div>
+            <div class="metric"><span class="lbl">Lead / Trail</span><span class="val">0ms / 0ms</span></div>
+            <div class="metric"><span class="lbl">Internal Gaps</span><span class="val">none ms</span></div>
+            <div class="metric"><span class="lbl">Loudness</span><span class="val">-15.9 LUFS</span></div>
+            <div class="metric"><span class="lbl">True Peak</span><span class="val">-1.5 dBFS</span></div>
+            <div class="metric"><span class="lbl">Speed</span><span class="val">15 cps</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+    <div class="sample-card">
+      <div class="sample-header">
+        <span class="sample-badge">#2</span>
+        <h3>2. Barry — Nervous Encounter</h3>
+        <span class="sample-speaker">Barry (en-NG-AbeoNeural)</span>
+      </div>
+
+      <div class="sample-text">
+        <p class="display-text"><strong>Written:</strong> "Protector! Please tell me you haven’t escalated the Aster ticket yet. I swear I was only servicing the cooling racks on Saturday!"</p>
+        <p class="spoken-text"><strong>Spoken:</strong> "Protector! Please tell me you haven't escalated the Aster ticket yet. I swear I was only servicing the cooling racks on Saturday!"</p>
+      </div>
+
+      <div class="variants-grid">
+        <!-- Variant A -->
+        <div class="variant-col variant-a">
+          <div class="variant-header">
+            <h4>Variant A (Crisp & Natural)</h4>
+            <span class="tag">Target Gap: 140ms | Rate: +10%</span>
+          </div>
+          <audio controls preload="auto" src="./sample_2_barry_nervous_A.mp3"></audio>
+          <div class="metrics-box">
+            <div class="metric"><span class="lbl">Duration</span><span class="val">5.72s</span></div>
+            <div class="metric"><span class="lbl">Lead / Trail</span><span class="val">0ms / 0ms</span></div>
+            <div class="metric"><span class="lbl">Internal Gaps</span><span class="val">none ms</span></div>
+            <div class="metric"><span class="lbl">Loudness</span><span class="val">-16.1 LUFS</span></div>
+            <div class="metric"><span class="lbl">True Peak</span><span class="val">-1.8 dBFS</span></div>
+            <div class="metric"><span class="lbl">Speed</span><span class="val">18.9 cps</span></div>
+          </div>
+        </div>
+
+        <!-- Variant B -->
+        <div class="variant-col variant-b">
+          <div class="variant-header">
+            <h4>Variant B (Brisk & Flowing)</h4>
+            <span class="tag">Target Gap: 185ms | Rate: +13%</span>
+          </div>
+          <audio controls preload="auto" src="./sample_2_barry_nervous_B.mp3"></audio>
+          <div class="metrics-box">
+            <div class="metric"><span class="lbl">Duration</span><span class="val">5.66s</span></div>
+            <div class="metric"><span class="lbl">Lead / Trail</span><span class="val">0ms / 0ms</span></div>
+            <div class="metric"><span class="lbl">Internal Gaps</span><span class="val">none ms</span></div>
+            <div class="metric"><span class="lbl">Loudness</span><span class="val">-16 LUFS</span></div>
+            <div class="metric"><span class="lbl">True Peak</span><span class="val">-1.7 dBFS</span></div>
+            <div class="metric"><span class="lbl">Speed</span><span class="val">19.1 cps</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+    <div class="sample-card">
+      <div class="sample-header">
+        <span class="sample-badge">#3</span>
+        <h3>3. Michael — Executive Pressure Call</h3>
+        <span class="sample-speaker">Michael (en-NG-AbeoNeural)</span>
+      </div>
+
+      <div class="sample-text">
+        <p class="display-text"><strong>Written:</strong> "Protector. Blessing tells me you’re leading the Aster review. I have the European acquisition audit in forty-eight hours. Is this contained?"</p>
+        <p class="spoken-text"><strong>Spoken:</strong> "Protector. Blessing tells me you're leading the Aster review. I have the European acquisition audit in forty-eight hours. Is this contained?"</p>
+      </div>
+
+      <div class="variants-grid">
+        <!-- Variant A -->
+        <div class="variant-col variant-a">
+          <div class="variant-header">
+            <h4>Variant A (Crisp & Natural)</h4>
+            <span class="tag">Target Gap: 140ms | Rate: +2%</span>
+          </div>
+          <audio controls preload="auto" src="./sample_3_michael_pressure_A.mp3"></audio>
+          <div class="metrics-box">
+            <div class="metric"><span class="lbl">Duration</span><span class="val">6.79s</span></div>
+            <div class="metric"><span class="lbl">Lead / Trail</span><span class="val">0ms / 0ms</span></div>
+            <div class="metric"><span class="lbl">Internal Gaps</span><span class="val">none ms</span></div>
+            <div class="metric"><span class="lbl">Loudness</span><span class="val">-17 LUFS</span></div>
+            <div class="metric"><span class="lbl">True Peak</span><span class="val">-1.9 dBFS</span></div>
+            <div class="metric"><span class="lbl">Speed</span><span class="val">17.7 cps</span></div>
+          </div>
+        </div>
+
+        <!-- Variant B -->
+        <div class="variant-col variant-b">
+          <div class="variant-header">
+            <h4>Variant B (Brisk & Flowing)</h4>
+            <span class="tag">Target Gap: 185ms | Rate: +5%</span>
+          </div>
+          <audio controls preload="auto" src="./sample_3_michael_pressure_B.mp3"></audio>
+          <div class="metrics-box">
+            <div class="metric"><span class="lbl">Duration</span><span class="val">6.72s</span></div>
+            <div class="metric"><span class="lbl">Lead / Trail</span><span class="val">0ms / 0ms</span></div>
+            <div class="metric"><span class="lbl">Internal Gaps</span><span class="val">none ms</span></div>
+            <div class="metric"><span class="lbl">Loudness</span><span class="val">-16.9 LUFS</span></div>
+            <div class="metric"><span class="lbl">True Peak</span><span class="val">-1.7 dBFS</span></div>
+            <div class="metric"><span class="lbl">Speed</span><span class="val">17.9 cps</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+    <div class="sample-card">
+      <div class="sample-header">
+        <span class="sample-badge">#4</span>
+        <h3>4. Tsharp — Casual Night Recon</h3>
+        <span class="sample-speaker">Tsharp (en-NG-AbeoNeural)</span>
+      </div>
+
+      <div class="sample-text">
+        <p class="display-text"><strong>Written:</strong> "Yo Protector. Off-grid telemetry caught offshore scanners hitting 8080. If you probe that port actively, Cedarline’s SOC will trip. Keep it quiet."</p>
+        <p class="spoken-text"><strong>Spoken:</strong> "Yo Protector. Off-grid telemetry caught offshore scanners hitting eighty eighty. If you probe that port actively, Cedarline's sock will trip. Keep it quiet."</p>
+      </div>
+
+      <div class="variants-grid">
+        <!-- Variant A -->
+        <div class="variant-col variant-a">
+          <div class="variant-header">
+            <h4>Variant A (Crisp & Natural)</h4>
+            <span class="tag">Target Gap: 140ms | Rate: +3%</span>
+          </div>
+          <audio controls preload="auto" src="./sample_4_tsharp_casual_A.mp3"></audio>
+          <div class="metrics-box">
+            <div class="metric"><span class="lbl">Duration</span><span class="val">7.36s</span></div>
+            <div class="metric"><span class="lbl">Lead / Trail</span><span class="val">0ms / 0ms</span></div>
+            <div class="metric"><span class="lbl">Internal Gaps</span><span class="val">none ms</span></div>
+            <div class="metric"><span class="lbl">Loudness</span><span class="val">-16.8 LUFS</span></div>
+            <div class="metric"><span class="lbl">True Peak</span><span class="val">-1.7 dBFS</span></div>
+            <div class="metric"><span class="lbl">Speed</span><span class="val">18.2 cps</span></div>
+          </div>
+        </div>
+
+        <!-- Variant B -->
+        <div class="variant-col variant-b">
+          <div class="variant-header">
+            <h4>Variant B (Brisk & Flowing)</h4>
+            <span class="tag">Target Gap: 185ms | Rate: +6%</span>
+          </div>
+          <audio controls preload="auto" src="./sample_4_tsharp_casual_B.mp3"></audio>
+          <div class="metrics-box">
+            <div class="metric"><span class="lbl">Duration</span><span class="val">7.33s</span></div>
+            <div class="metric"><span class="lbl">Lead / Trail</span><span class="val">0ms / 0ms</span></div>
+            <div class="metric"><span class="lbl">Internal Gaps</span><span class="val">none ms</span></div>
+            <div class="metric"><span class="lbl">Loudness</span><span class="val">-16.9 LUFS</span></div>
+            <div class="metric"><span class="lbl">True Peak</span><span class="val">-1.7 dBFS</span></div>
+            <div class="metric"><span class="lbl">Speed</span><span class="val">18.3 cps</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+    <div class="sample-card">
+      <div class="sample-header">
+        <span class="sample-badge">#5</span>
+        <h3>5. Phone Call Exchange — Sequential Lines</h3>
+        <span class="sample-speaker">Blessing (en-NG-EzinneNeural)</span>
+      </div>
+
+      <div class="sample-text">
+        <p class="display-text"><strong>Written:</strong> "Protector, good morning. Don’t waste time with breakfast. Get to Marina Tower now; svc-aster is pulling files it shouldn’t touch. | I’ve suppressed the automated alert from the executive dashboard for now, but Michael is already asking questions. Hurry up."</p>
+        <p class="spoken-text"><strong>Spoken:</strong> "Protector, good morning. Don't waste time with breakfast. Get to Marina Tower now, service aster is pulling files it shouldn't touch. I've suppressed the automated alert from the executive dashboard for now, but Michael is already asking questions. Hurry up."</p>
+      </div>
+
+      <div class="variants-grid">
+        <!-- Variant A -->
+        <div class="variant-col variant-a">
+          <div class="variant-header">
+            <h4>Variant A (Crisp & Natural)</h4>
+            <span class="tag">Target Gap: 140ms | Rate: +5%</span>
+          </div>
+          <audio controls preload="auto" src="./sample_5_phone_call_A.mp3"></audio>
+          <div class="metrics-box">
+            <div class="metric"><span class="lbl">Duration</span><span class="val">13.61s</span></div>
+            <div class="metric"><span class="lbl">Lead / Trail</span><span class="val">0ms / 0ms</span></div>
+            <div class="metric"><span class="lbl">Internal Gaps</span><span class="val">none ms</span></div>
+            <div class="metric"><span class="lbl">Loudness</span><span class="val">-16.7 LUFS</span></div>
+            <div class="metric"><span class="lbl">True Peak</span><span class="val">-1.8 dBFS</span></div>
+            <div class="metric"><span class="lbl">Speed</span><span class="val">16.1 cps</span></div>
+          </div>
+        </div>
+
+        <!-- Variant B -->
+        <div class="variant-col variant-b">
+          <div class="variant-header">
+            <h4>Variant B (Brisk & Flowing)</h4>
+            <span class="tag">Target Gap: 185ms | Rate: +8%</span>
+          </div>
+          <audio controls preload="auto" src="./sample_5_phone_call_B.mp3"></audio>
+          <div class="metrics-box">
+            <div class="metric"><span class="lbl">Duration</span><span class="val">13.46s</span></div>
+            <div class="metric"><span class="lbl">Lead / Trail</span><span class="val">0ms / 0ms</span></div>
+            <div class="metric"><span class="lbl">Internal Gaps</span><span class="val">none ms</span></div>
+            <div class="metric"><span class="lbl">Loudness</span><span class="val">-16.7 LUFS</span></div>
+            <div class="metric"><span class="lbl">True Peak</span><span class="val">-1 dBFS</span></div>
+            <div class="metric"><span class="lbl">Speed</span><span class="val">16.3 cps</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+    <div class="sample-card">
+      <div class="sample-header">
+        <span class="sample-badge">#6</span>
+        <h3>6. Long Multi-Sentence Line — Technical Debrief</h3>
+        <span class="sample-speaker">Blessing (en-NG-EzinneNeural)</span>
+      </div>
+
+      <div class="sample-text">
+        <p class="display-text"><strong>Written:</strong> "Let me review the SHA-256 hash. Incredible forensic work, Protector. This configuration snapshot is irrefutable: svc-aster was given corporate-admin with wildcard scopes. This wasn’t a bug; someone intentionally bypassed policy. We can contain it quietly to protect Cedarline’s commercial standing, or escalate it formally to CRCII regulators."</p>
+        <p class="spoken-text"><strong>Spoken:</strong> "Let me review the SHA-256 hash. Incredible forensic work, Protector. This configuration snapshot is irrefutable: service aster was given corporate-admin with wildcard scopes. This wasn't a bug, someone intentionally bypassed policy. We can contain it quietly to protect Cedarline's commercial standing, or escalate it formally to C R C I I regulators."</p>
+      </div>
+
+      <div class="variants-grid">
+        <!-- Variant A -->
+        <div class="variant-col variant-a">
+          <div class="variant-header">
+            <h4>Variant A (Crisp & Natural)</h4>
+            <span class="tag">Target Gap: 140ms | Rate: -4%</span>
+          </div>
+          <audio controls preload="auto" src="./sample_6_long_multisentence_A.mp3"></audio>
+          <div class="metrics-box">
+            <div class="metric"><span class="lbl">Duration</span><span class="val">21.88s</span></div>
+            <div class="metric"><span class="lbl">Lead / Trail</span><span class="val">0ms / 0ms</span></div>
+            <div class="metric"><span class="lbl">Internal Gaps</span><span class="val">none ms</span></div>
+            <div class="metric"><span class="lbl">Loudness</span><span class="val">-16.2 LUFS</span></div>
+            <div class="metric"><span class="lbl">True Peak</span><span class="val">-0.9 dBFS</span></div>
+            <div class="metric"><span class="lbl">Speed</span><span class="val">13.7 cps</span></div>
+          </div>
+        </div>
+
+        <!-- Variant B -->
+        <div class="variant-col variant-b">
+          <div class="variant-header">
+            <h4>Variant B (Brisk & Flowing)</h4>
+            <span class="tag">Target Gap: 185ms | Rate: -1%</span>
+          </div>
+          <audio controls preload="auto" src="./sample_6_long_multisentence_B.mp3"></audio>
+          <div class="metrics-box">
+            <div class="metric"><span class="lbl">Duration</span><span class="val">21.7s</span></div>
+            <div class="metric"><span class="lbl">Lead / Trail</span><span class="val">0ms / 0ms</span></div>
+            <div class="metric"><span class="lbl">Internal Gaps</span><span class="val">none ms</span></div>
+            <div class="metric"><span class="lbl">Loudness</span><span class="val">-16.2 LUFS</span></div>
+            <div class="metric"><span class="lbl">True Peak</span><span class="val">-1.3 dBFS</span></div>
+            <div class="metric"><span class="lbl">Speed</span><span class="val">13.8 cps</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+</body>
+</html>

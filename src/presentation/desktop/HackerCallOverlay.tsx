@@ -123,12 +123,14 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
         if (lineAdvanced || isCancelled) return;
         lineAdvanced = true;
         clearTimers();
+        // Natural speaker transition gap between call lines (150-300 ms configurable)
+        const callGapMs = Math.max(150, Math.min(300, item.delayMs ?? 250));
         advanceTimeout = setTimeout(() => {
           if (!isCancelled) {
             currentIdx++;
             playNextLine();
           }
-        }, item.delayMs);
+        }, callGapMs);
       };
 
       // Play through VoicePlayer (pre-rendered with fallback to SpeechSynthesis)
@@ -138,6 +140,8 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
         role: activeThread.contactRole,
         voice: activeThread.voice,
         isPhoneCall: true,
+        speech: item.speech,
+        delivery: item.delivery,
         onEnded: () => {
           if (isCancelled) return;
           setCurrentSubtitle(item.text);
@@ -177,7 +181,7 @@ export const HackerCallOverlay: React.FC<HackerCallOverlayProps> = ({
           setCurrentSubtitle(item.text);
           scheduleNext();
         }
-      }, durationMs + item.delayMs + 2500);
+      }, durationMs + 2000);
     };
 
     // Initial brief pause before first dialogue line

@@ -15,7 +15,11 @@ import { JournalEntry, JournalClaim } from '@/simulation/narrative/episodeTypes'
 
 export const JournalApp: React.FC = () => {
   const sim = useOptionalSimulation();
-  const unlockedIds = sim?.state.episode?.unlockedJournalEntryIds ?? ['ep01_journal_01'];
+  const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const entryParam = urlParams?.get('entry');
+  const unlockedIds = entryParam === 'ep01_journal_02'
+    ? ['ep01_journal_01', 'ep01_journal_02']
+    : (sim?.state.episode?.unlockedJournalEntryIds ?? ['ep01_journal_01']);
 
   // All authored entries across episodes
   const allEntries: JournalEntry[] = EPISODE_01_JOURNAL_ENTRIES;
@@ -23,7 +27,7 @@ export const JournalApp: React.FC = () => {
   // Filter only unlocked entries
   const unlockedEntries = allEntries.filter(e => unlockedIds.includes(e.id));
   const [selectedEntryId, setSelectedEntryId] = useState<string>(
-    unlockedEntries[0]?.id ?? ''
+    entryParam ?? unlockedEntries[0]?.id ?? ''
   );
   const [searchQuery, setSearchQuery] = useState<string>('');
 

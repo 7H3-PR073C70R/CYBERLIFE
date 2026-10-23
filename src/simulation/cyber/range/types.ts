@@ -142,7 +142,7 @@ export type LogSeverity = 'INFO' | 'NOTICE' | 'WARN' | 'ERROR' | 'CRITICAL';
 export interface FictionalLogEntry {
   readonly id: string;
   readonly timestamp: string;
-  readonly source: 'auth' | 'system' | 'firewall' | 'app-portal' | 'file-server' | 'edr';
+  readonly source: 'auth' | 'system' | 'firewall' | 'app-portal' | 'file-server' | 'edr' | 'siem' | 'sysmon';
   readonly severity: LogSeverity;
   readonly eventType: string;
   readonly hostId: string;

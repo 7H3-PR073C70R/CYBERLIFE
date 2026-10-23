@@ -29,6 +29,9 @@ import {
   SYNTHETIC_TRAFFIC_EVENTS,
 } from '@/simulation/cyber/network/trafficFixtures';
 import {
+  EPISODE_01_TRAFFIC_EVENTS,
+} from '@/simulation/cyber/network/ep01TrafficFixtures';
+import {
   filterTrafficEvents,
 } from '@/simulation/cyber/network/trafficAnalyzer';
 import {
@@ -92,12 +95,19 @@ export const PacketLensApp: React.FC<PacketLensAppProps> = ({
   else if (tabParam === 'intel' || tabParam === 'threatintel') mappedTab = 'intel';
   else if (tabParam === 'investigation') mappedTab = 'investigation';
 
+  const activeTrafficSource = useMemo(() => {
+    if (simState?.episode?.activeEpisodeId === 'ep01_triage_init') {
+      return EPISODE_01_TRAFFIC_EVENTS;
+    }
+    return SYNTHETIC_TRAFFIC_EVENTS;
+  }, [simState?.episode?.activeEpisodeId]);
+
   const initialHostParam = urlParams?.get('node') || urlParams?.get('host');
   const rawPkt = urlParams?.get('pkt');
   let initialPktParam: number | undefined;
   if (rawPkt) {
     if (rawPkt.startsWith('pkt-')) {
-      const match = SYNTHETIC_TRAFFIC_EVENTS.find(p => p.id === rawPkt);
+      const match = activeTrafficSource.find(p => p.id === rawPkt);
       if (match) initialPktParam = match.sequenceNo;
     } else {
       const parsed = parseInt(rawPkt, 10);
@@ -150,23 +160,24 @@ export const PacketLensApp: React.FC<PacketLensAppProps> = ({
   const [protocolFilter, setProtocolFilter] = useState<ProtocolType | 'ALL'>('ALL');
   const [classificationFilter, setClassificationFilter] = useState<TrafficClassification | 'ALL'>('ALL');
   const [hostTrafficFilter, setHostTrafficFilter] = useState<string>('ALL');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const initialFilterParam = urlParams?.get('filter') || urlParams?.get('q') || '';
+  const [searchQuery, setSearchQuery] = useState<string>(initialFilterParam);
   const [selectedSequenceNo, setSelectedSequenceNo] = useState<number>(initialPktParam ?? initialSelectedPacketNo);
   const [savedEvidencePktIds, setSavedEvidencePktIds] = useState<Set<string>>(new Set());
 
   const filteredPackets = useMemo(() => {
-    return filterTrafficEvents(SYNTHETIC_TRAFFIC_EVENTS, {
+    return filterTrafficEvents(activeTrafficSource, {
       protocol: protocolFilter,
       classification: classificationFilter,
       hostId: hostTrafficFilter !== 'ALL' ? hostTrafficFilter : undefined,
       searchQuery: searchQuery || undefined,
     });
-  }, [protocolFilter, classificationFilter, hostTrafficFilter, searchQuery]);
+  }, [activeTrafficSource, protocolFilter, classificationFilter, hostTrafficFilter, searchQuery]);
 
   const selectedPacket = useMemo<SyntheticTrafficEvent>(() => {
-    const found = SYNTHETIC_TRAFFIC_EVENTS.find(p => p.sequenceNo === selectedSequenceNo);
-    return found ?? filteredPackets[0] ?? SYNTHETIC_TRAFFIC_EVENTS[0]!;
-  }, [selectedSequenceNo, filteredPackets]);
+    const found = activeTrafficSource.find(p => p.sequenceNo === selectedSequenceNo);
+    return found ?? filteredPackets[0] ?? activeTrafficSource[0]!;
+  }, [activeTrafficSource, selectedSequenceNo, filteredPackets]);
 
   // ---------------------------------------------------------------------------
   // TAB 3: THREAT INTELLIGENCE STATE
@@ -176,7 +187,7 @@ export const PacketLensApp: React.FC<PacketLensAppProps> = ({
   const [selectedIndicatorId, setSelectedIndicatorId] = useState<string>(PHANTOM_WEAVER_C2_RECORD.id);
   const [correlationResults, setCorrelationResults] = useState<readonly ThreatCorrelationMatch[]>(() => {
     return urlParams?.get('correlate') === '1'
-      ? correlateAllTraffic(SYNTHETIC_TRAFFIC_EVENTS, THREAT_INTEL_RECORDS)
+      ? correlateAllTraffic(activeTrafficSource, THREAT_INTEL_RECORDS)
       : [];
   });
   const [localReviewStatuses, setLocalReviewStatuses] = useState<Record<string, ThreatReviewStatus>>({});
@@ -198,7 +209,7 @@ export const PacketLensApp: React.FC<PacketLensAppProps> = ({
 
   // Run automated correlation for selected indicator
   const handleCorrelateIndicator = (indicator: ThreatIndicatorRecord) => {
-    const matches = correlateThreatIndicator(indicator, SYNTHETIC_TRAFFIC_EVENTS);
+    const matches = correlateThreatIndicator(indicator, activeTrafficSource);
     setCorrelationResults(matches);
     if (indicator.id === 'ioc-ip-c2-phantom') {
       dispatchObjectiveAdvance('obj-m16-correlate-intel');
@@ -206,7 +217,7 @@ export const PacketLensApp: React.FC<PacketLensAppProps> = ({
   };
 
   const handleCorrelateAll = () => {
-    const allMatches = correlateAllTraffic(SYNTHETIC_TRAFFIC_EVENTS, THREAT_INTEL_RECORDS);
+    const allMatches = correlateAllTraffic(activeTrafficSource, THREAT_INTEL_RECORDS);
     setCorrelationResults(allMatches);
   };
 
@@ -992,7 +1003,7 @@ export const PacketLensApp: React.FC<PacketLensAppProps> = ({
             {/* Search query */}
             <input
               type="text"
-              placeholder="Display filter (e.g. payroll$, 8443, .kdbx)..."
+              placeholder="Display filter (e.g. smb2.cmd == 5 && ip.addr == 10.0.4.15, tls, payroll)..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               style={{
@@ -1003,9 +1014,27 @@ export const PacketLensApp: React.FC<PacketLensAppProps> = ({
                 padding: '2px 8px',
                 fontSize: '0.72rem',
                 flex: 1,
-                minWidth: '180px',
+                minWidth: '220px',
               }}
             />
+
+            <button
+              onClick={() => setSearchQuery('smb2.cmd == 5 && ip.addr == 10.0.4.15')}
+              title="Apply Wireshark display filter for SMB2 Tree Connect from app-portal-01"
+              style={{
+                padding: '2px 8px',
+                fontSize: '0.68rem',
+                backgroundColor: 'rgba(0, 229, 255, 0.1)',
+                color: '#00e5ff',
+                border: '1px solid rgba(0, 229, 255, 0.3)',
+                borderRadius: '3px',
+                cursor: 'pointer',
+                fontFamily: 'monospace',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              smb2.cmd == 5
+            </button>
 
             {/* Reset Filters button */}
             <button
@@ -1260,7 +1289,7 @@ export const PacketLensApp: React.FC<PacketLensAppProps> = ({
             }}
           >
             <span>
-              Showing {filteredPackets.length} of {SYNTHETIC_TRAFFIC_EVENTS.length} synthetic frames | Capture format: <code>pcap 2.4</code>
+              Showing {filteredPackets.length} of {activeTrafficSource.length} synthetic frames | Capture format: <code>pcap 2.4</code>
             </span>
             <span style={{ color: '#f0883e' }}>
               Incident Finding: Frame #10 confirms unconstrained SMB2 Tree Connect to payroll$
@@ -1569,7 +1598,7 @@ export const PacketLensApp: React.FC<PacketLensAppProps> = ({
                               </span>
                               <button
                                 onClick={() => {
-                                  const pkt = SYNTHETIC_TRAFFIC_EVENTS.find(p => p.id === m.matchedEventId);
+                                  const pkt = activeTrafficSource.find(p => p.id === m.matchedEventId);
                                   if (pkt) {
                                     setSelectedSequenceNo(pkt.sequenceNo);
                                     setActiveTab('traffic');
@@ -1869,7 +1898,7 @@ export const PacketLensApp: React.FC<PacketLensAppProps> = ({
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {Array.from(savedEvidencePktIds).map(pktId => {
-                      const pkt = SYNTHETIC_TRAFFIC_EVENTS.find(p => p.id === pktId);
+                      const pkt = activeTrafficSource.find(p => p.id === pktId);
                       if (!pkt) return null;
                       return (
                         <div

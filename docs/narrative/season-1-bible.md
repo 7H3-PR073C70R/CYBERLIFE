@@ -144,7 +144,7 @@ Cyberlife structures each gameplay day into a four-phase diurnal cycle, mirrorin
 ## 4. Blackouts as Lost Time: The Forensic Contradiction
 
 ### 4.1 Grounded Reality: Municipal Infrastructure as Narrative Device
-In Lagos Island, electrical supply shifts constantly between the national grid (Eko Electricity Distribution Company / EKEDC), private diesel generator banks, and residential solar inverter arrays. The sudden cut—marked by the neighborhood-wide drop in background hum followed seconds later by the clatter of small two-stroke generators—is an inescapable reality.
+In Lagos Island, electrical supply shifts constantly between the national grid (Lagos Electricity Distribution Company / LEDCo), private diesel generator banks, and residential solar inverter arrays. The sudden cut—marked by the neighborhood-wide drop in background hum followed seconds later by the clatter of small two-stroke generators—is an inescapable reality.
 
 In Cyberlife, this infrastructure fragility is elevated into a psychological and investigative mechanic: **The Lost Time State**.
 

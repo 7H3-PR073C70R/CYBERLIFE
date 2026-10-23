@@ -28,6 +28,8 @@ import { HumanIntelState, createInitialHumanIntelState } from '../humanIntel/typ
 import { WorldSimulationState, createInitialWorldSimulationState } from '../world/types';
 import { EpisodeDirectorState } from '../narrative/episodeTypes';
 import { createInitialEpisodeDirectorState } from '../narrative/episodeDirector';
+import { TraceSystemState } from '../cyber/trace/types';
+import { createInitialTraceState } from '../cyber/trace/traceEngine';
 
 export interface InitialStateOverrides {
   readonly schemaVersion?: number;
@@ -60,6 +62,7 @@ export interface InitialStateOverrides {
   readonly humanIntel?: HumanIntelState;
   readonly worldSim?: WorldSimulationState;
   readonly episode?: EpisodeDirectorState;
+  readonly trace?: TraceSystemState;
 }
 
 
@@ -187,6 +190,8 @@ export function createInitialSimulationState(
       overrides?.worldSim ?? createInitialWorldSimulationState(),
     episode:
       overrides?.episode ?? createInitialEpisodeDirectorState(),
+    trace:
+      overrides?.trace ?? createInitialTraceState(),
   };
 
 

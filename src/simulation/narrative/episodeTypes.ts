@@ -18,7 +18,8 @@ export type EpisodeBeatType =
   | 'blackout'
   | 'dayCase'
   | 'nightJob'
-  | 'debrief';
+  | 'debrief'
+  | 'choice';
 
 export type BeatTriggerType =
   | 'immediate'
@@ -88,6 +89,8 @@ export interface EpisodeMessage {
 export interface EpisodeCallDialogueLine {
   readonly text: string;
   readonly delayMs: number;
+  readonly speech?: string;
+  readonly delivery?: 'neutral' | 'calm' | 'anxious' | 'urgent' | 'tired' | 'tense';
 }
 
 export interface EpisodeCall {
@@ -115,6 +118,22 @@ export interface EpisodeMutation {
   readonly skipMinutes?: number;
 }
 
+export interface EpisodeChoiceOption {
+  readonly id: string; // e.g. 'A' | 'B'
+  readonly label: string;
+  readonly description: string;
+  readonly factionStandingDeltas?: Readonly<Record<string, number>>;
+  readonly flagsToSet?: Readonly<Record<string, WorldFlagValue>>;
+  readonly legalExposureDelta?: number;
+}
+
+export interface EpisodeChoiceDefinition {
+  readonly choiceId: string;
+  readonly title: string;
+  readonly prompt: string;
+  readonly options: readonly EpisodeChoiceOption[];
+}
+
 export interface BeatEffects {
   readonly setFlags?: Readonly<Record<string, WorldFlagValue>>;
   readonly factionStandingDeltas?: Readonly<Record<string, number>>;
@@ -123,6 +142,7 @@ export interface BeatEffects {
   readonly ticket?: EpisodeTicket;
   readonly onionMessage?: EpisodeMessage;
   readonly call?: EpisodeCall;
+  readonly choice?: EpisodeChoiceDefinition;
   readonly clockSkipSeconds?: number;
   readonly blackout?: {
     readonly durationSeconds: number;
@@ -192,5 +212,6 @@ export interface EpisodeDirectorState {
     readonly timestampIso: string;
   } | null;
   readonly activeCall: EpisodeCall | null;
+  readonly activeChoice: EpisodeChoiceDefinition | null;
   readonly mentorHintsDelivered: readonly string[];
 }

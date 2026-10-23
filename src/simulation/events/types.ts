@@ -91,8 +91,18 @@ export type SimulationEventType =
   | 'EPISODE_BLACKOUT_TRIGGERED'
   | 'EPISODE_BLACKOUT_ENDED'
   | 'EPISODE_JOURNAL_UNLOCKED'
+  | 'EPISODE_CHOICE_PRESENTED'
+  | 'EPISODE_CHOICE_RESOLVED'
   | 'EPISODE_COMPLETED'
-  | 'EPISODE_GUIDANCE_MODE_CHANGED';
+  | 'EPISODE_GUIDANCE_MODE_CHANGED'
+  | 'TRACE_ACTION_NOISE_RECORDED'
+  | 'DEFENDER_RESPONSE_TRIGGERED'
+  | 'OPSEC_ACTION_APPLIED'
+  | 'TRACE_METER_DECAYED'
+  | 'JOB_SCOPE_UPDATED'
+  | 'SCOPE_WARNING_RAISED'
+  | 'SCOPE_WARNING_RESOLVED'
+  | 'DEFENDER_DEBRIEF_GENERATED';
 
 export interface BaseSimulationEvent<TType extends SimulationEventType, TPayload> {
   readonly id: string;
@@ -520,10 +530,29 @@ export type SimulationEvent =
   | EpisodeBlackoutTriggeredEvent
   | EpisodeBlackoutEndedEvent
   | EpisodeJournalUnlockedEvent
+  | EpisodeChoicePresentedEvent
+  | EpisodeChoiceResolvedEvent
   | EpisodeCompletedEvent
   | EpisodeGuidanceModeChangedEvent
   | EpisodeTitleCardTriggeredEvent
-  | EpisodeTitleCardDismissedEvent;
+  | EpisodeTitleCardDismissedEvent
+  | TraceActionNoiseRecordedEvent
+  | DefenderResponseTriggeredEvent
+  | OpsecActionAppliedEvent
+  | TraceMeterDecayedEvent
+  | JobScopeUpdatedEvent
+  | ScopeWarningRaisedEvent
+  | ScopeWarningResolvedEvent
+  | DefenderDebriefGeneratedEvent;
+
+export type TraceActionNoiseRecordedEvent = BaseSimulationEvent<'TRACE_ACTION_NOISE_RECORDED', Record<string, unknown>>;
+export type DefenderResponseTriggeredEvent = BaseSimulationEvent<'DEFENDER_RESPONSE_TRIGGERED', Record<string, unknown>>;
+export type OpsecActionAppliedEvent = BaseSimulationEvent<'OPSEC_ACTION_APPLIED', Record<string, unknown>>;
+export type TraceMeterDecayedEvent = BaseSimulationEvent<'TRACE_METER_DECAYED', Record<string, unknown>>;
+export type JobScopeUpdatedEvent = BaseSimulationEvent<'JOB_SCOPE_UPDATED', Record<string, unknown>>;
+export type ScopeWarningRaisedEvent = BaseSimulationEvent<'SCOPE_WARNING_RAISED', Record<string, unknown>>;
+export type ScopeWarningResolvedEvent = BaseSimulationEvent<'SCOPE_WARNING_RESOLVED', Record<string, unknown>>;
+export type DefenderDebriefGeneratedEvent = BaseSimulationEvent<'DEFENDER_DEBRIEF_GENERATED', Record<string, unknown>>;
 
 export type EpisodeTitleCardTriggeredEvent = BaseSimulationEvent<
   'EPISODE_TITLE_CARD_TRIGGERED',
@@ -630,6 +659,26 @@ export type EpisodeJournalUnlockedEvent = BaseSimulationEvent<
   'EPISODE_JOURNAL_UNLOCKED',
   {
     readonly journalEntryId: string;
+  }
+>;
+
+export type EpisodeChoicePresentedEvent = BaseSimulationEvent<
+  'EPISODE_CHOICE_PRESENTED',
+  {
+    readonly episodeId: string;
+    readonly beatId: string;
+    readonly choiceId: string;
+    readonly title: string;
+  }
+>;
+
+export type EpisodeChoiceResolvedEvent = BaseSimulationEvent<
+  'EPISODE_CHOICE_RESOLVED',
+  {
+    readonly episodeId: string;
+    readonly choiceId: string;
+    readonly optionId: string;
+    readonly label: string;
   }
 >;
 

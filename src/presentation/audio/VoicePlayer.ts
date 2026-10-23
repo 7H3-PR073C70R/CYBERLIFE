@@ -17,6 +17,7 @@ import { NpcVoiceConfig } from '../../simulation/actors/types';
 import { audioManager } from './AudioManager';
 import { voiceDialogueService } from './VoiceDialogueService';
 import { phoneFilterChain } from './PhoneFilterChain';
+import { normalizeTextForSpeech } from '../../content/audio/pronunciationDictionary';
 
 export interface VoicePlayOptions {
   speaker?: string;
@@ -25,6 +26,8 @@ export interface VoicePlayOptions {
   gender?: 'female' | 'male';
   voice?: NpcVoiceConfig;
   isPhoneCall?: boolean;
+  speech?: string;
+  delivery?: 'neutral' | 'calm' | 'anxious' | 'urgent' | 'tired' | 'tense';
   onStart?: () => void;
   onEnded?: () => void;
   onError?: (err: unknown) => void;
@@ -116,37 +119,7 @@ export class VoicePlayer {
    * Preprocess dialogue text to align with speech generation and hashing.
    */
   public cleanTextForSpeech(rawText: string, isPidgin: boolean = false): string {
-    if (!rawText) return '';
-    const trimmed = rawText.trim();
-    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-      return '';
-    }
-
-    let text = rawText
-      .replace(/\*[^*]+\*/g, '')
-      .replace(/\[[^\]]+\]/g, '');
-
-    if (!isPidgin) {
-      text = text
-        .replace(/\bCVE-(\d{4})-(\d+)\b/gi, 'C V E $1, $2')
-        .replace(/\bCVE\b/g, 'C V E')
-        .replace(/\bSOC\b/g, 'sock')
-        .replace(/\bIoC\b/gi, 'I o C')
-        .replace(/\bIoCs\b/gi, "I o C's")
-        .replace(/\bZRTP\b/gi, 'Z R T P')
-        .replace(/\bAES\b/gi, 'A E S')
-        .replace(/\bSMB\b/gi, 'S M B')
-        .replace(/\bIP\b/g, 'I P')
-        .replace(/\bIAM\b/gi, 'I A M')
-        .replace(/\bRCE\b/gi, 'R C E')
-        .replace(/\bSIEM\b/gi, 'seem')
-        .replace(/\bASAP\b/gi, 'as soon as possible')
-        .replace(/\bfilesrv-01\b/gi, 'file server 0 1')
-        .replace(/\bapp-portal-01\b/gi, 'app portal 0 1')
-        .replace(/\bsvc-aster\b/gi, 'service aster');
-    }
-
-    return text.replace(/\s+/g, ' ').trim();
+    return normalizeTextForSpeech(rawText, { isPidgin });
   }
 
   /**
@@ -164,20 +137,28 @@ export class VoicePlayer {
   }
 
   /**
-   * Find clip in manifest by speaker and text.
+   * Find clip in manifest by speaker and text (matching display or speech text).
    */
-  public findClip(speakerId: string | undefined, rawText: string): VoiceManifestClip | null {
+  public findClip(
+    speakerId: string | undefined,
+    rawText: string,
+    speechText?: string
+  ): VoiceManifestClip | null {
     if (!this.manifest || !rawText) return null;
 
     const isPidgin = speakerId === 'npc_nkechi';
     const clean = this.cleanTextForSpeech(rawText, isPidgin);
+    const cleanSpeech = speechText ? this.cleanTextForSpeech(speechText, isPidgin) : '';
 
-    // 1. Direct match by raw text or clean text in manifest clips
+    // 1. Direct match by raw text, speech override, or clean text in manifest clips
     for (const clip of Object.values(this.manifest.clips)) {
-      if (
-        (clip.text === rawText || clip.cleanText === clean) &&
-        (!speakerId || clip.speakerId === speakerId)
-      ) {
+      const matchesText =
+        clip.text === rawText ||
+        clip.cleanText === clean ||
+        (speechText && clip.text === speechText) ||
+        (cleanSpeech && clip.cleanText === cleanSpeech);
+
+      if (matchesText && (!speakerId || clip.speakerId === speakerId)) {
         return clip;
       }
     }
@@ -186,7 +167,12 @@ export class VoicePlayer {
     if (speakerId) {
       for (const [key, clip] of Object.entries(this.manifest.bySpeakerAndHash)) {
         if (key.startsWith(`${speakerId}:`)) {
-          if (clip.text === rawText || clip.cleanText === clean) {
+          if (
+            clip.text === rawText ||
+            clip.cleanText === clean ||
+            (speechText && clip.text === speechText) ||
+            (cleanSpeech && clip.cleanText === cleanSpeech)
+          ) {
             return clip;
           }
         }
@@ -218,7 +204,7 @@ export class VoicePlayer {
       phoneFilterChain.startCallNoise();
     }
 
-    const clip = this.findClip(options.speakerId, text);
+    const clip = this.findClip(options.speakerId, text, options.speech);
 
     if (clip) {
       // Pre-rendered Audio Clip Path
@@ -226,7 +212,7 @@ export class VoicePlayer {
     }
 
     // Fallback Path: Browser SpeechSynthesis
-    return this.playFallback(text, options, playId);
+    return this.playFallback(options.speech || text, options, playId);
   }
 
   /**
@@ -368,29 +354,52 @@ export class VoicePlayer {
   }
 
   /**
-   * Stop active playback immediately and reset ducking.
+   * Stop active playback with smooth fadeout (60-80ms) and reset ducking.
    */
-  public stop(): void {
+  public stop(fadeMs: number = 70): void {
     this.currentPlayId = 0;
     voiceDialogueService.stop();
 
-    if (this.activeSource) {
-      try {
-        this.activeSource.stop();
-        this.activeSource.disconnect();
-      } catch {
-        // Ignored
-      }
-      this.activeSource = null;
-    }
+    const src = this.activeSource;
+    const gain = this.activeGain;
+    this.activeSource = null;
+    this.activeGain = null;
 
-    if (this.activeGain) {
-      try {
-        this.activeGain.disconnect();
-      } catch {
-        // Ignored
+    if (src && gain) {
+      const ctx = audioManager.getContext();
+      if (ctx && fadeMs > 0 && gain.gain) {
+        try {
+          const now = ctx.currentTime;
+          gain.gain.cancelScheduledValues(now);
+          gain.gain.setValueAtTime(gain.gain.value, now);
+          gain.gain.linearRampToValueAtTime(0.0001, now + fadeMs / 1000);
+          setTimeout(() => {
+            try {
+              src.stop();
+              src.disconnect();
+              gain.disconnect();
+            } catch {
+              /* ignore cleanup error */
+            }
+          }, fadeMs + 20);
+        } catch {
+          try {
+            src.stop();
+            src.disconnect();
+            gain.disconnect();
+          } catch {
+            /* ignore cleanup error */
+          }
+        }
+      } else {
+        try {
+          src.stop();
+          src.disconnect();
+          gain.disconnect();
+        } catch {
+          /* ignore cleanup error */
+        }
       }
-      this.activeGain = null;
     }
 
     audioManager.setDucking(false);

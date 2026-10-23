@@ -138,6 +138,18 @@ export class WorldEnvironment {
     broadSt.receiveShadow = true;
     this.group.add(broadSt);
 
+    // High-Fidelity PBR Avenue Mesh Overlay
+    AssetLoader.getInstance()
+      .loadNormalizedGLTF('/assets/environment/road_avenue_pbr.glb')
+      .then(roadModel => {
+        roadModel.name = 'PBR_RoadAvenue';
+        roadModel.position.set(0, 0.015, -8);
+        this.group.add(roadModel);
+      })
+      .catch(() => {
+        // Retains base asphalt roadway fallback
+      });
+
     // Marina Road (East-West waterfront boulevard, Width: 12m, X: -36 to +36, Z: 20 to 32)
     const marinaRdGeo = new THREE.PlaneGeometry(74, 12);
     const marinaRd = new THREE.Mesh(marinaRdGeo, asphaltMat);
@@ -353,6 +365,17 @@ export class WorldEnvironment {
       entranceSide: 'WEST', // Facing Broad Street / Marina junction
       roofEquipment: true,
       hasWaterTank: true,
+      modelUrl: '/assets/environment/buildings/tower_cedarline_marina.glb',
+      logoOptions: {
+        companyName: 'Cedarline Services Ltd.',
+        subtext: 'Enterprise Cyber Defense & SOC',
+        brandColor: '#00f0ff',
+        accentColor: '#10b981',
+        logoIcon: 'CYBER',
+        width: 10.0,
+        height: 2.4,
+      },
+      logoPosition: [0, 23.5, 8.2],
     });
     this.buildings.push(cedarline);
     this.group.add(cedarline.getMesh());
@@ -379,56 +402,165 @@ export class WorldEnvironment {
       targetLocationId: 'cedarline_interior',
     });
 
+    // Industrial Backup Diesel Generator (Cedarline service bay)
+    this.buildIndustrialGenerator();
+
     // ----------------------------------------------------
-    // SECONDARY BUILDINGS & STREET CANYONS
+    // LANDMARK 3: Krest Independent Risk Headquarters
     // ----------------------------------------------------
-    // 3. Heritage Commercial Chambers ("Tinubu Chambers")
-    const tinubuChambers = new Building({
-      name: 'Tinubu Commercial Chambers',
+    const krestHQ = new Building({
+      name: 'Krest Independent Risk HQ',
       x: -28,
       z: -14,
-      width: 10,
-      height: 10,
-      depth: 12,
-      style: 'AFRO_BRAZILIAN',
-      color: 0xb45309, // Terracotta plaster
-      trimColor: 0xfef3c7,
+      width: 12,
+      height: 14,
+      depth: 14,
+      style: 'COMMERCIAL_TOWER',
+      color: 0x1e293b,
+      trimColor: 0xef4444,
       entranceSide: 'EAST',
-      hasBalcony: false,
-      hasWaterTank: true,
+      modelUrl: '/assets/environment/buildings/blocks_krest_commercial.glb',
+      logoOptions: {
+        companyName: 'Krest Independent Risk',
+        subtext: 'Special Investigations & Forensics',
+        brandColor: '#ef4444',
+        accentColor: '#f97316',
+        logoIcon: 'RISK',
+        width: 9.2,
+        height: 2.2,
+      },
+      logoPosition: [0, 15.0, 7.2],
     });
-    this.buildings.push(tinubuChambers);
-    this.group.add(tinubuChambers.getMesh());
+    this.buildings.push(krestHQ);
+    this.group.add(krestHQ.getMesh());
     this.collisionWorld.addObstacle(
-      tinubuChambers.getBoundingBox().minX,
-      tinubuChambers.getBoundingBox().maxX,
-      tinubuChambers.getBoundingBox().minZ,
-      tinubuChambers.getBoundingBox().maxZ,
-      'Building: Tinubu Commercial Chambers'
+      krestHQ.getBoundingBox().minX,
+      krestHQ.getBoundingBox().maxX,
+      krestHQ.getBoundingBox().minZ,
+      krestHQ.getBoundingBox().maxZ,
+      'Building: Krest Independent Risk HQ'
     );
 
-    // 4. Northwest Heritage Building ("Lagos Island Printing House")
-    const printingHouse = new Building({
-      name: 'Lagos Island Printing House',
+    // ----------------------------------------------------
+    // LANDMARK 4: The Lagos Inquirer Press House
+    // ----------------------------------------------------
+    const inquirerHouse = new Building({
+      name: 'The Lagos Inquirer Press House',
       x: -18,
       z: -30,
-      width: 11,
-      height: 11,
+      width: 12,
+      height: 14,
       depth: 14,
-      style: 'AFRO_BRAZILIAN',
-      color: 0x78716c, // Weathered grey masonry
-      trimColor: 0x334155,
+      style: 'MODERN_OFFICE',
+      color: 0x334155,
+      trimColor: 0xfbbf24,
       entranceSide: 'EAST',
-      hasBalcony: true,
+      modelUrl: '/assets/environment/buildings/blocks_inquirer_balogun.glb',
+      logoOptions: {
+        companyName: 'The Lagos Inquirer',
+        subtext: 'Investigative Press & Newsroom',
+        brandColor: '#fbbf24',
+        accentColor: '#ffffff',
+        logoIcon: 'PRESS',
+        width: 8.8,
+        height: 2.2,
+      },
+      logoPosition: [0, 14.8, 7.2],
     });
-    this.buildings.push(printingHouse);
-    this.group.add(printingHouse.getMesh());
+    this.buildings.push(inquirerHouse);
+    this.group.add(inquirerHouse.getMesh());
     this.collisionWorld.addObstacle(
-      printingHouse.getBoundingBox().minX,
-      printingHouse.getBoundingBox().maxX,
-      printingHouse.getBoundingBox().minZ,
-      printingHouse.getBoundingBox().maxZ,
-      'Building: Lagos Island Printing House'
+      inquirerHouse.getBoundingBox().minX,
+      inquirerHouse.getBoundingBox().maxX,
+      inquirerHouse.getBoundingBox().minZ,
+      inquirerHouse.getBoundingBox().maxZ,
+      'Building: The Lagos Inquirer Press House'
+    );
+
+    // ----------------------------------------------------
+    // LANDMARK 5: Eko Merchant Bank Tower
+    // ----------------------------------------------------
+    const ekoBank = new Building({
+      name: 'Eko Merchant Bank Tower',
+      x: 22,
+      z: -26,
+      width: 14,
+      height: 24,
+      depth: 16,
+      style: 'COMMERCIAL_TOWER',
+      color: 0x090d16,
+      trimColor: 0xfacc15,
+      entranceSide: 'WEST',
+      modelUrl: '/assets/environment/buildings/tower_eko_bank.glb',
+      logoOptions: {
+        companyName: 'Eko Merchant Bank',
+        subtext: 'Private & Corporate Banking',
+        brandColor: '#facc15',
+        accentColor: '#38bdf8',
+        logoIcon: 'BANK',
+        width: 9.8,
+        height: 2.4,
+      },
+      logoPosition: [0, 24.5, 8.2],
+    });
+    this.buildings.push(ekoBank);
+    this.group.add(ekoBank.getMesh());
+    this.collisionWorld.addObstacle(
+      ekoBank.getBoundingBox().minX,
+      ekoBank.getBoundingBox().maxX,
+      ekoBank.getBoundingBox().minZ,
+      ekoBank.getBoundingBox().maxZ,
+      'Building: Eko Merchant Bank Tower'
+    );
+
+    // Eko Bank Entrance Marker & Interaction
+    const ekoMarker = new InteractableMarker(14.5, -26, 0xfacc15, 'Eko Merchant Bank Entrance');
+    this.markers.push(ekoMarker);
+    this.group.add(ekoMarker.getMesh());
+
+    this.interactionRegistry.register({
+      id: 'interact_eko_bank_entrance',
+      name: 'Eko Merchant Bank',
+      promptAction: 'approach Eko Merchant Bank grand entrance [E]',
+      description: 'Major private and corporate merchant bank anchor on Broad Street.',
+      position: [14.5, 0, -26],
+      radius: 2.8,
+    });
+
+    // ----------------------------------------------------
+    // LANDMARK 6: National Digital Security Response Centre (NDSRC)
+    // ----------------------------------------------------
+    const ndsrcCivic = new Building({
+      name: 'NDSRC Cyber Command',
+      x: -28,
+      z: 6,
+      width: 14,
+      height: 16,
+      depth: 14,
+      style: 'MODERN_OFFICE',
+      color: 0x064e3b,
+      trimColor: 0x10b981,
+      entranceSide: 'EAST',
+      modelUrl: '/assets/environment/buildings/blocks_ndsrc_civic.glb',
+      logoOptions: {
+        companyName: 'NDSRC — Cyber Command',
+        subtext: 'National Incident Response Centre',
+        brandColor: '#10b981',
+        accentColor: '#38bdf8',
+        logoIcon: 'GOV',
+        width: 9.6,
+        height: 2.3,
+      },
+      logoPosition: [0, 16.5, 7.2],
+    });
+    this.buildings.push(ndsrcCivic);
+    this.group.add(ndsrcCivic.getMesh());
+    this.collisionWorld.addObstacle(
+      ndsrcCivic.getBoundingBox().minX,
+      ndsrcCivic.getBoundingBox().maxX,
+      ndsrcCivic.getBoundingBox().minZ,
+      ndsrcCivic.getBoundingBox().maxZ,
+      'Building: NDSRC Cyber Command'
     );
 
     // ----------------------------------------------------
@@ -557,6 +689,33 @@ export class WorldEnvironment {
     this.group.add(welcomePortal);
     this.collisionWorld.addObstacle(-6.3, -5.3, -36.5, -35.5, 'Gateway Pillar West');
     this.collisionWorld.addObstacle(5.3, 6.3, -36.5, -35.5, 'Gateway Pillar East');
+  }
+
+  /**
+   * Builds the heavy industrial backup diesel generator with sound-attenuated acoustic enclosure,
+   * exhaust muffler, and safety perimeter at Cedarline service yard.
+   */
+  private buildIndustrialGenerator(): void {
+    const genGroup = new THREE.Group();
+    genGroup.name = 'CedarlineDieselGenerator';
+    genGroup.position.set(12.5, 0, 16.0);
+
+    AssetLoader.getInstance()
+      .loadNormalizedGLTF('/assets/environment/generator_diesel_realistic.glb')
+      .then(genModel => {
+        genGroup.add(genModel);
+      })
+      .catch(() => {
+        const box = new THREE.Mesh(
+          new THREE.BoxGeometry(2.5, 1.8, 1.4),
+          new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.6 })
+        );
+        box.position.y = 0.9;
+        genGroup.add(box);
+      });
+
+    this.group.add(genGroup);
+    this.collisionWorld.addObstacle(11.0, 14.0, 15.0, 17.0, 'Heavy Industrial Diesel Generator');
   }
 
   /**
@@ -1035,10 +1194,41 @@ export class WorldEnvironment {
     });
 
     const isCedarline = locationId === 'cedarline_interior';
-    // Bright, natural architectural tones so PBR diffuse textures retain natural clarity and bounce
-    const floorColor = isCedarline ? 0x94a3b8 : 0xd1d5db;
-    const wallColor = isCedarline ? 0xe2e8f0 : 0xf1ece4;
-    const accentColor = isCedarline ? 0x10b981 : 0x38bdf8;
+    const isEkoBank = locationId === 'eko_bank_interior';
+    const isKrest = locationId === 'krest_interior';
+    const isInquirer = locationId === 'inquirer_interior';
+    const isApartment = locationId === 'apartment_interior' || (!isCedarline && !isEkoBank && !isKrest && !isInquirer);
+
+    // Bespoke real-world company architectural color schemes
+    const floorColor = isCedarline
+      ? 0x94a3b8 // Sleek slate-blue composite
+      : isEkoBank
+      ? 0x451a03 // Polished Italian teak / mahogany
+      : isKrest
+      ? 0x0f172a // Dark carbon forensic slate
+      : isInquirer
+      ? 0x64748b // Vintage newsprint terrazzo
+      : 0xd1d5db; // Residential oak parquet
+
+    const wallColor = isCedarline
+      ? 0xe2e8f0 // Clean institutional off-white
+      : isEkoBank
+      ? 0xfef3c7 // Warm ivory gold
+      : isKrest
+      ? 0x1e293b // Deep tactical charcoal
+      : isInquirer
+      ? 0xf1f5f9 // Clean newsroom grey
+      : 0xf1ece4; // Warm apartment plaster
+
+    const accentColor = isCedarline
+      ? 0x10b981 // Cedarline Emerald Green
+      : isEkoBank
+      ? 0xfacc15 // Eko Merchant Gold
+      : isKrest
+      ? 0xef4444 // Krest Forensic Crimson
+      : isInquirer
+      ? 0xfbbf24 // Inquirer Amber
+      : 0x38bdf8; // Player Cyan
 
     // Interior Dedicated Lighting
     // 1. Warm Key Light (Directional entrance light providing warm, rich illumination across the room)
@@ -1245,23 +1435,87 @@ export class WorldEnvironment {
     this.markers.push(wsMarker);
     this.group.add(wsMarker.getMesh());
 
+    const wsName = isCedarline
+      ? 'Cedarline Workstation'
+      : isEkoBank
+      ? 'Eko Merchant Bank Treasury Terminal'
+      : isKrest
+      ? 'Krest Independent Risk Forensic Rig'
+      : isInquirer
+      ? 'The Lagos Inquirer Editorial Desk'
+      : 'Research Workstation';
+
+    const exitName = isCedarline
+      ? 'Cedarline Services Exit'
+      : isEkoBank
+      ? 'Eko Merchant Bank Exit'
+      : isKrest
+      ? 'Krest Independent Risk Exit'
+      : isInquirer
+      ? 'The Lagos Inquirer Exit'
+      : 'Apartment Exit';
+
+    const primaryWsId = isCedarline
+      ? 'interact_cedarline_workstation'
+      : isApartment
+      ? 'interact_apartment_workstation'
+      : `interact_${locationId}_workstation`;
+
+    const wsPrompt = isCedarline
+      ? 'access Cedarline corporate terminal [E]'
+      : isApartment
+      ? 'access personal research workstation [E]'
+      : `access ${wsName} [E]`;
+
     this.interactionRegistry.register({
-      id: isCedarline ? 'interact_cedarline_workstation' : 'interact_apartment_workstation',
-      name: isCedarline ? 'Cedarline Workstation' : 'Research Workstation',
-      promptAction: isCedarline
-        ? 'access Cedarline corporate terminal [E]'
-        : 'access personal research workstation [E]',
-      description: isCedarline
-        ? 'A secured enterprise terminal connected to the Cedarline internal network.'
-        : 'Your personal cybersecurity research rig and simulated development terminal.',
+      id: primaryWsId,
+      name: wsName,
+      promptAction: wsPrompt,
+      description: `Secured terminal inside ${wsName}.`,
       position: [0, 0, -2.4],
       radius: 2.2,
     });
 
+    if (primaryWsId !== `interact_${locationId}_workstation`) {
+      const bespokeName = isCedarline ? 'Cedarline SOC Workstation' : wsName;
+      this.interactionRegistry.register({
+        id: `interact_${locationId}_workstation`,
+        name: bespokeName,
+        promptAction: wsPrompt,
+        description: `Secured terminal inside ${bespokeName}.`,
+        position: [0, 0, -2.4],
+        radius: 2.2,
+      });
+    }
+
+    // Photorealistic Kitbashed GLTF Interior Architecture
+    const interiorModelMap: Record<string, string> = {
+      cedarline_interior: '/assets/environment/interiors/office_cedarline_soc.glb',
+      eko_bank_interior: '/assets/environment/interiors/office_eko_bank_loft.glb',
+      krest_interior: '/assets/environment/interiors/office_krest_war_room.glb',
+      apartment_interior: '/assets/environment/interiors/office_player_apartment.glb',
+      inquirer_interior: '/assets/environment/interiors/office_inquirer_newsroom.glb',
+    };
+
+    const interiorModelUrl = interiorModelMap[locationId];
+    if (interiorModelUrl) {
+      AssetLoader.getInstance()
+        .loadNormalizedGLTF(interiorModelUrl)
+        .then(model => {
+          model.name = `GLTF_Interior_${locationId}`;
+          model.position.set(0, 0, 0);
+          this.group.add(model);
+          this.interiorProps.push(model);
+        })
+        .catch(err => {
+          console.warn(`WorldEnvironment: Failed to load interior model ${interiorModelUrl}`, err);
+        });
+    }
+
     if (isCedarline) {
       // Build comprehensive corporate SOC environment (Signage, Video Wall, Server Racks, Workstation Pods)
       this.buildCedarlineSocEnvironment(accentColor, halfW, halfD, roomH);
-    } else {
+    } else if (isApartment) {
       // Player Apartment interior furniture and decorations
       this.buildApartmentProceduralFallback();
       this.loadApartmentProps();
@@ -1276,7 +1530,7 @@ export class WorldEnvironment {
 
     // Exit Doorway Marker at (0, 0, 5.0) - Floor-only reticle so no floating shape obstructs camera
     const exitMarker = new InteractableMarker(0, 5.0, accentColor, {
-      label: isCedarline ? 'Cedarline Services Exit' : 'Apartment Exit',
+      label: exitName,
       isFloorOnly: true,
       radius: 1.0,
     });
@@ -1285,7 +1539,7 @@ export class WorldEnvironment {
 
     this.interactionRegistry.register({
       id: 'interact_exit_door',
-      name: isCedarline ? 'Cedarline Services Exit' : 'Apartment Exit',
+      name: exitName,
       promptAction: 'return to the outdoor neighborhood [E]',
       description: 'Exit the building and return to Broad Street, Lagos Island.',
       position: [0, 0, 5.0],

@@ -1,0 +1,1977 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-10-23T09:52:41.394Z",
+  "description": "Production normalization specifications, target metric dimensions, and transform offsets for Cyberlife assets.",
+  "assets": {
+    "2012_ford_mustang_boss_302.glb": {
+      "filename": "2012_ford_mustang_boss_302.glb",
+      "title": "2012 Ford Mustang Boss 302",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 0.02,
+        "y": 0.01,
+        "z": 0.05
+      },
+      "targetDimensions": {
+        "length": 8.75,
+        "width": 3.5,
+        "height": 1.75
+      },
+      "scaleFactor": 175,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.88,
+      "triangles": 40698,
+      "fileSizeMB": 5.03,
+      "author": "Ddiaz Design",
+      "license": "CC-BY-NC-SA-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/2012-ford-mustang-boss-302-e15676ce063f41d4aeffde06f36087b2",
+      "hash": "4abd23a997b8dd49677639d4e8b342835505f5d05a09d033522c5de5a1fba013"
+    },
+    "2019_ford_mustang_cobra_jet.glb": {
+      "filename": "2019_ford_mustang_cobra_jet.glb",
+      "title": "2019 Ford Mustang Cobra Jet",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 8.33,
+        "y": 5.5,
+        "z": 20.34
+      },
+      "targetDimensions": {
+        "length": 6.47,
+        "width": 2.65,
+        "height": 1.75
+      },
+      "scaleFactor": 0.3182,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.88,
+      "triangles": 235210,
+      "fileSizeMB": 14.33,
+      "author": "OUTPISTON",
+      "license": "CC-BY-NC-SA-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/2019-ford-mustang-cobra-jet-0a6ca1921bfa40528e7a074acef27b6b",
+      "hash": "49330475648977a31807339c001deba577b35ac2083384a3835d4a6d486631a0"
+    },
+    "2021_ford_mondeo_hybrid_estate.glb": {
+      "filename": "2021_ford_mondeo_hybrid_estate.glb",
+      "title": "2021 Ford Mondeo Hybrid Estate",
+      "verdict": "USE AFTER WORK",
+      "tags": [
+        "vehicle",
+        "civilian",
+        "corporate",
+        "traffic"
+      ],
+      "nativeDimensions": {
+        "x": 215.34,
+        "y": 151.15,
+        "z": 493.36
+      },
+      "targetDimensions": {
+        "length": 4.93,
+        "width": 2.15,
+        "height": 1.51
+      },
+      "scaleFactor": 0.01,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.75,
+      "triangles": 396450,
+      "fileSizeMB": 38.14,
+      "author": "tonielpro520",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/2021-ford-mondeo-hybrid-estate-cb5a3dc0adff4bde9c2b897c892f8663",
+      "hash": "cd4b0f59777a0bf19781b3ab799d310e0b397857ddda80896810f75d9f464e97"
+    },
+    "azure_confidence.glb": {
+      "filename": "azure_confidence.glb",
+      "title": "Azure Confidence",
+      "verdict": "PARKED",
+      "tags": [
+        "character_scan",
+        "unrigged"
+      ],
+      "nativeDimensions": {
+        "x": 0.69,
+        "y": 1.9,
+        "z": 0.36
+      },
+      "targetDimensions": {
+        "length": 0.36,
+        "width": 0.69,
+        "height": 1.9
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.95,
+      "triangles": 257516,
+      "fileSizeMB": 17.45,
+      "author": "restore50",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/azure-confidence-3c9e8d3e69e74138aaf1bd9f1d7c5f35",
+      "hash": "11e571889af3fe17545a08bdff1fbcadbea1df388b6c353acc10c225b567a79b"
+    },
+    "basement_home_office_badeskchallenge.glb": {
+      "filename": "basement_home_office_badeskchallenge.glb",
+      "title": "Basement Home Office #BADeskChallenge",
+      "verdict": "USE AFTER WORK",
+      "tags": [
+        "interior",
+        "room",
+        "workstation"
+      ],
+      "nativeDimensions": {
+        "x": 4.39,
+        "y": 3.05,
+        "z": 4.09
+      },
+      "targetDimensions": {
+        "length": 4.09,
+        "width": 4.39,
+        "height": 3.05
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 1.52,
+      "triangles": 745410,
+      "fileSizeMB": 25.78,
+      "author": "Fatih174",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/basement-home-office-badeskchallenge-324ceb119c754bed973ab7a603750742",
+      "hash": "f976ca862876f4bd7d7129482978914d0b5696aeb713c07ba6f279b0967461a5"
+    },
+    "building_hallway.glb": {
+      "filename": "building_hallway.glb",
+      "title": "Building Hallway",
+      "verdict": "USE AFTER WORK",
+      "tags": [
+        "interior",
+        "corridor",
+        "architecture"
+      ],
+      "nativeDimensions": {
+        "x": 2319.66,
+        "y": 638.65,
+        "z": 2170.19
+      },
+      "targetDimensions": {
+        "length": 10.85,
+        "width": 11.6,
+        "height": 3.19
+      },
+      "scaleFactor": 0.005,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 1.6,
+      "triangles": 52198,
+      "fileSizeMB": 16.39,
+      "author": "jimbogies",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/building-hallway-b407c0f316b94b1cbcf0bf254c3c2442",
+      "hash": "7551c6566e7397a1d6cc77d5b661e93e74323ec2cbba47e76789abaccd43851a"
+    },
+    "casio_fx100au_plus_2nd_edition_calculator.glb": {
+      "filename": "casio_fx100au_plus_2nd_edition_calculator.glb",
+      "title": "Casio fx100au Plus 2nd Edition Calculator",
+      "verdict": "USE AFTER WORK",
+      "tags": [
+        "prop",
+        "interior",
+        "stationery",
+        "desk"
+      ],
+      "nativeDimensions": {
+        "x": 2.39,
+        "y": 0.25,
+        "z": 4.97
+      },
+      "targetDimensions": {
+        "length": 0.165,
+        "width": 0.079,
+        "height": 0.014
+      },
+      "scaleFactor": 0.033,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.007,
+      "triangles": 30833,
+      "fileSizeMB": 2.91,
+      "author": "The_Elz_Art",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/casio-fx100au-plus-2nd-edition-calculator-12029b2cfb124c4fa7d995e666bfbbda",
+      "hash": "f469b5862f15449d7123c3a47193727cc31319a131322737ee822cc91ef54b4a"
+    },
+    "casual_chic_in_pink.glb": {
+      "filename": "casual_chic_in_pink.glb",
+      "title": "Casual Chic In Pink",
+      "verdict": "PARKED",
+      "tags": [
+        "character_scan",
+        "unrigged"
+      ],
+      "nativeDimensions": {
+        "x": 0.6,
+        "y": 1.9,
+        "z": 0.48
+      },
+      "targetDimensions": {
+        "length": 0.48,
+        "width": 0.6,
+        "height": 1.9
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.95,
+      "triangles": 272008,
+      "fileSizeMB": 18.43,
+      "author": "restore50",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/casual-chic-in-pink-d424e0ff661947039a00f44ae563cf34",
+      "hash": "046ef745fc72a27c073fa2d600e85b3c070c1bac2b2c461f65858defc5d517e1"
+    },
+    "casual_confidence (1).glb": {
+      "filename": "casual_confidence (1).glb",
+      "title": "Casual Confidence",
+      "verdict": "PARKED",
+      "tags": [
+        "character_scan",
+        "unrigged"
+      ],
+      "nativeDimensions": {
+        "x": 0.61,
+        "y": 1.9,
+        "z": 0.47
+      },
+      "targetDimensions": {
+        "length": 0.47,
+        "width": 0.61,
+        "height": 1.9
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.95,
+      "triangles": 227590,
+      "fileSizeMB": 15.89,
+      "author": "restore50",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/casual-confidence-45532401d0fd45b681cbee9ea7963e31",
+      "hash": "3cef9aa11d0342100daa5010c3115b7b11d632efe9c7cbbbd5ed1f62cae18c38"
+    },
+    "casual_confidence (2).glb": {
+      "filename": "casual_confidence (2).glb",
+      "title": "Casual Confidence",
+      "verdict": "PARKED",
+      "tags": [
+        "character_scan",
+        "unrigged"
+      ],
+      "nativeDimensions": {
+        "x": 0.71,
+        "y": 1.9,
+        "z": 0.39
+      },
+      "targetDimensions": {
+        "length": 0.39,
+        "width": 0.71,
+        "height": 1.9
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.95,
+      "triangles": 236656,
+      "fileSizeMB": 16.41,
+      "author": "restore50",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/casual-confidence-7b881f58dc4d4799950a5e14a5e4fe59",
+      "hash": "8c768a4879fcc802b7d50d741498ad09f0b792690f650cf6d9ed1a1803c84e50"
+    },
+    "casual_confidence (3).glb": {
+      "filename": "casual_confidence (3).glb",
+      "title": "Casual Confidence",
+      "verdict": "PARKED",
+      "tags": [
+        "character_scan",
+        "unrigged"
+      ],
+      "nativeDimensions": {
+        "x": 0.7,
+        "y": 1.9,
+        "z": 0.39
+      },
+      "targetDimensions": {
+        "length": 0.39,
+        "width": 0.7,
+        "height": 1.9
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.95,
+      "triangles": 198662,
+      "fileSizeMB": 14.59,
+      "author": "restore50",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/casual-confidence-3f14ef26c4464535bc53a7b709019ec4",
+      "hash": "b990053053884bf6b7b5f80ea099f5392c0d52a539f540f60b1f9fa829f50dff"
+    },
+    "casual_confidence copy.glb": {
+      "filename": "casual_confidence copy.glb",
+      "title": "Casual Confidence",
+      "verdict": "PARKED",
+      "tags": [
+        "character_scan",
+        "unrigged"
+      ],
+      "nativeDimensions": {
+        "x": 0.61,
+        "y": 1.9,
+        "z": 0.35
+      },
+      "targetDimensions": {
+        "length": 0.35,
+        "width": 0.61,
+        "height": 1.9
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.95,
+      "triangles": 340644,
+      "fileSizeMB": 22.41,
+      "author": "restore50",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/casual-confidence-5a1a605bf67d42399f05655248c0376e",
+      "hash": "fc7f676f873a98a9c7fd199373d60b9ae197265b2e7ce81e085037b783e6d35a"
+    },
+    "casual_confidence.glb": {
+      "filename": "casual_confidence.glb",
+      "title": "Casual Confidence",
+      "verdict": "PARKED",
+      "tags": [
+        "character_scan",
+        "unrigged"
+      ],
+      "nativeDimensions": {
+        "x": 0.71,
+        "y": 1.9,
+        "z": 0.39
+      },
+      "targetDimensions": {
+        "length": 0.39,
+        "width": 0.71,
+        "height": 1.9
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.95,
+      "triangles": 236656,
+      "fileSizeMB": 16.41,
+      "author": "restore50",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/casual-confidence-7b881f58dc4d4799950a5e14a5e4fe59",
+      "hash": "8c768a4879fcc802b7d50d741498ad09f0b792690f650cf6d9ed1a1803c84e50"
+    },
+    "casual_portrait_of_a_man_in_a_beige_t-shirt.glb": {
+      "filename": "casual_portrait_of_a_man_in_a_beige_t-shirt.glb",
+      "title": "Casual Portrait Of A Man In A Beige T-Shirt",
+      "verdict": "PARKED",
+      "tags": [
+        "character_scan",
+        "unrigged"
+      ],
+      "nativeDimensions": {
+        "x": 0.69,
+        "y": 1.9,
+        "z": 0.48
+      },
+      "targetDimensions": {
+        "length": 0.48,
+        "width": 0.69,
+        "height": 1.9
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.95,
+      "triangles": 269392,
+      "fileSizeMB": 17.73,
+      "author": "restore50",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/casual-portrait-of-a-man-in-a-beige-t-shirt-dd932052623843d0bf5de660974d84d3",
+      "hash": "831f23e6787c3c4df2be43f79c5b2e0b05e54707a997168f3db8cf84d873958c"
+    },
+    "ccity_building_set_1.glb": {
+      "filename": "ccity_building_set_1.glb",
+      "title": "CCity Building Set 1",
+      "verdict": "USE",
+      "tags": [
+        "kit",
+        "building",
+        "modular",
+        "street_wall"
+      ],
+      "nativeDimensions": {
+        "x": 55800,
+        "y": 3185.66,
+        "z": 23400
+      },
+      "targetDimensions": {
+        "length": 23.4,
+        "width": 25,
+        "height": 31.86
+      },
+      "scaleFactor": 0.01,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 15.9,
+      "triangles": 31050,
+      "fileSizeMB": 13.72,
+      "author": "Neberkenezer",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/ccity-building-set-1-a2d5c7bfcc2148fb8994864c43dfcc97",
+      "hash": "9289894c493e1cd5c6a3c799d6ca17b66bd7db8a1bbc32f712efd23ed83ea039"
+    },
+    "city.glb": {
+      "filename": "city.glb",
+      "title": "City",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 52.98,
+        "y": 14.23,
+        "z": 55.98
+      },
+      "targetDimensions": {
+        "length": 6.89,
+        "width": 6.52,
+        "height": 1.75
+      },
+      "scaleFactor": 0.123,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.88,
+      "triangles": 263001,
+      "fileSizeMB": 26.13,
+      "author": "Voxelatio",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/city-262c1e8e50254d58aaac0c9c2d166511",
+      "hash": "98a8ec73f7100a5f289951254231892fbde353e137eb21d767c5b2ebcdacaa1f"
+    },
+    "cyberpunk_city.glb": {
+      "filename": "cyberpunk_city.glb",
+      "title": "Cyberpunk City",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 29.84,
+        "y": 20.54,
+        "z": 15.74
+      },
+      "targetDimensions": {
+        "length": 1.34,
+        "width": 2.54,
+        "height": 1.75
+      },
+      "scaleFactor": 0.0852,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.88,
+      "triangles": 1257909,
+      "fileSizeMB": 90.59,
+      "author": "mortalityrexotable",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/cyberpunk-city-3f24e5c5bf924f46b30d9a392afa9624",
+      "hash": "c7ee6ea189844680e3962c4ffb0984d7d78df15969707f3bd3dfc1e79216ea4c"
+    },
+    "download_crown_of_hispania_for_pc.glb": {
+      "filename": "download_crown_of_hispania_for_pc.glb",
+      "title": "Download Crown Of Hispania For PC",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 0.01,
+        "y": 0.02,
+        "z": 0
+      },
+      "targetDimensions": {
+        "length": 0,
+        "width": 0.01,
+        "height": 0.02
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.01,
+      "triangles": 5265,
+      "fileSizeMB": 0.51,
+      "author": "HiddenBonobo621",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/download-crown-of-hispania-for-pc-343f2f1ddb384cbabcefd8851e0aec61",
+      "hash": "ea9650ca240bc661a1a8557db33411119637824456426c0bce159bb02ead0128"
+    },
+    "download_loot_and_ledger-tenoke_for_pc.glb": {
+      "filename": "download_loot_and_ledger-tenoke_for_pc.glb",
+      "title": "Download Loot And Ledger-TENOKE For PC",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 0.85,
+        "y": 1,
+        "z": 0.69
+      },
+      "targetDimensions": {
+        "length": 0.69,
+        "width": 0.85,
+        "height": 1
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.5,
+      "triangles": 141330,
+      "fileSizeMB": 6.47,
+      "author": "OvertWildcat3133",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/download-loot-and-ledger-tenoke-for-pc-e13e16c276624a48aec490821c3a89d9",
+      "hash": "257deebfe4a6c407c54971cf99e3d4af6d7f9076b8924a511d489f3a25488f70"
+    },
+    "edsr_2002_-_alexandra_roivas.glb": {
+      "filename": "edsr_2002_-_alexandra_roivas.glb",
+      "title": "EDSR (2002) - Alexandra Roivas",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 2.83,
+        "y": 3.18,
+        "z": 0.63
+      },
+      "targetDimensions": {
+        "length": 0.35,
+        "width": 1.56,
+        "height": 1.75
+      },
+      "scaleFactor": 0.5503,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.87,
+      "triangles": 4374,
+      "fileSizeMB": 48.85,
+      "author": "Ziggertron",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/edsr-2002-alexandra-roivas-c46a4d4f71aa4b08b196ad92c786cf18",
+      "hash": "069f4689424b0291469b93e32e13cb61bfbacd3977d0cf01a462de70cec96071"
+    },
+    "elegant_office_muse.glb": {
+      "filename": "elegant_office_muse.glb",
+      "title": "Elegant Office Muse",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 0.52,
+        "y": 1.9,
+        "z": 0.45
+      },
+      "targetDimensions": {
+        "length": 0.45,
+        "width": 0.52,
+        "height": 1.9
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.95,
+      "triangles": 1934595,
+      "fileSizeMB": 107.79,
+      "author": "Grauwolf",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/elegant-office-muse-f954a3f8d7a540648c417472259ec35e",
+      "hash": "96dc5559f9c7fbf213bea42d634b8492ae9c4aede213acaadcf33900b89b4a9d"
+    },
+    "floral_print_high-waisted_shorts_look copy.glb": {
+      "filename": "floral_print_high-waisted_shorts_look copy.glb",
+      "title": "Floral Print High-Waisted Shorts Look",
+      "verdict": "PARKED",
+      "tags": [
+        "character_scan",
+        "unrigged"
+      ],
+      "nativeDimensions": {
+        "x": 0.72,
+        "y": 1.9,
+        "z": 0.38
+      },
+      "targetDimensions": {
+        "length": 0.38,
+        "width": 0.72,
+        "height": 1.9
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.95,
+      "triangles": 253839,
+      "fileSizeMB": 17.7,
+      "author": "restore50",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/floral-print-high-waisted-shorts-look-340b7d1d236b4b6eb041211c7d38a66d",
+      "hash": "114e165c3015b3ec37ff77a3192e4f68350620f7d6802fd8ac580e714d634e81"
+    },
+    "floral_print_high-waisted_shorts_look.glb": {
+      "filename": "floral_print_high-waisted_shorts_look.glb",
+      "title": "Floral Print High-Waisted Shorts Look",
+      "verdict": "PARKED",
+      "tags": [
+        "character_scan",
+        "unrigged"
+      ],
+      "nativeDimensions": {
+        "x": 0.72,
+        "y": 1.9,
+        "z": 0.38
+      },
+      "targetDimensions": {
+        "length": 0.38,
+        "width": 0.72,
+        "height": 1.9
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.95,
+      "triangles": 253839,
+      "fileSizeMB": 17.7,
+      "author": "restore50",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/floral-print-high-waisted-shorts-look-340b7d1d236b4b6eb041211c7d38a66d",
+      "hash": "114e165c3015b3ec37ff77a3192e4f68350620f7d6802fd8ac580e714d634e81"
+    },
+    "ford_mondeo_taxi.glb": {
+      "filename": "ford_mondeo_taxi.glb",
+      "title": "Ford Mondeo TAXI",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 85.68,
+        "y": 65.17,
+        "z": 193.69
+      },
+      "targetDimensions": {
+        "length": 5.21,
+        "width": 2.3,
+        "height": 1.75
+      },
+      "scaleFactor": 0.0269,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.88,
+      "triangles": 2326,
+      "fileSizeMB": 1.94,
+      "author": "TSB3DMODELS",
+      "license": "CC-BY-NC-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/ford-mondeo-taxi-8bc1c46fe0334d03a5eb927b6a129dc8",
+      "hash": "ef27cf8948ac04fd00ae02d3941f1c4b98b34db8cdffc229f0894190f1f03ad7"
+    },
+    "free__atlanta_corperate_office_building.glb": {
+      "filename": "free__atlanta_corperate_office_building.glb",
+      "title": "[FREE]  Atlanta, Corperate Office Building",
+      "verdict": "USE",
+      "tags": [
+        "building",
+        "high_rise",
+        "commercial",
+        "skyline"
+      ],
+      "nativeDimensions": {
+        "x": 60.83,
+        "y": 212,
+        "z": 96.85
+      },
+      "targetDimensions": {
+        "length": 33.9,
+        "width": 21.3,
+        "height": 74.2
+      },
+      "scaleFactor": 0.35,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 37.1,
+      "triangles": 37290,
+      "fileSizeMB": 10.32,
+      "author": "99.Miles",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/free-atlanta-corperate-office-building-d96380fb001345cca9a9be121f3e43d5",
+      "hash": "893abeeefd1396db5bfff54f1f451fc128bcd6e6c3c3a3d965b70f8b9cf3a641"
+    },
+    "free_loft_17_interior_floors_view_of_the_city..glb": {
+      "filename": "free_loft_17_interior_floors_view_of_the_city..glb",
+      "title": "free Loft 17 interior floors, view of the city.",
+      "verdict": "USE AFTER WORK",
+      "tags": [
+        "interior",
+        "office",
+        "loft",
+        "venue"
+      ],
+      "nativeDimensions": {
+        "x": 37.19,
+        "y": 19.26,
+        "z": 33.93
+      },
+      "targetDimensions": {
+        "length": 6.78,
+        "width": 7.44,
+        "height": 3.85
+      },
+      "scaleFactor": 0.2,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 1.92,
+      "triangles": 45420,
+      "fileSizeMB": 12.28,
+      "author": "dasy444",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/free-loft-17-interior-floors-view-of-the-city-1bc27584241b4078975b31dd4610d6e0",
+      "hash": "741e899b8a925e6886e07dc2e171791bb99e50b1f7b2a67d00fc7e939298def3"
+    },
+    "free_loft_18_mini_office_v.optimization.glb": {
+      "filename": "free_loft_18_mini_office_v.optimization.glb",
+      "title": "free Loft 18 mini office v.optimization",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 15.43,
+        "y": 6.13,
+        "z": 11.7
+      },
+      "targetDimensions": {
+        "length": 3.34,
+        "width": 4.41,
+        "height": 1.75
+      },
+      "scaleFactor": 0.2855,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.88,
+      "triangles": 39882,
+      "fileSizeMB": 15.61,
+      "author": "dasy444",
+      "license": "SKETCHFAB",
+      "sourceUrl": "https://sketchfab.com/3d-models/free-loft-18-mini-office-voptimization-e434caaeaa4a4347a3c45eac6c138c30",
+      "hash": "7049b5825d3811b7aa613c74b72e08b9010ba72c6b00c427519dd1fd5ad0b3e1"
+    },
+    "generator_lp.glb": {
+      "filename": "generator_lp.glb",
+      "title": "Generator LP",
+      "verdict": "USE",
+      "tags": [
+        "infrastructure",
+        "power",
+        "prop",
+        "commercial"
+      ],
+      "nativeDimensions": {
+        "x": 110.47,
+        "y": 71.6,
+        "z": 74.92
+      },
+      "targetDimensions": {
+        "length": 1.44,
+        "width": 0.93,
+        "height": 0.97
+      },
+      "scaleFactor": 0.013,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.47,
+      "triangles": 10902,
+      "fileSizeMB": 4.35,
+      "author": "YoeriBervoets",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/generator-lp-9127ac84a3c84d56be6e3993ed350eff",
+      "hash": "71d8029eaa00114ed5d2e05c2edada33f57c3dfccf16e37d396a7a6ffeb5962c"
+    },
+    "high_rise_office_building.glb": {
+      "filename": "high_rise_office_building.glb",
+      "title": "High Rise Office Building",
+      "verdict": "USE",
+      "tags": [
+        "building",
+        "mid_rise",
+        "commercial",
+        "office"
+      ],
+      "nativeDimensions": {
+        "x": 37.09,
+        "y": 33.19,
+        "z": 18.36
+      },
+      "targetDimensions": {
+        "length": 37.09,
+        "width": 18.36,
+        "height": 33.19
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 16.6,
+      "triangles": 16963,
+      "fileSizeMB": 10.49,
+      "author": "Arsen Ismailov",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/high-rise-office-building-3db1659ca3984bdbb18d9d3838095bea",
+      "hash": "1cccf4154d6855c2947b1de963c3e6a5e6d70971b8b5d4337831088978dd1adf"
+    },
+    "lagos_danfo_bus.glb": {
+      "filename": "lagos_danfo_bus.glb",
+      "title": "Lagos Danfo Bus",
+      "verdict": "USE",
+      "tags": [
+        "vehicle",
+        "danfo",
+        "public_transit",
+        "commercial"
+      ],
+      "nativeDimensions": {
+        "x": 2,
+        "y": 0.89,
+        "z": 0.95
+      },
+      "targetDimensions": {
+        "length": 4.9,
+        "width": 2.18,
+        "height": 2.2
+      },
+      "scaleFactor": 2.45,
+      "upAxis": "+Y",
+      "forwardAxis": "+X",
+      "rotationOffset": [
+        0,
+        1.5707963267948966,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 1.1,
+      "triangles": 40922,
+      "fileSizeMB": 6.88,
+      "author": "Iam_thearchitect",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/lagos-danfo-bus-41b71827dcc94339b627fb79d9a7adb7",
+      "hash": "942c18da814ff4b11bbe164b5165f45e339ad3c44102fe38af43596a98a94c5f"
+    },
+    "low-poly_city_buildings.glb": {
+      "filename": "low-poly_city_buildings.glb",
+      "title": "Low-poly City Buildings",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 5.74,
+        "y": 2.81,
+        "z": 4.56
+      },
+      "targetDimensions": {
+        "length": 4.56,
+        "width": 5.74,
+        "height": 2.81
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 1.41,
+      "triangles": 7150,
+      "fileSizeMB": 4.09,
+      "author": "smooth998",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/low-poly-city-buildings-e0209ac5bb684d2d85e5ade96c92d2ff",
+      "hash": "65bac40b2f96085206dda9817606bda58b2a7228f7f27f6109c8e06d801334c2"
+    },
+    "low_rise_wall_to_wall_office_building.glb": {
+      "filename": "low_rise_wall_to_wall_office_building.glb",
+      "title": "Low rise wall to wall office building",
+      "verdict": "USE",
+      "tags": [
+        "building",
+        "low_rise",
+        "commercial",
+        "storefront"
+      ],
+      "nativeDimensions": {
+        "x": 3280,
+        "y": 3272.57,
+        "z": 3299.67
+      },
+      "targetDimensions": {
+        "length": 14.8,
+        "width": 14.7,
+        "height": 14.7
+      },
+      "scaleFactor": 0.0045,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 7.35,
+      "triangles": 2616,
+      "fileSizeMB": 0.79,
+      "author": "aitortilla01",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/low-rise-wall-to-wall-office-building-2dd3bdd5e0724eb1b1025a922fa754cf",
+      "hash": "943c8d043ea454dc92af9c37a67a0d5e1c092772b4230c8b7e966dd261a9b0b2"
+    },
+    "man_in_a_yellow_tank_top_and_navy_cargo_shorts.glb": {
+      "filename": "man_in_a_yellow_tank_top_and_navy_cargo_shorts.glb",
+      "title": "Man In A Yellow Tank Top And Navy Cargo Shorts",
+      "verdict": "PARKED",
+      "tags": [
+        "character_scan",
+        "unrigged"
+      ],
+      "nativeDimensions": {
+        "x": 0.63,
+        "y": 1.9,
+        "z": 0.45
+      },
+      "targetDimensions": {
+        "length": 0.45,
+        "width": 0.63,
+        "height": 1.9
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.95,
+      "triangles": 226310,
+      "fileSizeMB": 15.8,
+      "author": "restore50",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/man-in-a-yellow-tank-top-and-navy-cargo-shorts-79f22f9c3dc74268a79179ce00f0d068",
+      "hash": "98f6f95db85dbdeac28474659f73a87d046553987647a0c5ccea080e0e09ad7a"
+    },
+    "mersus_office.glb": {
+      "filename": "mersus_office.glb",
+      "title": "Mersus Office",
+      "verdict": "USE AFTER WORK",
+      "tags": [
+        "interior",
+        "corporate",
+        "office",
+        "venue"
+      ],
+      "nativeDimensions": {
+        "x": 17.01,
+        "y": 2.91,
+        "z": 16.1
+      },
+      "targetDimensions": {
+        "length": 16.1,
+        "width": 17.01,
+        "height": 2.91
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 1.45,
+      "triangles": 60593,
+      "fileSizeMB": 24.14,
+      "author": "Mersus Technologies",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/mersus-office-8714be387bcd406898b2615f7dae3a47",
+      "hash": "245345e96925588d3285b17ce039f6cbdf1707930e69c526c6f10582e0e2c571"
+    },
+    "new_york_buildings.glb": {
+      "filename": "new_york_buildings.glb",
+      "title": "New York Buildings",
+      "verdict": "USE AFTER WORK",
+      "tags": [
+        "building",
+        "commercial",
+        "row_buildings"
+      ],
+      "nativeDimensions": {
+        "x": 10.34,
+        "y": 5.3,
+        "z": 22.06
+      },
+      "targetDimensions": {
+        "length": 61.7,
+        "width": 28.9,
+        "height": 14.8
+      },
+      "scaleFactor": 2.8,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 7.4,
+      "triangles": 5142,
+      "fileSizeMB": 11.48,
+      "author": "sumitmangela",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/new-york-buildings-e7922fe0f7b14ed786f84529f9217dac",
+      "hash": "768281501b4f892aacc4f2c0661dda775655e4d381c72b3d63f62b781732999c"
+    },
+    "office.glb": {
+      "filename": "office.glb",
+      "title": "Office",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 57.29,
+        "y": 27.92,
+        "z": 69.02
+      },
+      "targetDimensions": {
+        "length": 4.33,
+        "width": 3.59,
+        "height": 1.75
+      },
+      "scaleFactor": 0.0627,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.88,
+      "triangles": 1372,
+      "fileSizeMB": 4.02,
+      "author": "VertexForge",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/office-eba2f30a692d41f29be10706b970d883",
+      "hash": "72f28f4e8a48c041ce635e1ed7a5a66749768161b01f4edaf74a04abcc5c4139"
+    },
+    "office_computer.glb": {
+      "filename": "office_computer.glb",
+      "title": "Office Computer",
+      "verdict": "USE",
+      "tags": [
+        "prop",
+        "interior",
+        "hardware",
+        "workstation"
+      ],
+      "nativeDimensions": {
+        "x": 140.25,
+        "y": 123.96,
+        "z": 184.83
+      },
+      "targetDimensions": {
+        "length": 1.85,
+        "width": 1.4,
+        "height": 1.24
+      },
+      "scaleFactor": 0.01,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.62,
+      "triangles": 2244,
+      "fileSizeMB": 1.45,
+      "author": "sebodeweb",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/office-computer-9403093258264563a89d708b906f1b47",
+      "hash": "94ef880e768680bf2b36fa8bba4ed8baaaf0d1ad443baa9745caf197f98ead67"
+    },
+    "office_desk.glb": {
+      "filename": "office_desk.glb",
+      "title": "Office Desk",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 90.15,
+        "y": 48.09,
+        "z": 75.16
+      },
+      "targetDimensions": {
+        "length": 2.74,
+        "width": 3.28,
+        "height": 1.75
+      },
+      "scaleFactor": 0.0364,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.88,
+      "triangles": 311440,
+      "fileSizeMB": 9.47,
+      "author": "saeed khalili",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/office-desk-b7a7bf47bdb241d1ba52acd7ecf2f0e8",
+      "hash": "293759534e9ba3f9740068a97c64347cccdee3dc72f06d6b5285bf49c4c5e5f0"
+    },
+    "office_floor.glb": {
+      "filename": "office_floor.glb",
+      "title": "Office floor",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 27.12,
+        "y": 18.48,
+        "z": 15.58
+      },
+      "targetDimensions": {
+        "length": 1.48,
+        "width": 2.57,
+        "height": 1.75
+      },
+      "scaleFactor": 0.0947,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.88,
+      "triangles": 158388,
+      "fileSizeMB": 31.03,
+      "author": "dasy444",
+      "license": "SKETCHFAB",
+      "sourceUrl": "https://sketchfab.com/3d-models/office-floor-b73bb971c36746d4be60b8e08bf32466",
+      "hash": "4d0865aa8d3a550f1312f1a043ee01451d9e78748fd53c01fdb2ee127a4202db"
+    },
+    "office_monitor__workstation_monitor.glb": {
+      "filename": "office_monitor__workstation_monitor.glb",
+      "title": "Office Monitor / Workstation Monitor",
+      "verdict": "USE",
+      "tags": [
+        "prop",
+        "interior",
+        "hardware",
+        "display"
+      ],
+      "nativeDimensions": {
+        "x": 252.75,
+        "y": 549.27,
+        "z": 831.1
+      },
+      "targetDimensions": {
+        "length": 0.25,
+        "width": 0.83,
+        "height": 0.55
+      },
+      "scaleFactor": 0.001,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.27,
+      "triangles": 177,
+      "fileSizeMB": 0.02,
+      "author": "DatSketch",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/office-monitor-workstation-monitor-6a7b0147890242418a49f6db26657ab4",
+      "hash": "75ac580efa3a2f2ddd0abe78b45971eb4c31a51ebc1ceddd047389f2f65e5d02"
+    },
+    "office_pc.glb": {
+      "filename": "office_pc.glb",
+      "title": "Office PC",
+      "verdict": "USE",
+      "tags": [
+        "prop",
+        "interior",
+        "hardware",
+        "workstation"
+      ],
+      "nativeDimensions": {
+        "x": 0.35,
+        "y": 0.59,
+        "z": 0.63
+      },
+      "targetDimensions": {
+        "length": 0.47,
+        "width": 0.26,
+        "height": 0.44
+      },
+      "scaleFactor": 0.75,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.22,
+      "triangles": 1700,
+      "fileSizeMB": 1.8,
+      "author": "fluffyw0lf",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/office-pc-69188a48a0b04b18aa015719b0551eaa",
+      "hash": "b13aa1bdb3f4c31b7dc641d1a56c0ae23274f64550009071cc284fa0de6d74ff"
+    },
+    "office_room.glb": {
+      "filename": "office_room.glb",
+      "title": "office room",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 8.37,
+        "y": 6.26,
+        "z": 9.64
+      },
+      "targetDimensions": {
+        "length": 2.7,
+        "width": 2.34,
+        "height": 1.75
+      },
+      "scaleFactor": 0.2796,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.88,
+      "triangles": 647810,
+      "fileSizeMB": 29.31,
+      "author": "78652552anans",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/office-room-ca28dffae44e44af91dd1e06971dbbd0",
+      "hash": "8b5e9311a4070c37487b5149fa6c62425690eee93b2b95e4ec7c0367cc5cee76"
+    },
+    "road__avenue__street.glb": {
+      "filename": "road__avenue__street.glb",
+      "title": "Road_ Avenue_ street",
+      "verdict": "USE",
+      "tags": [
+        "kit",
+        "infrastructure",
+        "road",
+        "pavement"
+      ],
+      "nativeDimensions": {
+        "x": 1000,
+        "y": 20,
+        "z": 1500
+      },
+      "targetDimensions": {
+        "length": 15,
+        "width": 10,
+        "height": 0.2
+      },
+      "scaleFactor": 0.01,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.1,
+      "triangles": 620,
+      "fileSizeMB": 3.43,
+      "author": "ahmagh2e",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/road--avenue--street-7f657c3eceb343ceaf5e542c50dab27a",
+      "hash": "ecdecf51165b585129801fdd3949d81f15863e089417d24287159731cedcbae9"
+    },
+    "sofa.glb": {
+      "filename": "sofa.glb",
+      "title": "Sofa",
+      "verdict": "USE",
+      "tags": [
+        "prop",
+        "interior",
+        "furniture",
+        "reception"
+      ],
+      "nativeDimensions": {
+        "x": 8.11,
+        "y": 3.2,
+        "z": 4.95
+      },
+      "targetDimensions": {
+        "length": 2.11,
+        "width": 1.28,
+        "height": 0.83
+      },
+      "scaleFactor": 0.26,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.41,
+      "triangles": 5290,
+      "fileSizeMB": 9.6,
+      "author": "Mike Polyakovich",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/sofa-6824c36d770b41c08fd86520a66dbfcf",
+      "hash": "c3273e39ec975ac7316a502913720687f8ee18556605f5e6294e9e74078ff492"
+    },
+    "sofa_03_4k.blend.zip": {
+      "filename": "sofa_03_4k.blend.zip",
+      "title": "sofa_03_4k.blend.zip",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "targetDimensions": {
+        "length": 0,
+        "width": 0,
+        "height": 0
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0,
+      "triangles": 0,
+      "fileSizeMB": 8.9,
+      "author": "Unknown",
+      "license": "Missing / Unusable Archive",
+      "sourceUrl": "N/A",
+      "hash": "a3b5f093f2987fe49ea7aea6a978f8345e918c0c8cf761310098f166672cec6a"
+    },
+    "sporting_village.glb": {
+      "filename": "sporting_village.glb",
+      "title": "SPORTING VILLAGE",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 108.46,
+        "y": 3.81,
+        "z": 108.51
+      },
+      "targetDimensions": {
+        "length": 49.84,
+        "width": 49.82,
+        "height": 1.75
+      },
+      "scaleFactor": 0.4593,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.87,
+      "triangles": 435252,
+      "fileSizeMB": 58.48,
+      "author": "SA3D",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/sporting-village-edd0ab495daa4ea0b61775cb4dc7bfb3",
+      "hash": "716fbb3ae5d5fac17c68ce05da6fda3f23a327c46406e19a40c6cb1cf5fe9c9c"
+    },
+    "street.glb": {
+      "filename": "street.glb",
+      "title": "Street",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 1678.1,
+        "y": 463.16,
+        "z": 738.47
+      },
+      "targetDimensions": {
+        "length": 2.81,
+        "width": 6.38,
+        "height": 1.76
+      },
+      "scaleFactor": 0.0038,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.88,
+      "triangles": 444938,
+      "fileSizeMB": 22.23,
+      "author": "Pasha",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/street-3ad93e5eaecb4b0aa2209023240bf35a",
+      "hash": "67b72ef481fd6423c1a1d3aba07d0ca1ce3027282b5d865932fbdb29f6761e1c"
+    },
+    "street_city_buildings_8.glb": {
+      "filename": "street_city_buildings_8.glb",
+      "title": "street city buildings (8)",
+      "verdict": "REJECT",
+      "tags": [
+        "misc"
+      ],
+      "nativeDimensions": {
+        "x": 18.08,
+        "y": 7.78,
+        "z": 23.71
+      },
+      "targetDimensions": {
+        "length": 5.33,
+        "width": 4.07,
+        "height": 1.75
+      },
+      "scaleFactor": 0.2249,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.87,
+      "triangles": 77066,
+      "fileSizeMB": 6.72,
+      "author": "dasy444",
+      "license": "SKETCHFAB",
+      "sourceUrl": "https://sketchfab.com/3d-models/street-city-buildings-8-873c5f14ec464966a11a4d772d187270",
+      "hash": "024295a19563a00a0d5b6a00868745b73a739db0dd23462c08f00ed09f873126"
+    },
+    "yellow_taxicab_-_ps1_car.glb": {
+      "filename": "yellow_taxicab_-_ps1_car.glb",
+      "title": "Yellow Taxi/Cab - PS1 Car",
+      "verdict": "HOLD",
+      "tags": [
+        "vehicle",
+        "taxi",
+        "stylized",
+        "retro"
+      ],
+      "nativeDimensions": {
+        "x": 0.98,
+        "y": 0.79,
+        "z": 2.7
+      },
+      "targetDimensions": {
+        "length": 4.5,
+        "width": 1.63,
+        "height": 1.32
+      },
+      "scaleFactor": 1.67,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "rotationOffset": [
+        0,
+        0,
+        0
+      ],
+      "pivot": "FLOOR_CENTER",
+      "groundOffset": 0.66,
+      "triangles": 664,
+      "fileSizeMB": 0.06,
+      "author": "MoiDev",
+      "license": "CC-BY-SA-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/yellow-taxicab-ps1-car-056735b2dc7349938089d57ee9fde738",
+      "hash": "d64334935bedd6e7a33e52ddf826acd47b3fbb3fb2a111f8c8eecd21f89d57c5"
+    },
+    "aldi_supermarket_full_interior.glb": {
+      "filename": "aldi_supermarket_full_interior.glb",
+      "title": "Aldi supermarket [full interior]",
+      "verdict": "REJECT",
+      "tags": [
+        "interior",
+        "commercial",
+        "supermarket"
+      ],
+      "rejectionReason": "CC-BY-NC 4.0 license forbids commercial use and German grocery corporate trademark creates legal/narrative clash",
+      "author": "Katydid",
+      "license": "CC-BY-NC-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/aldi-supermarket-full-interior-d543173cbeba44c8b1d3ae9e1d63cf02"
+    },
+    "autorikshaw_-_indian_tuk_tuk.glb": {
+      "filename": "autorikshaw_-_indian_tuk_tuk.glb",
+      "title": "Autorikshaw - Indian Tuk Tuk",
+      "verdict": "USE",
+      "shippedPath": "public/assets/vehicles/keke_realistic.glb",
+      "tags": [
+        "vehicle",
+        "keke",
+        "commercial",
+        "transit"
+      ],
+      "targetDimensions": {
+        "length": 2.65,
+        "width": 1.3,
+        "height": 1.75
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "forwardAxis": "-Z",
+      "pivot": "FLOOR_CENTER",
+      "triangles": 8126,
+      "fileSizeMB": 0.23,
+      "author": "bhagathartworks",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/autorikshaw-indian-tuk-tuk-5775d012693741008acff9dad410e92d",
+      "notes": "Recoloured with authentic Lagos commercial transit Yellow (#FACC15), black stripes, EKO TRANSIT livery, LAG-748-KK"
+    },
+    "coconut_palm.glb": {
+      "filename": "coconut_palm.glb",
+      "title": "Coconut Palm",
+      "verdict": "USE",
+      "shippedPath": "public/assets/environment/coconut_palm.glb",
+      "lodPath": "public/assets/environment/coconut_palm_lod.glb",
+      "tags": [
+        "vegetation",
+        "palm",
+        "coastal",
+        "promenade"
+      ],
+      "targetDimensions": {
+        "length": 6.84,
+        "width": 6.84,
+        "height": 11.23
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "triangles": 6626,
+      "lodTriangles": 1307,
+      "fileSizeMB": 1.2,
+      "author": "evolveduk",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/coconut-palm-26e787f2ff2e4c0fb004c3b0210805a3",
+      "notes": "Textures capped to 1024 WebP. Dual-tier LOD switching via CoconutPalmManager InstancedMesh"
+    },
+    "electricity_pole.glb": {
+      "filename": "electricity_pole.glb",
+      "title": "Concrete Electricity Pole",
+      "verdict": "USE",
+      "shippedPath": "public/assets/environment/electricity_pole.glb",
+      "tags": [
+        "infrastructure",
+        "street_furniture",
+        "utility"
+      ],
+      "targetDimensions": {
+        "length": 2.11,
+        "width": 2.63,
+        "height": 10.31
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "triangles": 3918,
+      "fileSizeMB": 1.29,
+      "author": "Helindu",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/electricity-pole-7cb81ca1f1f045889cf5917b9ead7817",
+      "notes": "Welded and decimated from 42k to 3.9k tris under 8k budget. Reoriented upright +90deg along +Y with base at Y=0"
+    },
+    "ferry_concept.glb": {
+      "filename": "ferry_concept.glb",
+      "title": "Ferry Concept (MV Eko Star)",
+      "verdict": "USE",
+      "shippedPath": "public/assets/vehicles/ferry_concept_realistic.glb",
+      "tags": [
+        "vehicle",
+        "ferry",
+        "maritime",
+        "waterway"
+      ],
+      "targetDimensions": {
+        "length": 29.54,
+        "width": 8.87,
+        "height": 7.74
+      },
+      "scaleFactor": 0.025,
+      "upAxis": "+Y",
+      "triangles": 15542,
+      "fileSizeMB": 0.08,
+      "author": "Gman The Cruise Dude",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/ferry-concept-73b9556133704e73af6637a428bcb8f4",
+      "notes": "Stripped 81k line primitives, decimated from 205k to 15.5k tris, scaled 0.025x, full PBR materials with Lagos ferry livery"
+    },
+    "old_wooden_boat.glb": {
+      "filename": "old_wooden_boat.glb",
+      "title": "Old Wooden Boat",
+      "verdict": "USE",
+      "shippedPath": "public/assets/vehicles/boat_wooden_realistic.glb",
+      "tags": [
+        "vehicle",
+        "boat",
+        "canoe",
+        "lagoon"
+      ],
+      "targetDimensions": {
+        "length": 5.92,
+        "width": 3.46,
+        "height": 1.59
+      },
+      "scaleFactor": 7.5,
+      "upAxis": "+Y",
+      "triangles": 11210,
+      "fileSizeMB": 0.5,
+      "author": "pnhtuan",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/old-wooden-boat-c62fa438ea0e464dbb23e0ca5ff03727",
+      "notes": "Scale normalized 7.5x to authentic lagoon fishing canoe dimensions. Waterline grounded at Y=0"
+    },
+    "vespa.glb": {
+      "filename": "vespa.glb",
+      "title": "Vespa Scooter",
+      "verdict": "USE",
+      "shippedPath": "public/assets/vehicles/vespa_scooter_realistic.glb",
+      "tags": [
+        "vehicle",
+        "scooter",
+        "civilian",
+        "two_wheeler"
+      ],
+      "targetDimensions": {
+        "length": 1.8,
+        "width": 0.55,
+        "height": 1.01
+      },
+      "scaleFactor": 0.000085,
+      "upAxis": "+Y",
+      "triangles": 3672,
+      "fileSizeMB": 0.2,
+      "author": "victorberdugo1",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/vespa-cc57eaef930e4de897ded51e7b87c3eb",
+      "notes": "Scale normalized 0.000085x to 1.80m length scooter. Grounded at Y=0"
+    },
+    "billboard_-_lowpoly.glb": {
+      "filename": "billboard_-_lowpoly.glb",
+      "title": "Highway Unipole Billboard (EkoSec)",
+      "verdict": "USE",
+      "shippedPath": "public/assets/environment/billboard_lowpoly.glb",
+      "tags": [
+        "street_furniture",
+        "billboard",
+        "advertising"
+      ],
+      "targetDimensions": {
+        "length": 14.86,
+        "width": 3.12,
+        "height": 19.64
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "triangles": 2669,
+      "fileSizeMB": 0.06,
+      "author": "rkmorello",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/billboard-lowpoly-baadeaf2bab344a4a909f6d3a19375b7",
+      "notes": "Replaced texture with procedural code-generated EkoSec Cloud SIEM ad"
+    },
+    "metal_billboard_advertising_single_sided_free.glb": {
+      "filename": "metal_billboard_advertising_single_sided_free.glb",
+      "title": "Single Sided Metal Roadside Billboard (Krest)",
+      "verdict": "USE",
+      "shippedPath": "public/assets/environment/billboard_single_sided.glb",
+      "tags": [
+        "street_furniture",
+        "billboard",
+        "advertising"
+      ],
+      "targetDimensions": {
+        "length": 9.2,
+        "width": 1.54,
+        "height": 12.23
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "triangles": 1664,
+      "fileSizeMB": 0.13,
+      "author": "Jotrain Models",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/metal-billboard-advertising-single-sided-free-33c164cf9e4346d1b48eb0c49cb2643f",
+      "notes": "Replaced blank poster with procedural code-generated Krest Global Logistics ad"
+    },
+    "metal_road_billboard_single_sided.glb": {
+      "filename": "metal_road_billboard_single_sided.glb",
+      "title": "Overhead Road Gantry Billboard",
+      "verdict": "USE",
+      "shippedPath": "public/assets/environment/billboard_road_single_sided.glb",
+      "tags": [
+        "street_furniture",
+        "gantry",
+        "signage"
+      ],
+      "targetDimensions": {
+        "length": 11.23,
+        "width": 2.11,
+        "height": 7.42
+      },
+      "scaleFactor": 1,
+      "upAxis": "+Y",
+      "triangles": 860,
+      "fileSizeMB": 0.32,
+      "author": "Frice",
+      "license": "CC-BY-4.0",
+      "sourceUrl": "https://sketchfab.com/3d-models/metal-road-billboard-single-sided-6534d76c592d4a0da374d3861e2d506a",
+      "notes": "Replaced textures with procedural Lagos highway directional signs (Broad St, CMS, Eko Tech). Flipped U UV coords"
+    }
+  }
+}

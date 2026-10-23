@@ -169,6 +169,129 @@ export const FICTIONAL_LOGS: readonly FictionalLogEntry[] = [
     message: 'Scheduled morning audit synchronization completed across Marina subnet 10.0.4.0/24.',
     details: 'Telemetry sources: 6 hosts reporting; 0 agent faults detected.',
   },
+  // ============================================================================
+  // ORION SIEM CEF ALERTS (mon-siem-01)
+  // ============================================================================
+  {
+    id: 'LOG-2026-CEF-01',
+    timestamp: '07:42:01 AM',
+    source: 'siem',
+    severity: 'WARN',
+    eventType: 'ALERT_SMB_TRAVERSAL',
+    hostId: 'mon-siem-01',
+    user: 'svc-aster',
+    message:
+      'CEF:0|CedarlineSec|OrionSIEM|2026.2|ALERT_SMB_TRAVERSAL|Unauthorized SMB Tree Connect to Confidential Share|7|src=10.0.4.15 dst=10.0.4.20 spt=51204 dpt=445 suser=svc-aster msg=Tree connect to \\\\filesrv-01\\confidential$ granted under corporate-admin role',
+    rawCef:
+      'CEF:0|CedarlineSec|OrionSIEM|2026.2|ALERT_SMB_TRAVERSAL|Unauthorized SMB Tree Connect to Confidential Share|7|src=10.0.4.15 dst=10.0.4.20 spt=51204 dpt=445 suser=svc-aster msg=Tree connect to \\\\filesrv-01\\confidential$ granted under corporate-admin role',
+    details:
+      'SIEM Correlation Engine: Service account svc-aster initiated tree connect to confidential management share using wildcard administrative token.',
+  },
+  {
+    id: 'LOG-2026-CEF-02',
+    timestamp: '07:42:02 AM',
+    source: 'siem',
+    severity: 'ERROR',
+    eventType: 'ALERT_OUTBOUND_TLS_ANOMALY',
+    hostId: 'mon-siem-01',
+    user: 'svc-aster',
+    message:
+      'CEF:0|CedarlineSec|OrionSIEM|2026.2|ALERT_OUTBOUND_TLS_ANOMALY|Unexpected TLS Egress from Application Tier|8|src=10.0.4.15 dst=196.220.10.5 spt=49812 dpt=8443 cs1=vault-core-01.transit.internal cs2=JA3:72c6499890ba msg=Outbound connection to unclassified external transit node',
+    rawCef:
+      'CEF:0|CedarlineSec|OrionSIEM|2026.2|ALERT_OUTBOUND_TLS_ANOMALY|Unexpected TLS Egress from Application Tier|8|src=10.0.4.15 dst=196.220.10.5 spt=49812 dpt=8443 cs1=vault-core-01.transit.internal cs2=JA3:72c6499890ba msg=Outbound connection to unclassified external transit node',
+    details:
+      'External TLS handshake detected destined for vault-core-01.transit.internal (Eko Nexus pipeline staging node). Application tier should have no external routing.',
+  },
+  {
+    id: 'LOG-2026-CEF-03',
+    timestamp: '07:42:02 AM',
+    source: 'siem',
+    severity: 'WARN',
+    eventType: 'ALERT_SMB_TRAVERSAL',
+    hostId: 'mon-siem-01',
+    user: 'svc-aster',
+    message:
+      'CEF:0|CedarlineSec|OrionSIEM|2026.2|ALERT_SMB_TRAVERSAL|Unauthorized SMB Tree Connect to Confidential Share|7|src=10.0.4.15 dst=10.0.4.20 spt=51204 dpt=445 suser=svc-aster msg=Duplicate alert: Tree connect to \\\\filesrv-01\\confidential$',
+    rawCef:
+      'CEF:0|CedarlineSec|OrionSIEM|2026.2|ALERT_SMB_TRAVERSAL|Unauthorized SMB Tree Connect to Confidential Share|7|src=10.0.4.15 dst=10.0.4.20 spt=51204 dpt=445 suser=svc-aster msg=Duplicate alert: Tree connect to \\\\filesrv-01\\confidential$',
+    details: 'Duplicate event emitted by secondary correlation rule.',
+  },
+  {
+    id: 'LOG-2026-CEF-04',
+    timestamp: '07:43:00 AM',
+    source: 'siem',
+    severity: 'INFO',
+    eventType: 'ALERT_HEALTH_PROBE',
+    hostId: 'mon-siem-01',
+    message:
+      'CEF:0|CedarlineSec|OrionSIEM|2026.2|ALERT_HEALTH_PROBE|AWS Staging Load Balancer Health Check|2|src=10.0.4.99 dst=10.0.4.15 spt=443 dpt=8080 msg=Routine TCP 8080 health check',
+    rawCef:
+      'CEF:0|CedarlineSec|OrionSIEM|2026.2|ALERT_HEALTH_PROBE|AWS Staging Load Balancer Health Check|2|src=10.0.4.99 dst=10.0.4.15 spt=443 dpt=8080 msg=Routine TCP 8080 health check',
+    details: 'Routine background monitoring noise from staging balancer.',
+  },
+  {
+    id: 'LOG-2026-CEF-SUPPRESSED',
+    timestamp: '07:45:10 AM',
+    source: 'siem',
+    severity: 'WARN',
+    eventType: 'ALERT_TICKET_SUPPRESSION',
+    hostId: 'mon-siem-01',
+    user: 'mfemi',
+    message:
+      'CEF:0|CedarlineSec|OrionSIEM|2026.2|ALERT_TICKET_SUPPRESSION|Ticket ALT-2026-1012 Suppressed from Executive Digest|6|src=10.0.4.200 cs3=SUPPRESSED_FROM_EXEC_DASHBOARD cs4=user:mfemi msg=Ticket ALT-2026-1012 suppressed from Morning Exec Briefing by user:mfemi',
+    rawCef:
+      'CEF:0|CedarlineSec|OrionSIEM|2026.2|ALERT_TICKET_SUPPRESSION|Ticket ALT-2026-1012 Suppressed from Executive Digest|6|src=10.0.4.200 cs3=SUPPRESSED_FROM_EXEC_DASHBOARD cs4=user:mfemi msg=Ticket ALT-2026-1012 suppressed from Morning Exec Briefing by user:mfemi',
+    details:
+      'Management override logged: VP Michael (mfemi) excluded ticket ALT-2026-1012 from executive security summary ahead of board acquisition review.',
+  },
+  // ============================================================================
+  // SYSMON EVENT RECORDS (app-portal-01)
+  // ============================================================================
+  {
+    id: 'LOG-2026-SYS-01',
+    timestamp: '07:42:01 AM',
+    source: 'sysmon',
+    severity: 'WARN',
+    eventType: 'SYSMON_EVENT_1',
+    hostId: 'app-portal-01',
+    user: 'CEDARLINE\\svc-aster',
+    message:
+      'Sysmon Event 1: aster-agent-worker.exe spawned targeting \\\\filesrv-01\\confidential$\\payroll_2026_q3_draft.xlsx',
+    details:
+      'Sysmon Process Creation (Event ID 1):\n  UtcTime:      2026-10-12 06:42:01.710\n  ProcessId:    4812\n  Image:        C:\\Cedarline\\Aster\\bin\\aster-agent-worker.exe\n  CommandLine:  aster-agent-worker.exe --task=retrieve --target=\\\\filesrv-01\\confidential$\\payroll_2026_q3_draft.xlsx\n  User:         CEDARLINE\\svc-aster\n  ParentImage:  C:\\Windows\\System32\\services.exe\n  Hashes:       SHA256=d8f1b2c45e6a789012345678abcdef0123456789abcdef0123456789abcdef01',
+    sysmon: {
+      eventId: 1,
+      processId: 4812,
+      image: 'C:\\Cedarline\\Aster\\bin\\aster-agent-worker.exe',
+      commandLine:
+        'aster-agent-worker.exe --task=retrieve --target=\\\\filesrv-01\\confidential$\\payroll_2026_q3_draft.xlsx',
+      user: 'CEDARLINE\\svc-aster',
+      parentImage: 'C:\\Windows\\System32\\services.exe',
+    },
+  },
+  {
+    id: 'LOG-2026-SYS-03',
+    timestamp: '07:42:02 AM',
+    source: 'sysmon',
+    severity: 'WARN',
+    eventType: 'SYSMON_EVENT_3',
+    hostId: 'app-portal-01',
+    user: 'CEDARLINE\\svc-aster',
+    message:
+      'Sysmon Event 3: aster-agent-worker.exe network connection to 196.220.10.5:8443 (vault-core-01.transit.internal)',
+    details:
+      'Sysmon Network Connection (Event ID 3):\n  UtcTime:             2026-10-12 06:42:02.104\n  ProcessId:           4812\n  Image:               C:\\Cedarline\\Aster\\bin\\aster-agent-worker.exe\n  User:                CEDARLINE\\svc-aster\n  Protocol:            tcp\n  Initiated:           true\n  SourceIp:            10.0.4.15\n  SourcePort:          49812\n  DestinationIp:       196.220.10.5\n  DestinationPort:     8443\n  DestinationHostname: vault-core-01.transit.internal',
+    sysmon: {
+      eventId: 3,
+      processId: 4812,
+      image: 'C:\\Cedarline\\Aster\\bin\\aster-agent-worker.exe',
+      user: 'CEDARLINE\\svc-aster',
+      protocol: 'tcp',
+      destinationIp: '196.220.10.5',
+      destinationPort: 8443,
+      destinationHostname: 'vault-core-01.transit.internal',
+    },
+  },
 ];
 
 export function getFictionalLogs(): readonly FictionalLogEntry[] {

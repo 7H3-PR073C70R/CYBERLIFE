@@ -109,13 +109,26 @@ export type LogSeverity = 'INFO' | 'NOTICE' | 'WARN' | 'ERROR';
 export interface FictionalLogEntry {
   readonly id: string; // e.g. "LOG-2026-101"
   readonly timestamp: string; // e.g. "07:35:45 AM"
-  readonly source: 'auth' | 'system' | 'firewall' | 'app-portal' | 'file-server';
+  readonly source: 'auth' | 'system' | 'firewall' | 'app-portal' | 'file-server' | 'siem' | 'sysmon';
   readonly severity: LogSeverity;
   readonly eventType: string;
   readonly hostId: string;
   readonly user?: string;
   readonly message: string;
   readonly details?: string;
+  readonly rawCef?: string;
+  readonly sysmon?: {
+    readonly eventId: number;
+    readonly processId?: number;
+    readonly image?: string;
+    readonly commandLine?: string;
+    readonly user?: string;
+    readonly parentImage?: string;
+    readonly protocol?: string;
+    readonly destinationIp?: string;
+    readonly destinationPort?: number;
+    readonly destinationHostname?: string;
+  };
 }
 
 export interface ChainOfCustodyEntry {

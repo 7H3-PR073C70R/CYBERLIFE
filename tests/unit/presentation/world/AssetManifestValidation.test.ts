@@ -96,4 +96,106 @@ describe('Asset Manifest & Provenance Registry Validation', () => {
     expect(Array.isArray(parsed.assets)).toBe(true);
     expect(parsed.assets.length).toBeGreaterThanOrEqual(15);
   });
+
+  it('verifies that no unlisted 3D model exists in public/assets without being tracked in LICENSES.md and ASSET_MANIFEST', () => {
+    const walkSync = (dir: string): string[] => {
+      let results: string[] = [];
+      const list = fs.readdirSync(dir);
+      for (const item of list) {
+        const full = path.join(dir, item);
+        const stat = fs.statSync(full);
+        if (stat.isDirectory()) {
+          results = results.concat(walkSync(full));
+        } else {
+          results.push(full);
+        }
+      }
+      return results;
+    };
+
+    const assetsDir = path.resolve(projectRoot, 'public/assets');
+    const allFiles = walkSync(assetsDir);
+    const glbFiles = allFiles.filter(f => f.endsWith('.glb') || f.endsWith('.gltf'));
+    const licensesPath = path.resolve(projectRoot, 'public/assets/LICENSES.md');
+    const licensesContent = fs.readFileSync(licensesPath, 'utf8');
+
+    const manifestLocalPaths = new Set(ASSET_MANIFEST.map(a => path.resolve(projectRoot, a.localPath)));
+
+    for (const glb of glbFiles) {
+      const filename = path.basename(glb);
+      const relativePath = path.relative(projectRoot, glb).replace(/\\/g, '/');
+
+      // 1. Must be listed in LICENSES.md
+      const isListedInLicenses = licensesContent.includes(filename) || licensesContent.includes(relativePath);
+      expect(
+        isListedInLicenses,
+        `Unlisted 3D asset detected in public/: "${relativePath}" is missing from public/assets/LICENSES.md`
+      ).toBe(true);
+
+      // 2. Must be tracked in ASSET_MANIFEST
+      const isTrackedInManifest = manifestLocalPaths.has(glb);
+      expect(
+        isTrackedInManifest,
+        `Untracked 3D asset detected in public/: "${relativePath}" is missing from ASSET_MANIFEST registry`
+      ).toBe(true);
+    }
+  });
+
+  it('strictly enforces that rejected assets and unhandled folders never enter public/assets', () => {
+    const walkSync = (dir: string): string[] => {
+      let results: string[] = [];
+      const list = fs.readdirSync(dir);
+      for (const item of list) {
+        const full = path.join(dir, item);
+        const stat = fs.statSync(full);
+        if (stat.isDirectory()) {
+          results = results.concat(walkSync(full));
+        } else {
+          results.push(full);
+        }
+      }
+      return results;
+    };
+
+    const assetsDir = path.resolve(projectRoot, 'public/assets');
+    const allFiles = walkSync(assetsDir);
+
+    // Assert that aldi_supermarket (CC-BY-NC / real brand) never enters public/
+    const forbiddenPatterns = [
+      'aldi',
+      'aldi_supermarket',
+      'Universal Base Characters',
+      'Universal_Base_Characters',
+    ];
+
+    for (const file of allFiles) {
+      const lower = file.toLowerCase();
+      for (const pattern of forbiddenPatterns) {
+        expect(
+          lower.includes(pattern.toLowerCase()),
+          `Security / License Violation: Forbidden or unhandled asset "${file}" was detected in public/assets!`
+        ).toBe(false);
+      }
+    }
+  });
+
+  it('verifies that every asset path referenced in public/assets/LICENSES.md physically exists on disk', () => {
+    const licensesPath = path.resolve(projectRoot, 'public/assets/LICENSES.md');
+    const licensesContent = fs.readFileSync(licensesPath, 'utf8');
+    const fileRegex = /`public\/assets\/[^`\s]+`/g;
+    const matches = licensesContent.match(fileRegex) || [];
+
+    expect(matches.length).toBeGreaterThanOrEqual(20);
+
+    for (const match of matches) {
+      const cleanPath = match.replace(/`/g, '');
+      const fullPath = path.resolve(projectRoot, cleanPath);
+      const exists = fs.existsSync(fullPath);
+      expect(
+        exists,
+        `File referenced in public/assets/LICENSES.md does not exist at "${cleanPath}"`
+      ).toBe(true);
+    }
+  });
 });
+

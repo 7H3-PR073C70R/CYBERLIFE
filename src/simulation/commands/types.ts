@@ -430,7 +430,17 @@ export type SimulationCommand =
   | TriggerBlackoutBeatCommand
   | DismissEpisodeBlackoutCommand
   | SetEpisodeGuidanceModeCommand
-  | UnlockJournalEntryCommand;
+  | ResolveEpisodeChoiceCommand
+  | UnlockJournalEntryCommand
+  | RecordActionNoiseCommand
+  | ApplyOpsecActionCommand
+  | DecayTraceCommand
+  | SetJobScopeCommand
+  | RaiseScopeWarningCommand
+  | AcknowledgeScopeWarningCommand
+  | DismissDefenderResponseCommand
+  | GenerateDefenderDebriefCommand
+  | ClearActiveDebriefCommand;
 
 import type { ThreatReviewStatus } from '../cyber/threatintel/types';
 import type { InvestigationConclusionSubmission } from '../cyber/investigation/types';
@@ -744,8 +754,66 @@ export interface SetEpisodeGuidanceModeCommand {
   readonly mode: EpisodeGuidanceMode;
 }
 
+export interface ResolveEpisodeChoiceCommand {
+  readonly type: 'ResolveEpisodeChoice';
+  readonly optionId: string;
+}
+
 export interface UnlockJournalEntryCommand {
   readonly type: 'UnlockJournalEntry';
   readonly entryId: string;
+}
+
+export interface RecordActionNoiseCommand {
+  readonly type: 'RecordActionNoise';
+  readonly actionId: string;
+  readonly target: string;
+}
+
+export interface ApplyOpsecActionCommand {
+  readonly type: 'ApplyOpsecAction';
+  readonly opsecAction?: 'TOR_ON' | 'TOR_OFF' | 'VPN_ON' | 'VPN_OFF' | 'WIPE_LOGS';
+  readonly useTor?: boolean;
+  readonly useVpn?: boolean;
+  readonly logCleanup?: boolean;
+}
+
+export interface DecayTraceCommand {
+  readonly type: 'DecayTrace';
+}
+
+export interface SetJobScopeCommand {
+  readonly type: 'SetJobScope';
+  readonly scope?: import('../cyber/trace/types').AuthorizedScopeDefinition | null;
+  readonly isNightJob?: boolean;
+  readonly jobId?: string | null;
+}
+
+export interface RaiseScopeWarningCommand {
+  readonly type: 'RaiseScopeWarning';
+  readonly warning?: import('../cyber/trace/types').ScopeWarning;
+  readonly target?: string;
+  readonly actionId?: string;
+  readonly attemptedCommand?: string;
+}
+
+export interface AcknowledgeScopeWarningCommand {
+  readonly type: 'AcknowledgeScopeWarning';
+  readonly proceed: boolean;
+}
+
+export interface DismissDefenderResponseCommand {
+  readonly type: 'DismissDefenderResponse';
+  readonly responseId: string;
+}
+
+export interface GenerateDefenderDebriefCommand {
+  readonly type: 'GenerateDefenderDebrief';
+  readonly jobId: string;
+  readonly jobTitle?: string;
+}
+
+export interface ClearActiveDebriefCommand {
+  readonly type: 'ClearActiveDebrief';
 }
 

@@ -58,6 +58,12 @@ export interface TerminalExecutionContext {
   };
   /** History of commands entered in the current session. */
   history: readonly string[];
+  /** Optional Trace and Legal Exposure state. */
+  traceState?: import('../trace/types').TraceSystemState;
+  /** Optional dispatcher for simulation commands from terminal. */
+  dispatchCommand?: (
+    command: import('../../commands/types').SimulationCommand
+  ) => import('../../commands/types').CommandResult;
 }
 
 export interface TerminalCommandHandler {

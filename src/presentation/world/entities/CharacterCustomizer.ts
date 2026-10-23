@@ -17,7 +17,18 @@ export interface CharacterPalette {
   hair?: number;
   accent?: number;
   style?: CharacterOutfitStyle;
+  isExpat?: boolean;
 }
+
+/**
+ * European and international expat fair skin tones:
+ * Preserves diversity without flat-darkening all characters to black.
+ */
+export const EXPAT_FAIR_SKIN_TONES = [
+  0xf5d0b5, // Fair peach / light ivory
+  0xedd0be, // Light European / expat complexion
+  0xdfbe9f, // Sun-warmed fair
+] as const;
 
 /**
  * Bespoke protagonist appearance for the player character:
@@ -334,6 +345,52 @@ export function reindexCh12Mesh(mesh: THREE.Mesh): void {
 }
 
 /**
+ * Melanin shader hook for photorealistic 3D scanned character textures:
+ * Selectively identifies skin pixels by warm chrominance delta (r > g > b, delta warm),
+ * and enhances melanin depth while fully preserving clothing fabrics, suit weaves,
+ * ties, watches, eyes, hair, and specular highlights.
+ * Fair / expat characters (isExpat = true) retain their natural photorealistic complexion.
+ */
+export function applyMelaninToTextureMaterial(
+  mat: THREE.MeshStandardMaterial,
+  melaninHex: number,
+  isExpat?: boolean
+): void {
+  if (isExpat) {
+    return;
+  }
+
+  const melaninColor = new THREE.Color(melaninHex);
+
+  mat.onBeforeCompile = (shader) => {
+    shader.uniforms.uMelaninColor = { value: melaninColor };
+    shader.uniforms.uMelaninStrength = { value: 0.85 };
+
+    shader.fragmentShader = `
+      uniform vec3 uMelaninColor;
+      uniform float uMelaninStrength;
+    ` + shader.fragmentShader;
+
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <map_fragment>',
+      `
+      #include <map_fragment>
+      // Selective melanin enhancement for Nigerian multi-ethnic diversity:
+      // Preserves clothing, hair, eyes, and micro-normals
+      vec3 col = diffuseColor.rgb;
+      bool isSkin = (col.r > col.g) && (col.g > col.b) && ((col.r - col.g) > 0.035) && ((col.g - col.b) > 0.015) && (col.r > 0.18);
+      if (isSkin) {
+        float lum = dot(col, vec3(0.299, 0.587, 0.114));
+        vec3 targetMelanin = uMelaninColor * (lum * 1.35);
+        diffuseColor.rgb = mix(col, targetMelanin, uMelaninStrength);
+      }
+      `
+    );
+  };
+  mat.needsUpdate = true;
+}
+
+/**
  * Applies a custom Nigerian skin tone, tailored suit or casual clothing, and footwear finish
  * to a rigged character model instance without affecting other instances.
  */
@@ -390,11 +447,19 @@ export function applyCharacterCustomization(
         return;
       }
 
-      // 2. Models with discrete sub-meshes (player_male, player_female, ped_female_2)
-      const meshName = (child.name || '').toLowerCase();
+      // 2. Photorealistic scanned characters with photographic diffuse map
       const currentMat = Array.isArray(child.material) ? child.material[0] : child.material;
       if (!(currentMat instanceof THREE.MeshStandardMaterial)) return;
 
+      if (currentMat.map) {
+        const mat = currentMat.clone();
+        applyMelaninToTextureMaterial(mat, skinColor, palette.isExpat);
+        child.material = mat;
+        return;
+      }
+
+      // 3. Models with discrete sub-meshes (player_male, player_female, ped_female_2)
+      const meshName = (child.name || '').toLowerCase();
       const mat = currentMat.clone();
 
       if (meshName.includes('body')) {

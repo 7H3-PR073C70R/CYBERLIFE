@@ -55,6 +55,11 @@ import { ScreenDesktopState } from '../world/ScreenRenderer';
 import { OS_NAME, OS_VERSION, KERNEL_STRING } from './osBranding';
 import { getWallpaperDataUrl } from './wallpaper';
 import { OsIcon, OsIconName } from './icons/OsIcons';
+import { ScopeWarningDialog } from './components/ScopeWarningDialog';
+import { DefenderViewModal } from './components/DefenderViewModal';
+import { EnterpriseDebriefModal } from './components/EnterpriseDebriefModal';
+import { IncidentChoiceModal } from './components/IncidentChoiceModal';
+import { EPISODE_01_DEFINITION } from '@/simulation/narrative/episodeData';
 
 export interface DesktopShellProps {
   workstationId?: string;
@@ -107,7 +112,11 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
   showWelcomeBannerRef.current = showWelcomeBanner;
 
   // Short skippable boot/login moment on first sit-down (1.6s)
-  const [bootMomentActive, setBootMomentActive] = useState<boolean>(true);
+  const skipBootParam = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('skipBoot') === '1';
+  const [bootMomentActive, setBootMomentActive] = useState<boolean>(() => !skipBootParam);
+  const [showDebriefModal, setShowDebriefModal] = useState<boolean>(false);
+  const traceState = sim?.state.trace;
+  const isImmersive = sim?.state.episode?.guidanceMode === 'Immersive';
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -174,6 +183,8 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
       const dialogueLines = episodeCall.dialogue.map(d => ({
         text: d.text,
         delayMs: d.delayMs ?? 3000,
+        speech: d.speech,
+        delivery: d.delivery,
       }));
       const dynamicThread: ChatThread = {
         id: `thread-${episodeCall.callerId}`,
@@ -420,6 +431,7 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
           onExitDesktop={onExitDesktop}
           onPeekOut={onPeekOut}
           isPeekAvailable={layout === 'fullscreen'}
+          onOpenDebrief={() => setShowDebriefModal(true)}
         />
 
         {/* Workspace Area */}
@@ -1164,6 +1176,115 @@ export const DesktopShell: React.FC<DesktopShellProps> = ({
             >
               Press any key or click to skip
             </div>
+          </div>
+        )}
+
+        {/* RoE Scope Warning Dialog */}
+        {traceState?.pendingScopeWarning && (
+          <ScopeWarningDialog warning={traceState.pendingScopeWarning} />
+        )}
+
+        {/* Defender View Purple Team Debrief Modal */}
+        {(showDebriefModal || Boolean(traceState?.activeDebrief) || (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('defenderDebrief') === '1')) && (
+          <DefenderViewModal
+            debrief={
+              traceState?.activeDebrief ?? {
+                jobId: 'ep01_night_recon',
+                completedAtSimTime: 1729670400,
+                finalTraceLevel: 60,
+                finalLegalExposure: 15,
+                totalActions: 1,
+                detectedCount: 1,
+                overallVerdict: 'SURVEILLED',
+                feedbackSummary: 'Aggressive port scans trigger stateless firewall rate-limiters.',
+                entries: [
+                  {
+                    id: 'deb-1',
+                    actionName: 'SYN Stealth Scan (Aggressive)',
+                    timestampString: '00:14:22',
+                    timestampSimTime: 1729670400,
+                    target: 'app-portal-01:8080',
+                    logFormat: 'CEF',
+                    logLine:
+                      'CEF:0|Cedarline|EdgeFW|2026.1|PORT_SCAN|TCP SYN Port Scan Detected|7|src=102.89.23.14 dst=10.0.4.15 spt=49210 dpt=8080 proto=TCP act=DROP',
+                    status: 'DETECTED',
+                    attckTechniqueId: 'T1046',
+                    attckTechniqueName: 'Network Service Discovery',
+                    blueTeamInsight:
+                      'High rate of SYN packets without completing handshake exceeded rate limit threshold (50 pkts/sec).',
+                    redTeamLesson:
+                      'Use passive OSINT or slow timing template (-T2) with decoy IP addresses.',
+                  },
+                ],
+              }
+            }
+            onClose={() => {
+              setShowDebriefModal(false);
+              sim?.dispatch({ type: 'ClearActiveDebrief' });
+            }}
+          />
+        )}
+
+        {/* Incident Escalation Choice Dilemma (Beat 8) */}
+        {(sim?.state.episode?.activeChoice || (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('choice') === '1')) && (
+          <IncidentChoiceModal
+            choice={
+              sim?.state.episode?.activeChoice ??
+              (EPISODE_01_DEFINITION.beats.find(b => b.id === 'ep01_beat_08_choice')?.effects.choice ?? {
+                choiceId: 'choice_escalation_ep01',
+                title: 'Incident Classification & Escalation Dilemma',
+                prompt: 'Assess whether to escalate external C2 anomaly to executive leadership or contain locally.',
+                options: [
+                  {
+                    id: 'opt_escalate_external',
+                    label: 'Escalate External Anomalies (Strict Compliance)',
+                    description: 'Log external staging pipeline in ticket ALT-2026-1012.',
+                  },
+                  {
+                    id: 'opt_internal_containment',
+                    label: 'Classify as Internal Misconfiguration (Team Shield)',
+                    description: 'Attribute query strictly to IAM misconfiguration.',
+                  },
+                ],
+              })
+            }
+          />
+        )}
+
+        {/* Enterprise SOC Day Debrief Modal (Beat 9) */}
+        {(sim?.state.episode?.activeBeatId === 'ep01_beat_09_day_debrief' || (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('dayDebrief') === '1')) && (
+          <EnterpriseDebriefModal
+            isOpen={true}
+            onClose={() => {
+              sim?.dispatch({ type: 'CompleteEpisodeBeat', beatId: 'ep01_beat_09_day_debrief' });
+            }}
+          />
+        )}
+
+        {/* Diegetic Immersive Trace Alert Overlay */}
+        {isImmersive && traceState && traceState.traceMeter >= 50 && (
+          <div
+            data-testid="immersive-trace-overlay"
+            style={{
+              position: 'absolute',
+              bottom: '12px',
+              right: '16px',
+              pointerEvents: 'none',
+              padding: '6px 12px',
+              backgroundColor: 'rgba(15, 23, 42, 0.9)',
+              border: `1px solid ${traceState.traceMeter >= 75 ? '#ef4444' : '#eab308'}`,
+              borderRadius: '4px',
+              color: traceState.traceMeter >= 75 ? '#fca5a5' : '#fef08a',
+              fontFamily: 'ui-monospace, monospace',
+              fontSize: '11px',
+              zIndex: 7000,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+          >
+            <span>⚠️</span>
+            <span>PERIMETER SENSOR SCRUTINY: TRACE {traceState.traceMeter}%</span>
           </div>
         )}
       </div>

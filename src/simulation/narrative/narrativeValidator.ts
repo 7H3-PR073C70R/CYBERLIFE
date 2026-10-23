@@ -521,12 +521,12 @@ export function validateEpisodeDefinition(
     }
 
     if (beat.effects.ticket) {
-      if (!beat.effects.ticket.ticketId || !beat.effects.ticket.ticketId.startsWith('TKT-')) {
+      if (!beat.effects.ticket.ticketId || (!beat.effects.ticket.ticketId.startsWith('TKT-') && !beat.effects.ticket.ticketId.startsWith('ALT-'))) {
         errors.push({
           entityType: 'BEAT',
           entityId: beat.id,
           code: 'INVALID_RANGE',
-          message: `Beat "${beat.id}" ticketId "${beat.effects.ticket.ticketId}" must follow 'TKT-2026-xxxx' format.`,
+          message: `Beat "${beat.id}" ticketId "${beat.effects.ticket.ticketId}" must follow 'TKT-2026-xxxx' or 'ALT-2026-xxxx' format.`,
         });
       }
     }

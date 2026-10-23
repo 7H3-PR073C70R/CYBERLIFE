@@ -56,7 +56,9 @@ export const IncidentApp: React.FC = () => {
   const mission = sim?.state.mission;
   const activeTickets = sim?.state.episode?.activeTickets ?? [];
 
-  const [activeTab, setActiveTab] = useState<IncidentAppTab>('overview');
+  const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const initialTabParam = urlParams?.get('tab') as IncidentAppTab | null;
+  const [activeTab, setActiveTab] = useState<IncidentAppTab>(initialTabParam ?? 'overview');
   const [reportCopied, setReportCopied] = useState<boolean>(false);
 
   // Root-cause assessment form state

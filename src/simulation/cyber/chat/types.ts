@@ -29,7 +29,12 @@ export interface ChatThread {
   unreadCount: number;
   messages: ChatMessage[];
   canCall: boolean;
-  callDialogue: Array<{ text: string; delayMs: number }>;
+  callDialogue: Array<{
+    text: string;
+    delayMs: number;
+    speech?: string;
+    delivery?: 'neutral' | 'calm' | 'anxious' | 'urgent' | 'tired' | 'tense';
+  }>;
   voice?: NpcVoiceConfig;
 }
 

@@ -8,6 +8,7 @@ export interface HumanoidPalette {
   pants: number;
   shoes: number;
   accent: number;
+  isExpat?: boolean;
 }
 
 export const DEFAULT_PLAYER_PALETTE: HumanoidPalette = {

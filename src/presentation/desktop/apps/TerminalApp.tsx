@@ -16,6 +16,7 @@
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { createDefaultTerminalParser, TerminalExecutionContext } from '@/simulation/cyber/terminal';
+import { interceptTerminalCommand } from '@/simulation/cyber/trace/commandInterceptor';
 import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 import { OS_NAME, OS_VERSION, OS_BRANDING, HOSTNAMES, KERNEL_STRING } from '../osBranding';
 import { OsIcon } from '../icons/OsIcons';
@@ -71,6 +72,7 @@ const KNOWN_COMMANDS = [
   'forensics',
   'soctriage',
   'complianceaudit',
+  'trace',
 ];
 
 function formatDirForPrompt(dir: string): string {
@@ -210,6 +212,8 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
             locationId: 'apartment_interior',
           },
         history,
+        traceState: sim?.state.trace,
+        dispatchCommand: sim?.dispatch,
       };
     },
     [sim, workstationId, isCedarline]
@@ -261,7 +265,35 @@ export const TerminalApp: React.FC<TerminalAppProps> = ({
     sfxController.playTerminalEnter();
 
     const ctx = buildContext(activeTab.currentDirectory, activeTab.history);
-    const result = parser.parseAndExecute(trimmed, ctx);
+    const interception = interceptTerminalCommand(trimmed, ctx);
+
+    if (interception.shouldBlock && interception.blockingLines) {
+      const entry: TerminalEntry = {
+        id: `entry-${Date.now()}`,
+        command: trimmed,
+        stdout: interception.blockingLines,
+        isError: true,
+        timestamp: sim?.state.time.calendar.timeString ?? '08:00 AM',
+      };
+      setTabs(prev =>
+        prev.map(t =>
+          t.id === activeTab.id
+            ? {
+                ...t,
+                entries: [...t.entries, entry],
+                history: [...t.history, trimmed],
+                historyIndex: -1,
+                inputVal: '',
+              }
+            : t
+        )
+      );
+      onTerminalOutput?.(interception.blockingLines);
+      return;
+    }
+
+    const commandToRun = interception.cleanedCommand ?? trimmed;
+    const result = parser.parseAndExecute(commandToRun, ctx);
 
     const nextHistory = [...activeTab.history, trimmed];
     const nextDir = result.newDirectory ? result.newDirectory : activeTab.currentDirectory;

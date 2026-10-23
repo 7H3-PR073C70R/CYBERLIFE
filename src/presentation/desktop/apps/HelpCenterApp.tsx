@@ -11,6 +11,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useOptionalSimulation } from '@/application/simulation/SimulationContext';
 
 type HelpCategory =
   'all' | 'controls' | 'commands' | 'mission' | 'career' | 'persistence' | 'troubleshooting';
@@ -152,6 +153,9 @@ const HELP_TOPICS: readonly HelpTopic[] = [
 ];
 
 export const HelpCenterApp: React.FC = () => {
+  const sim = useOptionalSimulation();
+  const [showOrientationNote, setShowOrientationNote] = useState(true);
+  const currentTicket = sim?.state.episode?.activeTickets[0];
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<HelpCategory>('all');
   const [selectedTopicId, setSelectedTopicId] = useState<string>(HELP_TOPICS[0]!.id);
@@ -215,6 +219,52 @@ export const HelpCenterApp: React.FC = () => {
           </button>
         )}
       </div>
+
+      {/* Skippable 'What To Do Now' Note for Active Episode */}
+      {showOrientationNote && currentTicket && (
+        <div
+          style={{
+            margin: '0 1rem 0.8rem',
+            padding: '0.8rem 1rem',
+            backgroundColor: 'rgba(0, 229, 255, 0.08)',
+            border: '1px solid rgba(0, 229, 255, 0.3)',
+            borderRadius: '6px',
+            fontSize: '0.8rem',
+            color: '#e2e8f0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            gap: '1rem',
+          }}
+          data-testid="help-what-to-do-now"
+        >
+          <div>
+            <div style={{ color: '#00e5ff', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.72rem', marginBottom: '0.2rem' }}>
+              Current Mission Briefing // {currentTicket.ticketId}
+            </div>
+            <div style={{ fontWeight: 600, color: '#f8fafc', marginBottom: '0.3rem' }}>
+              {currentTicket.title}
+            </div>
+            <div style={{ color: '#94a3b8', lineHeight: '1.4' }}>
+              {currentTicket.instructions[0] ?? currentTicket.description}
+            </div>
+          </div>
+          <button
+            onClick={() => setShowOrientationNote(false)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#64748b',
+              cursor: 'pointer',
+              fontSize: '0.85rem',
+              padding: '2px 6px',
+            }}
+            title="Dismiss note"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {/* Category Filter Pills */}
       <div className="help-category-bar" role="tablist">

@@ -13,7 +13,7 @@ export interface BuildingOptions {
   width: number;
   height: number;
   depth: number;
-  color: number;
+  color?: number;
   trimColor?: number;
   accentColor?: number;
   entranceSide?: 'NORTH' | 'SOUTH' | 'EAST' | 'WEST';
@@ -23,6 +23,19 @@ export interface BuildingOptions {
   hasWaterTank?: boolean;
   hasBalcony?: boolean;
   roofEquipment?: boolean;
+  modelUrl?: string;
+  logoOptions?: {
+    companyName: string;
+    subtext?: string;
+    brandColor: string;
+    accentColor?: string;
+    bgDark?: string;
+    width?: number;
+    height?: number;
+    logoIcon?: 'CYBER' | 'BANK' | 'RISK' | 'PRESS' | 'GOV';
+  };
+  logoPosition?: [number, number, number];
+  logoRotationY?: number;
 }
 
 /**
@@ -60,7 +73,7 @@ export class Building {
     // 1. Main Facade Block
     const mainGeo = new THREE.BoxGeometry(options.width, options.height, options.depth);
     const mainMat = new THREE.MeshStandardMaterial({
-      color: options.color,
+      color: options.color ?? 0x1e293b,
       roughness: style === 'COMMERCIAL_TOWER' ? 0.3 : 0.8,
       metalness: style === 'COMMERCIAL_TOWER' ? 0.4 : 0.1,
     });
@@ -128,6 +141,39 @@ export class Building {
     // 7. Rooftop Equipment (for commercial towers / modern offices)
     if (options.roofEquipment || style === 'COMMERCIAL_TOWER') {
       this.buildRoofEquipment(options);
+    }
+
+    // 8. 3D Corporate Emissive Rooftop / Facade Signage
+    if (options.logoOptions) {
+      const sign = LagosProps.createCorporateSignboard(options.logoOptions);
+      if (options.logoPosition) {
+        sign.position.set(...options.logoPosition);
+      } else {
+        sign.position.set(0, options.height + 1.2, options.depth / 2 + 0.2);
+      }
+      if (options.logoRotationY !== undefined) {
+        sign.rotation.y = options.logoRotationY;
+      }
+      this.group.add(sign);
+    }
+
+    // 9. Photorealistic GLTF Kitbashed Model Integration
+    if (options.modelUrl) {
+      AssetLoader.getInstance()
+        .loadNormalizedGLTF(options.modelUrl)
+        .then(model => {
+          model.name = `GLTF_${options.name}`;
+          model.position.set(0, 0, 0);
+          this.group.add(model);
+
+          // Hide basic procedural block so high-fidelity GLTF architecture is rendered
+          mainMesh.visible = false;
+          baseMesh.visible = false;
+          trimMesh.visible = false;
+        })
+        .catch(err => {
+          console.warn(`Building: Failed to load GLTF ${options.modelUrl}, retaining procedural facade`, err);
+        });
     }
   }
 

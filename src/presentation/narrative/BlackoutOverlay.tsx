@@ -137,7 +137,7 @@ export const BlackoutOverlay: React.FC<BlackoutOverlayProps> = ({
             ⚡ GRID VOLTAGE COLLAPSE // SUBSTATION TRIP
           </div>
           <div style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '0.75rem' }}>
-            EKEDC Municipal Feed Dropped. Inverter Transfer Initiating...
+            LEDCo Municipal Feed Dropped. Inverter Transfer Initiating...
           </div>
           <div style={{ color: '#ef4444', fontSize: '0.8rem', fontFamily: '"JetBrains Mono", monospace' }}>
             LINE VOLTAGE: COLLAPSED // INVERTER SENSE: 11.8V

@@ -25,6 +25,7 @@ import {
   JournalEntry,
 } from './episodeTypes';
 import { getEpisodeById, EPISODE_01_JOURNAL_ENTRIES } from './episodeData';
+import { createInitialNarrativeState } from './initialNarrativeState';
 
 /**
  * Creates the initial state for the Episode Director.
@@ -44,6 +45,7 @@ export function createInitialEpisodeDirectorState(
     activeBlackout: null,
     activeTitleCard: null,
     activeCall: null,
+    activeChoice: null,
     mentorHintsDelivered: [],
   };
 }
@@ -105,6 +107,8 @@ export function syncJournalToFilesystem(unlockedEntryIds: readonly string[]): vo
   const unlocked = allEntries.filter(entry => unlockedEntryIds.includes(entry.id));
   const fileContent = formatEncryptedJournalFile(unlocked);
 
+  virtualFilesystem.mkdir('/home/protector/.vault');
+  virtualFilesystem.writeFile('/home/protector/.vault/journal.enc', fileContent);
   virtualFilesystem.mkdir('/home/analyst/.vault');
   virtualFilesystem.writeFile('/home/analyst/.vault/journal.enc', fileContent);
 }
@@ -210,8 +214,8 @@ function activateBeat(
     );
   }
 
-  // 2. Ticket Beat
-  if (beat.type === 'ticket' && beat.effects.ticket) {
+  // 2. Ticket Effect
+  if (beat.effects.ticket) {
     const ticket = beat.effects.ticket;
     const exists = updatedDirector.activeTickets.some(t => t.ticketId === ticket.ticketId);
     if (!exists) {
@@ -230,8 +234,8 @@ function activateBeat(
     }
   }
 
-  // 3. Onion Message Beat
-  if (beat.type === 'onionMessage' && beat.effects.onionMessage) {
+  // 3. Onion Message Effect
+  if (beat.effects.onionMessage) {
     const msg = beat.effects.onionMessage;
     const exists = updatedDirector.deliveredMessages.some(m => m.id === msg.id);
     if (!exists) {
@@ -250,8 +254,8 @@ function activateBeat(
     }
   }
 
-  // 4. Call Beat
-  if (beat.type === 'call' && beat.effects.call) {
+  // 4. Call Effect
+  if (beat.effects.call) {
     updatedDirector = {
       ...updatedDirector,
       activeCall: beat.effects.call,
@@ -295,6 +299,43 @@ function activateBeat(
       ...updatedFlags,
       ...beat.effects.setFlags,
     };
+  }
+
+  // 7b. Faction standing deltas
+  let updatedNarrative = state.narrative ? { ...state.narrative } : createInitialNarrativeState();
+  if (beat.effects.factionStandingDeltas && updatedNarrative.factions) {
+    const nextFactions = { ...updatedNarrative.factions };
+    for (const [factionId, delta] of Object.entries(beat.effects.factionStandingDeltas)) {
+      const existing = nextFactions[factionId];
+      if (existing) {
+        const nextStanding = Math.max(-100, Math.min(100, existing.standing + delta));
+        nextFactions[factionId] = {
+          ...existing,
+          standing: nextStanding,
+          history: [
+            ...existing.history,
+            { delta, reason: `Episode beat: ${beat.title}`, timestamp: state.time.simulationTimeSeconds },
+          ],
+        };
+      }
+    }
+    updatedNarrative = { ...updatedNarrative, factions: nextFactions };
+  }
+
+  // 7c. Choice Beat
+  if (beat.type === 'choice' && beat.effects.choice) {
+    updatedDirector = {
+      ...updatedDirector,
+      activeChoice: beat.effects.choice,
+    };
+    events.push(
+      createSimulationEvent('EPISODE_CHOICE_PRESENTED', state.time.simulationTimeSeconds, nextRevision, {
+        episodeId: episodeDef.id,
+        beatId: beat.id,
+        choiceId: beat.effects.choice.choiceId,
+        title: beat.effects.choice.title,
+      })
+    );
   }
 
   // 8. Blackout Beat
@@ -346,6 +387,7 @@ function activateBeat(
       },
       time: updatedTime,
       flags: updatedFlags,
+      narrative: updatedNarrative,
       episode: updatedDirector,
     },
     events,
@@ -369,7 +411,9 @@ export function completeEpisodeBeat(
     return { state, events: [] };
   }
 
-  const beatIndex = episodeDef.beats.findIndex(b => b.id === beatId);
+  const beatIndex = episodeDef.beats.findIndex(
+    b => b.id === beatId || (b.effects.call && b.effects.call.id === beatId)
+  );
   if (beatIndex === -1) {
     return { state, events: [] };
   }
@@ -394,6 +438,7 @@ export function completeEpisodeBeat(
     completedBeatIds: completedBeats,
     activeCall: beat.type === 'call' ? null : director.activeCall,
     activeBlackout: beat.type === 'blackout' ? null : director.activeBlackout,
+    activeChoice: beat.type === 'choice' ? null : director.activeChoice,
   };
 
   let updatedState: SimulationState = {
@@ -445,6 +490,92 @@ export function completeEpisodeBeat(
   }
 
   return { state: updatedState, events };
+}
+
+/**
+ * Resolves an active episode choice dilemma.
+ */
+export function resolveEpisodeChoice(
+  state: SimulationState,
+  optionId: string
+): { state: SimulationState; events: SimulationEvent[] } {
+  const director = state.episode;
+  if (!director || !director.activeChoice) {
+    return { state, events: [] };
+  }
+
+  const choiceDef = director.activeChoice;
+  const option = choiceDef.options.find(o => o.id === optionId);
+  if (!option) {
+    return { state, events: [] };
+  }
+
+  const nextRevision = state.metadata.revision + 1;
+  const events: SimulationEvent[] = [];
+
+  events.push(
+    createSimulationEvent('EPISODE_CHOICE_RESOLVED', state.time.simulationTimeSeconds, nextRevision, {
+      episodeId: director.activeEpisodeId ?? '',
+      choiceId: choiceDef.choiceId,
+      optionId: option.id,
+      label: option.label,
+    })
+  );
+
+  let updatedFlags = { ...state.flags };
+  if (option.flagsToSet) {
+    updatedFlags = { ...updatedFlags, ...option.flagsToSet };
+  }
+
+  let updatedNarrative = state.narrative ? { ...state.narrative } : createInitialNarrativeState();
+  if (option.factionStandingDeltas && updatedNarrative.factions) {
+    const nextFactions = { ...updatedNarrative.factions };
+    for (const [factionId, delta] of Object.entries(option.factionStandingDeltas)) {
+      const existing = nextFactions[factionId];
+      if (existing) {
+        const nextStanding = Math.max(-100, Math.min(100, existing.standing + delta));
+        nextFactions[factionId] = {
+          ...existing,
+          standing: nextStanding,
+          history: [
+            ...existing.history,
+            { delta, reason: `Episode choice: ${option.label}`, timestamp: state.time.simulationTimeSeconds },
+          ],
+        };
+      }
+    }
+    updatedNarrative = { ...updatedNarrative, factions: nextFactions };
+  }
+
+  let updatedTrace = state.trace;
+  if (option.legalExposureDelta !== undefined && updatedTrace) {
+    const currentMeter = updatedTrace.legalExposureMeter ?? 0;
+    updatedTrace = {
+      ...updatedTrace,
+      legalExposureMeter: Math.max(0, Math.min(100, currentMeter + option.legalExposureDelta)),
+    };
+  }
+
+  const intermediateState: SimulationState = {
+    ...state,
+    metadata: {
+      ...state.metadata,
+      revision: nextRevision,
+    },
+    flags: updatedFlags,
+    narrative: updatedNarrative,
+    trace: updatedTrace,
+    episode: {
+      ...director,
+      activeChoice: null,
+    },
+  };
+
+  if (director.activeBeatId) {
+    return completeEpisodeBeat(intermediateState, director.activeBeatId);
+  }
+
+  return { state: intermediateState, events };
 }
 
 /**

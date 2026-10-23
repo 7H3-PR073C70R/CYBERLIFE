@@ -86,6 +86,8 @@ export interface DialogueNode {
   readonly id: string;
   readonly speakerId: string;
   readonly text: string;
+  readonly speech?: string;
+  readonly delivery?: 'neutral' | 'calm' | 'anxious' | 'urgent' | 'tired' | 'tense';
   readonly choices: readonly DialogueChoice[];
   readonly isTerminal?: boolean;
 }

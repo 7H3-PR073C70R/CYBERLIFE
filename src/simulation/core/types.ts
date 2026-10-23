@@ -80,6 +80,7 @@ import type { ActivityDirectorState } from '../activities/types';
 import type { HumanIntelState } from '../humanIntel/types';
 import type { WorldSimulationState } from '../world/types';
 import type { EpisodeDirectorState } from '../narrative/episodeTypes';
+import type { TraceSystemState } from '../cyber/trace/types';
 
 export interface SimulationState {
   readonly metadata: SimulationMetadata;
@@ -110,6 +111,8 @@ export interface SimulationState {
   readonly worldSim?: WorldSimulationState;
   /** Episode delivery framework state: title cards, diegetic tickets, calls, messages, journal, blackouts. */
   readonly episode?: EpisodeDirectorState;
+  /** Night jobs trace meter, legal exposure, scope enforcement, and defender view debrief. */
+  readonly trace?: TraceSystemState;
 }
 
 

@@ -364,6 +364,265 @@ export const DevSimulationDrawer: React.FC<DevSimulationDrawerProps> = ({ isOpen
           </div>
         </div>
 
+        {/* Narrative Episode Controls */}
+        <div>
+          <h3
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-accent-cyan)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              marginBottom: '0.5rem',
+            }}
+          >
+            Episode 01 Controls (Dev)
+          </h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem' }}>
+            <button
+              type="button"
+              className="btn-primary"
+              style={{
+                fontSize: '0.75rem',
+                padding: '0.4rem',
+                backgroundColor: 'rgba(6, 182, 212, 0.25)',
+                border: '1px solid #06b6d4',
+                color: '#67e8f9',
+              }}
+              onClick={() =>
+                handleRunCommand({
+                  type: 'StartEpisode',
+                  episodeId: 'ep01_triage_init',
+                })
+              }
+              data-testid="dev-btn-start-ep01"
+            >
+              🎬 Start Episode 01
+            </button>
+
+            <button
+              type="button"
+              className="btn-primary"
+              style={{ fontSize: '0.75rem', padding: '0.4rem' }}
+              onClick={() =>
+                handleRunCommand({
+                  type: 'SetEpisodeGuidanceMode',
+                  mode: state.episode?.guidanceMode === 'Immersive' ? 'Guided' : 'Immersive',
+                })
+              }
+              data-testid="dev-btn-toggle-guidance"
+            >
+              Mode: {state.episode?.guidanceMode ?? 'Guided'} ➔ {state.episode?.guidanceMode === 'Immersive' ? 'Guided' : 'Immersive'}
+            </button>
+
+            <button
+              type="button"
+              className="btn-primary"
+              style={{ fontSize: '0.75rem', padding: '0.4rem' }}
+              onClick={() => {
+                if (state.episode?.activeBeatId) {
+                  handleRunCommand({
+                    type: 'CompleteEpisodeBeat',
+                    beatId: state.episode.activeBeatId,
+                  });
+                } else {
+                  handleRunCommand({
+                    type: 'AdvanceEpisodeBeat',
+                  });
+                }
+              }}
+              data-testid="dev-btn-advance-beat"
+            >
+              ⏩ Next / Advance Beat
+            </button>
+
+            <button
+              type="button"
+              style={{
+                backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                border: '1px solid #f59e0b',
+                color: '#fbbf24',
+                padding: '0.4rem',
+                borderRadius: '4px',
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+              }}
+              onClick={() =>
+                handleRunCommand({
+                  type: 'TriggerBlackoutBeat',
+                  beatId: 'ep01_beat_12_cliffhanger',
+                })
+              }
+              data-testid="dev-btn-trigger-blackout"
+            >
+              ⚡ Trigger Blackout
+            </button>
+          </div>
+          <div style={{ marginTop: '0.4rem', fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>
+            Active Episode: <strong style={{ color: '#fff' }}>{state.episode?.activeEpisodeId ?? 'None'}</strong> | Beat:{' '}
+            <strong style={{ color: '#fff' }}>{state.episode?.activeBeatId ?? 'None'}</strong>
+          </div>
+        </div>
+
+        {/* Trace & Legal Exposure Testing Controls */}
+        <div style={{ marginTop: '1rem' }}>
+          <h3
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-text-secondary)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              marginBottom: '0.5rem',
+            }}
+          >
+            Trace & Legal Exposure Telemetry
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem' }}>
+            <button
+              type="button"
+              style={{
+                backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                border: '1px solid #a855f7',
+                color: '#e9d5ff',
+                padding: '0.4rem',
+                borderRadius: '4px',
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+              }}
+              onClick={() =>
+                handleRunCommand({
+                  type: 'SetJobScope',
+                  isNightJob: true,
+                  jobId: 'ep01_night_intel',
+                })
+              }
+              data-testid="dev-btn-start-nightjob"
+            >
+              🌙 Start Night Job
+            </button>
+
+            <button
+              type="button"
+              style={{
+                backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                border: '1px solid #ef4444',
+                color: '#fca5a5',
+                padding: '0.4rem',
+                borderRadius: '4px',
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+              }}
+              onClick={() =>
+                handleRunCommand({
+                  type: 'RecordActionNoise',
+                  actionId: 'portscan_aggressive',
+                  target: 'app-portal-01',
+                })
+              }
+              data-testid="dev-btn-active-scan"
+            >
+              💥 Loud Scan (+60 Noise)
+            </button>
+
+            <button
+              type="button"
+              style={{
+                backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                border: '1px solid #10b981',
+                color: '#6ee7b7',
+                padding: '0.4rem',
+                borderRadius: '4px',
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+              }}
+              onClick={() =>
+                handleRunCommand({
+                  type: 'RecordActionNoise',
+                  actionId: 'passive_osint',
+                  target: 'app-portal-01',
+                })
+              }
+              data-testid="dev-btn-quiet-osint"
+            >
+              🤫 Passive OSINT (+5)
+            </button>
+
+            <button
+              type="button"
+              style={{
+                backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                border: '1px solid #f59e0b',
+                color: '#fde047',
+                padding: '0.4rem',
+                borderRadius: '4px',
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+              }}
+              onClick={() =>
+                handleRunCommand({
+                  type: 'RaiseScopeWarning',
+                  target: 'out-of-scope-dc02',
+                  actionId: 'portscan_aggressive',
+                  attemptedCommand: 'svcscan inspect out-of-scope-dc02',
+                })
+              }
+              data-testid="dev-btn-raise-scope-warning"
+            >
+              ⚠️ Raise Scope Warning
+            </button>
+
+            <button
+              type="button"
+              style={{
+                backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                border: '1px solid #38bdf8',
+                color: '#bae6fd',
+                padding: '0.4rem',
+                borderRadius: '4px',
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+              }}
+              onClick={() =>
+                handleRunCommand({
+                  type: 'GenerateDefenderDebrief',
+                  jobId: 'ep01_night_intel',
+                  jobTitle: 'Night Operation: Perimeter Reconnaissance',
+                })
+              }
+              data-testid="dev-btn-generate-debrief"
+            >
+              🛡️ Defender Debrief
+            </button>
+
+            <button
+              type="button"
+              style={{
+                backgroundColor: 'rgba(100, 116, 139, 0.2)',
+                border: '1px solid #64748b',
+                color: '#cbd5e1',
+                padding: '0.4rem',
+                borderRadius: '4px',
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+              }}
+              onClick={() =>
+                handleRunCommand({
+                  type: 'ApplyOpsecAction',
+                  logCleanup: true,
+                })
+              }
+              data-testid="dev-btn-wipe-traces"
+            >
+              🧹 Wipe Session Traces
+            </button>
+          </div>
+          <div style={{ marginTop: '0.4rem', fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>
+            Trace: <strong style={{ color: '#ef4444' }}>{state.trace?.traceMeter ?? 0}%</strong> | Legal:{' '}
+            <strong style={{ color: '#f59e0b' }}>{state.trace?.legalExposureMeter ?? 0}%</strong> | Mode:{' '}
+            <strong style={{ color: '#a855f7' }}>{state.trace?.isNightJobActive ? 'NIGHT' : 'DAY'}</strong>
+          </div>
+        </div>
+
         {/* Command Result Box */}
         {lastResult && (
           <div

@@ -138,12 +138,12 @@ export class LogviewTool implements CyberTool<LogviewArgs, LogviewResult> {
 
     if (
       source &&
-      !['auth', 'system', 'firewall', 'app-portal', 'file-server'].includes(source.toLowerCase())
+      !['auth', 'system', 'firewall', 'app-portal', 'file-server', 'siem', 'sysmon'].includes(source.toLowerCase())
     ) {
       return {
         success: false,
         error: `Unknown log source '${source}'.`,
-        hint: 'Permitted sources: auth, system, firewall, app-portal, file-server.',
+        hint: 'Permitted sources: auth, system, firewall, app-portal, file-server, siem, sysmon.',
       };
     }
 
@@ -235,6 +235,18 @@ export class LogviewTool implements CyberTool<LogviewArgs, LogviewResult> {
       );
       lines.push('  Message:');
       lines.push(`    ${l.message}`);
+      if (l.rawCef) {
+        lines.push('  Raw CEF Record:');
+        lines.push(`    ${l.rawCef}`);
+      }
+      if (l.sysmon) {
+        lines.push('  Sysmon Fields:');
+        lines.push(`    Event ID:     ${l.sysmon.eventId}`);
+        if (l.sysmon.image) lines.push(`    Image:        ${l.sysmon.image}`);
+        if (l.sysmon.commandLine) lines.push(`    CommandLine:  ${l.sysmon.commandLine}`);
+        if (l.sysmon.destinationIp) lines.push(`    Destination:  ${l.sysmon.destinationIp}:${l.sysmon.destinationPort}`);
+        if (l.sysmon.destinationHostname) lines.push(`    Dest Host:    ${l.sysmon.destinationHostname}`);
+      }
       if (l.details) {
         lines.push('  Technical Context:');
         lines.push(`    ${l.details}`);

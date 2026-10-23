@@ -58,7 +58,10 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
   const [cameraMode, setCameraMode] = useState<CameraMode>('THIRD_PERSON');
   const [activeTarget, setActiveTarget] = useState<InteractableDefinition | null>(null);
   const [noticeMessage, setNoticeMessage] = useState<string | null>(null);
-  const [activeNpcId, setActiveNpcId] = useState<string | null>(() => initialNpcParam ?? null);
+  const [activeNpcId, setActiveNpcId] = useState<string | null>(() => {
+    if (initialNpcParam === 'barry' || initialNpcParam === 'npc_marcus') return 'npc_marcus';
+    return initialNpcParam ?? null;
+  });
   const [playerPosition, setPlayerPosition] = useState<{ x: number; z: number }>(() => {
     if (initialLocParam === 'apartment_interior') return { x: -12.0, z: -14.0 };
     if (initialLocParam === 'cedarline_interior') return { x: 18.0, z: 6.0 };
@@ -79,13 +82,13 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
       : 'interact_cedarline_workstation'
   );
 
-  // M15 Main Menu & Audio State
   const initialMenuParam = initialParams?.get('menu');
   const skipMenuParam = initialParams?.get('skipMenu');
+  const initialEpisodeParam = initialParams?.get('episode');
   const isTestEnv =
     typeof process !== 'undefined' && process.env?.NODE_ENV === 'test';
   const hasDirectTestingParams = Boolean(
-    initialLocParam || initialWsParam || initialNpcParam || initialAppParam
+    initialLocParam || initialWsParam || initialNpcParam || initialAppParam || initialEpisodeParam
   );
 
   const [isMainMenuOpen, setIsMainMenuOpen] = useState<boolean>(() => {
@@ -135,6 +138,64 @@ export const WorldViewport: React.FC<WorldViewportProps> = ({ onInitialized, onE
       prevEvidenceCountRef.current = count;
     }
   }, [sim?.state.narrative?.evidenceVault]);
+
+  // Handle URL narrative episode & trace parameters for direct testing / automation
+  useEffect(() => {
+    if (!sim) return;
+    const epParam = initialParams?.get('episode');
+    const guidanceParam = initialParams?.get('guidance');
+    const blackoutParam = initialParams?.get('blackout');
+    const nightJobParam = initialParams?.get('nightJob');
+    const traceParam = initialParams?.get('trace');
+    const scopeWarningParam = initialParams?.get('scopeWarning');
+    const debriefParam = initialParams?.get('debrief');
+
+    if (epParam && !sim.state.episode?.activeEpisodeId) {
+      sim.dispatch({ type: 'StartEpisode', episodeId: epParam });
+    }
+    if (guidanceParam === 'Immersive' || guidanceParam === 'Guided') {
+      if (sim.state.episode?.guidanceMode !== guidanceParam) {
+        sim.dispatch({ type: 'SetEpisodeGuidanceMode', mode: guidanceParam });
+      }
+    }
+    if (blackoutParam === 'cliffhanger') {
+      if (!sim.state.episode?.activeBlackout) {
+        sim.dispatch({ type: 'TriggerBlackoutBeat', beatId: 'ep01_beat_12_cliffhanger' });
+      }
+    } else if (blackoutParam === '1' || blackoutParam === 'true') {
+      if (!sim.state.episode?.activeBlackout) {
+        sim.dispatch({ type: 'TriggerBlackoutBeat', beatId: 'ep01_beat_06_blackout' });
+      }
+    }
+    if (nightJobParam === '1') {
+      sim.dispatch({ type: 'SetJobScope', isNightJob: true, jobId: 'ep01_night_intel' });
+    }
+    if (traceParam) {
+      const val = parseInt(traceParam, 10);
+      if (!isNaN(val)) {
+        sim.dispatch({
+          type: 'RecordActionNoise',
+          actionId: val >= 50 ? 'portscan_aggressive' : 'passive_osint',
+          target: 'app-portal-01',
+        });
+      }
+    }
+    if (scopeWarningParam === '1') {
+      sim.dispatch({
+        type: 'RaiseScopeWarning',
+        target: 'external-transit-gw',
+        actionId: 'portscan_aggressive',
+        attemptedCommand: 'svcscan inspect external-transit-gw',
+      });
+    }
+    if (debriefParam === '1') {
+      sim.dispatch({
+        type: 'GenerateDefenderDebrief',
+        jobId: 'ep01_night_intel',
+        jobTitle: 'Night Operation: Perimeter Reconnaissance',
+      });
+    }
+  }, [sim]);
 
   const initializeScene = useCallback(() => {
     if (!containerRef.current) return;

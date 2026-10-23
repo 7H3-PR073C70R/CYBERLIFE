@@ -786,6 +786,27 @@ export function validateSimulationState(state: SimulationState): void {
       throw new InvariantViolationError('episode.guidanceMode must be "Guided" or "Immersive"');
     }
   }
+
+  // 17. Trace & Legal Exposure invariants
+  if (state.trace) {
+    const { trace } = state;
+    if (typeof trace.traceMeter !== 'number' || trace.traceMeter < 0 || trace.traceMeter > 100) {
+      throw new InvariantViolationError(`Invalid traceMeter: ${trace.traceMeter}`);
+    }
+    if (
+      typeof trace.legalExposureMeter !== 'number' ||
+      trace.legalExposureMeter < 0 ||
+      trace.legalExposureMeter > 100
+    ) {
+      throw new InvariantViolationError(`Invalid legalExposureMeter: ${trace.legalExposureMeter}`);
+    }
+    if (!Array.isArray(trace.actionHistory)) {
+      throw new InvariantViolationError('trace.actionHistory must be an array');
+    }
+    if (!Array.isArray(trace.activeDefenderResponses)) {
+      throw new InvariantViolationError('trace.activeDefenderResponses must be an array');
+    }
+  }
 }
 
 export function checkSimulationInvariants(state: SimulationState): string[] {

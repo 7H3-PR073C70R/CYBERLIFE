@@ -1705,4 +1705,161 @@ export class LagosProps {
 
     return group;
   }
+
+  /**
+   * Creates a photorealistic 3D corporate rooftop or facade signboard
+   * with emissive logo, company brand styling, and edge lighting.
+   */
+  public static createCorporateSignboard(options: {
+    companyName: string;
+    subtext?: string;
+    brandColor: string;
+    accentColor?: string;
+    bgDark?: string;
+    width?: number;
+    height?: number;
+    logoIcon?: 'CYBER' | 'BANK' | 'RISK' | 'PRESS' | 'GOV';
+  }): THREE.Group {
+    const group = new THREE.Group();
+    group.name = `CorporateSign_${options.companyName.replace(/\s+/g, '_')}`;
+
+    const w = options.width ?? 10.0;
+    const h = options.height ?? 2.4;
+    const d = 0.4;
+
+    // 1. Backplate Frame & Mount
+    const frameGeo = new THREE.BoxGeometry(w + 0.3, h + 0.3, d);
+    const frameMat = new THREE.MeshStandardMaterial({
+      color: 0x0f172a,
+      roughness: 0.4,
+      metalness: 0.8,
+    });
+    const frameMesh = new THREE.Mesh(frameGeo, frameMat);
+    frameMesh.castShadow = true;
+    group.add(frameMesh);
+
+    // 2. Emissive Neon Border Piping
+    const borderGeo = new THREE.BoxGeometry(w + 0.15, h + 0.15, d + 0.05);
+    const borderMat = new THREE.MeshStandardMaterial({
+      color: 0x09090b,
+      emissive: new THREE.Color(options.accentColor ?? options.brandColor),
+      emissiveIntensity: 0.85,
+      roughness: 0.2,
+    });
+    const borderMesh = new THREE.Mesh(borderGeo, borderMat);
+    group.add(borderMesh);
+
+    // 3. Dynamic High-Res Corporate Brand Graphic Panel
+    if (typeof document !== 'undefined') {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 256;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        // Dark metallic gradient background
+        const grad = ctx.createLinearGradient(0, 0, 1024, 0);
+        grad.addColorStop(0, options.bgDark ?? '#060d1b');
+        grad.addColorStop(0.5, '#0f172a');
+        grad.addColorStop(1, options.bgDark ?? '#060d1b');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 1024, 256);
+
+        // Neon brand border
+        ctx.strokeStyle = options.brandColor;
+        ctx.lineWidth = 6;
+        ctx.strokeRect(12, 12, 1000, 232);
+
+        // Logo Icon Crest
+        ctx.save();
+        ctx.fillStyle = options.brandColor;
+        ctx.strokeStyle = options.accentColor ?? '#ffffff';
+        ctx.lineWidth = 4;
+
+        if (options.logoIcon === 'BANK') {
+          // Geometric vault / financial pillars
+          ctx.strokeRect(60, 68, 80, 120);
+          ctx.fillRect(80, 88, 40, 80);
+          ctx.beginPath();
+          ctx.moveTo(40, 68);
+          ctx.lineTo(100, 30);
+          ctx.lineTo(160, 68);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        } else if (options.logoIcon === 'RISK') {
+          // Tactical security shield
+          ctx.beginPath();
+          ctx.moveTo(100, 40);
+          ctx.lineTo(150, 70);
+          ctx.lineTo(135, 140);
+          ctx.lineTo(100, 185);
+          ctx.lineTo(65, 140);
+          ctx.lineTo(50, 70);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        } else if (options.logoIcon === 'PRESS') {
+          // Investigative press quill / newspaper banner
+          ctx.strokeRect(55, 60, 90, 130);
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(70, 80, 60, 15);
+          ctx.fillRect(70, 105, 60, 10);
+          ctx.fillRect(70, 125, 60, 10);
+          ctx.fillRect(70, 145, 60, 10);
+        } else if (options.logoIcon === 'GOV') {
+          // Civic federal star & shield
+          ctx.beginPath();
+          ctx.arc(100, 110, 50, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.font = 'bold 50px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('★', 100, 128);
+        } else {
+          // Cyber life hexagonal node / tech core
+          ctx.beginPath();
+          ctx.moveTo(100, 45);
+          ctx.lineTo(145, 75);
+          ctx.lineTo(145, 145);
+          ctx.lineTo(100, 175);
+          ctx.lineTo(55, 145);
+          ctx.lineTo(55, 75);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fillRect(85, 95, 30, 30);
+        }
+        ctx.restore();
+
+        // Company Name Typography
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 58px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(options.companyName.toUpperCase(), 190, 115);
+
+        // Subtext / Tagline
+        if (options.subtext) {
+          ctx.fillStyle = options.accentColor ?? options.brandColor;
+          ctx.font = '700 28px sans-serif';
+          ctx.fillText(options.subtext.toUpperCase(), 195, 175);
+        }
+
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        const panelMesh = new THREE.Mesh(
+          new THREE.PlaneGeometry(w, h),
+          new THREE.MeshStandardMaterial({
+            map: tex,
+            roughness: 0.2,
+            metalness: 0.1,
+            emissiveMap: tex,
+            emissive: new THREE.Color(0xffffff),
+            emissiveIntensity: 0.8,
+          })
+        );
+        panelMesh.position.set(0, 0, d / 2 + 0.04);
+        group.add(panelMesh);
+      }
+    }
+
+    return group;
+  }
 }

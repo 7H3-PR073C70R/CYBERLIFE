@@ -109,5 +109,35 @@ export const WORLD_CONFIG = {
       spawnPosition: [0, 0, 1.5],
       spawnYaw: 0,
     } as LocationDefinition,
+
+    ekoBankInterior: {
+      id: 'eko_bank_interior',
+      name: 'Eko Merchant Bank — Executive Loft',
+      description:
+        'High-ceiling executive banking loft with private vaults and interbank settlement terminals.',
+      type: 'INTERIOR',
+      spawnPosition: [0, 0, 1.5],
+      spawnYaw: 0,
+    } as LocationDefinition,
+
+    krestInterior: {
+      id: 'krest_interior',
+      name: 'Krest Independent Risk — Cyber War Room',
+      description:
+        'Confidential corporate intelligence and forensic investigation war room.',
+      type: 'INTERIOR',
+      spawnPosition: [0, 0, 1.5],
+      spawnYaw: 0,
+    } as LocationDefinition,
+
+    inquirerInterior: {
+      id: 'inquirer_interior',
+      name: 'The Lagos Inquirer — Investigative Newsroom',
+      description:
+        'Busy investigative press room with editorial desks and public records microfiche.',
+      type: 'INTERIOR',
+      spawnPosition: [0, 0, 1.5],
+      spawnYaw: 0,
+    } as LocationDefinition,
   },
 } as const;
